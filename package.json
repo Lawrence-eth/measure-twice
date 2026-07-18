@@ -1,8 +1,8 @@
 {
-  "name": "counterproof",
+  "name": "measure-twice",
   "version": "0.1.0",
   "private": true,
-  "description": "An evidence-first programming tutor that turns misconceptions into runnable counterexamples.",
+  "description": "A consequence-driven field school that teaches complete beginners how to build responsibly with AI.",
   "license": "MIT",
   "engines": {
     "node": ">=22"

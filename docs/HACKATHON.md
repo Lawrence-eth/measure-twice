@@ -6,8 +6,9 @@ Deadline: **July 21, 2026 at 5:00 PM Pacific**.
 
 - [x] New project created during the submission period
 - [x] Education track selected
-- [x] GPT-5.6 integration designed
-- [ ] Complete three lessons
+- [x] GPT-5.6 integration implemented
+- [x] Complete one deep, consequence-driven mission
+- [x] Deterministic judge mode and server-side evidence debrief
 - [ ] Deploy public judge-ready demo
 - [ ] Add smoke test for hosted URL
 
@@ -16,9 +17,9 @@ Deadline: **July 21, 2026 at 5:00 PM Pacific**.
 - [x] MIT license
 - [x] Setup and verification commands
 - [x] Codex collaboration log
-- [ ] Sample screenshots
-- [ ] Final supported-platform notes
-- [ ] Public GitHub visibility confirmed
+- [x] Sample screenshots
+- [x] Final supported-platform notes
+- [x] Public GitHub visibility confirmed
 
 ## Devpost
 
@@ -31,7 +32,7 @@ Deadline: **July 21, 2026 at 5:00 PM Pacific**.
 
 ## Demo safety
 
-- [ ] No third-party music or unlicensed assets
-- [ ] No credentials or personal information on screen
-- [ ] Demo works in a clean browser session
-- [ ] Backup deterministic path rehearsed
+- [x] No third-party music or unlicensed assets
+- [x] No credentials or personal information on screen
+- [x] Demo works in a clean browser session
+- [x] Backup deterministic path exercised by Playwright

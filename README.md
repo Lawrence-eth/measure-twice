@@ -1,33 +1,61 @@
-# Counterproof
+# Measure Twice
 
-**Debug your mental model, not just your code.**
+**Learn to build with AI without mistaking polish for proof.**
 
-Counterproof is an evidence-first programming tutor. It turns a learner's explanation into a falsifiable hypothesis, runs the smallest useful counterexample, and then checks whether the learner can transfer the corrected idea to a new situation.
+Measure Twice is a consequence-driven educational simulation for complete beginners. The learner rescues an AI-assisted community project that looks finished but quietly fails. They practice the judgment behind a trustworthy build: defining an outcome, preserving context, bounding AI authority, inspecting changes, demanding evidence, repairing precisely, and shipping a recoverable version.
 
 Built for the **Education** track of OpenAI Build Week 2026.
 
-## Why it exists
+![Measure Twice landing experience](docs/screenshots/landing.png)
 
-AI tutors are good at producing explanations. That does not prove the learner changed the misconception that caused the mistake. Counterproof uses a different loop:
+## Why this is different
 
-1. **Commit** — explain what you think the program will do.
-2. **Counterexample** — GPT-5.6 diagnoses the underlying belief; the lesson pairs it with a small, audited probe.
-3. **Observe** — the browser runtime executes the code and records what actually happened.
-4. **Repair** — teach the concept back using the observed evidence.
-5. **Transfer** — solve a fresh case that requires the corrected mental model.
+Most beginner AI courses teach prompt formulas, tool tours, or passive tips. Measure Twice teaches a durable operating method through consequences.
 
-The model can suggest and explain. Only the runtime can report execution evidence.
+> AI output is a proposal. Your project becomes trustworthy through evidence.
 
-## Current checkpoint
+The flagship mission uses three rules:
 
-- One polished JavaScript lesson about `await` and the event loop
-- Deterministic demo mode that works without credentials
-- Server-side GPT-5.6 integration through the Responses API
-- Structured model output validated with Zod
-- Isolated, time-limited browser worker for audited experiment fixtures
-- Teach-back and transfer stages
+1. Every feature pays a hidden-system cost.
+2. Every AI action needs an authority boundary.
+3. Every “done” claim owes evidence.
 
-See [the product brief](docs/PRODUCT.md) and [build log](docs/BUILD_LOG.md) for scope and provenance.
+No coding knowledge is assumed. Repository, commit, diff, environment variable, deployment, evidence, and rollback are introduced in plain language exactly when the learner needs them.
+
+## The learning experience
+
+The mission, **The page that looks finished**, begins with a polished Repair Café page and an AI message declaring it ready. The page contains an invented guarantee, a clipped phone action, and no proof that checks ran.
+
+The learner moves through TRACE:
+
+- **Target** — turn a vague request into a specific audience, outcome, proof-of-done, and non-goals.
+- **Record** — create a simulated GitHub repository with trusted facts, a README, safe environment placeholders, and a known-good commit—without committing a secret.
+- **Assign** — assemble a bounded context packet and distinguish local permission from consequential external action.
+- **Check** — inspect the preview, diff, trusted facts, mobile behavior, accessibility, secrets, and execution log.
+- **Evolve** — create a reproducible Bug Capsule, request the smallest repair, preserve passing behavior, and rerun failed checks.
+
+The final transfer challenge removes the TRACE labels and switches from a website to a budget spreadsheet. The Build Replay then connects each decision to its consequence and evidence. It reports **mission evidence**, never false mastery after one session.
+
+![Measure Twice Build Replay](docs/screenshots/build-replay.png)
+
+## Signature interactions
+
+- **Context X-ray** shows which trusted facts, constraints, and permissions the AI can actually see.
+- **Blast Radius** makes the hidden systems and changed files behind “helpful” extra features visible.
+- **Proof Ledger** connects each requirement to an independent check; an AI claim cannot turn a requirement green.
+- **Checkpoint Rewind** makes unsafe mistakes recoverable inside the simulation.
+- **Build Replay** reveals the causal chain from decision to project consequence to evidence.
+- **Field Manual** preserves exact templates for the build brief, repository setup, AI handoff, plan review, proof ledger, bug report, and ship gate.
+
+See [the full curriculum](docs/CURRICULUM.md) and [product brief](docs/PRODUCT.md).
+
+## Educational design
+
+The core curriculum, defects, evidence, scoring, and consequences are authored and deterministic. The learner must attempt a decision before receiving feedback. Feedback always names the goal, observed evidence, transferable principle, and next repair.
+
+GPT‑5.6 is not allowed to invent lesson truth or change the score. It receives the server-recomputed evidence profile and optional learner reflection, then returns a constrained personalized debrief. Without credentials, the same journey ends with an authored deterministic debrief.
+
+The design draws on active learning, worked examples with fading, self-explanation, formative feedback, retrieval, authentic transfer, and evidence-centered assessment. Sources and their concrete product implications are documented in [docs/CURRICULUM.md](docs/CURRICULUM.md).
 
 ## Run locally
 
@@ -41,11 +69,12 @@ npm run dev
 
 Open <http://localhost:3000>.
 
-The example environment enables deterministic demo mode. To use GPT-5.6, put a valid server-side API key in `.env.local` and set:
+The default is fully functional deterministic judge mode. To enable the single live GPT‑5.6 debrief, keep the API key server-side and set:
 
 ```dotenv
-DEMO_MODE=false
+OPENAI_API_KEY=your-server-key
 OPENAI_MODEL=gpt-5.6
+DEMO_MODE=false
 ```
 
 Never expose `OPENAI_API_KEY` through a `NEXT_PUBLIC_` variable.
@@ -59,21 +88,40 @@ npm run test:e2e
 npm run build
 ```
 
-## How GPT-5.6 is used
+The test suite covers deterministic assessment, unsafe repository choices, scope overreach, independent evidence, repair-and-retest gates, transfer, server-side score recomputation, malformed/oversized API input, the complete desktop/mobile journey, and meaningful failure recovery.
 
-Counterproof calls the OpenAI Responses API on the server. GPT-5.6 receives the lesson, prediction, and learner explanation and returns a typed diagnosis: a falsifiable belief hypothesis, likely misconception, discriminating question, confidence, and minimal hint. The executable probes are curated fixtures, so generated code cannot redefine the evidence. A second typed call evaluates the teach-back against server-verified output; a third checks whether both the prediction and causal explanation transfer to unfamiliar code.
+## GPT‑5.6 implementation
 
-The application defaults to the official `gpt-5.6` alias. It uses Structured Outputs so the interface consumes validated learning objects rather than parsing prose.
+- Server-side OpenAI Responses API
+- Structured Outputs parsed with Zod
+- `store: false`
+- bounded output and low reasoning effort
+- hashed `safety_identifier`
+- learner text treated as untrusted data
+- server-recomputed scores and evidence
+- deterministic fallback for missing keys, rate limits, refusals, incomplete responses, or provider errors
 
-## How Codex is being used
+The model can personalize language. It cannot alter progression, artifacts, correctness, scores, or “ready to ship.”
 
-Codex is the primary engineering collaborator for product framing, architecture, implementation, tests, interface work, documentation, and demo preparation. Human decisions—including the evidence-first learning loop, Education track, JavaScript-only scope, and deterministic judge mode—are recorded in [docs/BUILD_LOG.md](docs/BUILD_LOG.md).
+## How Codex was used
 
-Before submission, the primary Codex thread's `/feedback` Session ID will be added here and to Devpost.
+Codex is the primary engineering collaborator for concept exploration, official documentation research, curriculum synthesis, product architecture, implementation, tests, accessibility, interface work, and submission preparation.
+
+Human decisions—including the Education track, beginner audience, rejection of a real project generator, content-first quality bar, TRACE learning spine, deterministic curriculum, and evidence-over-claims doctrine—are recorded in [docs/BUILD_LOG.md](docs/BUILD_LOG.md).
+
+Before submission, the primary project thread’s `/feedback` Session ID will be added here and to Devpost.
 
 ## Judge-friendly testing
 
-The hosted demo will start in clearly labeled seeded mode, so the complete learning loop can be tested without an account, API key, or paid service. The seeded diagnosis uses both the selected prediction and bounded cues from the written explanation. Real GPT-5.6 mode can be enabled by the project owner for the recorded demo.
+- No account, API key, payment, or external integration is required.
+- Progress is stored only in local browser storage and can be reset from the header.
+- The complete mission works on desktop and mobile and is keyboard accessible.
+- Reduced-motion preferences are respected.
+- No real repository, deployment, purchase, message, permission, or data mutation occurs.
+
+## Privacy and safety
+
+Measure Twice stores only the simulated mission state in the learner’s browser. It has no authentication, analytics, database, arbitrary code execution, GitHub OAuth, or real deployment. Model output is rendered as text and cannot perform actions.
 
 ## License
 

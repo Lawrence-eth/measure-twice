@@ -1,8 +1,12 @@
-# Counterproof contributor guide
+# Measure Twice contributor guide
 
-## Product invariant
+## Product invariants
 
-Counterproof must help a learner revise a mental model through observable evidence. It must not collapse into an answer-generating chat interface.
+- This is an educational simulation, not a project generator or generic AI course.
+- The learner must make a consequential choice before receiving instruction.
+- AI output is always presented as a proposal. Only authored evidence can mark work as verified.
+- Every field note must change a concrete building behavior and be applied inside the mission.
+- Core curriculum, defects, evidence, and scoring stay deterministic. GPT-5.6 may personalize feedback, but it cannot invent the lesson or decide ground truth.
 
 ## Commands
 
@@ -20,7 +24,8 @@ Run typechecking and tests for every behavior change. Run the production build b
 - Keep OpenAI API calls server-side under `app/api`.
 - Validate every model and client boundary with Zod.
 - Maintain deterministic demo fixtures so judges can test without an API key.
-- Treat runtime output as evidence. Never let a model fabricate whether code passed or what it printed.
+- Never let a model fabricate whether a test ran, what evidence showed, or whether a learner is ready to ship.
 - Prefer small, named domain functions in `lib/` over business logic embedded in components.
-- Keep the primary learning loop usable on a 390px-wide screen.
+- Keep the complete mission keyboard-usable and usable on a 390px-wide screen.
+- Respect reduced-motion preferences and never rely on drag as the only interaction.
 - Do not commit credentials, learner-identifying data, or generated session transcripts.
