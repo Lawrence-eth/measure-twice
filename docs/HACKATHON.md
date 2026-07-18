@@ -27,7 +27,7 @@ Deadline: **July 21, 2026 at 5:00 PM Pacific**.
 - [ ] Public YouTube demo under three minutes
 - [ ] Audio explains both Codex and GPT-5.6 usage
 - [ ] Repository URL
-- [ ] Testing instructions
+- [x] Testing instructions
 - [ ] `/feedback` Codex Session ID
 
 ## Demo safety

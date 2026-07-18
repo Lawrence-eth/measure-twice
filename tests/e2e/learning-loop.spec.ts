@@ -137,7 +137,9 @@ test("completes the evidence-first build mission and receives a debrief", async 
     "I will define proof before asking AI to edit, inspect the actual change, and rerun the checks after a bounded repair.",
   );
   await page.getByRole("button", { name: /Create my evidence debrief/i }).click();
-  await expect(page.getByText(/Authored judge mode|Personalized live/i)).toBeVisible();
+  await expect(page.getByText(/Authored judge mode|Personalized live/i)).toBeVisible({
+    timeout: 30_000,
+  });
   await expect(page.getByText(/known-good state/i)).toBeVisible();
 });
 

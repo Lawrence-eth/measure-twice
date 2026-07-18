@@ -88,6 +88,8 @@ npm run test:e2e
 npm run build
 ```
 
+`npm run build` creates the Cloudflare-compatible `dist` artifact used by the hosted demo. To exercise the browser suite against an already-running preview, use `PLAYWRIGHT_BASE_URL=https://your-preview.example npm run test:e2e`.
+
 The test suite covers deterministic assessment, unsafe repository choices, scope overreach, independent evidence, repair-and-retest gates, transfer, server-side score recomputation, malformed/oversized API input, the complete desktop/mobile journey, and meaningful failure recovery.
 
 ## GPT‑5.6 implementation
@@ -118,6 +120,13 @@ Before submission, the primary project thread’s `/feedback` Session ID will be
 - The complete mission works on desktop and mobile and is keyboard accessible.
 - Reduced-motion preferences are respected.
 - No real repository, deployment, purchase, message, permission, or data mutation occurs.
+
+## Supported environments
+
+- Current desktop and mobile browsers with JavaScript and local storage enabled.
+- Node.js 22+ for local development with Next.js.
+- Cloudflare Workers-compatible hosting; the same four Playwright journeys run against that production runtime.
+- Deterministic judge mode without an OpenAI key, or an optional server-side GPT-5.6 debrief.
 
 ## Privacy and safety
 

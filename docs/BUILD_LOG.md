@@ -40,8 +40,10 @@ Key product decisions:
 Verified checkpoint:
 
 - Production Next.js build passes
+- Cloudflare Workers/Vinext production build passes
 - 12 current domain/API tests pass after the product pivot
 - 4 Playwright journeys pass across desktop Chromium and a Pixel 7 viewport
+- The same complete journeys pass against the local Workers runtime, including the debrief route
 - Complete best-practice and meaningful-failure paths are covered
 - Dependency audit reports zero known vulnerabilities
 
