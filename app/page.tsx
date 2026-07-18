@@ -1,5 +1,5 @@
-import { MeasureTwice } from "@/components/MeasureTwice";
+import { Pentimento } from "@/components/Pentimento";
 
 export default function Home() {
-  return <MeasureTwice />;
+  return <Pentimento />;
 }

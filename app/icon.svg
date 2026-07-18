@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Pentimento">
+  <rect width="64" height="64" rx="8" fill="#171821"/>
+  <path d="M19 48V16h13.3c9 0 14.7 4.5 14.7 12.1 0 8-5.8 12.7-15.8 12.7h-4.3V48H19Zm7.9-13.5h4.4c5.1 0 7.7-2 7.7-6.1 0-4-2.5-5.9-7.3-5.9h-4.8v12Z" fill="#f4f2ed"/>
+  <path d="M23 50V18h13.3c9 0 14.7 4.5 14.7 12.1 0 8-5.8 12.7-15.8 12.7h-4.3V50H23Zm7.9-13.5h4.4c5.1 0 7.7-2 7.7-6.1 0-4-2.5-5.9-7.3-5.9h-4.8v12Z" fill="none" stroke="#d9c9d8" stroke-width="1.5" opacity=".86"/>
+  <path d="M8 10h11M12 6v9M45 54h11M52 49v9" stroke="#7568e8" stroke-width="1.5"/>
+</svg>

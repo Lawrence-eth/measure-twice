@@ -1,8 +1,8 @@
 {
-  "name": "measure-twice",
+  "name": "pentimento",
   "version": "0.1.0",
   "private": true,
-  "description": "A consequence-driven field school that teaches complete beginners how to build responsibly with AI.",
+  "description": "A consequence-driven learning experience that teaches complete beginners how to build trustworthy projects with AI.",
   "license": "MIT",
   "engines": {
     "node": ">=22"
@@ -30,6 +30,7 @@
     "zod": "4.4.3"
   },
   "devDependencies": {
+    "@axe-core/playwright": "4.12.1",
     "@cloudflare/vite-plugin": "1.45.1",
     "@playwright/test": "1.61.1",
     "@types/node": "^24.0.0",
