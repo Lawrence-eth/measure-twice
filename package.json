@@ -9,7 +9,7 @@
   },
   "scripts": {
     "dev": "next dev",
-    "build": "vinext build",
+    "build": "vinext build && node scripts/copy-hosting-metadata.mjs",
     "build:next": "next build",
     "start": "wrangler dev --config dist/server/wrangler.json",
     "start:next": "next start",
@@ -17,7 +17,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
-    "build:vinext": "vinext build",
+    "build:vinext": "npm run build",
     "start:vinext": "wrangler dev --config dist/server/wrangler.json",
     "deploy:vinext": "vinext-cloudflare deploy --config dist/server/wrangler.json"
   },
