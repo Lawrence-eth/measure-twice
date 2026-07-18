@@ -1,0 +1,39 @@
+{
+  "name": "counterproof",
+  "version": "0.1.0",
+  "private": true,
+  "description": "An evidence-first programming tutor that turns misconceptions into runnable counterexamples.",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "playwright test"
+  },
+  "dependencies": {
+    "next": "16.2.10",
+    "openai": "6.48.0",
+    "react": "19.2.7",
+    "react-dom": "19.2.7",
+    "zod": "4.4.3"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.61.1",
+    "@types/node": "^24.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "typescript": "5.9.3",
+    "vitest": "4.1.10"
+  },
+  "overrides": {
+    "next": {
+      "postcss": "8.5.19"
+    }
+  }
+}
