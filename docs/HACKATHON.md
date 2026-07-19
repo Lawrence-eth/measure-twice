@@ -288,10 +288,10 @@ values remain in [BUILD_LOG.md](BUILD_LOG.md).
 | --- | --- |
 | Public YouTube demo URL | **TBD — entrant uploads and verifies public visibility** |
 | Primary Codex /feedback Session ID | **TBD — entrant obtains it from the primary build thread** |
-| Exact final v5 deployed source | `84304ce0440ff6ab2a606b4902b4dfe197203b6e` |
-| Final Sites deployment version | Version 3 · deployment `appgdep_6a5ce5ef6e588191a682e7a37d5e65d5` |
-| Hosted v5 acceptance result and timestamp | PASS · 30/30 desktop/mobile Chromium checks · July 19, 2026 15:05 UTC |
-| Rollback version confirmed for final release | Sites version 2 · `ada4a48615f7931324dc3afc70d99880ec4e2b1d` |
+| Exact final v5 deployed source | `0ac40c9b7f08acafa687322cd4d4188785f03f44` |
+| Final Sites deployment version | Version 4 · deployment `appgdep_6a5cf7cfa3e081919637286b10e33854` |
+| Hosted v5 acceptance result and timestamp | PASS · 30/30 local desktop/mobile Chromium checks plus 5/5 hosted critical-path checks · July 19, 2026 16:15 UTC |
+| Rollback version confirmed for final release | Sites version 3 · `84304ce0440ff6ab2a606b4902b4dfe197203b6e` |
 | Production reflection mode and evidence | Deterministic demo fallback · no Sites runtime environment entries · hosted endpoint returned `mode: "demo"` with the required 2 questions and 3 next moves |
 | Repository public-access or private-sharing confirmation | Public signed-out request returned `200`; MIT license visible |
 | Devpost submission confirmation | **TBD — entrant submits and records it** |

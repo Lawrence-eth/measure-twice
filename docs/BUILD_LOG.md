@@ -439,3 +439,38 @@ at 15:05 UTC:
 | Hosted interaction coverage | PASS · Reveal, four chapters, 13 decisions, eight Playbook-note saves, Field Guide, canvas lenses, persistence, restart, keyboard, Axe, reduced motion, and 320/390/768/1440px overflow |
 | Production reflection mode | PASS · no runtime environment entries; `/api/debrief` returned `mode: "demo"` with two questions and three next moves |
 | Rollback target | PASS · Sites version 2 · `ada4a48615f7931324dc3afc70d99880ec4e2b1d` |
+
+## July 19 — Refined interaction release
+
+A final user review identified a presentation-quality problem rather than a
+curriculum problem: the two opening actions felt crowded, motion felt abrupt,
+and several controls still looked like generic interface components. Codex
+treated this as a system-level interaction pass rather than adding more
+content.
+
+The release gives the primary and overview actions distinct visual roles and a
+measured vertical separation, replaces hard offset effects with quieter depth,
+adds restrained state transitions to choices, feedback, dialogs, route
+controls, and the surface/underlayers lens, and gives the opening Reveal a
+deliberate inspection sequence. Focus now moves to the next available audit
+action, reduced-motion users receive automatic rather than smooth scrolling,
+forced-colors states remain explicit, and decorative button glyphs do not alter
+accessible names. The initial entrance uses movement without fading text, so
+content is immediately readable and cannot be sampled at reduced contrast.
+
+The exact refinement was verified and published on July 19, 2026 at 16:15 UTC:
+
+| Check | Result |
+| --- | --- |
+| Deployed source | PASS · `0ac40c9b7f08acafa687322cd4d4188785f03f44` |
+| Sites version | PASS · version 4 |
+| Production deployment | PASS · `appgdep_6a5cf7cfa3e081919637286b10e33854` |
+| Native public URL | PASS · `https://pentimento.law-ender.chatgpt.site` |
+| Typecheck and build | PASS |
+| Unit tests | PASS · 96/96 |
+| Local browser suite | PASS · 30/30 across desktop and mobile Chromium |
+| Local experience-density audit | PASS · desktop and mobile · zero gated violations |
+| Production critical path | PASS · 5/5 hosted Playwright checks covering Reveal, reduced motion, and core-route Axe |
+| Production action separation | PASS · 22px at 320/390px; 24px at 768/1440px |
+| Production responsive overflow | PASS · zero opening overflow at 320, 390, 768, and 1440px |
+| Rollback target | PASS · Sites version 3 · `84304ce0440ff6ab2a606b4902b4dfe197203b6e` |
