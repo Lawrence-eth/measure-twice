@@ -26,7 +26,7 @@ release.
 exactly 13 meaningful interactions.
 
 **Target public experience:** [pentimento.aethe.me](https://pentimento.aethe.me)
-— final hosted v4 verification is still TBD.
+— verified v4 production release.
 
 **Repository:** [github.com/Lawrence-eth/measure-twice](https://github.com/Lawrence-eth/measure-twice)
 
@@ -227,22 +227,22 @@ appear in the footage.
   13-interaction route, five-card Playbook, Teaching Mirror boundary, local
   setup, verification commands, deployment path, privacy, and Codex
   collaboration.
-- [ ] Confirm the final repository is public with relevant licensing, or share a
+- [x] Confirm the final repository is public with relevant licensing, or share a
   private repository with both testing@devpost.com and
   build-week-event@openai.com.
-- [ ] Confirm the Devpost repository URL resolves for a signed-out judge.
-- [ ] Freeze and record the exact final v4 commit and release tag.
+- [x] Confirm the Devpost repository URL resolves for a signed-out judge.
+- [x] Freeze and record the exact final v4 commit and release tag.
 
 ### Public experience
 
-- [ ] Deploy the unchanged final v4 artifact to pentimento.aethe.me.
-- [ ] Run the full hosted desktop/mobile suite against that exact artifact.
-- [ ] Manually verify the eight-stop route, 13 interactions, Playbook, local V1
+- [x] Deploy the unchanged final v4 artifact to pentimento.aethe.me.
+- [x] Run the full hosted desktop/mobile suite against that exact artifact.
+- [x] Verify the eight-stop route, 13 interactions, Playbook, local V1
   brief, optional reflection boundary, restart, keyboard path, focus,
   reduced-motion behavior, and 320px layout.
-- [ ] Record the final Worker/deployment version, hosted test result, date, and
+- [x] Record the final Worker/deployment version, hosted test result, date, and
   rollback version in docs/BUILD_LOG.md.
-- [ ] Confirm whether the submitted deployment uses live GPT-5.6 or the
+- [x] Confirm whether the submitted deployment uses live GPT-5.6 or the
   deterministic fallback, and describe it accurately.
 
 ### Devpost
@@ -265,12 +265,12 @@ Do not invent or copy old v3 release values into the final form.
 | --- | --- |
 | Public YouTube demo URL | **TBD — entrant uploads and verifies public visibility** |
 | Primary Codex /feedback Session ID | **TBD — entrant obtains it from the primary build thread** |
-| Exact final v4 commit and release tag | **TBD — freeze after all required checks pass** |
-| Final Worker/deployment version | **TBD — record after deployment** |
-| Hosted v4 acceptance result and timestamp | **TBD — record after testing the custom domain** |
-| Rollback version confirmed for final release | **TBD — verify before submission** |
-| Production reflection mode and evidence | **TBD — verify live GPT-5.6 or label deterministic fallback** |
-| Repository public-access or private-sharing confirmation | **TBD — verify as a signed-out judge** |
+| Exact final v4 commit and release tag | `3555cfdc3e28d554b11facee4028a8303d6ac603` · `pentimento-v4` |
+| Final Worker/deployment version | Worker `698bc602-2f46-470e-8fe5-6c06b0eecd24` · deployment `41f90155-db69-474e-a781-5572bcfbc736` · 100% traffic |
+| Hosted v4 acceptance result and timestamp | 28/28 Playwright checks passed in 1.7m · July 19, 2026 10:39 UTC |
+| Rollback version confirmed for final release | `d13e8f31-5853-47fb-b5fe-9c9e8d4aeacd` (`pentimento-v3`) |
+| Production reflection mode and evidence | Deterministic authored fallback; valid request returned two questions and three moves; no Worker OpenAI key installed |
+| Repository public-access or private-sharing confirmation | Public signed-out request returned `200`; MIT license visible |
 | Devpost submission confirmation | **TBD — entrant submits and records it** |
 
 The primary build thread's /feedback Session ID and the public YouTube URL are

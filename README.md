@@ -159,6 +159,11 @@ The configured model comes from `OPENAI_MODEL`; the repository's Build Week
 default is `gpt-5.6`. The authored learning route itself is deterministic and
 does not depend on model availability.
 
+The current public Worker has no server-side OpenAI key, so its optional
+reflection is explicitly served in deterministic fallback mode. The bounded
+GPT‑5.6 path is implemented and tested and can be enabled with the server-only
+configuration below; fallback output is not presented as a live model result.
+
 ## Judge walkthrough
 
 No installation, account, API key, or real deployment is required to evaluate

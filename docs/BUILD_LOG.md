@@ -259,7 +259,88 @@ server-only variables without changing the authored route.
 The previous production Worker version
 `6ad39402-8aae-4070-a2c3-95c194bbf063` remains the known rollback target.
 
-The implementation acceptance contract is [QUALITY_STANDARD.md](QUALITY_STANDARD.md), and the submission closeout is [HACKATHON.md](HACKATHON.md).
+## July 19 — cognitive-load and transfer correction
+
+The human reviewed v3 as a general user and found that, despite its depth, it
+still exposed too much curriculum at once and did not make the first useful
+action obvious enough. The correction was not to remove the method. It was to
+make the method learnable: one promise, one current task, one visible action,
+and optional depth only when the learner asks for it.
+
+Codex rebuilt the product as the v4 guided simulation:
+
+- a literal opening promise — “Learn to build with AI. One clear step at a
+  time.” — with time, safety boundary, and one primary action;
+- eight stops and exactly thirteen consequential interactions;
+- one persistent Willow Fix Day project whose earlier decisions remain visible
+  as Pentimento layers;
+- a mobile-first current task, with the project canvas collapsed until opened;
+- short, causal wrong-choice consequences instead of generic correction;
+- a five-level evidence ladder and a required fail → bounded repair → retry
+  sequence;
+- a truthful separation between build-time AI and runtime AI;
+- route-specific completion guidance that defines folder, README, brief, Git,
+  commit, push, and GitHub in plain language;
+- a five-card Playbook with one milestone open at a time and a copyable,
+  step-by-step project-home request;
+- a local-first four-step Teaching Mirror that creates the reusable V1 brief
+  before any optional network request; and
+- explicit focus restoration, 44px mobile targets, reduced-motion behavior,
+  and a 320px sticky overview action.
+
+Independent beginner and accessibility audits found and closed the final
+transfer, focus, reflow, touch-target, and small-screen dead-end issues before
+the production candidate was frozen.
+
+## Calm guided-simulation production evidence record (v4)
+
+The exact application release is commit
+`3555cfdc3e28d554b11facee4028a8303d6ac603`, preserved by annotated tag
+`pentimento-v4`. The generated Worker was tested before upload, uploaded once
+as an immutable version, assigned 100% of production traffic, and then tested
+again through the public custom domain.
+
+| Evidence | Exact result for v4 |
+| --- | --- |
+| Deployed application commit | `3555cfdc3e28d554b11facee4028a8303d6ac603` · annotated tag `pentimento-v4` · pushed to public `main` |
+| `npm run typecheck` | PASS · TypeScript completed with no diagnostics |
+| `npm test` | PASS · 96/96 progress, persistence, schema-boundary, authored-fallback, and API tests |
+| `npm run build:next` | PASS · Next.js 16.2.10 production build; static root/icon and dynamic debrief route classified |
+| `npm run build` | PASS · all five Vinext environments built; hosting metadata copied into the generated Cloudflare artifact |
+| Dependency audit | PASS · `npm audit --audit-level=high` reported 0 vulnerabilities |
+| Density contract | PASS on development, generated Worker, and public host · zero threshold violations; every core task and action starts in the first 390×844 viewport; no horizontal overflow |
+| Beginner clarity gate | PASS at 320×844 and 390×844 · no P0/P1 comprehension blockers; repository handoff defines unfamiliar terms and supplies a copyable first setup request |
+| Accessibility/reflow gate | PASS · Axe A/AA, complete keyboard route, dialog focus/return, reduced motion, 44px visible mobile controls, 320/390/768/1440 widths, and 200%-zoom-equivalent layout |
+| Generated-Worker acceptance | PASS · unchanged `dist` Worker at `127.0.0.1:8787`; 28/28 desktop/mobile Playwright checks in 1.8m |
+| Hosted acceptance | PASS · 28/28 desktop/mobile Playwright checks against `https://pentimento.aethe.me` in 1.7m · July 19, 2026 10:39 UTC |
+| Public boundary matrix | PASS · root `200`; icon `200`; valid Teaching Mirror request `200` with two questions and three moves; invalid request `400`; unrelated POST blocked by Cloudflare `403` |
+| Burst availability check | PASS · 60/60 rapid public HEAD requests returned `200`; Pentimento is excluded from the unrelated zone-wide 40-request/10-second rule while the rest of `aethe.me` remains protected |
+| Hosted screenshot review | PASS · nine desktop/mobile release captures regenerated from the exact public artifact and visually inspected |
+| Public repository | PASS · signed-out HTTP request returned `200` and exposed the MIT-licensed `Lawrence-eth/measure-twice` repository |
+| Public URL and deployed commit agree | PASS · Worker version `698bc602-2f46-470e-8fe5-6c06b0eecd24`, tagged `release-3555cfd`, carries the v4 deployment message; deployment `41f90155-db69-474e-a781-5572bcfbc736` assigns it 100% traffic |
+
+### v4 production routing and recovery
+
+- Worker: `pentimento`
+- Route: `pentimento.aethe.me/*`
+- DNS: proxied CNAME to `custom-domains.chatgpt.site`; the Worker route serves
+  the application
+- Write boundary: Cloudflare blocks non-read methods except the exact
+  `POST /api/debrief` path; the application validates shape and size and
+  rate-limits live reflection
+- Production reflection mode: explicitly labelled deterministic fallback; no
+  server-side OpenAI key is installed in the Worker
+- Rollback version: `d13e8f31-5853-47fb-b5fe-9c9e8d4aeacd` (`pentimento-v3`)
+
+The public v4 experience is complete without a key. Live GPT‑5.6 reflection
+remains implemented behind the documented server-only configuration and must
+be described as optional; authored fallback output must never be presented as
+a live model result.
+
+The current implementation acceptance contract is
+[FINAL_EXPERIENCE.md](FINAL_EXPERIENCE.md), and the submission closeout is
+[HACKATHON.md](HACKATHON.md). [QUALITY_STANDARD.md](QUALITY_STANDARD.md)
+remains the historical contract for the earlier product layer.
 
 ## Required submission evidence
 
