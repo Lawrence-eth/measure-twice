@@ -10,98 +10,82 @@ const repositoryRoot = path.resolve(
   "..",
 );
 const outputDirectory = path.join(repositoryRoot, "docs", "screenshots");
-const storageKey = "pentimento-studio-v3";
+const storageKey = "pentimento-studio-v4";
 
-const initialProgress = {
-  version: 3,
+const emptyMirror = {
+  person: "",
+  situation: "",
+  usefulResult: "",
+  completePath: "",
+  trustedFacts: "",
+  mustHave: "",
+  notNow: "",
+  doneWhen: "",
+  toolRoute: "",
+};
+
+const baseProgress = {
+  version: 4,
   started: true,
   stage: "tools",
   completedStages: ["idea"],
-  revealPercent: 52,
-  featureDecisions: {
-    "Event facts and accepted-item list": "now",
-    "Email link": "now",
-    "Booking system": "later",
-    "Volunteer accounts": "later",
-    Donations: "later",
-    "AI repair advice": "later",
-  },
-  ideaStep: 6,
-  toolLane: null,
-  foundationStep: 0,
-  promptParts: [],
-  planApproved: false,
-  buildCycle: 0,
-  buildPhase: "ask",
-  checksRun: [],
-  repairPrepared: false,
-  repairApplied: false,
-  versionFocus: 0,
-  releaseStep: 0,
-  improveStep: 0,
-  mirrorDraft: {
-    person: "",
-    situation: "",
-    usefulResult: "",
-    completePath: "",
-    trustedFacts: "",
-    mustHave: "",
-    notNow: "",
-    doneWhen: "",
-  },
+  ideaChoice: "facts-email",
+  toolChoice: null,
+  projectHomeChoice: null,
+  secretChoice: null,
+  aiFirstChoice: null,
+  planApprovalChoice: null,
+  buildEvidenceChoice: null,
+  checkAttemptChoice: null,
+  repairChoice: null,
+  checkRetryChoice: null,
+  releaseVersionChoice: null,
+  releaseProofChoice: null,
+  improveChoice: null,
+  toolDecoderOpen: false,
+  playbookOpen: false,
+  activePlaybookCard: null,
+  mirrorOpen: false,
+  mirrorStep: 1,
+  mirrorDraft: emptyMirror,
   finished: false,
 };
 
 const completedProgress = {
-  ...initialProgress,
-  stage: "playbook",
+  ...baseProgress,
+  stage: "completion",
   completedStages: [
     "idea",
     "tools",
-    "home",
-    "ask",
+    "project-home",
+    "ask-ai",
     "build",
     "check",
-    "live",
+    "go-live",
     "improve",
   ],
-  toolLane: "repository",
-  foundationStep: 5,
-  promptParts: ["purpose", "truth", "limits", "mode", "done"],
-  planApproved: true,
-  buildCycle: 3,
-  checksRun: [
-    "unsupported-promise",
-    "clipped-contact",
-    "inactive-email",
-  ],
-  repairPrepared: true,
-  repairApplied: true,
-  versionFocus: 4,
-  releaseStep: 5,
-  improveStep: 4,
+  toolChoice: "repository",
+  projectHomeChoice: "route-home",
+  secretChoice: "private-env",
+  aiFirstChoice: "inspect-plan",
+  planApprovalChoice: "approve-step-one",
+  buildEvidenceChoice: "full-evidence",
+  checkAttemptChoice: "try-contact",
+  repairChoice: "bounded-repair",
+  checkRetryChoice: "retry-contact",
+  releaseVersionChoice: "v4-checked",
+  releaseProofChoice: "public-path",
+  improveChoice: "source-then-page",
   finished: true,
 };
 
 async function settle(page) {
   await page.waitForLoadState("networkidle");
   await page.evaluate(() => document.fonts.ready);
-  await page.waitForTimeout(150);
+  await page.waitForTimeout(120);
 }
 
-async function prepareLongCapture(page) {
-  await page.addStyleTag({
-    content: `
-      .skip-link { display: none !important; }
-      .studio-header--journey,
-      .route-nav { position: relative !important; top: auto !important; }
-    `,
-  });
-  await page.evaluate(() => window.scrollTo({ top: 0, behavior: "auto" }));
-  await page.waitForTimeout(100);
-}
-
-async function newPage(browser, viewport, progress) {
+async function newPage(browser, viewport, progress = null) {
   const context = await browser.newContext({
     viewport,
     deviceScaleFactor: 1,
@@ -127,53 +111,36 @@ async function captureOpening(browser, suffix, viewport) {
   await page
     .getByRole("heading", {
       level: 1,
-      name: /Build your first project with AI.*from idea to live link/i,
+      name: /Learn to build with AI.*One clear step at a time/i,
     })
     .waitFor();
   await settle(page);
   await page.screenshot({
     path: path.join(outputDirectory, `studio-welcome${suffix}.png`),
-    fullPage: true,
+    fullPage: false,
   });
 
-  await page.getByRole("button", { name: /Show me the route/i }).click();
   await page
-    .getByRole("heading", {
-      level: 1,
-      name: /Most first projects need three roles.*not twenty tools/i,
-    })
-    .waitFor();
+    .getByRole("button", { name: "Preview how the lesson works" })
+    .click();
+  await page.getByRole("dialog", { name: "How the lesson works" }).waitFor();
   await settle(page);
   await page.screenshot({
     path: path.join(outputDirectory, `tool-map${suffix}.png`),
-    fullPage: true,
+    fullPage: false,
   });
   await context.close();
 }
 
 async function captureToolChoice(browser, suffix, viewport) {
-  const { context, page } = await newPage(browser, viewport, initialProgress);
+  const { context, page } = await newPage(browser, viewport, baseProgress);
   await page.goto(baseUrl);
-  await page
-    .getByRole("button", { name: "Resume where I left off" })
-    .click();
-  await page
-    .getByRole("heading", {
-      level: 1,
-      name: "Choose a sensible place to start",
-    })
-    .waitFor();
-  await page.locator(".tool-name-decoder > summary").click();
-  await page
-    .locator(".lane-card")
-    .filter({ hasText: "Most transferable" })
-    .getByRole("button")
-    .click();
+  await page.getByRole("button", { name: "Resume at Tools" }).click();
+  await page.getByRole("heading", { level: 1, name: "Give each tool one job" }).waitFor();
   await settle(page);
-  await prepareLongCapture(page);
   await page.screenshot({
     path: path.join(outputDirectory, `tool-choice${suffix}.png`),
-    fullPage: true,
+    fullPage: false,
   });
   await context.close();
 }
@@ -182,12 +149,9 @@ async function captureCompletion(browser, suffix, viewport) {
   const { context, page } = await newPage(browser, viewport, completedProgress);
   await page.goto(baseUrl);
   await page
-    .getByRole("button", { name: "Resume where I left off" })
-    .click();
-  await page
     .getByRole("heading", {
       level: 1,
-      name: /You now know where to start/i,
+      name: /You can guide.*a project from idea to evidence/i,
     })
     .waitFor();
   await settle(page);
@@ -197,15 +161,22 @@ async function captureCompletion(browser, suffix, viewport) {
   });
 
   if (!suffix) {
-    await page.locator(".teaching-mirror > summary").click();
-    await page.getByRole("button", { name: "Load a tiny example" }).click();
-    await page
-      .getByRole("button", { name: "Ask the Teaching Mirror" })
-      .click();
-    await page.locator(".mirror-result").waitFor();
+    await page.getByRole("button", { name: "Shape my own V1 brief" }).click();
+    await page.getByLabel("Who is this for?").fill("A first-time community event visitor");
+    await page.getByLabel("What situation are they in?").fill("Deciding from a phone whether the event fits their item");
+    await page.getByLabel("What useful result should they get?").fill("Confirm the facts and email one question");
+    await page.getByRole("button", { name: "Next" }).click();
+    await page.getByLabel("What complete path should they finish?").fill("Open the page → compare approved details → email the organizer");
+    await page.getByLabel("What facts can you trust?").fill("The organizer-approved event note");
+    await page.getByRole("button", { name: "Next" }).click();
+    await page.getByLabel("What must the first version include?").fill("Date, place, item list, and a working contact path");
+    await page.getByLabel("What is not now?").fill("Accounts, booking, payments, and live availability");
+    await page.getByRole("button", { name: "Next" }).click();
+    await page.getByLabel("What proves it is done?").fill("Another person completes the path at 390px and by keyboard");
+    await page.getByRole("button", { name: "Create my V1 brief" }).click();
+    await page.getByRole("heading", { name: "V1 brief ready" }).waitFor();
     await settle(page);
-    await prepareLongCapture(page);
-    await page.locator(".teaching-mirror").screenshot({
+    await page.getByRole("dialog", { name: "Teaching Mirror" }).screenshot({
       path: path.join(outputDirectory, "teaching-mirror.png"),
     });
   }
@@ -229,4 +200,4 @@ try {
   await browser.close();
 }
 
-console.log(`Captured Pentimento release screenshots from ${baseUrl}`);
+console.log(`Captured Pentimento v4 release screenshots from ${baseUrl}`);

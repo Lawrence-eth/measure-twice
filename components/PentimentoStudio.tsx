@@ -829,9 +829,9 @@ function HomeStage({
             </div>
           </aside>
         )}
-        <section className="file-tree" aria-label="Repair Café project files">
+        <section className="file-tree" aria-label="Willow Fix Day project files">
           <header>
-            <span>repair-cafe/</span>
+            <span>willow-fix/</span>
             <b>{complete ? "Remote copy ready" : "Building foundation"}</b>
           </header>
           <ul>
@@ -1633,7 +1633,7 @@ function PlaybookContent({
             <details>
               <summary>Worked example and blank template</summary>
               <p>
-                <b>Repair Café:</b> {card.completedExample}
+                <b>Willow Fix Day:</b> {card.completedExample}
               </p>
               <pre>{card.reusableTemplate}</pre>
               <p>

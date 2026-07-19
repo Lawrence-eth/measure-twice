@@ -1,5 +1,5 @@
-import { PentimentoStudio } from "@/components/PentimentoStudio";
+import { PentimentoFinal } from "@/components/PentimentoFinal";
 
 export default function Home() {
-  return <PentimentoStudio />;
+  return <PentimentoFinal />;
 }

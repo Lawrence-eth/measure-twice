@@ -1,168 +1,228 @@
 # Pentimento
 
-> **Build your first project with AI—from idea to live link.**
+> **Learn to build with AI, one clear step at a time.**
 
-Pentimento is an interactive education experience for people who want to build with AI but do not know where to start. Through one fictional Repair Café website, it teaches the complete path beneath a finished project: choosing a useful first version, understanding which tools do what, giving the work a recoverable home, asking AI for bounded changes, checking the result, publishing one exact version, and improving it safely.
+Pentimento is an interactive education experience for complete beginners who
+have an idea but do not know how AI-built projects move from a rough request to
+a checked release.
 
-It is not a coding course, project generator, prompt gallery, or ranking of AI products. It teaches a durable project lifecycle that transfers when tools and product names change.
+The learner guides one fictional **Willow Fix Day** event page through eight
+focused stops. Each stop asks for one useful decision or trial, changes a
+persistent project canvas, and leaves behind a reusable rule or artifact. The
+core route contains **13 meaningful interactions** and takes about **12–15
+minutes**.
 
-No coding experience, account, API key, or real deployment is required. The guided journey takes about 25 minutes, and every stop adds a reusable template to the **First AI Build Playbook**.
+Pentimento does not teach coding syntax, rank AI products, or build a real
+project for the learner. It teaches the durable judgment beneath the tools:
+scope one complete path, give files a recoverable home, direct AI in small
+steps, distinguish claims from evidence, repair an observed failure, release
+one exact version, and improve from a trusted source.
 
 Built for the **Education** track of OpenAI Build Week 2026.
 
 - Live experience: [pentimento.aethe.me](https://pentimento.aethe.me)
 - Source: [github.com/Lawrence-eth/measure-twice](https://github.com/Lawrence-eth/measure-twice)
-- Current release evidence: [docs/HACKATHON.md](docs/HACKATHON.md)
+- License: [MIT](LICENSE)
 
-![Pentimento opening: Build your first project with AI—from idea to live link](docs/screenshots/studio-welcome.png)
+## The education problem
 
-## The problem
+A first-time builder now encounters browser AI builders, coding agents,
+editors, Git, GitHub, hosting dashboards, API keys, and model names before they
+have a mental model for a project. A polished generated screen can make the
+confusion worse: it looks finished even when the files are not recoverable, a
+visitor path has never been tried, or the deployed version is not the checked
+version.
 
-AI building products expose different buttons, names, and combinations of capabilities. A complete beginner can generate an impressive screen without knowing:
-
-- which kind of tool to begin with;
-- where the actual project files live;
-- what Git and GitHub add;
-- what to ask AI before allowing changes;
-- how to tell whether a result works;
-- how a private preview becomes a public link;
-- when a database, login, API, payment system, or runtime AI is justified; or
-- how to recover when a release is worse than the version before it.
-
-Pentimento teaches those durable decisions rather than a temporary catalog of products.
-
-## The route
-
-The learner follows one small project through eight stops:
-
-| Stop | What the learner does | What they keep |
-| --- | --- | --- |
-| **Idea** | Reduce an overloaded wishlist to one person, one useful result, and one complete first-version path | First-version brief |
-| **Tools** | Distinguish the AI workspace, project home, and host; compare two legitimate starting lanes | Tool route card |
-| **Project home** | Learn the separate jobs of a folder, Git, GitHub, commits, README files, and protected secrets | Repository starter checklist |
-| **Ask AI** | Turn “make me a beautiful site” into a bounded planning request with trusted facts, exclusions, checks, and an approval point | Planning prompt |
-| **Build** | Repeat ask → inspect → run → check → save through three small, visible cycles | Three named build versions |
-| **Check** | Find factual, phone-layout, and contact-path defects; reproduce them and request the smallest repair | Repair report |
-| **Go live** | Move one exact version through local, GitHub, preview, live, and recovery states | Release card |
-| **Improve** | Make one approved post-launch update without rebuilding the project | Change plan |
-
-The Playbook remains available from the first lesson. Completed stops mark templates as practiced; they do not lock useful guidance behind correct answers.
-
-## One mental map for changing tools
-
-Pentimento introduces three roles before product names:
+Pentimento teaches a tool-independent map:
 
 ```text
-AI helps build → the project home remembers → the host publishes
+AI workspace helps build → project home remembers → host publishes
 ```
 
-- An **AI workspace** helps plan, creates or changes project files, and may run checks.
-- A **project home** keeps the files and saved history. In the demonstrated route, that is a folder with Git and a GitHub copy.
-- A **web host** turns one selected version into a preview or public link.
+One product may perform more than one role, but the responsibilities remain
+different. A chat is not automatically a project home. A repository is not a
+public website. A completed deployment is not proof that a visitor can finish
+the important path.
 
-One product may combine several roles. The distinction still matters: a conversation is not automatically a repository, a repository is not automatically a website, and a successful deployment does not prove that a visitor can complete the important path.
+## The v4 learning experience
 
-The learner compares two honest starting lanes:
+The experience opens with a literal promise, the time and safety boundary, and
+one primary action. There is no prerequisite lecture. The learner starts with
+the project immediately, while definitions, full prompts, checklists, and
+examples remain available as optional depth.
 
-- **Shortest setup:** a hosted AI builder, with explicit checks for ownership, export, privacy, limits, and recovery.
-- **Most transferable:** a repository-aware agent, Git/GitHub, and a separate host, with more setup but visible files and history.
+| Stop | Required actions | What the learner practices | What appears on the canvas |
+| --- | ---: | --- | --- |
+| **1. Idea** | 1 | Reduce an ambitious wishlist to one person and one supportable finish | A first-version brief with a clear “Not now” boundary |
+| **2. Tools** | 1 | Choose between a faster hosted route and a more transferable repository route | Build, save, and publish responsibilities |
+| **3. Project home** | 2 | Put the work somewhere recoverable and decide whether the finished page needs runtime AI | Route-specific files/history with no unnecessary runtime dependency |
+| **4. Ask AI** | 2 | Ask AI to inspect and plan before editing, then approve one shown step | A bounded work agreement |
+| **5. Build** | 1 | Move beyond “AI says done” by opening the preview and trying the visitor path | A change record and saved V1 layer |
+| **6. Check** | 3 | Discover a dead contact action, request the smallest repair, and repeat the same path | A defect report and checked V4 layer |
+| **7. Go live** | 2 | Select the exact checked version and verify behavior at the public address | Release evidence and a pinned recovery version |
+| **8. Improve** | 1 | Change an approved source before changing the page | A source-backed V5 layer without erasing V4 |
 
-Pentimento demonstrates the repository lane because it makes the lifecycle visible, not because it is universally best.
+Only the current task asks for attention. Completed layers collapse into a
+compact trail; the route, project canvas, and optional references remain
+available without placing the whole curriculum on one screen.
 
-## The Repair Café case
+## What makes the interaction educational
 
-The case begins with an ambitious rough request for a neighborhood Repair Café website. The learner keeps only the first complete public path: a nearby resident checking from a phone can understand the event, decide whether their item fits, see that repair depends on volunteer availability, and email the organizer.
+### One consequential action at a time
 
-Version one deliberately needs no account, booking system, database, payment, personal-data store, or AI inside the finished page. Removing those systems makes the full project route understandable while preserving real decisions about facts, scope, files, phone layout, keyboard access, versions, publication, and recovery.
+The core route contains no acknowledgement clicks. A correct action advances
+only after it changes the learner's route, artifact, evidence, or understanding.
+Wrong choices remain useful: they reveal the extra systems or missing proof
+that the choice would introduce.
 
-Three build cycles create a readable page, complete its main visitor action, and refine the responsive presentation. The final polished preview contains realistic defects. The learner compares public wording with the approved brief, tries the contact path at 390px and by keyboard, writes a reproducible repair request, and checks the repaired V4 before the simulated release.
+### A persistent pentimento
 
-The final update adds one organizer-approved access fact by changing the trusted source first, preserving the working path, and saving a new recoverable version.
+A *pentimento* is an earlier layer visible beneath a finished work. The
+interface uses that idea literally. The event page is the surface; its brief,
+tool route, files, AI request, checks, versions, release proof, and recovery
+remain visible underneath it as the learner works.
 
-## Why the experience is distinctive
+### Evidence instead of AI confidence
 
-A *pentimento* is an earlier version visible beneath a finished work. The interface turns that idea into the learning model: the visible page is only the surface; the brief, tool choices, files, AI requests, checks, and saved versions remain inspectable underneath it.
-
-The experience uses an editorial conservation-studio language rather than a dashboard, chatbot, or gamified course shell. Literal instruction always comes before the metaphor. Every learning screen follows the same calm rhythm:
+Pentimento separates five levels of evidence:
 
 ```text
-outcome → short explanation → worked example → one action →
-visible consequence → reusable takeaway → optional depth
+AI claim → changed files → preview → human path → public path
 ```
 
-There are no scores, streaks, badges, mastery claims, trick questions, or “magic prompt” grades. The learner constructs, compares, inspects, repairs, and revises useful project artifacts.
+Each level proves something different. A passing typecheck can support code
+consistency without proving visitor behavior. A preview can prove appearance
+without proving a link works. A deployment dashboard can prove the host
+finished without proving the public path serves the right version.
 
-## First AI Build Playbook
+### A real fail → repair → retry loop
 
-The Playbook contains ten copyable cards:
+The Check stop does not announce the defect. The learner activates the
+important contact action and observes that nothing happens. They then choose a
+bounded repair that preserves approved facts and working layout, and must
+activate the repaired path again before V4 becomes eligible for release.
 
-1. choose a starting lane;
-2. define the first complete version;
-3. create a recoverable project home;
-4. ask AI to plan;
-5. request one build cycle;
-6. inspect without reading every line of code;
-7. report and repair a defect;
-8. protect credentials and private data;
-9. publish one checked version; and
-10. make a safe post-launch update.
+The email target is fictional and the interaction is simulated. No email is
+opened or sent.
 
-Each card states when to use it, the exact actions, the completed Repair Café example, a reusable blank template, the expected result, and the failure it prevents. The complete Playbook also includes a plain-language glossary and a realistic seven-day route for beginning another project.
+### Build-time AI is not automatically runtime AI
 
-## AI can build the product without living inside it
+AI helps create Pentimento's worked event page, but a visitor to that page only
+needs approved facts and a normal email link. The finished page therefore needs
+no model call or API key.
 
-The Repair Café page needs verified information and a normal email link. It does not need model responses, an API key, per-visitor AI cost, or another runtime failure mode.
+This distinction prevents a common beginner mistake: adding runtime cost,
+latency, privacy exposure, unsafe input, and another failure mode merely because
+AI was useful during development. Runtime AI belongs in a product only when the
+visitor's useful result actually requires it.
 
-Pentimento teaches that runtime AI belongs in a finished product only when the visitor’s useful result genuinely requires generation or interpretation that simpler rules or verified content cannot provide—and only when the team can manage keys, cost, latency, unsafe input, unreliable output, privacy, and outages.
+## Five-card Build-with-AI Playbook
 
-## GPT‑5.6 Teaching Mirror
+The optional Playbook groups the full method into five milestone cards instead
+of presenting a large handbook inline:
 
-After completing the authored route, a learner may explicitly open the optional **Teaching Mirror** and submit a first-version brief for their own idea together with the tool lane they selected. The mirror returns:
+1. **Shape the first version**
+2. **Choose a route and project home**
+3. **Ask, inspect, and save**
+4. **Check and repair**
+5. **Release and improve**
 
-- one clear strength;
-- exactly two unresolved assumptions phrased as questions;
-- one candidate feature to postpone, with a reason;
-- one honest tradeoff in the selected tool lane; and
-- exactly three small next moves.
+Each card answers four practical questions: when to use it, what to do, what
+counts as proof, and what template to copy. Route-specific guidance changes for
+the hosted and repository lanes. Only one card opens at a time.
 
-GPT‑5.6 does not grade the learner, decide whether an idea is good, generate or execute a real project, choose progression, rank brands, access a repository, request credentials, publish anything, or take an external action.
+## Teaching Mirror: transfer the method to a real idea
 
-The server validates the bounded input and structured output. The model receives only the deliberately submitted brief, lane, and a privacy-preserving safety identifier; browser progress and repository access remain outside the contract. The OpenAI key stays server-side, requests use `store: false`, and an authored fallback keeps the reflection useful when live model access is disabled or unavailable. The complete educational route never depends on the model.
+After the simulation, the learner can open the four-step **Teaching Mirror**.
+It first creates a reusable V1 brief locally from:
+
+- person and situation;
+- useful result and complete path;
+- trusted facts;
+- must-have and “Not now” boundaries;
+- a repeatable finish line; and
+- the selected starter route.
+
+The V1 brief is complete and copyable without a model call. The learner may
+then explicitly request an optional bounded GPT reflection. It returns one
+strength, exactly two unresolved questions, one feature to postpone, one honest
+route tradeoff, and exactly three next moves.
+
+The reflection cannot grade the learner, change lesson progression, generate or
+execute a project, access files or repositories, request credentials, publish,
+or take any external action. The API validates bounded input and structured
+output, keeps the key server-side, sets `store: false`, and falls back to an
+authored deterministic reflection if live model access is disabled, limited, or
+unavailable.
+
+The configured model comes from `OPENAI_MODEL`; the repository's Build Week
+default is `gpt-5.6`. The authored learning route itself is deterministic and
+does not depend on model availability.
+
+## Judge walkthrough
+
+No installation, account, API key, or real deployment is required to evaluate
+the submitted experience.
+
+1. Open [pentimento.aethe.me](https://pentimento.aethe.me) in a current desktop
+   or mobile browser.
+2. Select **Begin the guided build**. Use **Preview how the lesson works** only
+   if you want the three-phase overview first.
+3. Follow either tool lane. The repository lane makes the folder → Git → GitHub
+   → host path most explicit; the hosted lane demonstrates the export and
+   ownership tradeoff.
+4. In **Check**, try the contact action, choose the bounded link repair, and try
+   the repaired action again. The retry is required.
+5. In **Go live**, distinguish the checked V4 from the polished but untested V3,
+   then repeat the path at the simulated public address.
+6. At completion, open one of the five Playbook cards and select **Shape my own
+   V1 brief**. The brief works in deterministic demo mode; the GPT reflection is
+   explicitly optional.
+
+All Willow Fix Day people, addresses, versions, URLs, releases, and external
+actions inside the lesson are fictional or simulated. The lesson never changes
+a real repository, sends email, creates an account, or publishes a site.
+
+Progress is saved in the current browser. **Start over** opens a confirmation
+dialog before removing the v4 route, project layers, and Teaching Mirror draft
+from that device.
 
 ## Run locally
 
-Requirements: Node.js 22 or newer.
+Requirements: **Node.js 22 or newer**.
 
 ```bash
 npm install
 npm run dev
 ```
 
-Open <http://localhost:3000>. No account or external service is needed for the authored route.
+Open <http://localhost:3000>. The core route and deterministic Teaching Mirror
+fallback work without an account, network model call, or API key.
 
-For an explicit deterministic judge setup:
+To make demo behavior explicit:
 
 ```bash
 cp .env.example .env.local
 ```
-
-Keep:
 
 ```dotenv
 DEMO_MODE=true
 OPENAI_MODEL=gpt-5.6
 ```
 
-To exercise the live Teaching Mirror, keep the credential on the server and set:
+### Optional live reflection
+
+To exercise the live Teaching Mirror, keep the credential server-side and set:
 
 ```dotenv
-OPENAI_API_KEY=your-server-key
+OPENAI_API_KEY=your-server-side-key
 OPENAI_MODEL=gpt-5.6
 DEMO_MODE=false
 SAFETY_SALT=replace-with-a-random-server-secret
 ```
 
-Never expose `OPENAI_API_KEY` through a `NEXT_PUBLIC_` variable, browser code, a prompt, a screenshot, or a commit.
+Never use a `NEXT_PUBLIC_` variable for `OPENAI_API_KEY`, place it in browser
+code, paste it into a prompt, capture it in a screenshot, or commit it.
 
 ## Verify
 
@@ -174,68 +234,110 @@ npm run build:next
 npm run build
 ```
 
-- `npm test` covers the authored state, persistence validation, and Teaching Mirror API boundary.
-- `npm run test:e2e` exercises the complete desktop/mobile learning route, exact restoration, keyboard behavior, accessibility scans, and responsive layouts.
-- `npm run build:next` verifies the conventional Next.js production build.
-- `npm run build` creates the Cloudflare Workers-compatible `dist` artifact and copies the Sites hosting metadata.
+- `npm test` covers the v4 progress model, saved-state validation, and bounded
+  Teaching Mirror API behavior.
+- `npm run test:e2e` exercises both tool lanes, the 13-interaction route,
+  fail/repair/retry persistence, keyboard-only operation, dialog focus,
+  accessibility scans, and 320–1440px layouts.
+- `npm run build:next` checks the conventional Next.js production build.
+- `npm run build` creates the Cloudflare Workers-compatible `dist` artifact and
+  copies its hosting metadata.
 
-After `npm run build`, exercise the generated Worker locally:
+Run the generated Worker locally after `npm run build`:
 
 ```bash
 npm run start
 ```
 
-Run the browser suite against an already-hosted candidate with:
+Run the browser suite against an already-hosted candidate:
 
 ```bash
 PLAYWRIGHT_BASE_URL=https://pentimento.aethe.me npm run test:e2e
 ```
 
-Recapture the judge-facing desktop and mobile gallery from an exact hosted
-candidate with:
+Recapture release screenshots from the exact hosted candidate:
 
 ```bash
 SCREENSHOT_BASE_URL=https://pentimento.aethe.me node scripts/capture-release-screenshots.mjs
 ```
 
-Passing a local development journey does not prove the generated Worker or deployed custom domain. Final evidence belongs to the exact release artifact and is recorded in [docs/HACKATHON.md](docs/HACKATHON.md).
+## Deploy to Cloudflare Workers
 
-## How Codex and GPT‑5.6 were used
+With Wrangler authenticated and the intended Worker/custom-domain settings
+confirmed:
 
-Codex was the primary build collaborator. It helped turn the initial Education-track idea into a bounded curriculum; research the durable roles behind current AI building products; author the Repair Café case, templates, defects, and release route; model the versioned progress and structured Teaching Mirror boundary; implement the responsive interaction system; review accessibility and beginner comprehension; write tests; and prepare the Cloudflare-compatible artifact and submission material.
+```bash
+npm run build
+npm run start
+npm run deploy:vinext
+```
 
-The human retained the consequential product decisions: teach building rather than coding, serve complete beginners, follow one project from nothing to release, teach roles rather than rank brands, keep practical content available from the beginning, use the Pentimento identity, and treat content and interaction quality as the primary standard.
+`npm run start` is the local generated-artifact check; stop it before running
+the deploy command. After deployment, verify the custom domain and rerun the
+hosted Playwright suite. A passing development server does not prove that the
+generated Worker or exact public version is correct.
 
-GPT‑5.6 contributes through the optional Teaching Mirror described above. Its role is intentionally smaller than the authored curriculum: it reflects one learner-supplied brief into questions and next moves, while deterministic product logic controls the lesson.
+## How Codex contributed
 
-The dated collaboration record is in [docs/BUILD_LOG.md](docs/BUILD_LOG.md). The primary project thread’s `/feedback` Session ID must be added to the Devpost form before submission.
+Codex was the primary implementation collaborator. It accelerated:
 
-## Judge testing notes
+- turning the broad “teach people to build with AI” idea into a bounded
+  Education-track curriculum for complete beginners;
+- writing and revising the Willow Fix Day case, wrong-choice consequences,
+  artifacts, and five-card Playbook;
+- replacing an overwhelming interface with the one-task-at-a-time v4 route;
+- modeling strict progress, exact substep restoration, and the bounded Teaching
+  Mirror boundary;
+- implementing the responsive project canvas, dialogs, persistence, API route,
+  and Cloudflare build path; and
+- adversarial content review, accessibility review, density measurement,
+  browser tests, and release preparation.
 
-- Start at the live URL or run the repository locally; no login or API key is required.
-- Choose **Show me the route**. The opening explains the outcome, time, safety boundary, eight stops, and Playbook before asking for a project decision.
-- Use the layer reveal, then progress through the Repair Café route one focused action at a time.
-- Open **My Playbook** at any point to inspect or copy all ten practical templates.
-- In Check, run the three simulated lenses, assemble the bounded repair request, and inspect how the named versions differ.
-- In Go live, record Local, GitHub, Preview, Live, and Recovery separately. Every URL and external action inside the lesson is simulated.
-- At completion, optionally try the Teaching Mirror with a brief for your own idea. It returns reflection only and does not build or grade anything.
-- Progress is stored in this browser. Restart is confirmed before the v3 record is removed.
+The human retained the central product and design decisions: choose the
+Education track, teach project-building rather than coding, serve people with
+no prior experience, teach durable roles rather than rank brands, value useful
+content over feature count, use one worked project, make failure and recovery
+visible, and present it through the Pentimento layer metaphor.
 
-## Privacy and safety
+The core educational content is authored and deterministic. GPT is confined to
+the optional post-route reflection described above; it does not decide what is
+correct or control progression.
 
-Pentimento has no authentication, analytics, database, GitHub OAuth, arbitrary code execution, real deployment action, payment, or Repair Café visitor-data collection.
+The primary Codex project thread's `/feedback` Session ID must be added to the
+Devpost submission form before the deadline.
 
-Authored route progress and constructed choices remain in local browser storage. Nothing leaves the browser unless the learner explicitly invokes the Teaching Mirror. That request contains only the submitted first-version brief, selected lane, and a random session identifier; it does not contain the learner’s route history or grant repository access. In live mode, the validated brief, lane, and derived privacy-preserving safety identifier are sent to OpenAI, and the structured result is rendered as untrusted text.
+## Privacy and safety boundary
 
-The Repair Café, organizer, addresses, commits, preview URLs, public URLs, versions, and release actions inside the lesson are fictional or simulated. No real email is sent and nothing is published.
+- Core progress and the unfinished V1 brief are stored in browser
+  `localStorage`.
+- Nothing from the brief is submitted until the learner explicitly requests the
+  optional reflection.
+- That request contains only the learner-entered brief, selected route, and a
+  random session ID. It does not include route history or repository access.
+- The server validates request size and shape, derives a privacy-preserving
+  safety identifier for live model calls, rate-limits live reflection, and
+  keeps the OpenAI credential server-side.
+- Demo mode performs no OpenAI model request and returns the authored fallback.
+- Model failure never blocks access to the completed local V1 brief.
 
-## Documentation
+## Project map
 
-- [Product brief](docs/PRODUCT.md)
-- [Curriculum and content standard](docs/CURRICULUM.md)
-- [Quality standard](docs/QUALITY_STANDARD.md)
-- [Build and Codex collaboration log](docs/BUILD_LOG.md)
-- [Hackathon closeout](docs/HACKATHON.md)
+- [`components/PentimentoFinal.tsx`](components/PentimentoFinal.tsx) — v4
+  one-task-at-a-time interface, project canvas, Playbook, and Teaching Mirror
+- [`lib/final-journey.ts`](lib/final-journey.ts) — authored eight-stop
+  curriculum, choices, artifacts, and five-card index
+- [`lib/final-progress.ts`](lib/final-progress.ts) — validated v4 state,
+  persistence, reachability, and progression
+- [`app/api/debrief/route.ts`](app/api/debrief/route.ts) — bounded demo/live
+  reflection boundary
+- [`lib/debrief.ts`](lib/debrief.ts) — structured live reflection and authored
+  fallback
+- [`tests/e2e/final-journey.spec.ts`](tests/e2e/final-journey.spec.ts) — desktop,
+  mobile, keyboard, accessibility, persistence, and density coverage
+- [`docs/FINAL_EXPERIENCE.md`](docs/FINAL_EXPERIENCE.md) — beginner-first v4
+  experience contract
+- [`docs/BUILD_LOG.md`](docs/BUILD_LOG.md) — dated collaboration and historical
+  release record
 
 ## License
 

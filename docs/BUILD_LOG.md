@@ -35,7 +35,7 @@ The repository history preserves this layer:
 - `657852f` — Sites production-runtime setup; and
 - `ed5f6ce` — Sites metadata copied into the build artifact.
 
-Codex helped design and implement the Repair Café scenario, deterministic progress/evidence model, authored feedback, optional GPT‑5.6 debrief boundary, responsive interface, tests, and Cloudflare-compatible artifact.
+Codex helped design and implement the Willow Fix Day scenario, deterministic progress/evidence model, authored feedback, optional GPT‑5.6 debrief boundary, responsive interface, tests, and Cloudflare-compatible artifact.
 
 The earlier Measure Twice checkpoint had its own passing test/build record. Those results are historical evidence for those commits only; they are not used to claim that the later Pentimento release candidate passes.
 
@@ -79,7 +79,7 @@ Codex audited the first two minutes as a complete beginner, inspected the real m
 - rewrote the welcome to state that Pentimento is a guided simulation for first-time AI builders;
 - added a dedicated case briefing that establishes the learner’s role, human goal, interaction rhythm, and safety boundary before assessment;
 - added a contextual resume screen so saved learners are never dropped into unexplained controls;
-- reordered mobile content so task instructions always precede the Repair Café artifact;
+- reordered mobile content so task instructions always precede the Willow Fix Day artifact;
 - split the first layer into observation and decision states, revealing no radio choices until the learner explicitly chooses to decide;
 - removed the unexplained confidence gate from the first interaction while preserving calibration at later meaningful boundaries;
 - made Target, Record, Assign, Scope, Evolve, Release, and Transfer reveal one focused question, item, or next action at a time;
@@ -216,7 +216,7 @@ The correction also:
   map;
 - made all ten First AI Build Playbook cards, the glossary, and the first
   seven-day route available from the beginning;
-- kept one coherent Repair Café project across every stop;
+- kept one coherent Willow Fix Day project across every stop;
 - added strict v3 saved-state parsing and exact sub-step restoration;
 - made the mobile route keep the current stop visible;
 - rebuilt the optional GPT‑5.6 boundary as a Teaching Mirror for the learner’s

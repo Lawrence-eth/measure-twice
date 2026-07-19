@@ -11,7 +11,7 @@ The complete authored route requires no account, API key, payment, external acti
 ## Opening comprehension
 
 - Within the opening moments, a new learner can say that Pentimento teaches the path from an idea to a live AI-built project.
-- Before the first project decision, the learner knows the approximate duration, safety boundary, eight-stop route, Repair Café case, and Playbook outcome.
+- Before the first project decision, the learner knows the approximate duration, safety boundary, eight-stop route, Willow Fix Day case, and Playbook outcome.
 - The welcome has one dominant action: **Show me the route**.
 - The three-role map explains AI workspace, project home, and web host before product categories.
 - The connection “AI helps build → the project home remembers → the host publishes” appears in text, not only visually.
@@ -22,7 +22,7 @@ The complete authored route requires no account, API key, payment, external acti
 ## Curriculum integrity
 
 - The route remains Idea → Tools → Project home → Ask AI → Build → Check → Go live → Improve.
-- The Repair Café brief, files, preview, defects, repair, checks, release, and update use one consistent set of approved facts.
+- The Willow Fix Day brief, files, preview, defects, repair, checks, release, and update use one consistent set of approved facts.
 - Idea distinguishes a first complete path from accounts, booking, payment, live data, chat, and runtime AI.
 - Tools presents the hosted-builder and repository-aware lanes as legitimate tradeoffs, not a ranking.
 - Project home defines folder, Git, repository, GitHub, commit, README, `.gitignore`, environment setting, and secret at first meaningful use.
@@ -35,7 +35,7 @@ The complete authored route requires no account, API key, payment, external acti
 - Go live distinguishes local, GitHub, preview, live, and recovery.
 - A simulated deployment is followed by a simulated public-path check.
 - Improve changes the trusted source first and adds only the approved step-free entrance fact.
-- The finished Repair Café page does not require runtime AI.
+- The finished Willow Fix Day page does not require runtime AI.
 - One journey is never described as proof of mastery.
 
 ## Content usefulness
@@ -63,7 +63,7 @@ Additional gates:
 
 - The Playbook is available from the first lesson and never locked behind completion.
 - It contains ten cards covering tool choice, first-version scope, project home, planning, one build cycle, inspection, repair, secret safety, release, and post-launch change.
-- Every card includes use moment, exact actions, Repair Café example, blank template, expected result, and prevented failure.
+- Every card includes use moment, exact actions, Willow Fix Day example, blank template, expected result, and prevented failure.
 - Completing a matching stop marks a card **Practiced** without hiding or changing its content.
 - Learners can copy one blank template or the complete Playbook.
 - The complete view contains a seven-day starter route.

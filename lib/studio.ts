@@ -263,7 +263,7 @@ export const studioStops: readonly StudioStop[] = [
     outcome:
       "Collect the route, templates, safety checks, and a seven-day starting plan in one place.",
     explanation:
-      "The example matters only if you can transfer it. Replace the Repair Café details with your own person, result, facts, and boundaries.",
+      "The example matters only if you can transfer it. Replace the Willow Fix Day details with your own person, result, facts, and boundaries.",
     actionLabel: "Create my playbook",
     interaction: "collect",
     artifact: {
@@ -412,7 +412,7 @@ export const toolCategories: readonly ToolCategory[] = [
     tradeoff:
       "Adds cost, latency, privacy, safety, and reliability responsibilities.",
     beginnerGuidance:
-      "Do not add it merely because AI helped build the project. The Repair Café page does not need it.",
+      "Do not add it merely because AI helped build the project. The Willow Fix Day page does not need it.",
     projectNeedsRuntimeAI: true,
   },
 ] as const;
@@ -479,7 +479,7 @@ export const toolChoiceQuestions = [
 
 export const repairCafeRoughIdea = {
   note:
-    "Make a beautiful website for our Repair Café. Add bookings, volunteer accounts, live repair availability, chat, donations, reminders, an AI repair helper, and anything else useful. Make it impressive.",
+    "Make a beautiful website for our Willow Fix Day. Add bookings, volunteer accounts, live repair availability, chat, donations, reminders, an AI repair helper, and anything else useful. Make it impressive.",
   whyItFeelsAttractive:
     "It describes an exciting destination and gives AI freedom to produce something visual quickly.",
   whyItIsNotBuildableYet: [
@@ -550,7 +550,7 @@ export const firstVersionBrief: readonly BriefField[] = [
       "West Hall Community Room",
       "Small appliances, clothing, and bicycles",
       "Repairs depend on volunteer availability",
-      "Questions: hello@repair-cafe.example",
+      "Questions: hello@willow-fix.example",
     ],
     blankStarter: "Copy only facts approved by...",
   },
@@ -782,7 +782,7 @@ export const repairCafeProjectFiles: readonly ProjectFile[] = [
   },
   {
     path: "app/page.tsx",
-    job: "Assembles the visible Repair Café page.",
+    job: "Assembles the visible Willow Fix Day page.",
     learnerShouldCheck:
       "The visible sections follow the visitor’s complete path.",
     safeToCommit: true,
@@ -875,7 +875,7 @@ export const safeVersionCommands = [
   },
   {
     purpose: "Save a named version",
-    command: 'git commit -m "docs: define Repair Café first version"',
+    command: 'git commit -m "docs: define Willow Fix Day first version"',
     explain:
       "The message says what changed and why this version is useful.",
   },
@@ -891,7 +891,7 @@ export const secretSafety = {
   rule:
     "A secret belongs in a protected environment setting, never in a prompt, screenshot, public file, commit, or browser-delivered code.",
   thisProject:
-    "The Repair Café page needs no API, database, sign-in, or secret. Do not invent one.",
+    "The Willow Fix Day page needs no API, database, sign-in, or secret. Do not invent one.",
   safeExample: {
     place: ".env.local or the host’s protected secret settings",
     value: "SERVICE_API_KEY=replace_with_your_own_value",
@@ -953,7 +953,7 @@ export const buildablePromptParts: readonly PromptPart[] = [
     label: "Useful goal",
     purpose: "Names the result, not a style adjective.",
     repairCafeText:
-      "Plan a small public information page for a neighborhood Repair Café.",
+      "Plan a small public information page for a neighborhood Willow Fix Day.",
     weakAlternative: "Make an amazing modern app.",
   },
   {
@@ -1023,11 +1023,11 @@ export const buildablePromptParts: readonly PromptPart[] = [
 ] as const;
 
 export const weakFirstPrompt =
-  "Build me a beautiful, innovative Repair Café app. Make every useful feature and deploy it.";
+  "Build me a beautiful, innovative Willow Fix Day app. Make every useful feature and deploy it.";
 
 export const completePlanningPrompt = `I am building my first project and need plain-language explanations of unfamiliar files or commands.
 
-Plan a small public information page for a neighborhood Repair Café.
+Plan a small public information page for a neighborhood Willow Fix Day.
 
 The first visitor is a nearby resident checking from a phone. They need to understand when and where the event happens, decide whether their item fits, understand that a repair is not guaranteed, and open an email to the organizer.
 
@@ -1105,7 +1105,7 @@ Do not add new packages, images, forms, accounts, data storage, or tracking. Exp
     ],
     save: {
       select: "git add app/page.tsx app/styles.css",
-      message: 'git commit -m "feat: add Repair Café information structure"',
+      message: 'git commit -m "feat: add Willow Fix Day information structure"',
       reason: "Creates a recoverable version before interaction or visual refinement.",
     },
     artifact: "Version 1 · readable event information",
@@ -1118,19 +1118,19 @@ Do not add new packages, images, forms, accounts, data storage, or tracking. Exp
       "The visitor can understand accepted items and open an email to the approved address.",
     request: `Implement only cycle 2.
 
-Keep the approved text and existing reading order. Make the accepted-item list easy to scan, and turn the contact action into a real email link to hello@repair-cafe.example. The visible label must explain the action without relying on an icon.
+Keep the approved text and existing reading order. Make the accepted-item list easy to scan, and turn the contact action into a real email link to hello@willow-fix.example. The visible label must explain the action without relying on an icon.
 
 Do not add a contact form, stored personal data, booking, JavaScript behavior, or another dependency. Run the relevant checks and stop for preview review.`,
     expectedFiles: ["app/page.tsx", "app/styles.css"],
     inspectWithoutReadingCode: [
-      "Select the email action and confirm the device prepares an email to hello@repair-cafe.example.",
+      "Select the email action and confirm the device prepares an email to hello@willow-fix.example.",
       "Read the link without nearby text: its purpose should still be clear.",
       "Use the Tab key from the top of the page; a visible focus marker should reach the email action.",
       "Confirm the availability limit remains next to the decision-making information.",
     ],
     run: ["npm run typecheck", "npm test"],
     check: [
-      "The email destination is exactly hello@repair-cafe.example.",
+      "The email destination is exactly hello@willow-fix.example.",
       "The action works with keyboard input.",
       "No form or visitor-data storage was added.",
     ],
@@ -1271,7 +1271,7 @@ export const repairCafeDefects: readonly Defect[] = [
       "Inspect the destination shown by the browser.",
     ],
     expected:
-      "Both methods should open a new email addressed to hello@repair-cafe.example.",
+      "Both methods should open a new email addressed to hello@willow-fix.example.",
     consequence:
       "The page explains the event but fails at the final step of its chosen path.",
     preserve: [
@@ -1389,7 +1389,7 @@ export const repairReportTemplate = {
     "Report observable behavior first. Let the agent inspect the files before naming a technical cause.",
 } as const;
 
-export const completeRepairPrompt = `Repair three defects in the current Repair Café page. Keep the change limited to these defects.
+export const completeRepairPrompt = `Repair three defects in the current Willow Fix Day page. Keep the change limited to these defects.
 
 Defect 1 — unsupported public promise
 Observed: the page says “Every walk-in gets a repair.”
@@ -1410,7 +1410,7 @@ Reproduce:
 2. Select the email action with a pointer.
 3. Repeat with the keyboard and inspect its destination.
 Observed: no email draft opens and the action has no mailto destination.
-Expected: both methods open a new email addressed to hello@repair-cafe.example.
+Expected: both methods open a new email addressed to hello@willow-fix.example.
 
 Preserve the date, time, place, accepted items, approved email address, current reading order, desktop layout, and visible keyboard focus. Do not add a booking system, form, dependency, or unrelated redesign.
 
@@ -1583,9 +1583,9 @@ export const releaseChecklist = {
 } as const;
 
 export const exampleReleaseCard = {
-  project: "Repair Café page",
+  project: "Willow Fix Day page",
   releasedVersion: "V4 · Repaired",
-  publicUrl: "https://repair-cafe.example",
+  publicUrl: "https://willow-fix.example",
   publicCheck:
     "Facts, accepted items, availability limit, email path, 390px layout, and keyboard path checked after release.",
   checkedAt: "Record the real date and time when publishing",
@@ -1817,7 +1817,7 @@ export const playbookCards: readonly PlaybookCard[] = [
       "Check current building, hosting, storage, and usage limits.",
     ],
     completedExample:
-      "Repair Café: repository-aware agent + GitHub + static web host; no runtime AI.",
+      "Willow Fix Day: repository-aware agent + GitHub + static web host; no runtime AI.",
     reusableTemplate:
       "My product [does / does not] need AI at runtime. I value [least setup / visible ownership]. My files will live in ____. The project will be published by ____.",
     expectedResult:
@@ -1838,7 +1838,7 @@ export const playbookCards: readonly PlaybookCard[] = [
       "Write checks another person can repeat.",
     ],
     completedExample:
-      "A phone visitor reads approved Repair Café details, decides whether their item fits, and opens an email.",
+      "A phone visitor reads approved Willow Fix Day details, decides whether their item fits, and opens an email.",
     reusableTemplate:
       "For [person] in [situation], help them [result] through [complete path]. Use only [sources]. Include [must-haves]. Do not include [not-now]. Complete when [checks].",
     expectedResult: "A brief small enough to finish and specific enough to check.",
@@ -1857,7 +1857,7 @@ export const playbookCards: readonly PlaybookCard[] = [
       "Push the saved version to a GitHub repository.",
     ],
     completedExample:
-      "repair-cafe/ with README.md, docs/brief.md, .gitignore, and an initial GitHub commit.",
+      "willow-fix/ with README.md, docs/brief.md, .gitignore, and an initial GitHub commit.",
     reusableTemplate:
       "Project folder: ____. Brief path: ____. Run command: ____. Ignored private files: ____. Repository URL: ____.",
     expectedResult:
@@ -1877,7 +1877,7 @@ export const playbookCards: readonly PlaybookCard[] = [
       "Require AI to stop before editing.",
     ],
     completedExample:
-      "The complete Repair Café planning prompt produces three reviewable build cycles.",
+      "The complete Willow Fix Day planning prompt produces three reviewable build cycles.",
     reusableTemplate:
       "I am [experience]. Plan [goal] for [person]. Use [source]. Include [must-have]. Exclude [not-now]. Propose [number] cycles with result, files, preview check, command, and save message. Do not edit yet.",
     expectedResult:
@@ -1959,7 +1959,7 @@ export const playbookCards: readonly PlaybookCard[] = [
       "If exposed, revoke first, then remove and replace.",
     ],
     completedExample:
-      "Repair Café needs no secret; the static email link replaces a contact database and mail service.",
+      "Willow Fix Day needs no secret; the static email link replaces a contact database and mail service.",
     reusableTemplate:
       "Secret needed for: ____. Server-side setting: ____. Ignored local file: ____. Browser receives secret? No. Rotation owner: ____.",
     expectedResult:
@@ -1980,7 +1980,7 @@ export const playbookCards: readonly PlaybookCard[] = [
       "Repeat the important path at the public URL.",
     ],
     completedExample:
-      "Repair Café V4 moves from local to GitHub to preview to live, then receives a public phone check.",
+      "Willow Fix Day V4 moves from local to GitHub to preview to live, then receives a public phone check.",
     reusableTemplate:
       "Candidate: ____. Commit: ____. Preview: ____. Live URL: ____. Public checks: ____. Known limits: ____. Restore: ____.",
     expectedResult:
@@ -2103,7 +2103,7 @@ export const curriculumCompletion = {
     "Handle one post-launch change without rebuilding the whole project.",
   ],
   transferPrompt:
-    "Replace the Repair Café with your own idea. What is the smallest complete result one person could use by the end of this week?",
+    "Replace the Willow Fix Day with your own idea. What is the smallest complete result one person could use by the end of this week?",
   successStatement:
     "I know where to start, what to ask AI, how to check the work, and how one saved version becomes a live project.",
 } as const;

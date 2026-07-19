@@ -43,8 +43,8 @@ import {
   type SceneId,
 } from "@/lib/mission";
 
-const STORAGE_KEY = "pentimento:mission:v2:repair-cafe";
-const LEGACY_STORAGE_KEY = "measure-twice:mission:v1:repair-cafe";
+const STORAGE_KEY = "pentimento:mission:v2:willow-fix";
+const LEGACY_STORAGE_KEY = "measure-twice:mission:v1:willow-fix";
 const RELEASE_VERSION = "c7a91e4";
 const JOURNEY_CHAPTERS = [
   { label: "Understand", start: 0, end: 1 },
@@ -342,7 +342,7 @@ function RepairCafePreview({
     <div className={`device ${phone ? "device--phone" : "device--desktop"}`}>
       <div className="device__bar">
         <span><i /><i /><i /></span>
-        <small>repair-cafe.preview</small>
+        <small>willow-fix.preview</small>
         <b>{repaired ? "verified repair" : "AI proposal"}</b>
       </div>
       <div className="repair-page">
@@ -351,14 +351,14 @@ function RepairCafePreview({
           <span>Saturday · West Hall</span>
         </div>
         <div className="repair-page__hero">
-          <p>Neighborhood Repair Café</p>
+          <p>Neighborhood Willow Fix Day</p>
           <h3>Bring it broken.<br />Leave with a plan.</h3>
           <span>Small appliances, clothing, and bicycles · 10:00–14:00</span>
           {!repaired && <mark>Walk-ins are guaranteed a repair</mark>}
           {repaired && <mark className="verified-copy">Repairs depend on volunteer availability</mark>}
           {repaired ? (
             <a
-              href="mailto:hello@repair-cafe.example"
+              href="mailto:hello@willow-fix.example"
               className="mock-cta"
               onClick={(event) => {
                 event.preventDefault();
@@ -550,7 +550,7 @@ function LessonBriefing({
         <p className="overline">Here is the project</p>
         <h1 ref={headingRef} tabIndex={-1}>You are the project lead.<br /><em>AI made the first draft.</em></h1>
         <p>
-          A neighborhood Repair Café needs a simple event page. It looks polished, and the AI says every check passed. The organizer wants to share it in ten minutes.
+          A neighborhood Willow Fix Day needs a simple event page. It looks polished, and the AI says every check passed. The organizer wants to share it in ten minutes.
         </p>
       </section>
 
@@ -869,7 +869,7 @@ function RepositoryRoom({ selected }: { selected: string[] }) {
     <section className="repo-room" aria-label="Simulated GitHub repository">
       <header>
         <span className="repo-icon">◇</span>
-        <div><small>github.com / your-name</small><strong>repair-cafe</strong></div>
+        <div><small>github.com / your-name</small><strong>willow-fix</strong></div>
         <b>{selected.includes("checkpoint") ? "baseline saved · unverified" : "no restore point"}</b>
       </header>
       <div className="repo-room__body">
@@ -1583,7 +1583,7 @@ export function Pentimento() {
         ...current.releaseEvidence,
         preview: {
           version: RELEASE_VERSION,
-          url: "https://preview.repair-cafe.example",
+          url: "https://preview.willow-fix.example",
           checkedAt: new Date().toISOString(),
           factsPassed: true,
           corePathPassed: true,
@@ -1611,7 +1611,7 @@ export function Pentimento() {
         ...current.releaseEvidence,
         production: {
           version: RELEASE_VERSION,
-          url: "https://repair-cafe.example",
+          url: "https://willow-fix.example",
           checkedAt: new Date().toISOString(),
           factsPassed: true,
           corePathPassed: true,
@@ -1784,7 +1784,7 @@ export function Pentimento() {
       <main id="mission-content" className={`mission-canvas mission-canvas--${currentScene}`} data-testid={`scene-${currentScene}`}>
         <div className="mission-label">
           <span>Guided project</span>
-          <b>Repair Café event page</b>
+          <b>Willow Fix Day event page</b>
           <small>{sceneLabels[currentScene]}</small>
         </div>
         {currentScene !== "arrival" && <MobileInstrument progress={progress} workModeReviewed={workModeReviewed} />}
@@ -1795,7 +1795,7 @@ export function Pentimento() {
               <SceneHeading
                 eyebrow="First decision · Inspect the draft"
                 title="Can a visitor do what they came to do?"
-                copy="The Repair Café organizer plans to share this AI-made page in ten minutes. Your first job is not to fix it. Understand what is true and what the visitor can actually do."
+                copy="The Willow Fix Day organizer plans to share this AI-made page in ten minutes. Your first job is not to fix it. Understand what is true and what the visitor can actually do."
                 headingRef={sceneHeadingRef}
               />
               <SceneTask label="Do this now" title="Inspect before you decide.">
@@ -2206,7 +2206,7 @@ export function Pentimento() {
               <RepairCafePreview
                 phone
                 repaired={progress.repaired}
-                onAction={() => setPreviewNotice("Destination verified: hello@repair-cafe.example")}
+                onAction={() => setPreviewNotice("Destination verified: hello@willow-fix.example")}
               />
               {progress.repaired && (
                 <p className={`preview-notice ${previewNotice ? "is-visible" : ""}`} role="status">
@@ -2216,7 +2216,7 @@ export function Pentimento() {
               <div className="patch-summary">
                 <span className={progress.repaired ? "is-solid" : ""}>AI proposal</span>
                 <b>{progress.repaired ? "3 bounded changes" : progress.diagnosed ? "diagnosed · awaiting approval" : "waiting for repair brief"}</b>
-                <p>− unsupported guarantee<br />− fixed-width action<br />− inert button<br />+ approved availability wording<br />+ fluid phone layout<br />+ mailto:hello@repair-cafe.example</p>
+                <p>− unsupported guarantee<br />− fixed-width action<br />− inert button<br />+ approved availability wording<br />+ fluid phone layout<br />+ mailto:hello@willow-fix.example</p>
               </div>
             </div>
           </section>
@@ -2264,7 +2264,7 @@ export function Pentimento() {
             <aside className="release-card">
               <div className="release-card__stamp">PREVIEW<br /><b>→</b><br />PRODUCTION</div>
               <p>Release candidate</p>
-              <h3>repair-cafe<br /><span>verified-mobile-fix</span></h3>
+              <h3>willow-fix<br /><span>verified-mobile-fix</span></h3>
               <div><small>Commit</small><code>{progress.releaseEvidence.releaseVersion?.commit ?? "not recorded"}</code></div>
               <div><small>Evidence</small><b>{releaseRows.filter((row) => row.status === "pass").length} / {releaseRows.length}</b></div>
               <div><small>Recovery</small><b>{progress.releaseEvidence.releaseVersion?.recoveryVersion ?? "not recorded"}</b></div>
@@ -2411,7 +2411,7 @@ export function Pentimento() {
       >
         <div className="lesson-help__role"><span>Your role</span><p>You are the project lead. AI makes proposals; you decide the outcome, boundaries, checks, and release.</p></div>
         <ol>
-          <li><span>1</span><div><b>Read one situation</b><p>Each layer introduces one part of the same Repair Café project.</p></div></li>
+          <li><span>1</span><div><b>Read one situation</b><p>Each layer introduces one part of the same Willow Fix Day project.</p></div></li>
           <li><span>2</span><div><b>Make one focused decision</b><p>Choose what you would do. A wrong answer is safe and can be revised.</p></div></li>
           <li><span>3</span><div><b>See what the choice changes</b><p>The result explains what happened, why it matters, and what to do next.</p></div></li>
         </ol>
@@ -2452,7 +2452,7 @@ export function Pentimento() {
                     <div><dt>Prevents</dt><dd>{note.prevents}</dd></div>
                   </dl>
                   <details>
-                    <summary>See the completed Repair Café example</summary>
+                    <summary>See the completed Willow Fix Day example</summary>
                     <pre>{note.completedExample}</pre>
                   </details>
                   <h4>Blank template</h4>

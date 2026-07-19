@@ -60,13 +60,13 @@ export const mission = {
   premise:
     "The organizer plans to share this page in ten minutes. The AI says it is responsive, accessible, and ready.",
   stakeholder:
-    "Our neighborhood Repair Café needs a page for Saturday. People should quickly understand when and where it happens, what they can bring, and how to ask a question. We cannot promise every item will be repaired, and we do not have a booking system.",
+    "Our neighborhood Willow Fix Day needs a page for Saturday. People should quickly understand when and where it happens, what they can bring, and how to ask a question. We cannot promise every item will be repaired, and we do not have a booking system.",
   approvedFacts: [
     "Saturday, July 25 · 10:00–14:00",
     "West Hall Community Room",
     "Small appliances, clothing, and bicycles",
     "Repairs depend on volunteer availability",
-    "Questions: hello@repair-cafe.example",
+    "Questions: hello@willow-fix.example",
   ],
   inventedFact: "Walk-ins are guaranteed a repair",
   aiClaim:
@@ -112,7 +112,7 @@ export const defectLedger: readonly DefectRecord[] = [
     observed:
       "At a 390px screen width, the contact action is clipped and activating it opens no destination.",
     evidenceAnchor:
-      "390px interaction recording · expected destination hello@repair-cafe.example",
+      "390px interaction recording · expected destination hello@willow-fix.example",
     humanConsequence:
       "A visitor with a question cannot reach the organizer from the device most likely to be in their hand.",
     repairBoundary:
@@ -741,7 +741,7 @@ export const repairBrief = {
   reproduce:
     "Open the unverified baseline, compare the event copy with facts.md, set the preview to 390px, and activate ‘Ask about a repair.’",
   expected:
-    "The page uses the approved availability wording. The action remains fully visible and opens hello@repair-cafe.example.",
+    "The page uses the approved availability wording. The action remains fully visible and opens hello@willow-fix.example.",
   evidenceAnchor: [
     "facts.md · approved availability statement",
     "390px interaction recording",
@@ -872,7 +872,7 @@ export const postRepairReruns: readonly PostRepairRerun[] = [
     id: "email-destination-check",
     label: "Email destination",
     method: "Activate the action and record the destination it opens.",
-    passingEvidence: "The destination is mailto:hello@repair-cafe.example.",
+    passingEvidence: "The destination is mailto:hello@willow-fix.example.",
     protectsAgainst: "A visible control that still performs no useful action or reaches the wrong address.",
   },
   {
@@ -923,7 +923,7 @@ export const shipGate: ReleaseEvidence[] = [
     detail: "The action is visible, reachable, and opens the approved email destination on both target layouts.",
     correct: true,
     essential: true,
-    claim: "A visitor can reach hello@repair-cafe.example from the exact release candidate.",
+    claim: "A visitor can reach hello@willow-fix.example from the exact release candidate.",
     evidenceMethod: "Exercise the action on desktop and at 390px; record the observed destination.",
     evidenceLocation: "Evidence ledger · contact path recording · release commit",
     timing: "release-candidate",
@@ -1253,7 +1253,7 @@ Remaining gap:`,
     prevents: "Vague ‘fix it’ prompts, cause guessing, wide rewrites, hidden regressions, and green checks unrelated to the original failure.",
     completedExample: `Observed: Unsupported guarantee; contact clips at 390px and opens nothing
 Reproduce: Compare facts.md, set 390px, activate the action
-Expected: Approved wording; visible action opens hello@repair-cafe.example
+Expected: Approved wording; visible action opens hello@willow-fix.example
 Evidence anchor: facts.md + 390px recording + observed destination
 Must preserve: Event facts, keyboard path, no personal-data collection
 After repair: facts, width, destination, keyboard, final saved-file scan`,

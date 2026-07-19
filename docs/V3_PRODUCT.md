@@ -64,11 +64,11 @@ One journey is practice, not proof of lasting mastery.
 
 ## The case
 
-The learner builds a one-page website for a fictional neighborhood Repair Café.
+The learner builds a one-page website for a fictional neighborhood Willow Fix Day.
 
 The starting note is intentionally rough:
 
-> We need a page for next Saturday’s Repair Café. People should know what they can bring and how to contact us. Make it welcoming.
+> We need a page for next Saturday’s Willow Fix Day. People should know what they can bring and how to contact us. Make it welcoming.
 
 The first complete version helps one nearby resident:
 
@@ -119,7 +119,7 @@ Clarify that one product may combine several roles. The roles remain useful even
 
 ### 45–60 seconds: reveal the layers
 
-Show the finished Repair Café page. A reveal control exposes the rough note, brief, files, AI request, checks, and saved release beneath it. Provide buttons as an equivalent to dragging.
+Show the finished Willow Fix Day page. A reveal control exposes the rough note, brief, files, AI request, checks, and saved release beneath it. Provide buttons as an equivalent to dragging.
 
 Required copy:
 
@@ -167,7 +167,7 @@ Internal stop IDs should be stable for implementation and persistence:
 
 `idea`, `tools`, `home`, `ask`, `build`, `check`, `live`, `improve`.
 
-| Stop | Learner action in the Repair Café case | Concept taught | Playbook output |
+| Stop | Learner action in the Willow Fix Day case | Concept taught | Playbook output |
 | --- | --- | --- | --- |
 | **1. Idea** | Turn the rough note into one person, one result, one complete path, trusted facts, and a “later” list | A first version is the smallest complete useful journey, not the longest feature list | First-version brief + safe-project filter |
 | **2. Tools** | Compare the two starting lanes, choose the repository lane for the case, and connect the three roles | Tools differ, but workspace → project home → host is durable | Tool plan + selection questions |
@@ -211,7 +211,7 @@ Tool selection must be based on constraints, not a winner badge or popularity cl
 Minimum visible files:
 
 ```text
-repair-cafe/
+willow-fix/
 ├── README.md          purpose, setup, checks, limitations
 ├── brief.md           agreed first version
 ├── facts.md           approved event facts
@@ -331,7 +331,7 @@ Every learning screen uses the same order:
 
 1. **Outcome:** “At this stop, you will…”
 2. **Explanation:** no more than roughly 60–75 words before interaction.
-3. **Worked example:** the current Repair Café state.
+3. **Worked example:** the current Willow Fix Day state.
 4. **One action:** construct, compare, sort, reveal, inspect, or revise.
 5. **Visible consequence:** the project, file tree, preview, or route changes.
 6. **Takeaway:** a reusable artifact is added to the Playbook.
@@ -355,7 +355,7 @@ The Playbook is always available and grows visibly after each stop. Each entry c
 
 - when to use it;
 - the exact action or template;
-- the completed Repair Café example;
+- the completed Willow Fix Day example;
 - a blank reusable version;
 - the result it should produce; and
 - the failure it helps prevent.
@@ -367,7 +367,7 @@ Learners may copy or print the complete Playbook at any time. Core guidance is n
 ### Core authored experience
 
 - The opening, role map, two starting lanes, and full eight-stop route.
-- All Repair Café facts, files, AI messages, changes, defects, checks, and releases.
+- All Willow Fix Day facts, files, AI messages, changes, defects, checks, and releases.
 - The Playbook, templates, system-need guide, safety guidance, and seven-day plan.
 - Deterministic consequences, hints, and final summary.
 - A complete path without login, API key, model availability, or network access after load.
@@ -481,7 +481,7 @@ Every instructional item must pass all six checks:
 
 1. **Use moment:** says when the learner would use it.
 2. **Action:** gives an exact, executable next step.
-3. **Example:** shows the completed Repair Café version.
+3. **Example:** shows the completed Willow Fix Day version.
 4. **Reuse:** supplies a blank or adaptable version.
 5. **Observable result:** says what the action should produce.
 6. **Prevention:** names the mistake, risk, or wasted work it prevents.

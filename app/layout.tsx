@@ -1,26 +1,26 @@
 import type { Metadata, Viewport } from "next";
 
-import "./studio.css";
+import "./final.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://pentimento.aethe.me"),
-  title: "Pentimento — Build your first project with AI",
+  title: "Pentimento — Learn to build with AI",
   description:
-    "A guided studio for complete beginners: turn an idea into a small, checked, published project while learning what AI tools, GitHub, prompts, previews, and versions actually do.",
+    "A guided simulation for complete beginners: make 13 useful decisions and practice a reusable method from first idea to checked release.",
   applicationName: "Pentimento",
   openGraph: {
-    title: "Pentimento — From an idea to a live project",
+    title: "Pentimento — Learn to build with AI",
     description:
-      "Learn the whole AI-building path by guiding one small project from a rough idea to a live, recoverable version.",
+      "Guide one small project from a rough idea to a checked release in 13 meaningful decisions.",
     type: "website",
     url: "/",
     siteName: "Pentimento",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Pentimento — Build your first project with AI",
+    title: "Pentimento — Learn to build with AI",
     description:
-      "A calm, practical studio for learning tools, prompts, GitHub, checking, publishing, and improvement through one complete project.",
+      "Learn a reusable AI-building method through one complete, interactive project.",
   },
   alternates: {
     canonical: "/",

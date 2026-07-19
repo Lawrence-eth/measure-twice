@@ -14,13 +14,13 @@ export function ProjectCanvas({
   return (
     <section
       className={`project-canvas${compact ? " project-canvas--compact" : ""}`}
-      aria-label={`Repair Café website ${
+      aria-label={`Willow Fix Day website ${
         state === "blank" ? "before building" : `${state} version`
       }`}
     >
       <header>
         <span aria-hidden="true">● ● ●</span>
-        <b>repair-cafe.preview</b>
+        <b>willow-fix.preview</b>
         <em>{state === "repaired" || state === "updated" ? "checked" : state}</em>
       </header>
 
@@ -31,7 +31,7 @@ export function ProjectCanvas({
             <span>{updated ? "SATURDAY · 10:30" : "SATURDAY · WEST HALL"}</span>
           </nav>
           <div className="project-canvas__hero">
-            <small>NEIGHBORHOOD REPAIR CAFÉ</small>
+            <small>NEIGHBORHOOD WILLOW FIX DAY</small>
             <h2>Bring it broken.<br />Leave with a plan.</h2>
             <p>Small appliances, clothing, and bicycles · {updated ? "10:30" : "10:00"}–14:00</p>
             <mark className={broken ? "is-broken" : ""}>
@@ -40,7 +40,7 @@ export function ProjectCanvas({
                 : "Repairs depend on volunteer availability"}
             </mark>
             <a
-              href={broken ? undefined : "mailto:hello@repair-cafe.example"}
+              href={broken ? undefined : "mailto:hello@willow-fix.example"}
               className={broken ? "is-broken" : ""}
               onClick={(event) => event.preventDefault()}
             >

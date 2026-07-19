@@ -8,7 +8,7 @@ Pentimento shows a complete beginner how one AI-built project moves from a rough
 
 > **Build your first project with AI—from idea to live link.**
 
-The learner follows one fictional Repair Café website through the full project lifecycle, sees the decisions and files beneath its finished surface, and leaves with a reusable **First AI Build Playbook**.
+The learner follows one fictional Willow Fix Day website through the full project lifecycle, sees the decisions and files beneath its finished surface, and leaves with a reusable **First AI Build Playbook**.
 
 Pentimento is an authored educational experience. It is not:
 
@@ -74,9 +74,9 @@ After the authored route, the learner can:
 
 One completed journey is practice, not proof of lasting mastery.
 
-## The Repair Café case
+## The Willow Fix Day case
 
-The learner inherits an overloaded request for a public website for a fictional neighborhood Repair Café. The request asks for attractive presentation alongside bookings, volunteer accounts, live availability, chat, donations, reminders, AI repair advice, and other additions.
+The learner inherits an overloaded request for a public website for a fictional neighborhood Willow Fix Day. The request asks for attractive presentation alongside bookings, volunteer accounts, live availability, chat, donations, reminders, AI repair advice, and other additions.
 
 The first useful version is much smaller. It helps one nearby resident:
 
@@ -91,7 +91,7 @@ The approved facts are consistent across the brief, page, checks, and repair:
 - West Hall Community Room;
 - small appliances, clothing, and bicycles;
 - repairs depend on volunteer availability; and
-- questions go to `hello@repair-cafe.example`.
+- questions go to `hello@willow-fix.example`.
 
 Accounts, booking, payment, live inventory, chat, personal-data storage, and runtime AI are outside the first version. This keeps the complete lifecycle visible while preserving meaningful decisions about scope, sources, phone layout, keyboard use, versions, publication, and recovery.
 
@@ -128,7 +128,7 @@ The map also explains that AI may build an ordinary product without living insid
 
 ### Layer reveal
 
-The learner sees the finished Repair Café page and uses a slider or equivalent buttons to expose its earlier layers: rough idea, brief, files, AI requests, checks, and saved versions.
+The learner sees the finished Willow Fix Day page and uses a slider or equivalent buttons to expose its earlier layers: rough idea, brief, files, AI requests, checks, and saved versions.
 
 Only then does the learner begin the first project decision.
 
@@ -247,7 +247,7 @@ Its ten cards cover tool choice, first-version scope, project-home setup, planni
 
 - the moment when it is useful;
 - exact actions;
-- the completed Repair Café example;
+- the completed Willow Fix Day example;
 - a blank reusable template;
 - the observable result it should produce; and
 - the costly mistake it helps prevent.
@@ -313,11 +313,11 @@ Pentimento does not:
 - create an account, database, payment, or API integration;
 - publish a real deployment;
 - send an email or message;
-- collect Repair Café visitor data;
+- collect Willow Fix Day visitor data;
 - require an OpenAI key for the authored route; or
 - claim that completion proves durable competence.
 
-The Repair Café files, commits, URLs, and release actions are fictional or simulated.
+The Willow Fix Day files, commits, URLs, and release actions are fictional or simulated.
 
 ## Visual direction
 

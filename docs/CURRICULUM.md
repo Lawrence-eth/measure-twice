@@ -51,7 +51,7 @@ Prompts are work specifications. Their value comes from useful context, trusted 
 
 A first version is the smallest complete useful journey, not the greatest number of visible features.
 
-For the Repair Café:
+For the Willow Fix Day:
 
 ```text
 Nearby resident on a phone
@@ -111,14 +111,14 @@ Using AI during development is not a reason to put AI inside the finished produc
 
 ## The canonical case
 
-The fictional neighborhood Repair Café uses these approved facts:
+The fictional neighborhood Willow Fix Day uses these approved facts:
 
 ```text
 Saturday, July 25 · 10:00–14:00
 West Hall Community Room
 Small appliances, clothing, and bicycles
 Repairs depend on volunteer availability
-Questions: hello@repair-cafe.example
+Questions: hello@willow-fix.example
 ```
 
 The first-version visitor is a nearby resident checking from a phone. The result is to decide whether the event fits their need and contact the organizer.
@@ -170,7 +170,7 @@ Not now:
 Complete when:
 ```
 
-Repair Café example:
+Willow Fix Day example:
 
 ```text
 One person: A nearby resident with an item that might be repairable
@@ -266,7 +266,7 @@ Understand where the project lives, how it is saved, what another person needs, 
 ### Canonical file map
 
 ```text
-repair-cafe/
+willow-fix/
 ├── README.md          purpose, setup, checks, limitations
 ├── docs/brief.md      approved first version and trusted facts
 ├── app/page.tsx       visible page structure
@@ -291,7 +291,7 @@ repair-cafe/
 git status
 git diff
 git add README.md docs/brief.md
-git commit -m "docs: define Repair Café first version"
+git commit -m "docs: define Willow Fix Day first version"
 git push
 ```
 
@@ -325,7 +325,7 @@ Turn a vague request into a bounded planning task.
 ### Weak request
 
 ```text
-Build me a beautiful, innovative Repair Café app.
+Build me a beautiful, innovative Willow Fix Day app.
 Make every useful feature and deploy it.
 ```
 
@@ -396,7 +396,7 @@ Build one visible improvement at a time and keep an understandable recovery poin
 - **Check:** try the important human path and compare facts with their source.
 - **Save:** select reviewed files and create one named Git version.
 
-### Repair Café cycles
+### Willow Fix Day cycles
 
 | Cycle | Visible result | Main check | Saved state |
 | --- | --- | --- | --- |
@@ -578,7 +578,7 @@ Every card contains:
 
 - **Use moment:** when the learner needs it.
 - **Exact action:** an executable sequence.
-- **Worked example:** the completed Repair Café version.
+- **Worked example:** the completed Willow Fix Day version.
 - **Reuse:** a blank adaptable template.
 - **Observable result:** what the action should produce.
 - **Prevention:** the mistake, risk, or wasted work it helps avoid.
@@ -662,7 +662,7 @@ Every instructional item must pass all six checks:
 
 1. **Use moment:** says when the learner would use it.
 2. **Action:** gives an exact next step.
-3. **Example:** shows the completed Repair Café version.
+3. **Example:** shows the completed Willow Fix Day version.
 4. **Reuse:** supplies a blank or adaptable form.
 5. **Observable result:** says what the action should produce.
 6. **Prevention:** names the costly mistake or wasted work it prevents.
