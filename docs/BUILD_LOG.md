@@ -111,11 +111,11 @@ The integration uses the OpenAI Responses API, Zod Structured Outputs, `store: f
 
 ## Final-candidate evidence record
 
-The exact Pentimento release commit must earn its own evidence. This record belongs to the candidate tagged `pentimento-v1`; the tag and Sites version metadata resolve to the immutable submitted SHA without creating a self-referential commit hash inside the commit itself. Results are not carried forward from Measure Twice or an earlier Pentimento edit.
+The exact Pentimento release commit must earn its own evidence. This record belongs to commit `b762dcedd1a69a49a1ca76b370066da314ad2aa5`, tagged `pentimento-v1`. The Cloudflare deployment message and immutable Worker version independently record that source revision. Results are not carried forward from Measure Twice or an earlier Pentimento edit.
 
 | Evidence | Exact result for submitted commit |
 | --- | --- |
-| Submitted commit | Annotated release tag `pentimento-v1`; exact SHA also recorded by the Sites version |
+| Submitted commit | `b762dcedd1a69a49a1ca76b370066da314ad2aa5` · annotated tag `pentimento-v1` |
 | `npm run typecheck` | PASS · TypeScript completed with no diagnostics · July 18, 2026 15:55 UTC |
 | `npm test` | PASS · 82/82 unit, schema-boundary, migration, release-evidence, and API tests |
 | `npm run test:e2e` | PASS · 8/8 Chromium journeys across desktop and mobile projects; includes Axe scans, wrong paths, keyboard dialogs, native controls, release derivation, and debrief |
@@ -124,8 +124,16 @@ The exact Pentimento release commit must earn its own evidence. This record belo
 | Local generated-Worker smoke test | PASS · unchanged `dist` Worker at `127.0.0.1:8787`; 8/8 E2E including `/api/debrief` |
 | Dependency audit | PASS · `npm audit --audit-level=high` reported 0 vulnerabilities |
 | 320 / 390 / 768 / desktop screenshot review | PASS · no document overflow; 390px defect is intentionally clipped inside its device frame; eight final screenshots recaptured from the Worker artifact |
-| Hosted desktop/mobile core-path smoke test | Pending until the exact Sites version is deployed; never inferred from local evidence |
-| Public URL and deployed commit agree | Pending until Sites returns a successful deployment record and the custom-domain smoke test passes |
+| Hosted desktop/mobile core-path smoke test | PASS · 8/8 Playwright journeys against `https://pentimento.aethe.me` in 42.4s · July 19, 2026 03:20 UTC |
+| Public URL and deployed commit agree | PASS · Worker version `38752a8b-2032-49df-8042-71e61a431e3e` carries deployment message `Pentimento b762dce verified Build Week release`; root/title/tagline/favicon/API verified at the custom domain |
+
+### Production routing record
+
+- Worker: `pentimento`
+- Route: `pentimento.aethe.me/*`
+- DNS: the existing CNAME target remains `custom-domains.chatgpt.site`; proxying is enabled so the Worker route executes, preserving a reversible origin record
+- Security boundary: the zone still blocks non-read methods everywhere except the exact `POST pentimento.aethe.me/api/debrief` path; malformed debrief input returns the application’s JSON `400`, while an unrelated POST returns Cloudflare `403`
+- Recovery: disable the Worker route and return the CNAME to DNS-only to restore the earlier Sites origin
 
 The implementation acceptance contract is [QUALITY_STANDARD.md](QUALITY_STANDARD.md), and the submission closeout is [HACKATHON.md](HACKATHON.md).
 

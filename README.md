@@ -10,6 +10,7 @@ Built for the **Education** track of OpenAI Build Week 2026.
 
 - Live experience: [pentimento.aethe.me](https://pentimento.aethe.me)
 - Source: [github.com/Lawrence-eth/measure-twice](https://github.com/Lawrence-eth/measure-twice)
+- Deployed release: commit `b762dce` · Cloudflare Worker version `38752a8b-2032-49df-8042-71e61a431e3e`
 - Mission: **The page beneath the polish** · approximately 18–20 minutes
 
 ![Pentimento’s editorial field-studio landing experience](docs/screenshots/landing.png)
@@ -123,7 +124,7 @@ npm run build
 To run the browser suite against an already-hosted candidate:
 
 ```bash
-PLAYWRIGHT_BASE_URL=https://your-preview.example npm run test:e2e
+PLAYWRIGHT_BASE_URL=https://pentimento.aethe.me npm run test:e2e
 ```
 
 After `npm run build`, exercise the generated Worker locally with:

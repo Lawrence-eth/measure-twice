@@ -19,11 +19,11 @@ The official rules and Devpost form remain the source of truth. This file transl
 - [x] Repository includes an MIT license and English documentation
 - [x] Public repository URL prepared
 - [x] Public custom domain prepared
-- [ ] Freeze and tag the exact submitted commit
+- [x] Freeze and tag the exact submitted commit
 - [x] Run the full local and generated-Worker quality contract on the release candidate
-- [ ] Deploy that exact artifact to the public domain
-- [ ] Confirm the public page, metadata, and favicon all carry the final Pentimento identity
-- [ ] Record desktop and 390px hosted smoke-test evidence
+- [x] Deploy that exact artifact to the public domain
+- [x] Confirm the public page, metadata, and favicon all carry the final Pentimento identity
+- [x] Record desktop, mobile, 320px, 390px, and 768px hosted smoke-test evidence
 
 ## Required Devpost fields
 
@@ -171,9 +171,9 @@ Use original narration and interface footage. Do not include copyrighted music, 
 
 ## Submission-day record
 
-- Final commit: release tag `pentimento-v1` (resolve and paste its SHA after tagging)
-- Deployed commit/artifact: pending Sites deployment record
-- Public smoke-test time and result: pending exact-version deployment
+- Final release commit: `b762dcedd1a69a49a1ca76b370066da314ad2aa5` · tag `pentimento-v1`
+- Deployed artifact: Cloudflare Worker version `38752a8b-2032-49df-8042-71e61a431e3e`
+- Public smoke-test: July 19, 2026 03:20 UTC · 8/8 hosted Playwright journeys passed in 42.4s
 - YouTube URL: pending entrant upload
 - `/feedback` Session ID: pending entrant command in the primary Codex thread
 - Devpost submission confirmation: pending entrant submission
