@@ -12,7 +12,7 @@ Built for the **Education** track of OpenAI Build Week 2026.
 
 - Live experience: [pentimento.aethe.me](https://pentimento.aethe.me)
 - Source: [github.com/Lawrence-eth/measure-twice](https://github.com/Lawrence-eth/measure-twice)
-- Deployed release: commit `b762dce` · Cloudflare Worker version `38752a8b-2032-49df-8042-71e61a431e3e`
+- Deployed release: commit `8acdddb` · tag `pentimento-v2` · Cloudflare Worker version `6ad39402-8aae-4070-a2c3-95c194bbf063`
 - Mission: **The page beneath the polish** · approximately 18–20 minutes
 
 ![Pentimento’s editorial field-studio landing experience](docs/screenshots/landing.png)

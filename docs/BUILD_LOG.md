@@ -130,9 +130,9 @@ GPT‑5.6 is used only for an optional closing debrief. After the server validat
 
 The integration uses the OpenAI Responses API, Zod Structured Outputs, `store: false`, bounded output, low reasoning effort, a hashed safety identifier, and deterministic fallback. The model never decides whether the learner was correct or whether a release is ready.
 
-## Final-candidate evidence record
+## Initial production evidence record (v1)
 
-The exact Pentimento release commit must earn its own evidence. This record belongs to commit `b762dcedd1a69a49a1ca76b370066da314ad2aa5`, tagged `pentimento-v1`. The Cloudflare deployment message and immutable Worker version independently record that source revision. Results are not carried forward from Measure Twice or an earlier Pentimento edit.
+This historical record belongs to commit `b762dcedd1a69a49a1ca76b370066da314ad2aa5`, tagged `pentimento-v1`. It shows what the initial production release earned before the beginner-first correction. Those results are not used as evidence for v2.
 
 | Evidence | Exact result for submitted commit |
 | --- | --- |
@@ -155,6 +155,24 @@ The exact Pentimento release commit must earn its own evidence. This record belo
 - DNS: the existing CNAME target remains `custom-domains.chatgpt.site`; proxying is enabled so the Worker route executes, preserving a reversible origin record
 - Security boundary: the zone still blocks non-read methods everywhere except the exact `POST pentimento.aethe.me/api/debrief` path; malformed debrief input returns the application’s JSON `400`, while an unrelated POST returns Cloudflare `403`
 - Recovery: disable the Worker route and return the CNAME to DNS-only to restore the earlier Sites origin
+
+## Beginner-first production evidence record (v2)
+
+Observed beginner confusion triggered a presentation redesign rather than a content reduction. The exact corrected application is commit `8acdddb1ed9491f30e061f38a6bb6a057854eca2`, tagged `pentimento-v2`. The generated Worker was tested before upload, uploaded once as an immutable version, assigned 100% of production traffic, and then tested again through the public custom domain.
+
+| Evidence | Exact result for beginner-first release |
+| --- | --- |
+| Deployed application commit | `8acdddb1ed9491f30e061f38a6bb6a057854eca2` · annotated tag `pentimento-v2` |
+| `npm run typecheck` | PASS · TypeScript completed with no diagnostics |
+| `npm test` | PASS · 82/82 unit, schema-boundary, migration, persistence, release-evidence, and API tests |
+| `npm audit --audit-level=high` | PASS · 0 vulnerabilities |
+| `npm run build:next` | PASS · conventional Next.js production build completed |
+| `npm run build` | PASS · Cloudflare-compatible generated Worker completed |
+| Generated-Worker acceptance test | PASS · unchanged `dist` Worker at `127.0.0.1:8787`; 14/14 Playwright journeys in 2.0m across desktop and mobile |
+| Beginner and accessibility acceptance | PASS · pre-assessment briefing, one-task progression, recoverable wrong choices, exact saved-state restoration, focus handoffs, Axe scans, and 320 / 390 / 768px layouts are covered by the browser contract |
+| Screenshot review | PASS · ten desktop/mobile captures recaptured from the generated Worker and visually inspected |
+| Hosted acceptance test | PASS · 14/14 Playwright journeys against `https://pentimento.aethe.me` in 2.0m · July 19, 2026 06:01 UTC |
+| Public URL and deployed commit agree | PASS · Worker version `6ad39402-8aae-4070-a2c3-95c194bbf063` carries tag `release-8acdddb` and deployment message `Pentimento 8acdddb beginner-first release`; Cloudflare reports 100% traffic and the public root returns HTTP 200 |
 
 The implementation acceptance contract is [QUALITY_STANDARD.md](QUALITY_STANDARD.md), and the submission closeout is [HACKATHON.md](HACKATHON.md).
 

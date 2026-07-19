@@ -173,9 +173,9 @@ Use original narration and interface footage. Do not include copyrighted music, 
 
 ## Submission-day record
 
-- Final release commit: `b762dcedd1a69a49a1ca76b370066da314ad2aa5` · tag `pentimento-v1`
-- Deployed artifact: Cloudflare Worker version `38752a8b-2032-49df-8042-71e61a431e3e`
-- Public smoke-test: July 19, 2026 03:20 UTC · 8/8 hosted Playwright journeys passed in 42.4s
+- Final release commit: `8acdddb1ed9491f30e061f38a6bb6a057854eca2` · tag `pentimento-v2`
+- Deployed artifact: Cloudflare Worker version `6ad39402-8aae-4070-a2c3-95c194bbf063` · 100% production traffic
+- Public acceptance test: July 19, 2026 06:01 UTC · 14/14 hosted Playwright journeys passed in 2.0m across desktop and mobile
 - YouTube URL: pending entrant upload
 - `/feedback` Session ID: pending entrant command in the primary Codex thread
 - Devpost submission confirmation: pending entrant submission
