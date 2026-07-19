@@ -346,5 +346,23 @@ remains the historical contract for the earlier product layer.
 
 - Primary Codex `/feedback` Session ID: **TODO before submission**
 - Public repository: [github.com/Lawrence-eth/measure-twice](https://github.com/Lawrence-eth/measure-twice)
-- Public experience: [pentimento.aethe.me](https://pentimento.aethe.me)
+- Public experience:
+  [pentimento.law-ender.chatgpt.site](https://pentimento.law-ender.chatgpt.site)
 - Public YouTube demo under three minutes: **TODO before submission**
+
+## Native ChatGPT Sites migration — July 19, 2026
+
+The repository was rebound from an inaccessible Sites project in the
+`eason9504315` namespace to a new project created under the currently connected
+Sites identity with the intended `pentimento` slug. The old deployment was not
+deleted.
+
+| Check | Result |
+| --- | --- |
+| New native production URL | PASS · `https://pentimento.law-ender.chatgpt.site` returned HTTP `200` |
+| Site access | PASS · public |
+| Source binding | PASS · `.openai/hosting.json` points to the new Sites project |
+| Typecheck | PASS |
+| Unit tests | PASS · 96/96 |
+| Sites-compatible production build | PASS |
+| Hosted acceptance | PASS · 28/28 desktop/mobile Playwright checks against the new native URL · July 19, 2026 13:50 UTC |

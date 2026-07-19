@@ -26,8 +26,9 @@ release.
 **Experience:** An authored 12–15 minute guided simulation with eight stops and
 exactly 13 meaningful interactions.
 
-**Target public experience:** [pentimento.aethe.me](https://pentimento.aethe.me)
-— verified v4 production release.
+**Target public experience:**
+[pentimento.law-ender.chatgpt.site](https://pentimento.law-ender.chatgpt.site)
+— verified public ChatGPT Sites release.
 
 **Repository:** [github.com/Lawrence-eth/measure-twice](https://github.com/Lawrence-eth/measure-twice)
 
@@ -88,8 +89,8 @@ The required route is deliberately small:
 
 Use this copy only after the final v4 candidate is verified at the public URL:
 
-> Open https://pentimento.aethe.me in a current desktop or mobile browser. No
-> account, API key, installation, or real deployment is required. Select
+> Open https://pentimento.law-ender.chatgpt.site in a current desktop or mobile
+> browser. No account, API key, installation, or real deployment is required. Select
 > **Start with the first decision**; **See the 8-stop journey** is an optional
 > overview. Follow either tool route through all eight stops. In **Check**, try
 > the contact action, choose the bounded repair, and try the repaired action
@@ -236,7 +237,8 @@ appear in the footage.
 
 ### Public experience
 
-- [x] Deploy the unchanged final v4 artifact to pentimento.aethe.me.
+- [x] Deploy the final verified artifact to
+  pentimento.law-ender.chatgpt.site.
 - [x] Run the full hosted desktop/mobile suite against that exact artifact.
 - [x] Verify the eight-stop route, 13 interactions, Playbook, local V1
   brief, optional reflection boundary, restart, keyboard path, focus,

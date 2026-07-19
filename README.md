@@ -20,7 +20,7 @@ one exact version, and improve from a trusted source.
 
 Built for the **Education** track of OpenAI Build Week 2026.
 
-- Live experience: [pentimento.aethe.me](https://pentimento.aethe.me)
+- Live experience: [pentimento.law-ender.chatgpt.site](https://pentimento.law-ender.chatgpt.site)
 - Source: [github.com/Lawrence-eth/measure-twice](https://github.com/Lawrence-eth/measure-twice)
 - License: [MIT](LICENSE)
 
@@ -159,7 +159,7 @@ The configured model comes from `OPENAI_MODEL`; the repository's Build Week
 default is `gpt-5.6`. The authored learning route itself is deterministic and
 does not depend on model availability.
 
-The current public Worker has no server-side OpenAI key, so its optional
+The current public Site has no server-side OpenAI key, so its optional
 reflection is explicitly served in deterministic fallback mode. The bounded
 GPT‑5.6 path is implemented and tested and can be enabled with the server-only
 configuration below; fallback output is not presented as a live model result.
@@ -169,8 +169,9 @@ configuration below; fallback output is not presented as a live model result.
 No installation, account, API key, or real deployment is required to evaluate
 the submitted experience.
 
-1. Open [pentimento.aethe.me](https://pentimento.aethe.me) in a current desktop
-   or mobile browser.
+1. Open
+   [pentimento.law-ender.chatgpt.site](https://pentimento.law-ender.chatgpt.site)
+   in a current desktop or mobile browser.
 2. Select **Start with the first decision**. Use **See the 8-stop journey** only
    if you want the three-phase overview first.
 3. Follow either tool lane. The repository lane makes the folder → Git → GitHub
@@ -257,30 +258,32 @@ npm run start
 Run the browser suite against an already-hosted candidate:
 
 ```bash
-PLAYWRIGHT_BASE_URL=https://pentimento.aethe.me npm run test:e2e
+PLAYWRIGHT_BASE_URL=https://pentimento.law-ender.chatgpt.site npm run test:e2e
 ```
 
 Recapture release screenshots from the exact hosted candidate:
 
 ```bash
-SCREENSHOT_BASE_URL=https://pentimento.aethe.me node scripts/capture-release-screenshots.mjs
+SCREENSHOT_BASE_URL=https://pentimento.law-ender.chatgpt.site node scripts/capture-release-screenshots.mjs
 ```
 
-## Deploy to Cloudflare Workers
+## Deploy with ChatGPT Sites
 
-With Wrangler authenticated and the intended Worker/custom-domain settings
-confirmed:
+Pentimento is linked to its hosted Sites project through
+`.openai/hosting.json`. Before publishing a change:
 
 ```bash
+npm run typecheck
+npm test
 npm run build
-npm run start
-npm run deploy:vinext
+npm run test:e2e
 ```
 
-`npm run start` is the local generated-artifact check; stop it before running
-the deploy command. After deployment, verify the custom domain and rerun the
-hosted Playwright suite. A passing development server does not prove that the
-generated Worker or exact public version is correct.
+Push the exact reviewed Git commit to the Sites source repository, save a Site
+version from that commit, and deploy only that saved version. Every Sites
+deployment URL is production. After publishing, verify the exact
+`chatgpt.site` URL and rerun the hosted Playwright suite; a passing local server
+does not prove that the public version is correct.
 
 ## How Codex contributed
 

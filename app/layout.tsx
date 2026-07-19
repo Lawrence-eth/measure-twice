@@ -3,7 +3,7 @@ import type { Metadata, Viewport } from "next";
 import "./final.css";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://pentimento.aethe.me"),
+  metadataBase: new URL("https://pentimento.law-ender.chatgpt.site"),
   title: "Pentimento — Learn to build with AI",
   description:
     "A guided simulation for complete beginners: make 13 useful decisions and practice a reusable method from first idea to checked release.",
