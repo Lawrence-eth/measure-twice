@@ -2,221 +2,353 @@
 
 ## One sentence
 
-Pentimento is a guided simulation where a complete beginner leads one AI-built project from a shaky draft to a version they can explain, constrain, inspect, repair, and safely share—without writing code.
-
-## Name and metaphor
-
-A *pentimento* is the visible trace of an earlier version beneath a finished work. That is the product’s educational argument: the polished surface matters less than the decisions and evidence that support it.
-
-The visible line is:
-
-> **See the decisions beneath the finished surface.**
-
-Earlier choices are never treated as disposable quiz answers. They remain as layers in the learner’s final Revision Trace, where decision, consequence, and evidence can be inspected together.
-
-## Audience
-
-Pentimento is for someone who:
-
-- has an idea but has never built a project with AI;
-- may not know Git, GitHub, repository, commit, diff, environment variable, preview, deployment, or recovery;
-- needs a safe first experience before touching real users, money, access, or private data; and
-- deserves comprehensive instruction without being treated as incapable.
-
-No coding knowledge is assumed. The learner makes product, evidence, authority, and release decisions rather than writing syntax.
-
-## Problem
-
-Beginner AI education often stops at prompt patterns, tool tours, generated output, or a celebratory “ship” button. Those approaches can produce something impressive without teaching the harder, transferable questions:
-
-- What human outcome are we actually building for?
-- Which facts are trusted, and which were invented or inferred?
-- What may AI inspect or change, and what requires approval?
-- What new systems and obligations hide inside an attractive feature?
-- Which check supports each completion claim—and what does it not prove?
-- How do we repair one observed gap without disturbing everything else?
-- Which exact version is safe to share, and how would we recover?
-
-The cost of skipping those questions is not abstract. A polished project can mislead a visitor, expose a secret, fail on a phone, send an action nowhere, or reach production on the strength of an assurance nobody can reproduce.
+Pentimento shows a complete beginner how one AI-built project moves from a rough idea to a checked live link, without teaching coding syntax or building a real project for them.
 
 ## Product promise
 
-The learner takes one realistic project from polished failure to an evidence-backed simulated release. The learning record follows a causal chain:
+> **Build your first project with AI—from idea to live link.**
 
-```text
-decision → consequence → evidence → diagnosis → bounded repair → rerun → transfer
-```
+The learner follows one fictional Repair Café website through the full project lifecycle, sees the decisions and files beneath its finished surface, and leaves with a reusable **First AI Build Playbook**.
 
-The governing principle is:
+Pentimento is an authored educational experience. It is not:
 
-> AI output is a proposal. A project becomes trustworthy through evidence.
+- a coding course;
+- a project generator or code editor;
+- a catalog or ranking of AI products;
+- a collection of prompt tricks;
+- a real repository or deployment service; or
+- evidence that one short journey establishes mastery.
 
-Pentimento does not promise mastery after one mission. It records what the learner demonstrated independently, after revision, with worked support, or not yet.
+## Name and metaphor
 
-## The mission
+A *pentimento* is an earlier version visible beneath a finished work. The metaphor expresses the product’s argument: a polished interface is only the visible surface. A trustworthy project also has an idea, boundaries, files, requests, checks, saved versions, and a recovery path beneath it.
 
-### The page beneath the polish
+Literal meaning always comes first:
 
-A fictional neighborhood Repair Café needs a simple Saturday event page. The organizer wants phone visitors to understand the event, decide whether their item fits, and contact the organizer. Accounts, booking, payments, chat, and live inventory are outside the first version.
+> A finished project is only the visible surface. Pentimento reveals the idea, tool choices, project files, AI requests, checks, and saved versions underneath it.
 
-The AI says the page is responsive, accessible, verified, and ready. The canonical starting evidence is consistent throughout the product:
+## Audience
 
-1. **Unsupported guarantee** — the page promises every walk-in a repair; `facts.md` says repairs depend on volunteer availability.
-2. **Broken contact path** — at 390px, the action is clipped and activation has no destination; the approved destination is `mailto:hello@repair-cafe.example`.
-3. **Empty execution record** — the AI says checks passed, but there is no recorded command, time, output, or result.
+The primary learner is an adult with an idea but no experience with AI coding tools, project folders, Git, GitHub, previews, hosting, APIs, or deployment.
 
-The baseline is recoverable but unverified. “Known good” is reserved for a version supported by current evidence.
+They can use a browser and write in ordinary language. They should not need to know:
 
-## First-use comprehension
+- which product category to open first;
+- what a repository, commit, environment variable, or host means;
+- how to read code;
+- how to set up an API key; or
+- which questions to ask before an AI begins changing files.
 
-The artistic identity never substitutes for a plain explanation. Before any assessed choice, the experience must establish:
+Pentimento treats a beginner as capable of meaningful product, scope, evidence, and release decisions. It introduces a technical term only when that term answers the learner’s current question.
 
-1. **What this is** — a safe, guided educational simulation, not a project generator.
-2. **Who the learner is** — the project lead; AI proposes and the learner decides.
-3. **What they will learn** — how to define, direct, check, repair, release, and reuse an AI-assisted project method.
-4. **What happens next** — inspect one part, make one focused decision, see its result, and revise safely.
+## Problem
 
-The welcome leads to one case briefing. Returning learners receive a contextual resume screen instead of being dropped into unexplained controls. A persistent “How this works” panel restores the interaction model at any point.
+AI building products combine conversation, file editing, code execution, previews, repositories, cloud tasks, and hosting in different ways. Their changing labels make the starting point unclear.
 
-## Ten-layer experience
+Beginner education often makes the problem worse by offering a brand leaderboard, a long tool menu, generic prompt patterns, or a celebratory publish button. Those approaches can create visible output without teaching:
 
-1. **First layer** — inspect the approved source and main visitor path, then decide what should happen before release; no unexplained confidence gate appears here.
-2. **Target** — define a phone-first person, useful outcome, observable proof, non-goals, and whether runtime AI is actually needed, one line at a time.
-3. **Record** — review repository items sequentially, revealing GitHub vocabulary only when requested, and create an honestly labelled baseline.
-4. **Assign** — choose and confirm the work mode before reviewing the context packet one item at a time.
-5. **Scope** — review one AI-proposed plan item at a time as Keep, Defer, or Needs an answer and expose the obligations it creates.
-6. **Check** — run evidence tools and distinguish trusted-source comparisons, observed behavior, change review, execution records, and AI self-report.
-7. **Evolve** — diagnose without editing, approve three bounded changes, and rerun facts, 390px visibility, destination, keyboard, and final-file safety against one exact version.
-8. **Release** — perform only the next missing release action while a ten-row generated ledger remains available for deeper inspection.
-9. **Transfer** — answer source, proof, and bounded-next-move questions sequentially, then explain what the corrected `$385.15` does and does not prove.
-10. **Revision Trace** — move through the learner’s actual path, inspect a qualitative evidence profile, write an optional reflection, and open reusable field notes.
+- what belongs in a first version;
+- where the project actually lives;
+- what each tool role can and cannot establish;
+- how to reduce AI guessing;
+- how to inspect work without reading every line of code;
+- how local, preview, and live versions differ; or
+- how to make the next change without starting over.
 
-## Learning spine: TRACE
+Pentimento teaches the durable lifecycle beneath those interfaces.
 
-- **Target** one user-visible and testable outcome.
-- **Record** trusted facts, decisions, files, and recoverable versions.
-- **Assign** one bounded task with relevant context, explicit authority, and proof of done.
-- **Check** the artifact independently instead of accepting its creator’s summary.
-- **Evolve** from reproducible evidence, rerun affected checks, and name the verified state.
+## End-of-journey outcomes
 
-TRACE is a durable project method, not a magic prompt syntax. The transfer scene hides the labels so the learner must reconstruct the method in a different medium.
+After the authored route, the learner can:
 
-## Signature instruments
+1. define one safe, small, complete first version;
+2. choose a sensible tool category and explain its tradeoff;
+3. distinguish an AI workspace, project folder, Git, GitHub repository, and web host;
+4. write a bounded planning request with trusted facts and an approval point;
+5. repeat the ask → inspect → run → check → save build loop;
+6. inspect facts, the important human path, phone layout, keyboard use, file changes, and actual command results;
+7. report a defect with observable and reproducible evidence;
+8. distinguish local, GitHub, preview, live, and recovery states;
+9. decide when a database, login, API, payment system, or runtime AI is justified; and
+10. begin one post-launch improvement without rebuilding everything.
 
-### Context Lens
+One completed journey is practice, not proof of lasting mastery.
 
-The Context Lens shows the AI work mode, chosen goal, trusted sources, current files, acceptance checks, authority boundary, and relevant phone reference. Missing or unsafe context remains visibly different from known context.
+## The Repair Café case
 
-### Evidence Ledger
+The learner inherits an overloaded request for a public website for a fictional neighborhood Repair Café. The request asks for attractive presentation alongside bookings, volunteer accounts, live availability, chat, donations, reminders, AI repair advice, and other additions.
 
-The Evidence Ledger maps requirements to evidence threads. Each check names its observed result, evidence location, what it proves, and what it cannot prove. An AI explanation remains an unsupported claim until another method supplies evidence.
+The first useful version is much smaller. It helps one nearby resident:
 
-### Revision Trace
+1. open a shared link from a phone;
+2. understand the date, place, accepted items, and volunteer-availability limit;
+3. decide whether the event fits their need; and
+4. email the organizer.
 
-The Revision Trace is a navigable record of the learner’s real initial choice, later confidence decisions, attempts, hints, scope decisions, checks, repairs, release record, and transfer reasoning. It avoids a generic replay and avoids presenting a numeric score as mastery.
+The approved facts are consistent across the brief, page, checks, and repair:
 
-## Reusable value
+- Saturday, July 25, from 10:00 to 14:00;
+- West Hall Community Room;
+- small appliances, clothing, and bicycles;
+- repairs depend on volunteer availability; and
+- questions go to `hello@repair-cafe.example`.
 
-The field manual turns mission actions into working material for the learner’s next project. Every unlocked note contains:
+Accounts, booking, payment, live inventory, chat, personal-data storage, and runtime AI are outside the first version. This keeps the complete lifecycle visible while preserving meaningful decisions about scope, sources, phone layout, keyboard use, versions, publication, and recovery.
 
-- the situation that should trigger it;
-- the principle in plain language;
-- a completed Repair Café example;
+## Opening experience
+
+The opening has three calm screens before the first project decision.
+
+### Welcome
+
+The first screen states:
+
+- what Pentimento teaches;
+- that no coding experience or API key is needed;
+- that the route takes about 25 minutes;
+- that nothing real is published;
+- the eight stops ahead; and
+- that the learner leaves with a reusable Playbook.
+
+The single primary action is **Show me the route**.
+
+### Three-role map
+
+The learner first sees three durable roles:
+
+1. **AI workspace** — helps plan, creates or changes project files, and may run checks.
+2. **Project home** — keeps the files and saved versions; in the demonstrated lane, a project folder with Git and a GitHub copy.
+3. **Web host** — turns one chosen version into a preview or public link.
+
+The connection is explicit:
+
+> **AI helps build → the project home remembers → the host publishes.**
+
+The map also explains that AI may build an ordinary product without living inside the finished product.
+
+### Layer reveal
+
+The learner sees the finished Repair Café page and uses a slider or equivalent buttons to expose its earlier layers: rough idea, brief, files, AI requests, checks, and saved versions.
+
+Only then does the learner begin the first project decision.
+
+## Eight-stop journey
+
+### 1. Idea — turn a wish into a first version
+
+The learner sorts six proposed features into **First version**, **Later**, or **Needs an answer**. Each choice reveals the worked-example recommendation and the obligations hidden inside the feature.
+
+The first version retains only the event facts, accepted-item list, and email path. Booking, accounts, donations, and AI advice move out of the immediate build.
+
+Produced artifact: a first-version brief containing one person, situation, useful result, complete path, trusted facts, must-haves, not-now list, and observable finish line.
+
+### 2. Tools — choose a sensible place to start
+
+The learner compares:
+
+- a hosted-builder lane for the shortest setup; and
+- a repository-aware lane for the most transferable files and version habits.
+
+Both are legitimate. Pentimento demonstrates the repository lane because its folder, Git, GitHub, checks, and host remain visible—not because every beginner must use it.
+
+Produced artifact: a tool route card naming the workspace, project home, host, reason for the lane, and constraints to check.
+
+### 3. Project home — create files that can be understood and recovered
+
+Five sequential foundation actions assemble:
+
+- one clearly named project folder;
+- `README.md` and `docs/brief.md`;
+- a safe file map and `.gitignore`;
+- an honest first Git commit; and
+- a GitHub copy without a secret file.
+
+The learner sees the separate jobs of the folder, Git, repository, GitHub, commit, README, public assets, package file, `.gitignore`, and `.env.local`.
+
+Produced artifact: a repository starter checklist and plain-language file map.
+
+### 4. Ask AI — ask for a plan before asking for everything
+
+The learner compares a vague “beautiful and innovative” request with a useful work specification. They assemble five groups of context covering:
+
+- situation and useful goal;
+- person, complete path, and trusted facts;
+- first-version boundaries;
+- concrete quality and finish checks; and
+- work mode and approval point.
+
+AI must inspect and plan, name likely files and checks, then stop before editing.
+
+Produced artifact: a complete copyable planning request.
+
+### 5. Build — work in three visible cycles
+
+The learner completes three simulated cycles:
+
+1. make the information readable;
+2. complete the visitor’s contact path; and
+3. make the complete path comfortable at phone and desktop sizes.
+
+Each cycle shows the request, expected files, preview, checks, and saved-version message. The learner repeats:
+
+> **Ask → inspect → run → check → save**
+
+AI’s completion statement remains a report until the learner observes the files or result.
+
+Produced artifact: three named, recoverable build versions and a reusable build-loop card.
+
+### 6. Check — find and repair what polish hides
+
+Three simulated lenses expose:
+
+- an unsupported promise that conflicts with the approved source;
+- a clipped contact action at 390px; and
+- an action that looks real but has no usable email destination.
+
+The learner records observed behavior, reproduction steps, expected result, preserved behavior, and checks to repeat. They assemble a bounded repair request, apply the simulated repair, rerun the relevant facts, visitor-path, phone, keyboard, type, test, and build checks, then inspect the version ribbon.
+
+Produced artifact: a reproducible repair report and a checked V4 candidate.
+
+### 7. Go live — publish one known version
+
+The learner moves V4 through five distinct states:
+
+1. **Local** — the private development workspace.
+2. **GitHub** — the reviewed commit and remote history.
+3. **Preview** — a hosted candidate checked outside the development tab.
+4. **Live** — the public address serving the selected version.
+5. **Recovery** — the known previous version and restore procedure.
+
+Every action is simulated. The final release card records the exact version, public-path result, known limits, and recovery instruction.
+
+Produced artifact: a reusable release card.
+
+### 8. Improve — change without starting over
+
+The organizer approves one new fact: step-free access is through the side entrance on Willow Lane.
+
+The learner:
+
+- decides the request belongs now;
+- updates the trusted source first;
+- requests one bounded page change;
+- repeats the affected checks; and
+- saves a new recoverable version.
+
+The lesson explains that a request involving identity, money, private data, live operations, or runtime AI deserves a new first-version decision rather than hiding inside a small update.
+
+Produced artifact: a post-launch change plan and complete Playbook.
+
+## First AI Build Playbook
+
+The Playbook is always available. It is not a reward locked behind completion.
+
+Its ten cards cover tool choice, first-version scope, project-home setup, planning, one build cycle, inspection, repair, secret safety, release, and post-launch change. Each contains:
+
+- the moment when it is useful;
+- exact actions;
+- the completed Repair Café example;
 - a blank reusable template;
-- the evidence the template should produce; and
-- the costly failure it helps prevent.
+- the observable result it should produce; and
+- the costly mistake it helps prevent.
 
-The complete first-project guide covers safe project selection, a fourteen-step route from brief to live check, six AI work modes (Explore, Plan, Implement, Diagnose, Review, Verify), evidence types and their limits, repository and secret handling, preview/live separation, and a plain-language glossary.
+Cards become marked **Practiced** as the learner completes their matching stop. The learner may copy a single template or the complete Playbook and use the seven-day plan to begin another project.
 
 ## Interaction model
 
+Every core screen follows:
+
 ```text
-orient → inspect one thing → choose → see the consequence → revise → apply again
+outcome → short explanation → worked example → one action →
+visible consequence → reusable takeaway → optional depth
 ```
 
-- The welcome and case briefing establish product, role, goal, interaction model, and safety before assessment.
-- Future questions are not rendered until the learner explicitly continues; hidden controls cannot receive keyboard focus.
-- Target, Record, Assign, Scope, Evolve, Release, and Transfer reveal one focused decision or next action at a time.
-- Completed decisions collapse into visible summaries and remain editable.
-- Technical glossaries and full evidence tables are optional disclosures at the moment they become useful.
-- Explanatory option details stay hidden until the learner commits.
-- Distractors are plausible incomplete professional decisions, not joke answers.
-- Incorrect choices expose a human or project consequence and remain recoverable.
-- Hints progress from a goal cue to a strategy cue to a worked action.
-- Confidence appears only at later meaningful boundaries, after the interaction model is understood, so calibration can be discussed without rewarding bravado.
-- Progress is versioned, validated, persisted locally, and migrates safely from the earlier mission format.
-- Scene changes move to the beginning of the new layer; dialogs contain and restore focus.
+Product rules:
 
-## Release integrity
+- one dominant new decision or action at a time;
+- no dense dashboard on arrival;
+- literal instruction before metaphor;
+- plain language before a technical term;
+- worked consequences instead of unexplained right/wrong feedback;
+- back navigation and revision without penalty;
+- drag or visual interactions always have button and keyboard equivalents;
+- technical depth available in context;
+- no scores, streaks, badges, mastery labels, or quiz theatrics; and
+- Playbook access throughout the journey.
 
-The release experience is deliberately not a checklist of claims. Its ten rows are computed from evidence produced elsewhere. Completion requires:
+## Persistence
 
-- five passing post-repair reruns tied to the exact release version;
-- README purpose, setup, checks, limitations, and runtime-AI decision reviewed for that version;
-- a recorded successful production build for that version;
-- a hosted-preview facts and core-path smoke test;
-- the exact version plus a concrete recovery procedure;
-- explicit human approval after evidence and limitations are visible;
-- the simulated publication action; and
-- a live facts and core-path smoke test of that same version.
+Pentimento stores a versioned v3 progress record in local browser storage. It preserves the current stop, meaningful substep, feature decisions, chosen lane, prompt construction, build phase, checks, repair state, release step, improvement step, and completion.
 
-Publishing is a distinct authority boundary. Preview success is not treated as production evidence, and deployment success is not treated as user-path evidence.
+Returning learners receive a contextual resume screen rather than unexplained controls. Invalid storage falls back safely. Restart requires confirmation and states that the local learning record will be removed.
 
-## Role of GPT‑5.6
+V2 mission state is never silently interpreted as v3 curriculum state.
 
-Core learning truth is deterministic. GPT‑5.6 may personalize the closing debrief only after the server validates the complete versioned mission and recomputes its evidence profile.
+## GPT‑5.6 Teaching Mirror
 
-The model cannot:
+At completion, the learner may explicitly open the optional Teaching Mirror and submit:
 
-- change a decision or unlock a scene;
-- decide correctness, release readiness, or an evidence rating;
-- invent an action the learner did not take;
-- turn an AI assertion into proof; or
-- claim mastery from one mission.
+- a first-version brief for their own idea; and
+- the hosted-builder or repository-aware lane they selected.
 
-Judge mode remains complete without credentials. A live-model failure returns the authored debrief rather than interrupting the learning outcome.
+The structured response contains:
 
-## Visual and experiential direction
+- one clear strength;
+- exactly two unresolved assumptions as questions;
+- one candidate feature to postpone with a reason;
+- one honest lane tradeoff; and
+- exactly three small next moves.
 
-Pentimento uses a conservation-studio language rather than a conventional learning dashboard:
+The mirror is reflection, not assessment. It cannot grade, score, claim mastery, decide progression, generate or execute a project, rank brands, access a repository, request a credential, publish, or perform another external action.
 
-- warm canvas and paper surfaces with dark editorial ink;
-- ultramarine for current/selected, mauve for provisional AI material, viridian for verified evidence, crimson for failure, and neutral grey for untested states;
-- registration marks, marginal notes, underlayers, and one continuous evidence thread;
-- serif display typography paired with precise sans-serif instructional text;
-- restrained learner-triggered motion with reduced-motion support; and
-- no orange, perpetual glow, confetti, streaks, badges, or paint-splatter kitsch.
+Only the deliberately submitted brief, lane, and a random session identifier leave the browser. Progress history and repository access are excluded. The model receives the brief, lane, and a derived privacy-preserving safety identifier. The credential remains server-side, the request uses structured output and `store: false`, and the rendered result is treated as untrusted text. Authored fallback content preserves the learning outcome on missing credentials, refusal, timeout, limits, or provider failure.
 
-The artifact and instrumentation share one coherent visual grammar at 320px, 390px, tablet, and desktop widths.
+## Functional and safety boundaries
 
-## Functional boundaries
+Pentimento does not:
 
-Pentimento is an educational simulation. It does not:
+- create or edit a real project;
+- execute learner code or arbitrary commands;
+- connect to or mutate a GitHub repository;
+- create an account, database, payment, or API integration;
+- publish a real deployment;
+- send an email or message;
+- collect Repair Café visitor data;
+- require an OpenAI key for the authored route; or
+- claim that completion proves durable competence.
 
-- generate arbitrary projects or execute learner code;
-- create or mutate a real GitHub repository;
-- publish a real release from inside the mission;
-- send an email, make a purchase, change access, or collect Repair Café visitor data;
-- require runtime AI for the simulated finished page;
-- authenticate learners, sync progress, or provide high-stakes grading; or
-- claim that completing one mission proves durable competence.
+The Repair Café files, commits, URLs, and release actions are fictional or simulated.
 
-It stores validated progress in the learner’s browser. The optional debrief endpoint sends only derived evidence plus optional reflection to GPT‑5.6 in live mode.
+## Visual direction
+
+Pentimento uses a restrained editorial conservation-studio language:
+
+- warm paper and dark ink;
+- ultramarine for current or selected work;
+- mauve for provisional AI material;
+- viridian for checked states;
+- crimson for observed failure;
+- registration marks, underlayers, and marginal notes;
+- serif display type with precise sans-serif instruction; and
+- learner-triggered motion with reduced-motion support.
+
+It avoids generic dashboard chrome, perpetual glow, confetti, badges, orange, paint-splatter kitsch, and decorative complexity that competes with instruction.
 
 ## Success signals
 
 A first-time learner should be able to:
 
-- answer “What is this, what is my role, what will I learn, and what do I do next?” within the opening moments;
-- explain why the polished AI summary was insufficient;
-- write a specific person/outcome/proof/non-goal brief;
-- distinguish a recoverable baseline from a verified version;
-- name what context and authority an AI task actually needs;
-- connect each important claim to evidence and state the evidence’s limits;
-- write a reproducible, bounded repair request;
-- explain why release approval, exact version, live check, and recovery are separate; and
-- apply the same reasoning to the spreadsheet without TRACE labels.
+- explain within the opening moments that Pentimento teaches the idea-to-live AI-building route;
+- name the AI workspace, project home, and host roles after the map;
+- explain both starting lanes and choose one for a stated reason;
+- distinguish folder, Git, GitHub, commit, preview, live, and recovery after their relevant stops;
+- improve a vague request with context, boundaries, checks, and an approval point;
+- state the ask → inspect → run → check → save loop;
+- write a reproducible defect report;
+- explain why build success, a polished screenshot, and AI’s summary are each incomplete evidence;
+- name the exact release candidate and recovery action; and
+- use the Playbook without replaying the course.
 
-A judge should be able to see that complete causal arc in under three minutes while still finding deeper, reusable instruction in the full mission.
+A judge should see the complete causal arc in under three minutes while a first-time learner can explore the full depth in about 25 minutes.
 
-The acceptance contract is [QUALITY_STANDARD.md](QUALITY_STANDARD.md). If this brief and the implemented experience disagree, the quality standard and current verified behavior take precedence.
+The implementation acceptance contract is [QUALITY_STANDARD.md](QUALITY_STANDARD.md). The detailed v3 design specification remains in [V3_PRODUCT.md](V3_PRODUCT.md).

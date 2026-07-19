@@ -1,26 +1,26 @@
 import type { Metadata, Viewport } from "next";
 
-import "./globals.css";
+import "./studio.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://pentimento.aethe.me"),
-  title: "Pentimento — See the decisions beneath the finished surface",
+  title: "Pentimento — Build your first project with AI",
   description:
-    "A guided simulation where complete beginners learn to lead, inspect, repair, and safely share one AI-built project—without writing code.",
+    "A guided studio for complete beginners: turn an idea into a small, checked, published project while learning what AI tools, GitHub, prompts, previews, and versions actually do.",
   applicationName: "Pentimento",
   openGraph: {
-    title: "Pentimento — Build with AI. Know what to trust.",
+    title: "Pentimento — From an idea to a live project",
     description:
-      "Lead one AI-built project from polished draft to evidence-backed release. Guided, code-free, and safe to explore.",
+      "Learn the whole AI-building path by guiding one small project from a rough idea to a live, recoverable version.",
     type: "website",
     url: "/",
     siteName: "Pentimento",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Pentimento — Build with AI. Know what to trust.",
+    title: "Pentimento — Build your first project with AI",
     description:
-      "A guided, code-free simulation for learning how to lead a trustworthy AI-built project.",
+      "A calm, practical studio for learning tools, prompts, GitHub, checking, publishing, and improvement through one complete project.",
   },
   alternates: {
     canonical: "/",
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   colorScheme: "light",
-  themeColor: "#f4f2ed",
+  themeColor: "#f3efe6",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

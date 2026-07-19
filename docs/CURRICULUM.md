@@ -2,325 +2,682 @@
 
 ## Audience promise
 
-Pentimento assumes the learner has never used Git, GitHub, a coding agent, a test suite, environment variables, preview hosting, or deployment tooling. It does not assume that “beginner” means incapable. Each technical idea appears in plain language at the moment it becomes useful, then immediately changes a consequential decision.
+Pentimento assumes the learner has never used Git, GitHub, an AI coding agent, a project repository, a test suite, environment variables, preview hosting, or deployment tooling.
 
-The curriculum teaches **build judgment, not prompt tricks**.
+The curriculum teaches **how to build a project with AI, not how to write code**. It does not substitute prompt vocabulary for understanding. Each technical idea appears in plain language at the moment it changes a real decision.
 
-Before teaching that judgment, the experience gives the learner a usable mental model: Pentimento is a safe guided simulation; the learner is the project lead; AI made a proposal; each layer presents one small task; and no choice publishes, emails, or changes a real project. Practical meaning comes before the studio metaphor or assessment.
+By the end of the authored route, a learner should have practiced how to:
 
-By the end of one mission, a learner should have practiced how to:
+- turn a broad idea into one complete and checkable first version;
+- choose a tool role based on setup, ownership, visibility, and recovery;
+- give the work a durable home outside an AI conversation;
+- ask AI to plan before editing and stop at an approval point;
+- build in small, observable, recoverable slices;
+- inspect work even when they cannot read every line of code;
+- report a defect through observation rather than guessing at its cause;
+- publish one exact version and test it after publication;
+- identify when another system creates more responsibility than value; and
+- make the next change without reopening the whole project.
 
-- turn an idea into one observable human outcome;
-- decide whether AI belongs only in the build process or also in the finished product;
-- give a project durable, recoverable context outside a chat;
-- separate modes such as planning, implementing, diagnosing, reviewing, and verifying;
-- bound what AI may inspect, change, or do externally;
-- review the systems and obligations hiding inside a proposed feature;
-- connect each completion claim to evidence with known limits;
-- diagnose before editing and repair the smallest reproducible gap;
-- rerun failed and nearby checks against one exact version; and
-- distinguish a verified preview, approval to publish, a live check, and a recovery method.
+One guided project supplies practice, not a claim of mastery.
 
-One mission supplies performance evidence, not a claim of durable mastery.
+## Governing ideas
 
-## TRACE
+### Teach roles before products
 
-TRACE is a transferable project method rather than model-specific prompt syntax.
+Product names, feature sets, prices, and interfaces change. The curriculum begins with durable jobs:
 
-### T · Target
+| Role | Plain job | Does not guarantee |
+| --- | --- | --- |
+| **AI workspace** | Helps plan, changes files, explains work, and may run checks | Correct facts, a tried visitor path, a saved history, or a public result |
+| **Project home** | Keeps files and recoverable versions; commonly a folder with Git and a GitHub copy | That the project runs, is safe, or is deployed |
+| **Web host** | Turns one chosen version into a preview or public link | That the public path works or matches the checked version |
 
-Define:
+The durable connection is:
+
+> **AI helps build → the project home remembers → the host publishes.**
+
+One product may combine these roles. The learner should still ask what files exist, where history lives, which version is hosted, and how that version can be recovered.
+
+### Teach a lifecycle, not a magic prompt
+
+The route is:
+
+> **Idea → Tools → Project home → Ask AI → Build → Check → Go live → Improve**
+
+Prompts are work specifications. Their value comes from useful context, trusted sources, boundaries, approval points, and observable checks—not length, role-play, or secret wording.
+
+### Teach complete paths before feature lists
+
+A first version is the smallest complete useful journey, not the greatest number of visible features.
+
+For the Repair Café:
 
 ```text
-For: [one person in one situation]
-Outcome: [what they can decide or do]
-How we will know: [observable, repeatable checks]
-Not in this version: [explicit non-goals]
-Runtime AI: [needed or not needed, and why]
+Nearby resident on a phone
+→ reads when, where, and accepted items
+→ understands repair is not guaranteed
+→ opens an email to the organizer
 ```
 
-Useful habits:
+The path needs no account, booking system, payment, database, stored personal data, live inventory, chat, or runtime AI.
 
-- Begin with the person’s situation and a useful change, not an impressive feature list.
-- Prefer an observable action or decision to a subjective goal such as “feel delighted.”
-- Treat AI-created personas, facts, promises, and statistics as assumptions until a trusted source supports them.
-- Define the smallest complete journey: arrival → understanding → meaningful action → visible result.
-- Ask what new system each feature creates and what that system could fail, expose, or obligate someone to maintain.
-- Remove an entire unnecessary system instead of leaving several half-finished systems.
-- Decide whether the final product genuinely needs a model. Fixed logic or verified content may solve the problem with less cost, latency, privacy risk, and operational failure.
+### Separate saved, built, previewed, live, and working
+
+- **Saved** means one state has a name in version history.
+- **Built** means the production-build command produced a host-ready artifact.
+- **Previewed** means one hosted candidate was opened and checked.
+- **Live** means the intended public address serves a selected version.
+- **Working** is always relative to a named path and current evidence.
+
+No one state silently proves another.
+
+## Safe first-project filter
+
+A good first project usually has:
+
+- one person;
+- one complete path;
+- non-sensitive information;
+- reversible actions;
+- a result visible in a browser;
+- no payment or permission system; and
+- facts with a named owner or source.
+
+Pause and narrow when a first idea includes:
+
+- accounts, identity, or multiple permission roles;
+- private, medical, financial, or children’s data;
+- payment, refunds, or financial decisions;
+- live collaboration, real-time availability, or complex databases;
+- autonomous messages or external actions;
+- app-store distribution;
+- generated advice that could cause physical, legal, medical, or financial harm; or
+- operations no person has agreed to maintain.
+
+These ideas may be valuable. They are simply poor places to hide beginner complexity.
+
+## When another system is justified
+
+| System | Add it only when | Work it creates |
+| --- | --- | --- |
+| **Database** | Information must persist and be shared across sessions, devices, or people | Source of truth, editing, access, backups, stale data, recovery |
+| **Login** | Identity or permission changes what a person may see or do | Account recovery, access rules, security, deletion, support |
+| **External API** | The outcome depends on data or an action owned by another service | Credentials, failures, limits, cost, privacy, terms |
+| **Runtime AI** | The visitor needs generation or interpretation that simpler rules or verified content cannot supply | Protected keys, usage cost, latency, unsafe input, uncertain output, evaluation, fallback |
+| **Payment** | Price, fulfillment, refunds, disputes, security, support, and legal ownership are understood | Transaction states, receipts, fraud, tax questions, operations |
+
+Using AI during development is not a reason to put AI inside the finished product.
+
+## The canonical case
+
+The fictional neighborhood Repair Café uses these approved facts:
+
+```text
+Saturday, July 25 · 10:00–14:00
+West Hall Community Room
+Small appliances, clothing, and bicycles
+Repairs depend on volunteer availability
+Questions: hello@repair-cafe.example
+```
+
+The first-version visitor is a nearby resident checking from a phone. The result is to decide whether the event fits their need and contact the organizer.
+
+The complete journey uses one internally consistent sequence:
+
+```text
+rough idea
+→ approved brief
+→ project home
+→ bounded planning request
+→ three saved build cycles
+→ observed defects
+→ bounded repair
+→ checked V4
+→ simulated live V4
+→ one approved content update
+```
+
+## Stop 1 — Idea
+
+### Learning outcome
+
+Choose one person, one useful result, one complete path, trusted facts, must-haves, a not-now list, and a repeatable finish line.
+
+### Interaction
+
+The learner sorts six tempting features:
+
+- event facts and accepted-item list — first version;
+- email link — first version;
+- booking system — later;
+- volunteer accounts — later;
+- donations — needs an answer before any implementation; and
+- AI repair advice — later.
+
+The worked recommendation appears after each decision. It names the concrete obligations created by identity, personal data, changing data, money, runtime AI, and ongoing operations.
+
+### Reusable brief
+
+```text
+One person:
+Their situation:
+Useful result:
+One complete path:
+Trusted facts:
+Must be in version one:
+Not now:
+Complete when:
+```
 
 Repair Café example:
 
 ```text
-For: A nearby resident checking the event from a phone
-Outcome: Decide whether their item fits and contact the organizer
-How we will know: Facts match; key event details are present;
-                  email works at 390px
-Not in this version: Accounts, booking, payment, chat, or live inventory
-Runtime AI: Not needed; visitors need verified facts and an email link
+One person: A nearby resident with an item that might be repairable
+Their situation: Checking from a phone before Saturday
+Useful result: Decide whether to attend and email one question
+One complete path: Open → understand → decide → email
+Trusted facts: The organizer-approved event facts
+Must be in version one: Summary, items, limit, email link, phone layout
+Not now: Accounts, booking, payment, live data, chat, AI advice
+Complete when: Facts match and the path works at desktop and 390px by keyboard
 ```
 
-### R · Record
+### What it prevents
 
-Plain-language mental model:
+A polished prototype with no clear visitor, invented facts, several unfinished systems, and no observable finish line.
 
-- **Project folder:** the project files on the current computer.
-- **Git:** a tool that saves named versions and shows before-and-after changes.
-- **Repository:** the project files plus the version history Git has recorded.
-- **GitHub:** a remote place to store, share, and review a Git repository.
-- **Commit:** one named version of a coherent change.
-- **Baseline:** a saved starting state; recoverable, but not verified merely because it was saved.
-- **Diff:** the additions, removals, and edits between two states.
-- **README:** the project’s purpose, setup, checks, limitations, and handoff notes.
-- **`.gitignore`:** the list of local, generated, private, or secret-bearing files Git must not save.
-- **Environment variable:** a setting supplied outside source files, often by a computer or hosting platform.
+## Stop 2 — Tools
 
-Beginner repository route:
+### Learning outcome
+
+Choose a starting lane by constraints instead of product popularity.
+
+### Two legitimate lanes
+
+#### Shortest setup
 
 ```text
-□ Create or open one project folder and one Git repository
-□ Choose public or private GitHub visibility deliberately
-□ Add README.md with purpose, scope, setup, checks, and limitations
-□ Add the approved brief and named trusted-source files
-□ Add asset licences and credits where needed
-□ Add .gitignore before creating local secret-bearing files
-□ Add .env.example only when real configuration exists; use names/placeholders only
-□ Add AGENTS.md when durable agent commands, constraints, and done criteria help
-□ Run the starting project and record the command and actual result
-□ Inspect the exact files Git will save
-□ Save a baseline labelled “unverified starting state”
+Hosted AI builder
+→ connected repository or export
+→ built-in or separate host
 ```
 
-Call a later version “known good” only after the current checks support that claim.
+Choose it when fast visual iteration and minimal setup matter most. Before relying on it, check export, ownership, version history, privacy, cost, hosting limits, and recovery.
 
-Never commit credentials, `.env.local`, real user exports, database dumps, private logs, or unrelated transcripts. A private repository is not a secret manager. If a credential leaks, revoke or rotate it first; deleting the visible file does not reliably remove it from repository history.
-
-### A · Assign
-
-Choose the work mode before choosing the words:
-
-| Mode | Meaning | Expected return |
-| --- | --- | --- |
-| Explore | Compare possibilities; do not modify the project | Options, trade-offs, assumptions, unanswered questions |
-| Plan | Inspect context and propose bounded steps; do not modify | Likely files, dependencies, risks, checks, required decisions |
-| Implement | Make one agreed change and run the agreed checks | Changed files, actual results, assumptions, remaining risk |
-| Diagnose | Reproduce a failure and identify its likely cause; do not fix yet | Reproduction, evidence, hypothesis, uncertainty, repair proposal |
-| Review | Inspect existing changes; do not edit | Findings ordered by consequence with evidence locations |
-| Verify | Run named checks on an exact version | Procedure, exact result, evidence location, remaining gap |
-
-Reusable handoff:
+#### Most transferable
 
 ```text
-Mode:
-Outcome:
-Trusted context:
-One change:
-Constraints / non-goals:
-You may:
-Ask before:
-Done when:
-Return: files changed or proposed, assumptions, checks actually run,
-        evidence, and remaining risk
+Repository-aware AI agent
+→ project folder, Git, and GitHub
+→ separate host
 ```
 
-Authority rule:
+Choose it when visible files, reviewable history, portability, and custom work matter more than setup speed. Expect local setup, commands, secret handling, and a separate deployment step.
 
-> The harder an action is to reverse—and the more people, money, access, or data it affects—the tighter its approval and evidence must be.
+Pentimento demonstrates this lane to make the lifecycle visible, not to declare a winner.
 
-AI can usually inspect named local files, explain, draft a plan, and run agreed local checks. Broad edits, dependency changes, deletion, network use, or new configuration deserve review. Publishing, sending messages, spending money, changing access, and mutating important data require explicit human approval for the exact action.
+### Tool plan
 
-High-value habits:
+```text
+AI workspace:
+Project home:
+Preview / public host:
+Why this lane fits:
+Before starting, check:
+- ownership and export
+- privacy
+- current costs and limits
+- version history
+- supported platform
+- recovery
+```
 
-- Point to trusted files instead of pasting an entire project or unrelated directory.
-- State what is authoritative when sources conflict.
-- Ask the AI to inspect existing patterns before proposing a new one.
-- Request one coherent slice at a time.
-- Name constraints, non-goals, permission boundaries, and proof of done.
-- Ask for assumptions and concise rationale, not hidden chain-of-thought.
-- Require a return report containing changed files, checks actually run, concrete evidence, and remaining uncertainty.
-- Stop when work crosses the agreed boundary; revise the plan before expanding permission.
+### Selection questions
 
-#### Review the proposed scope
+1. Does the finished product itself need AI?
+2. Do I value least setup or the clearest view of real files?
+3. Can I export the files or connect them to GitHub?
+4. Who pays for building, hosting, storage, and runtime usage?
+5. Can I identify and restore an earlier version?
 
-Every plan item receives one of three dispositions:
+### What it prevents
 
-- **Keep** — directly serves the chosen outcome and has a clear check.
-- **Defer** — creates obligations the first complete version does not need.
-- **Needs an answer** — may matter, but the trusted brief does not define it well enough to build safely.
+Choosing a complex or locked-in stack because a product demo showed more features.
 
-Do not reduce scope to a file count. Make the obligations visible: user data, identity, permissions, dependencies, network calls, error states, recovery, accessibility, moderation, ongoing support, and evidence required if built.
+## Stop 3 — Project home
 
-### C · Check
+### Learning outcome
 
-> “Done” is a claim. Evidence makes it trustworthy.
+Understand where the project lives, how it is saved, what another person needs, and what must remain private.
 
-Evidence strength depends on the claim. Useful evidence types include:
+### Plain-language distinctions
+
+- **Project folder:** the files in the current workspace or computer.
+- **Git:** the local tool that records named versions and shows differences.
+- **Repository:** the project files plus their Git history and instructions.
+- **GitHub:** a service that can store and share that repository remotely.
+- **Commit:** one named snapshot of selected and reviewed changes.
+- **Diff:** what was added, removed, or edited between states.
+- **README:** the front-page explanation of purpose, setup, checks, and limits.
+- **`.gitignore`:** the list of generated or private files Git must not save.
+- **Environment variable:** a setting supplied outside source files.
+
+### Canonical file map
+
+```text
+repair-cafe/
+├── README.md          purpose, setup, checks, limitations
+├── docs/brief.md      approved first version and trusted facts
+├── app/page.tsx       visible page structure
+├── app/styles.css     layout, type, focus, phone behavior
+├── public/            intentional public assets and credits
+├── package.json       dependencies and named commands
+├── .gitignore         generated and private paths not to save
+└── .env.local         private local values; never commit
+```
+
+### Five foundation steps
+
+1. Create one clearly named project folder.
+2. Add `README.md` and the approved brief before requesting a full interface.
+3. Start Git and inspect which files are about to be saved.
+4. Save the brief as an honestly named first version.
+5. Push the reviewed commit to a private or public GitHub repository.
+
+### Minimal safe command route
+
+```bash
+git status
+git diff
+git add README.md docs/brief.md
+git commit -m "docs: define Repair Café first version"
+git push
+```
+
+Each command is taught by purpose. Learners are not expected to memorize an exhaustive Git interface.
+
+### Secret safety
+
+> A secret belongs in a protected environment setting, never in a prompt, screenshot, public file, commit, or browser-delivered code.
+
+Before saving, read every selected file and search for tokens, passwords, private data, and unexpected generated content.
+
+If a credential is exposed:
+
+1. revoke or rotate it at the provider immediately;
+2. remove it from the project and repository history;
+3. store the replacement in the correct protected setting; and
+4. inspect provider usage and billing.
+
+Deleting the visible line is not sufficient.
+
+### What it prevents
+
+Losing work, depending on one conversation as project memory, committing a secret, or being unable to identify the state that was checked.
+
+## Stop 4 — Ask AI
+
+### Learning outcome
+
+Turn a vague request into a bounded planning task.
+
+### Weak request
+
+```text
+Build me a beautiful, innovative Repair Café app.
+Make every useful feature and deploy it.
+```
+
+This does not identify a person, trusted facts, scope, checks, work mode, or approval boundary.
+
+### Planning request
+
+```text
+I am building my first project and need plain-language explanations.
+
+Goal:
+Person and situation:
+Trusted source:
+Complete path:
+Must include:
+Do not add:
+Quality constraints:
+
+First inspect the repository and propose three small build cycles.
+For each cycle, return:
+- visible result
+- likely files
+- preview check
+- command to run
+- saved-version message
+
+Do not edit files yet. Stop after the plan and wait for approval.
+```
+
+### Review questions
+
+- Can AI identify one person and one useful result?
+- Are the trusted facts named or stored in a file?
+- Does the request say what must not be added?
+- Can another person observe the finish line?
+- Does AI know whether to plan, edit, run, or explain?
+- Is there a clear point where AI must stop for review?
+
+### One-change request
+
+```text
+Implement only:
+Preserve:
+Do not add:
+Run:
+Ask before any external or hard-to-reverse action.
+Return changed files, actual results, assumptions, and remaining gaps.
+Stop for my preview review.
+```
+
+### What it prevents
+
+One large, opaque implementation based on unstated assumptions and permission to do everything.
+
+## Stop 5 — Build
+
+### Learning outcome
+
+Build one visible improvement at a time and keep an understandable recovery point.
+
+### Core loop
+
+> **Ask → inspect → run → check → save**
+
+- **Ask:** give one bounded request from the approved plan.
+- **Inspect:** read the changed-file list, visible text, package/configuration changes, and AI assumptions.
+- **Run:** open the current result and execute the agreed command.
+- **Check:** try the important human path and compare facts with their source.
+- **Save:** select reviewed files and create one named Git version.
+
+### Repair Café cycles
+
+| Cycle | Visible result | Main check | Saved state |
+| --- | --- | --- | --- |
+| 1. Information structure | Complete facts in a clear phone-first order | Page loads; every approved fact appears | V1 · readable event information |
+| 2. Visitor action | Accepted items and contact path | Exact email destination and keyboard use | V2 · complete visitor path |
+| 3. Responsive finish | Elegant phone and desktop presentation | 390px, keyboard, tests, production build | V3 · responsive first version |
+
+The interface keeps three synchronized views: AI request/report, changed files, and running preview.
+
+AI’s summary is labelled as a report until another observation supports it. A saved version records a state; it does not prove that state is correct.
+
+### What a non-coder can inspect
+
+- every new public sentence;
+- whether page order matches the complete path;
+- the changed-file names and any unexpected file;
+- new packages, permissions, network calls, or configuration;
+- the desktop and 390px preview;
+- the full path by pointer and keyboard; and
+- the final result of each agreed command.
+
+### What it prevents
+
+Large unreviewable changes, silent scope expansion, and saving several unrelated changes as one impossible-to-explain version.
+
+## Stop 6 — Check
+
+### Learning outcome
+
+Distinguish a polished result from a tried result, then write a reproducible and bounded repair request.
+
+### Canonical defects
+
+1. The page promises “Every walk-in gets a repair,” while the approved source says repairs depend on volunteer availability.
+2. At 390px, the contact action extends outside the visible page.
+3. Selecting the contact action does not open an email to the approved address.
+
+### Defect report
+
+```text
+Observed:
+Steps to reproduce:
+Expected:
+Environment / URL / version:
+Evidence:
+Must preserve:
+After the change, repeat:
+```
+
+Describe observable behavior before naming a technical cause.
+
+### Practical checks
+
+1. Do all public facts match the trusted source?
+2. Can the intended person complete the main path?
+3. Does it work at phone and desktop sizes?
+4. Can it be used by keyboard with visible focus and clear labels?
+5. What happens with missing, long, invalid, slow, or failed input where relevant?
+6. What exactly changed, including files, packages, permissions, configuration, and network calls?
+7. Which named version was checked, and what remains untested?
+
+### Evidence limits
 
 | Evidence | Supports | Does not establish |
 | --- | --- | --- |
-| Trusted-source comparison | Whether project claims match an approved source | Whether the interface works |
-| Diff review | What files, dependencies, configuration, and behavior changed | Whether the new behavior succeeds |
-| Production build | Whether exact code/configuration produces an artifact | Whether a visitor can complete the main path |
-| Automated test | Whether the behaviors encoded in that test pass | Requirements the test never encoded |
-| Screenshot | What one visual state looked like at one size | Keyboard use, destination, data flow, or other sizes |
-| Representative path | What a user could observe while doing the important task | Untried paths or environments |
-| AI summary | What AI intended, believes, or says it ran | What the project actually does |
+| Source comparison | Whether public claims match approved facts | Whether interaction works |
+| Diff review | What files and configuration changed | Whether behavior succeeds |
+| Production build | Whether exact code produces a host-ready artifact | Whether a visitor completes the path |
+| Automated test | Whether encoded behaviors pass | Requirements the test omitted |
+| Screenshot | One visible state at one size | Keyboard use, link destination, or other sizes |
+| Representative path | What one person observed in one environment | Every untried path |
+| AI summary | What AI intended or reports | What the project actually does |
 
-An AI explanation can help select the next check. It cannot independently verify its own work.
-
-The Evidence Ledger records:
+### Recovery loop
 
 ```text
-Claim:
-Method or check:
-Exact URL / environment / version:
-Result: pass / fail / not run
-Evidence location:
-What this proves:
-What it does not prove:
-Remaining gap:
+reproduce → narrow → approve the smallest repair →
+repeat the original case → check nearby behavior → save a new version
 ```
 
-Before accepting a change, inspect:
+The repaired V4 repeats approved facts, complete path, 390px, keyboard, typecheck, tests, and production build checks.
 
-- changed and unexpectedly deleted files;
-- new dependencies, configuration, permissions, network calls, or environment handling;
-- functionality outside the brief;
-- secrets, personal data, invented facts, and unlicensed materials;
-- whether the important path works at representative sizes and by keyboard;
-- whether empty, error, denied, duplicate, refresh, and slow states matter for this project; and
-- whether tests, documentation, and the AI summary match the exact version being reviewed.
+### What it prevents
 
-Five practical test lanes:
+Vague “fix it” requests, diagnosis by guesswork, unrelated rewrites, and a repaired defect that returns because no one repeated the failing case.
 
-1. **Happy:** expected person and valid input.
-2. **Empty/error:** no data, invalid input, network failure, denied permission.
-3. **Boundary:** phone width, long text, refresh/back, duplicate action, slow connection.
-4. **Accessibility:** keyboard, focus, labels, contrast, feedback, zoom, responsive layout.
-5. **Misuse/access:** wrong user, unexpected input, excessive requests, unauthorized action.
+## Stop 7 — Go live
 
-A green suite only supports behaviors it actually covers. A build indicates code and configuration health. A screenshot proves one visible state. None of them alone proves the whole human outcome.
+### Learning outcome
 
-### E · Evolve
+Move one exact checked version into public use and know how to recover.
 
-Begin with diagnosis, not permission to edit:
+### Release states
+
+| State | Meaning | Learner action |
+| --- | --- | --- |
+| **Local** | Private development result | Complete the path, inspect changes, run checks |
+| **GitHub** | Remote repository and history | Push the selected commit; confirm no private file |
+| **Preview** | Hosted release candidate | Open outside the development tab and repeat important checks |
+| **Live** | Intended public address | Publish V4 and try the public path fresh |
+| **Recovery** | Known restore route | Record the prior version and host restore action |
+
+### Release card
 
 ```text
-Mode: Diagnose first; do not edit yet
-Observed:
-How to reproduce:
-Expected:
-Evidence anchor:
-Environment / URL / version:
-Must preserve:
-Smallest permitted change:
-After repair, rerun:
+Project:
+Exact saved version / commit:
+Production build result:
+Preview URL and check:
+Known limitations:
+Human approval:
+Public URL and live-path result:
+Previous working version:
+Recovery procedure:
 ```
 
-Recovery loop:
+A successful host deployment is followed by a public-path check. Preview success does not prove production, and GitHub is not the public application URL.
+
+### What it prevents
+
+Publishing the wrong commit, treating deployment success as visitor success, or discovering there is no recovery procedure during a failure.
+
+## Stop 8 — Improve
+
+### Learning outcome
+
+Make one post-launch change without reopening every product decision.
+
+### Canonical update
+
+Approved request:
+
+> Step-free access is through the side entrance on Willow Lane.
+
+The sequence is:
+
+1. confirm the change supports the existing visitor result;
+2. update `docs/brief.md`, the trusted source;
+3. name the public file that should change;
+4. preserve facts, contact path, phone layout, and keyboard use;
+5. request only the approved wording change;
+6. repeat facts, complete path, 390px, keyboard, tests, and build;
+7. save, preview, publish, and check a new version.
+
+### Post-launch template
 
 ```text
-reproduce → narrow → form a hypothesis → approve the smallest fix →
-rerun the original case → check nearby behavior → save a verified version
+New approved fact or request:
+Why it belongs now:
+Trusted source update:
+Change only:
+Preserve:
+Repeat these checks:
+New saved-version label:
 ```
 
-Do not paraphrase exact evidence into “broken,” change several possible causes at once, suppress an error merely to get a green check, or continue stacking work on a failing state.
+If the update introduces identity, money, private data, live operations, or runtime AI, it deserves a new brief and first-version decision.
 
-In the Repair Café case, the bounded patch:
+### What it prevents
 
-- replaces the unsupported guarantee with approved availability wording;
-- removes the fixed minimum width that clips the action; and
-- connects the visible action to `mailto:hello@repair-cafe.example`.
+A small content request quietly becoming a redesign, new platform, or unreviewed system.
 
-It adds no package, form, database, personal-data collection, or runtime AI. The learner then reruns five checks against the same version: facts, 390px visibility, email destination, keyboard behavior, and final saved-file safety.
+## First AI Build Playbook
 
-## Release is an evidence boundary
+All ten cards are available from the beginning:
 
-The learner does not declare release readiness by checking claims. The release table reads evidence produced by the mission.
+1. Choose a starting lane.
+2. Define the first complete version.
+3. Create a recoverable project home.
+4. Ask AI to plan.
+5. Request one build cycle.
+6. Inspect without reading every line of code.
+7. Report and repair a defect.
+8. Protect credentials and private data.
+9. Publish one checked version.
+10. Make a safe post-launch update.
 
-A complete release record contains:
+Every card contains:
+
+- **Use moment:** when the learner needs it.
+- **Exact action:** an executable sequence.
+- **Worked example:** the completed Repair Café version.
+- **Reuse:** a blank adaptable template.
+- **Observable result:** what the action should produce.
+- **Prevention:** the mistake, risk, or wasted work it helps avoid.
+
+The complete Playbook adds a plain-language glossary and seven-day starting route:
 
 ```text
-Release version:
-Post-repair facts, phone, destination, keyboard, and safety evidence:
-README / limitations review:
-Production-build record:
-Hosted-preview URL and smoke-test time:
-Explicit approval for this exact version and access mode:
-Public URL and post-release result:
-Recovery version and concrete procedure:
+Day 1 · one person, result, and small project
+Day 2 · trusted facts, not-now list, and tool lane
+Day 3 · folder, README, brief, .gitignore, Git, and GitHub
+Day 4 · reviewed small-cycle plan
+Day 5 · first complete local path
+Day 6 · phone, keyboard, repair, and reruns
+Day 7 · hosted preview, approved release, live check, and recovery
 ```
 
-Local, preview, and live are different environments. Test the hosted preview before making it public, ask for explicit approval after evidence and limitations are visible, and rerun the core path after publication. Deployment success does not prove visitor success. Code rollback may also fail to reverse a data migration, which is why a recovery procedure must match the system being changed.
+## GPT‑5.6 Teaching Mirror
 
-## Transfer case
+The Teaching Mirror appears only after the authored journey. It is optional and initiated explicitly by the learner.
 
-The final challenge hides the TRACE labels and changes medium. A community budget contains approved receipts of `$240.00`, `$86.40`, and `$58.75`. The AI changes the total formula to:
+### Learner input
 
-```text
-=SUM(B2:B4)+57.75
-```
+- their own first-version brief; and
+- their selected hosted-builder or repository-aware lane.
 
-and claims the `$442.90` total is verified. The learner must return to the original receipts and approved rule, inspect the formula, independently calculate `$385.15`, preserve the original, limit the repair to B5, rerun the calculation, and explain both what the evidence proves and what remains uncertain.
+The interface explains that this submitted text will leave the browser and tells the learner not to include secrets or personal information.
 
-The different surface tests whether the method transfers beyond a website or remembered vocabulary.
+### Structured output
 
-## Content quality gate
+- one specific strength;
+- exactly two unresolved assumptions phrased as questions;
+- one feature to postpone with a concrete reason;
+- one honest tradeoff for the selected lane; and
+- exactly three small next moves.
 
-Every instructional item must answer all five questions:
+### Boundary
 
-1. What situation triggers this advice?
-2. What exact action should the learner take?
-3. What evidence shows that action worked?
-4. What costly mistake does it prevent?
-5. Does the lesson transfer across tools?
+GPT‑5.6 cannot:
 
-If it cannot, it is removed.
+- grade, score, give a level, or claim mastery;
+- decide correctness or route progression;
+- decide whether the learner’s idea is good;
+- rank brands or assert current product capabilities;
+- generate code or build the project;
+- access a repository;
+- request an API key or credential;
+- create an account, publish, or take an external action; or
+- convert an inference into a fact.
 
-Pentimento deliberately omits AI history timelines, model catalogs, “secret prompts,” role-play cosmetics, prompt scores, framework debates, coding syntax lessons, exhaustive Git commands, generic quizzes, streaks, badges, motivational filler, fake market statistics, and long AI-generated explanations disconnected from learner action.
+The result is an AI-assisted reflection, not curriculum truth. Structured validation, bounded input, server-side credentials, `store: false`, and an authored fallback keep the core outcome deterministic.
 
 ## Learning design
 
-The interaction loop is:
+The interaction grammar is:
 
 ```text
-orient → inspect one thing → choose → experience consequence →
-diagnose evidence → explain → repair → apply again in a new context
+orient → see a worked example → take one action →
+observe the consequence → keep a reusable artifact
 ```
 
-Scaffolding fades across the mission:
+Scaffolding changes across the route:
 
-- The welcome and case briefing establish the learner’s role, the human goal, the interaction rhythm, and the safety boundary before options appear.
-- The first layer places instructions before the artifact on every screen size and reveals its choices only after the learner says they are ready to decide.
-- Target builds the four-line promise sequentially while the Build Map accumulates the result.
-- Record reviews one repository item at a time; its compact GitHub glossary is optional.
-- Assign confirms the AI work mode before revealing the context packet one item at a time.
-- Scope reviews one proposed item at a time and lets the footprint accumulate visibly.
-- Check asks the learner to choose independent evidence and inspect its limits.
-- Evolve builds the repair brief one line at a time, then separates diagnosis, human approval, repair, and five reruns.
-- Release exposes only the next missing action and keeps the full derived ledger available on demand.
-- Transfer changes the artifact from a website to a spreadsheet, reveals its three decisions sequentially, and requires a written explanation without coaching the learner through named steps.
+- the welcome explains the whole outcome before asking for a decision;
+- the role map gives a durable model before product categories;
+- the layer reveal creates curiosity without withholding literal instructions;
+- Idea sorts one feature at a time;
+- Tools compares two tradeoffs rather than presenting a winner;
+- Project home assembles one foundation step at a time;
+- Ask AI constructs one useful context group at a time;
+- Build repeats the same five-phase loop across three cycles;
+- Check moves from observation to report to repair to rerun;
+- Go live reveals one environment state at a time;
+- Improve repeats the method with less scaffolding; and
+- the Playbook makes every artifact available outside the lesson sequence.
 
-One focused task is visually dominant at a time. Completed choices collapse into an editable decision trail; future controls are not rendered. Reference depth is preserved in disclosures and the earned field guide rather than competing with the current action.
+Future controls are not rendered as a wall of choices. Completed steps remain revisitable. Optional depth answers “Why this matters” only after the current action is clear.
 
-Hints progress from a goal cue to a strategy cue to a worked action. Hints and revisions remain visible in the final record; they are not secretly converted into a punitive score.
+## Content quality gate
 
-Assessment records observable evidence across outcome targeting, durable context, bounded delegation, critical inspection, independent verification, precise revision, release judgment, and transfer. The learner-facing qualitative labels are **independent**, **after revision**, **with a hint**, and **not yet demonstrated**. Later retrieval and new projects are required before making stronger competence claims.
+Every instructional item must pass all six checks:
 
-## Sources translated into product decisions
+1. **Use moment:** says when the learner would use it.
+2. **Action:** gives an exact next step.
+3. **Example:** shows the completed Repair Café version.
+4. **Reuse:** supplies a blank or adaptable form.
+5. **Observable result:** says what the action should produce.
+6. **Prevention:** names the costly mistake or wasted work it prevents.
 
-- [UNESCO AI competency framework for students](https://www.unesco.org/en/articles/ai-competency-framework-students): human agency, accountability, problem scoping, responsible creation, and authentic projects.
-- [OECD/EU AI literacy framework](https://www.oecd.org/en/publications/empowering-learners-for-the-age-of-ai_65cd27d4-en.html): understanding, critical evaluation, ethical use, and creative application.
-- [ICAP framework](https://education.asu.edu/sites/default/files/lcl/chiwylie2014icap_2.pdf): constructive and interactive learner activity instead of passive exposure.
-- [Shute, formative feedback](https://doi.org/10.3102/0034654307313795): timely, specific, supportive feedback that changes the next action.
-- [Chi et al., self-explanation](https://doi.org/10.1207/s15516709cog1302_1): learners explain why evidence changes the rule.
-- [Roediger and Karpicke, retrieval practice](https://pubmed.ncbi.nlm.nih.gov/16507066/): reconstruction and transfer rather than another passive summary.
-- [National Academies, evidence-centered assessment](https://www.nationalacademies.org/read/18409/chapter/5): capability claim → observable evidence → task designed to elicit it.
-- [GitHub Hello World](https://docs.github.com/en/get-started/start-your-journey/hello-world), [commits](https://docs.github.com/en/pull-requests/committing-changes-to-your-project/creating-and-editing-commits/about-commits), and [README guidance](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-readmes): repository, branch, review, commit, and documentation mental models.
-- [GitHub sensitive-data remediation](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository): revoke exposed secrets first; deleting a file is not enough.
-- [OpenAI safety best practices](https://developers.openai.com/api/docs/guides/safety-best-practices): human review, adversarial testing, and clear limitations.
-- [OpenAI API-key safety](https://help.openai.com/en/articles/5112595-best-practices-for-api-key-safety): server-side keys and environment variables.
-- [W3C accessibility design tips](https://www.w3.org/WAI/tips/designing/) and [forms tutorial](https://www.w3.org/WAI/tutorials/forms/): keyboard access, labels, feedback, contrast, and responsive behavior.
-- [Vercel Git deployments](https://vercel.com/docs/git), [environment variables](https://vercel.com/docs/environment-variables), and [rollback](https://vercel.com/docs/instant-rollback): preview/live separation, scoped configuration, and recoverable releases.
+Editorial rules:
 
-The implementation acceptance contract is [QUALITY_STANDARD.md](QUALITY_STANDARD.md). This curriculum must be revised whenever the implemented evidence story changes.
+- A sentence must change a decision, action, mental model, or interpretation; otherwise remove it.
+- Literal meaning comes before metaphor and plain language before jargon.
+- Advice states its conditions and tradeoffs.
+- Product examples, if added, are secondary and never presented as timeless rankings.
+- Trusted facts, learner observations, AI reports, and inferences remain visibly distinct.
+- Prompts are work specifications, not incantations.
+- Examples remain consistent across brief, files, preview, checks, release, and update.
+- “Saved,” “built,” “previewed,” “published,” and “works” remain distinct.
+- Safety guidance states what not to expose, where it belongs, and what to do after leakage.
+- Reading only headings, actions, and takeaways should still reveal a coherent route.
+
+Pentimento deliberately omits model-history timelines, exhaustive tool catalogs, secret prompts, prompt scores, framework debates, coding syntax, generic quizzes, streaks, badges, fake market statistics, and motivational filler disconnected from an action.

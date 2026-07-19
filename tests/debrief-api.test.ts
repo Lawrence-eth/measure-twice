@@ -1,152 +1,241 @@
-import { beforeEach, describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+
+const parseResponse = vi.hoisted(() => vi.fn());
+
+vi.mock("openai", () => ({
+  default: class OpenAIMock {
+    responses = {
+      parse: parseResponse,
+    };
+  },
+}));
 
 import { POST } from "@/app/api/debrief/route";
-import { initialProgress, type MissionProgress } from "@/lib/evidence-engine";
-import { checks, planOptions, postRepairReruns, repositoryOptions } from "@/lib/mission";
 
 const endpoint = "http://localhost/api/debrief";
 const sessionId = "123e4567-e89b-42d3-a456-426614174000";
+const brief = {
+  person: "A neighbor with a broken household item",
+  situation: "They are checking from a phone before Saturday's event.",
+  usefulResult: "They can decide whether to attend and email the organizer.",
+  completePath: "Open the page, check the facts, then open a prepared email.",
+  trustedFacts: [
+    "Saturday, 10:00–14:00",
+    "Repairs depend on volunteer availability",
+  ],
+  mustHave: ["Event facts", "A working email action", "A readable phone layout"],
+  notNow: ["Accounts", "Live availability", "Donations"],
+  doneWhen: "The facts match and the email action works at 390px.",
+};
 
-function completeProgress(): MissionProgress {
-  return {
-    ...initialProgress,
-    scene: "replay",
-    started: true,
-    arrivalChoice: "inspect",
-    confidence: { arrival: 0.7, radius: 0.9, transfer: 0.9 },
-    target: {
-      audience: "audience-neighbors",
-      outcome: "outcome-attend",
-      proof: "proof-behavior",
-      nonGoal: "nongoal-systems",
-    },
-    repository: repositoryOptions.filter((item) => item.correct).map((item) => item.id),
-    context: ["goal", "trusted-facts", "current-files", "acceptance", "authority", "mobile-reference"],
-    plan: planOptions.filter((item) => item.correct).map((item) => item.id),
-    scopeDecisions: Object.fromEntries(
-      planOptions.map((item) => [item.id, item.recommendedDisposition]),
-    ),
-    scopeReviewed: planOptions.map((item) => item.id),
-    checksRun: checks.filter((item) => item.correct).map((item) => item.id),
-    repair: {
-      observed: "observed-exact",
-      reproduce: "reproduce-exact",
-      expected: "expected-exact",
-      preserve: "preserve-verified",
-    },
-    repaired: true,
-    diagnosed: true,
-    retested: postRepairReruns.map((item) => item.id),
-    postRepairReruns: postRepairReruns.map((item) => ({
-      id: item.id,
-      passed: true,
-      version: "c7a91e4",
-      evidence: item.passingEvidence,
-    })),
-    shipGate: [],
-    releaseEvidence: {
-      readme: {
-        version: "c7a91e4",
-        reviewedAt: "2026-07-18T12:00:00.000Z",
-        limitationsReviewed: true,
-      },
-      build: {
-        version: "c7a91e4",
-        command: "npm run build",
-        exitCode: 0,
-        recordedAt: "2026-07-18T12:01:00.000Z",
-      },
-      preview: {
-        version: "c7a91e4",
-        url: "https://preview.repair-cafe.example",
-        checkedAt: "2026-07-18T12:02:00.000Z",
-        factsPassed: true,
-        corePathPassed: true,
-      },
-      releaseVersion: {
-        commit: "c7a91e4",
-        recoveryVersion: "first-release",
-        recoveryProcedure: "Withdraw the link and redeploy a newly verified commit.",
-      },
-      production: {
-        version: "c7a91e4",
-        url: "https://repair-cafe.example",
-        checkedAt: "2026-07-18T12:03:00.000Z",
-        factsPassed: true,
-        corePathPassed: true,
-      },
-    },
-    publishApproved: true,
-    published: true,
-    productionChecked: true,
-    transfer: {
-      source: "source-receipts",
-      proof: "proof-recalc",
-      next: "next-bounded",
-    },
-    transferExplanation:
-      "The receipts and independent calculation prove the corrected total, but they do not prove unrelated workbook formulas.",
-    attempts: {
-      arrival: 1,
-      target: 1,
-      record: 1,
-      handoff: 1,
-      radius: 1,
-      check: 1,
-      evolve: 1,
-      ship: 1,
-      transfer: 1,
-    },
-  };
-}
+const liveResult = {
+  clearStrength: "The brief names one person and one useful result.",
+  unresolvedAssumptions: [
+    "Who keeps the event facts current?",
+    "Which visitor will try the path on a phone?",
+  ],
+  featureToPostpone: {
+    feature: "Accounts",
+    reason: "Identity adds recovery, permissions, and support work.",
+  },
+  toolTradeoff:
+    "A repository-aware agent exposes the files but requires more setup.",
+  nextMoves: [
+    "Name the owner of every trusted fact.",
+    "Ask for a plan before file changes.",
+    "Build, check, and save one small step.",
+  ],
+};
 
-function request(body: unknown): Request {
+function request(
+  body: unknown,
+  headers: Record<string, string> = {},
+): Request {
   return new Request(endpoint, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", ...headers },
     body: JSON.stringify(body),
   });
 }
 
-describe("debrief API", () => {
+function validBody(toolLane: "hosted" | "repository" = "repository") {
+  return {
+    sessionId,
+    toolLane,
+    firstVersionBrief: brief,
+  };
+}
+
+describe("Teaching Mirror API", () => {
   beforeEach(() => {
     process.env.DEMO_MODE = "true";
+    delete process.env.OPENAI_API_KEY;
+    delete process.env.OPENAI_MODEL;
+    parseResponse.mockReset();
   });
 
-  it("recomputes the authoritative evidence score", async () => {
-    const response = await POST(request({ sessionId, progress: completeProgress(), score: 0 }));
+  it("returns the complete authored reflection without grading", async () => {
+    const response = await POST(request(validBody()));
+    const body = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(response.headers.get("cache-control")).toBe("no-store");
+    expect(body.mode).toBe("demo");
+    expect(body).not.toHaveProperty("score");
+    expect(body).not.toHaveProperty("level");
+    expect(body.result.clearStrength).toContain(brief.usefulResult);
+    expect(body.result.unresolvedAssumptions).toHaveLength(2);
+    expect(body.result.featureToPostpone.feature).toBe("Accounts");
+    expect(body.result.toolTradeoff).toContain("repository-aware");
+    expect(body.result.nextMoves).toHaveLength(3);
+  });
+
+  it("changes the authored tradeoff for the hosted lane", async () => {
+    const response = await POST(request(validBody("hosted")));
+    const body = await response.json();
+
+    expect(body.result.toolTradeoff).toContain("hosted builder");
+    expect(body.result.toolTradeoff).toContain("export");
+  });
+
+  it("rejects extra fields and incomplete briefs", async () => {
+    const extraField = await POST(
+      request({ ...validBody(), score: 100 }),
+    );
+    const missingField = await POST(
+      request({
+        ...validBody(),
+        firstVersionBrief: { ...brief, doneWhen: undefined },
+      }),
+    );
+
+    expect(extraField.status).toBe(400);
+    expect(missingField.status).toBe(400);
+  });
+
+  it("rejects out-of-bounds content", async () => {
+    const tooManyFacts = await POST(
+      request({
+        ...validBody(),
+        firstVersionBrief: {
+          ...brief,
+          trustedFacts: Array.from({ length: 9 }, (_, index) => `Fact ${index}`),
+        },
+      }),
+    );
+    const oversizedField = await POST(
+      request({
+        ...validBody(),
+        firstVersionBrief: {
+          ...brief,
+          situation: "x".repeat(241),
+        },
+      }),
+    );
+
+    expect(tooManyFacts.status).toBe(400);
+    expect(oversizedField.status).toBe(400);
+  });
+
+  it("rejects malformed JSON and oversized bodies", async () => {
+    const malformed = await POST(
+      new Request(endpoint, { method: "POST", body: "{" }),
+    );
+    const oversized = await POST(
+      new Request(endpoint, {
+        method: "POST",
+        headers: { "Content-Length": "12001" },
+        body: JSON.stringify(validBody()),
+      }),
+    );
+
+    expect(malformed.status).toBe(400);
+    expect(oversized.status).toBe(413);
+  });
+
+  it("uses the bounded Responses API contract in live mode", async () => {
+    process.env.DEMO_MODE = "false";
+    process.env.OPENAI_API_KEY = "test-key";
+    parseResponse.mockResolvedValue({
+      status: "completed",
+      error: null,
+      output: [
+        {
+          type: "message",
+          content: [{ type: "output_text", text: "structured" }],
+        },
+      ],
+      output_parsed: liveResult,
+    });
+
+    const response = await POST(
+      request(validBody(), { "x-real-ip": "198.51.100.42" }),
+    );
+    const body = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(body).toEqual({ mode: "live", result: liveResult });
+    expect(parseResponse).toHaveBeenCalledTimes(1);
+    const parameters = parseResponse.mock.calls[0][0];
+    expect(parameters.model).toBe("gpt-5.6");
+    expect(parameters.store).toBe(false);
+    expect(parameters.safety_identifier).toMatch(/^[a-f0-9]{64}$/);
+    expect(parameters).not.toHaveProperty("tools");
+    expect(parameters.input).toContain(brief.usefulResult);
+    expect(parameters.instructions).toContain("Do not score, grade");
+  });
+
+  it("falls back safely when the live request is refused", async () => {
+    process.env.DEMO_MODE = "false";
+    process.env.OPENAI_API_KEY = "test-key";
+    parseResponse.mockResolvedValue({
+      status: "completed",
+      error: null,
+      output: [
+        {
+          type: "message",
+          content: [{ type: "refusal", refusal: "Cannot help with that." }],
+        },
+      ],
+      output_parsed: null,
+    });
+
+    const response = await POST(
+      request(validBody("hosted"), { "x-real-ip": "198.51.100.43" }),
+    );
     const body = await response.json();
 
     expect(response.status).toBe(200);
     expect(body.mode).toBe("demo");
-    expect(body.score).toBe(100);
-    expect(body.level).toBe("Independent");
-    expect(body.result.nextProjectMoves).toHaveLength(3);
+    expect(body.result.unresolvedAssumptions).toHaveLength(2);
+    expect(body.result.nextMoves).toHaveLength(3);
   });
 
-  it("rejects a replay record whose final evidence is unsafe", async () => {
-    const progress = completeProgress();
-    progress.repository.push("api-key");
-    const response = await POST(request({ sessionId, progress }));
+  it("limits live model calls without removing the authored lesson", async () => {
+    process.env.DEMO_MODE = "false";
+    process.env.OPENAI_API_KEY = "test-key";
+    parseResponse.mockResolvedValue({
+      status: "completed",
+      error: null,
+      output: [
+        {
+          type: "message",
+          content: [{ type: "output_text", text: "structured" }],
+        },
+      ],
+      output_parsed: liveResult,
+    });
+    const headers = { "x-real-ip": "198.51.100.44" };
 
-    expect(response.status).toBe(400);
-  });
+    const first = await POST(request(validBody(), headers));
+    const second = await POST(request(validBody(), headers));
+    const limited = await POST(request(validBody(), headers));
+    const limitedBody = await limited.json();
 
-  it("rejects a structurally valid but unfinished mission", async () => {
-    const response = await POST(request({ sessionId, progress: initialProgress }));
-    expect(response.status).toBe(400);
-  });
-
-  it("rejects oversized reflection text", async () => {
-    const progress = completeProgress();
-    progress.reflection = "x".repeat(601);
-    const response = await POST(request({ sessionId, progress }));
-
-    expect(response.status).toBe(400);
-  });
-
-  it("rejects malformed JSON", async () => {
-    const response = await POST(new Request(endpoint, { method: "POST", body: "{" }));
-    expect(response.status).toBe(400);
+    expect((await first.json()).mode).toBe("live");
+    expect((await second.json()).mode).toBe("live");
+    expect(limitedBody.mode).toBe("demo");
+    expect(limitedBody.result.nextMoves).toHaveLength(3);
+    expect(parseResponse).toHaveBeenCalledTimes(2);
   });
 });

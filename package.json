@@ -2,7 +2,7 @@
   "name": "pentimento",
   "version": "0.1.0",
   "private": true,
-  "description": "A guided simulation that teaches complete beginners how to lead trustworthy AI-built projects without writing code.",
+  "description": "An interactive education experience that guides complete beginners from an AI-build idea to a checked live link.",
   "license": "MIT",
   "engines": {
     "node": ">=22"

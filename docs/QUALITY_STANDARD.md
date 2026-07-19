@@ -1,72 +1,157 @@
 # Pentimento quality standard
 
-This document is the acceptance contract for the Build Week submission. Pentimento is ready only when the product itself follows the evidence discipline it teaches.
+This document is the acceptance contract for the OpenAI Build Week submission. Pentimento is ready only when the product itself follows the careful build discipline it teaches.
 
 ## Product promise
 
-Pentimento teaches a complete beginner how to take a small AI-assisted project from an idea to a version they can explain, constrain, inspect, repair, and safely share. It is an educational simulation, not a project generator and not a coding course. The finished Repair Café page does not require AI, an API key, or a model at runtime.
+Pentimento teaches a complete beginner how one AI-built project moves from a rough idea to a checked live link. It is an authored educational simulation, not a coding course, project generator, tool ranking, real repository, or deployment service.
 
-## Learning integrity
+The complete authored route requires no account, API key, payment, external action, or coding knowledge.
 
-- The learner defines a specific person, outcome, observable checks, and explicit non-goals before granting edit permission.
-- Git, GitHub, repository, commit, before-and-after changes (diff), environment variable, preview, live version, and recovery are defined in plain language at first use.
-- No answer explains its own correctness before the learner commits. Distractors are plausible incomplete decisions, not jokes.
-- Wrong decisions create a visible human or project consequence and remain recoverable.
-- The canonical initial evidence is consistent everywhere:
-  - unsupported repair guarantee;
-  - contact action is clipped at 390px;
-  - contact action has no destination;
-  - AI says checks passed while the execution record is empty;
-  - keyboard order and tracked-file safety currently pass.
-- The baseline is called recoverable but unverified. “Known good” is reserved for a version supported by current checks.
-- The repaired contact action visibly has `mailto:hello@repair-cafe.example`, fits at 390px, and can be reached and activated by keyboard.
-- Post-repair evidence reruns facts, phone visibility, link destination, keyboard behavior, and final-file safety.
-- Release status is derived from evidence produced in the mission. A learner cannot manufacture a pass by ticking a claim.
-- Publishing is a distinct authority boundary: preview verification, explicit approval, exact version, live smoke test, and recovery method are all visible.
-- Spreadsheet transfer uses `=SUM(B2:B4)+57.75`, requires a trusted source and independent recalculation, and includes a learner explanation.
-- The final Revision Trace reflects the learner’s real initial choice, later confidence decisions, attempts, hints, consequences, repairs, checks, and transfer reasoning.
-- Assessment reports demonstrated independently / after revision / with support / not yet demonstrated. Help-seeking is visible, not secretly punished by a dominant score.
+## Opening comprehension
 
-## Reusable value
+- Within the opening moments, a new learner can say that Pentimento teaches the path from an idea to a live AI-built project.
+- Before the first project decision, the learner knows the approximate duration, safety boundary, eight-stop route, Repair Café case, and Playbook outcome.
+- The welcome has one dominant action: **Show me the route**.
+- The three-role map explains AI workspace, project home, and web host before product categories.
+- The connection “AI helps build → the project home remembers → the host publishes” appears in text, not only visually.
+- The layer reveal has a range control plus button equivalents and explains what its underlayers mean.
+- No dense dashboard, assessment framing, unexplained confidence control, or technical glossary appears on arrival.
+- Literal explanation precedes the Pentimento metaphor.
 
-- TRACE is the only curriculum mnemonic. Context Lens, Evidence Ledger, and Revision Trace are the only other signature names.
-- Every working note includes: when to use it, a completed Repair Café example, a blank template, the evidence it should produce, and the common failure it prevents.
-- The manual includes a safe first-project route, AI work modes (Explore, Plan, Implement, Diagnose, Review, Verify), authority boundaries, repository setup, secret handling, asset/data responsibility, checks, preview/live release, and recovery.
-- Technical terms never replace plain-language instructions.
+## Curriculum integrity
 
-## Interaction and accessibility
+- The route remains Idea → Tools → Project home → Ask AI → Build → Check → Go live → Improve.
+- The Repair Café brief, files, preview, defects, repair, checks, release, and update use one consistent set of approved facts.
+- Idea distinguishes a first complete path from accounts, booking, payment, live data, chat, and runtime AI.
+- Tools presents the hosted-builder and repository-aware lanes as legitimate tradeoffs, not a ranking.
+- Project home defines folder, Git, repository, GitHub, commit, README, `.gitignore`, environment setting, and secret at first meaningful use.
+- Ask AI teaches goal, person, trusted facts, boundaries, quality constraints, work mode, finish line, and approval point.
+- Build completes three visible cycles using ask → inspect → run → check → save.
+- AI’s report remains visibly distinct from a learner observation or command result.
+- Check exposes the unsupported promise, 390px clipping, and inactive email destination through reproducible steps.
+- The repair remains bounded and preserves approved facts, page order, desktop layout, keyboard focus, and the no-new-system boundary.
+- V4 is described as checked only after facts, complete path, 390px, keyboard, typecheck, tests, and production build are shown as rerun.
+- Go live distinguishes local, GitHub, preview, live, and recovery.
+- A simulated deployment is followed by a simulated public-path check.
+- Improve changes the trusted source first and adds only the approved step-free entrance fact.
+- The finished Repair Café page does not require runtime AI.
+- One journey is never described as proof of mastery.
 
-- Within the opening moments, a new learner can identify what Pentimento is, their role, what they will learn, and the single next action.
-- A dedicated case briefing appears before any assessed choice and states that the experience is simulated, reversible, code-free, and unable to publish or send email.
-- Instructions precede artifacts and decisions at every width; mobile never places the Repair Café preview before the first task explanation.
-- Dense layers reveal one focused question, item, or next action at a time. Future controls are not rendered or keyboard-focusable.
-- Completed choices remain visible in compact editable trails; comprehensive reference content moves behind labelled disclosures rather than disappearing.
-- A persistent “How this works” action can restate the learner’s role and interaction rhythm. Returning learners receive a contextual resume screen.
-- Every scene transition scrolls to the beginning and moves focus to the new scene heading.
-- Single-choice controls use native radio behavior; tabs use the WAI-ARIA tabs pattern or ordinary button semantics.
-- Dialogs contain focus, support Escape when dismissal is safe, hide/inert the background, and restore focus.
-- Restart requires confirmation and remains available at 320px through the persistent Help panel.
-- Progress groups the ten internal layers into four learner-facing chapters and communicates the current chapter visually and to assistive technology at every width.
-- The signature instrument remains reachable near the decision on mobile through a compact status/tray.
-- Status never relies on color alone. Tables use table semantics; traces use list semantics.
-- Copy success/failure and asynchronous debrief state are announced.
-- Essential touch targets are at least 44px. Meaningful copy is at least 12px and meets WCAG AA contrast.
-- The product works at 320, 390, 768, and desktop widths; 200% zoom does not hide content or controls.
-- Motion is triggered by learner action, has no perpetual glow/pulse, and respects `prefers-reduced-motion`.
+## Content usefulness
+
+Every instructional item states:
+
+1. when to use it;
+2. the exact action;
+3. a completed example;
+4. a reusable blank form;
+5. the observable result; and
+6. the mistake or wasted work it prevents.
+
+Additional gates:
+
+- A sentence changes a decision, action, mental model, or interpretation; filler is removed.
+- Core explanation stays near 60–75 words before an example or interaction.
+- Plain language comes before jargon.
+- Advice names conditions and tradeoffs instead of claiming one universal tool or workflow.
+- Prompts are work specifications, not magic wording.
+- “Saved,” “built,” “previewed,” “published,” and “works” remain distinct claims.
+- Safety advice says what not to expose, where a protected value belongs, and what to do after leakage.
+
+## First AI Build Playbook
+
+- The Playbook is available from the first lesson and never locked behind completion.
+- It contains ten cards covering tool choice, first-version scope, project home, planning, one build cycle, inspection, repair, secret safety, release, and post-launch change.
+- Every card includes use moment, exact actions, Repair Café example, blank template, expected result, and prevented failure.
+- Completing a matching stop marks a card **Practiced** without hiding or changing its content.
+- Learners can copy one blank template or the complete Playbook.
+- The complete view contains a seven-day starter route.
+- Copy success is announced to assistive technology.
+- The Playbook remains useful without replaying the lesson.
+
+## Teaching Mirror integrity
+
+- The Teaching Mirror is optional and reachable only as a learner-initiated reflection at completion.
+- Before sending, the interface states that the learner’s submitted brief and lane will leave the browser and warns against secrets or personal information.
+- The request contains only a learner-supplied first-version brief, selected lane, and random session identifier—not route history or repository access.
+- Input length and structure are validated server-side.
+- The response contains one strength, exactly two unresolved assumptions, one postpone candidate with reason, one lane tradeoff, and exactly three next moves.
+- The result is labelled AI-assisted reflection.
+- The model cannot score, grade, claim mastery, decide progression, decide whether the idea is good, rank brands, generate code, build, access a repository, request credentials, publish, or take an external action.
+- The OpenAI credential remains server-side and is never exposed through a `NEXT_PUBLIC_` variable.
+- Live requests use structured output, `store: false`, bounded output, and a privacy-preserving safety identifier.
+- Refusal, invalid output, missing credentials, rate limits, or provider failure return the authored fallback.
+- The full route and Playbook remain complete when the model is unavailable.
+
+## Interaction
+
+- Each core view has one dominant new action or decision.
+- Future decisions are not rendered as a wall of focusable controls.
+- Each view presents outcome, short explanation, worked example, action, visible consequence, takeaway, and optional depth in that order.
+- Feedback explains what changed, why it matters, and what to do next.
+- Incomplete decisions remain revisable and never create a dead end.
+- Completed stops remain available for review.
+- The persistent journey shows the current stop and what has been completed without becoming navigation homework.
+- The Playbook remains reachable near the current task.
+- No score, streak, badge, mastery label, trick distractor, or confetti appears.
+- Scene changes scroll to the beginning and focus the new primary heading.
+- Returning learners receive a contextual resume screen.
+- Restart requires confirmation, supports safe dismissal, and restores focus.
+
+## Accessibility and responsiveness
+
+- Semantic landmarks, heading order, lists, forms, buttons, links, definition lists, and code blocks match their meaning.
+- Every control has an accessible name and visible focus.
+- The entire route, Playbook, restart, and Teaching Mirror can be completed by keyboard.
+- Dialogs contain focus, hide or inert the background, support Escape when safe, and restore focus.
+- Selection state is exposed programmatically and never relies on color alone.
+- Status updates and copy results are announced without stealing focus.
+- Layer reveal, file map, version ribbon, and release sequence have meaningful text equivalents.
+- Touch targets are at least 44 × 44 CSS pixels where practical.
+- Text and focus indicators meet WCAG AA contrast.
+- The route works at 320px, 390px, 768px, desktop, and 200% zoom without task-blocking horizontal scrolling.
+- Mobile preserves instruction before the current artifact or action.
+- Reduced-motion mode preserves every meaning and removes non-essential transitions.
+
+## Persistence and privacy
+
+- Progress uses the dedicated versioned key `pentimento-studio-v3`.
+- The exact stop, meaningful substep, feature decisions, selected lane, prompt parts, build cycle and phase, checks, repair state, version focus, release step, improvement step, and completion survive refresh.
+- V2 mission data is never silently interpreted as v3.
+- Invalid or partial storage falls back to a usable state rather than a blank or impossible route.
+- Storage failure does not prevent the authored journey.
+- Resume states the restored stop and returns focus to the unfinished task.
+- Restart removes only the v3 local learning record after confirmation.
+- Learner content remains local unless the learner explicitly invokes the Teaching Mirror.
+- The application has no authentication, analytics, database, GitHub OAuth, arbitrary code execution, or real external mutation.
 
 ## Visual identity
 
-- The visible product name is Pentimento with the line “See the decisions beneath the finished surface.”
-- Orange is absent from tokens, literal colors, imagery, screenshots, and state language.
-- The palette separates current/selected (ultramarine), AI/provisional (mauve), verified (viridian), failed (crimson), and neutral/untested states.
-- Underlayers, registration marks, marginal notes, and one continuous evidence thread express the pentimento metaphor without paint-splatter or museum kitsch.
-- Artifact frames share one coherent conservation-instrument grammar.
+- The visible product is Pentimento and the opening promise is “Build your first project with AI—from idea to live link.”
+- The visual language is editorial and conservation-inspired rather than a generic learning dashboard or chatbot.
+- Warm paper, dark ink, ultramarine, mauve, viridian, crimson, underlayers, registration marks, and marginal notes form one coherent system.
+- Literal state labels accompany all color and position cues.
+- Orange, perpetual glow, paint splatter, confetti, badges, and decorative motion are absent.
+- The artistic metaphor supports comprehension rather than replacing it.
 
-## Technical and submission quality
+## Technical and release quality
 
-- Persisted state is versioned, validated, migratable or safely recoverable, and save failures do not break the mission.
-- Deterministic authored feedback works without an API key. Live GPT-5.6 debriefing remains constrained, transparent, and optional.
-- Unit tests cover every gate and persistence validator.
-- End-to-end tests cover an independent path, a repair path, exact contact destination, evidence-derived release, real Revision Trace, scene focus/scroll, dialog keyboard behavior, mobile reflow, and production Worker runtime.
-- Typecheck, unit tests, production build, Worker smoke tests, browser tests, dependency audit, and screenshot review all pass from the exact deployed commit.
-- README, product/curriculum docs, screenshots, demo claims, repository state, and deployed behavior agree.
+- Unit tests cover v3 progress creation, validation, exact restoration, progression, and safe fallback.
+- API tests cover Teaching Mirror validation, deterministic fallback, structured response, limits, and live failure fallback.
+- Browser tests cover opening comprehension, all eight stops, Playbook availability, complete desktop/mobile paths, exact mid-stop restoration, dialog behavior, focus movement, accessibility scans, and 320/390/768px layouts.
+- Typecheck, unit tests, conventional Next build, Cloudflare-compatible build, generated-Worker smoke tests, hosted browser tests, dependency audit, and screenshot review run against the exact release candidate.
+- A passing earlier commit is never used as evidence for a later candidate.
+- README, product brief, curriculum, quality standard, hackathon copy, screenshots, demo claims, repository state, and deployed behavior agree.
+- Final commit, tag, Worker version, traffic assignment, hosted test time, video URL, `/feedback` Session ID, and Devpost confirmation are recorded only after they exist.
+
+## Beginner validation target
+
+When moderated testing is available, use at least five people matching the primary audience:
+
+- four of five independently explain the product after the opening;
+- four of five complete Idea and Tools without facilitator instructions;
+- four of five correctly order the lifecycle and justify a starting lane afterward; and
+- no participant encounters a blocking issue at 320px, 200% zoom, or keyboard-only use.
+
+This target is a separate human-understanding signal. Automated accessibility and browser tests do not substitute for it.
