@@ -6,6 +6,8 @@ Pentimento assumes the learner has never used Git, GitHub, a coding agent, a tes
 
 The curriculum teaches **build judgment, not prompt tricks**.
 
+Before teaching that judgment, the experience gives the learner a usable mental model: Pentimento is a safe guided simulation; the learner is the project lead; AI made a proposal; each layer presents one small task; and no choice publishes, emails, or changes a real project. Practical meaning comes before the studio metaphor or assessment.
+
 By the end of one mission, a learner should have practiced how to:
 
 - turn an idea into one observable human outcome;
@@ -282,23 +284,28 @@ Pentimento deliberately omits AI history timelines, model catalogs, “secret pr
 The interaction loop is:
 
 ```text
-predict → commit → experience consequence → diagnose evidence →
-explain → repair → apply again in a new context
+orient → inspect one thing → choose → experience consequence →
+diagnose evidence → explain → repair → apply again in a new context
 ```
 
 Scaffolding fades across the mission:
 
-- Target begins with structured comparisons.
-- Record and Assign introduce plain-language concepts in the decision itself.
-- Scope requires the learner to expose obligations rather than count features.
+- The welcome and case briefing establish the learner’s role, the human goal, the interaction rhythm, and the safety boundary before options appear.
+- The first layer places instructions before the artifact on every screen size and reveals its choices only after the learner says they are ready to decide.
+- Target builds the four-line promise sequentially while the Build Map accumulates the result.
+- Record reviews one repository item at a time; its compact GitHub glossary is optional.
+- Assign confirms the AI work mode before revealing the context packet one item at a time.
+- Scope reviews one proposed item at a time and lets the footprint accumulate visibly.
 - Check asks the learner to choose independent evidence and inspect its limits.
-- Evolve separates diagnosis, human approval, repair, and five reruns.
-- Release derives status from evidence rather than accepting self-report.
-- Transfer removes the TRACE labels and requires a written explanation.
+- Evolve builds the repair brief one line at a time, then separates diagnosis, human approval, repair, and five reruns.
+- Release exposes only the next missing action and keeps the full derived ledger available on demand.
+- Transfer changes the artifact from a website to a spreadsheet, reveals its three decisions sequentially, and requires a written explanation without coaching the learner through named steps.
+
+One focused task is visually dominant at a time. Completed choices collapse into an editable decision trail; future controls are not rendered. Reference depth is preserved in disclosures and the earned field guide rather than competing with the current action.
 
 Hints progress from a goal cue to a strategy cue to a worked action. Hints and revisions remain visible in the final record; they are not secretly converted into a punitive score.
 
-Assessment records observable evidence across outcome targeting, durable context, bounded delegation, critical inspection, independent verification, precise revision, release judgment, and transfer. The qualitative labels are **without support**, **after revision**, **with worked support**, and **not yet demonstrated**. Later retrieval and new projects are required before making stronger competence claims.
+Assessment records observable evidence across outcome targeting, durable context, bounded delegation, critical inspection, independent verification, precise revision, release judgment, and transfer. The learner-facing qualitative labels are **independent**, **after revision**, **with a hint**, and **not yet demonstrated**. Later retrieval and new projects are required before making stronger competence claims.
 
 ## Sources translated into product decisions
 

@@ -35,10 +35,10 @@ export const productIdentity = {
   name: "Pentimento",
   pronunciation: "pen-ti-MEN-to",
   meaning: "A visible trace of an earlier version beneath a finished work.",
-  descriptor: "An interactive studio for building with AI",
+  descriptor: "A guided simulation for first-time AI builders",
   tagline: "See the decisions beneath the finished surface.",
   promise:
-    "Turn an AI draft into a project you can explain, test, repair, and safely share—without needing coding experience.",
+    "Learn to lead one small AI-built project from idea to a tested, shareable version—without writing code.",
 } as const;
 
 export const sceneLabels: Record<SceneId, string> = {
@@ -134,19 +134,19 @@ export const defectLedger: readonly DefectRecord[] = [
 export const arrivalChoices: Choice[] = [
   {
     id: "ship",
-    title: "Publish the current preview",
+    title: "Publish it now—the deadline is close",
     detail:
       "The page reaches visitors quickly, but the unsourced promise and unusable phone action reach them too. A deadline does not turn an unchecked claim into evidence.",
   },
   {
     id: "summary",
-    title: "Ask AI for a verification summary",
+    title: "Ask the AI to confirm its own work again",
     detail:
       "The explanation may be useful for deciding what to inspect, but it comes from the same source as the work and cannot verify that work by itself.",
   },
   {
     id: "inspect",
-    title: "Check the source and the visitor’s main path",
+    title: "Pause and check the organizer’s facts and the visitor’s key path",
     detail:
       "Comparing the page with approved facts and trying its contact action produces evidence independent of the AI’s assurance.",
     correct: true,

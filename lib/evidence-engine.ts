@@ -951,7 +951,7 @@ export function canCompleteScene(
 
   switch (scene) {
     case "arrival":
-      return Boolean(parsed.arrivalChoice && parsed.confidence.arrival);
+      return parsed.arrivalChoice === "inspect";
     case "target":
       return rawTargetIsCorrect(parsed);
     case "record":

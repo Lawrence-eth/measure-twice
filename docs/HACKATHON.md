@@ -81,7 +81,7 @@ Passing a local dev journey does not prove the generated Worker, and passing the
 
 Use this text in the Devpost testing field, adjusting only if the final behavior changes:
 
-> Open `https://pentimento.aethe.me` in a current desktop or mobile browser. No account or API key is required. Choose **Begin the 20-minute studio**, then complete the ten-layer Repair Café mission. Deliberately making a plausible incomplete choice is safe: Pentimento shows the consequence and lets you revise it. In Check, run independent evidence tools and inspect what each result does and does not prove. In Evolve, diagnose before approving the bounded repair and rerun all five version-matched checks. In Release, produce the seven concrete release records; the ten-row table is derived from evidence and cannot be passed by ticking claims. Complete the spreadsheet transfer and inspect the Revision Trace and field manual. The release, public URLs, commits, and email inside the lesson are simulated; the hosted app performs no external mutation.
+> Open `https://pentimento.aethe.me` in a current desktop or mobile browser. No account or API key is required. Choose **See how the lesson works** and read the one-screen case briefing; it establishes the learner’s role and the safe simulation boundary before any choice appears. Continue through the Repair Café project one focused decision at a time. Deliberately making a plausible incomplete choice is safe: Pentimento shows what happened and lets you revise it. In Check, run independent evidence tools and inspect what each result does and does not prove. In Evolve, diagnose before approving the bounded repair and rerun all five version-matched checks. In Release, perform the next missing release action; the optional ten-row table is derived from evidence and cannot be passed by ticking claims. Complete the spreadsheet transfer and inspect the Revision Trace and practical guide. The release, public URLs, commits, and email inside the lesson are simulated; the hosted app performs no external mutation.
 
 Local fallback:
 
@@ -94,7 +94,7 @@ Open <http://localhost:3000>. Keep `DEMO_MODE=true` or omit the API key for the 
 
 ## Draft project description
 
-> Pentimento is an interactive studio that teaches a complete beginner how to build with AI without mistaking polish for proof. A fictional Repair Café page looks finished and the AI says every check passed—but it contains an unsupported guarantee, a phone contact action that is clipped and goes nowhere, and an empty execution record. The learner defines a testable outcome, creates durable repository context, bounds AI authority and scope, runs independent evidence, diagnoses before editing, approves a minimal repair, reruns five checks, and produces an evidence-derived release record. A transfer challenge then hides the method inside a flawed budget spreadsheet. The final Revision Trace reconstructs the learner’s real decisions and level of support rather than awarding a hollow score. Core truth is deterministic; optional GPT‑5.6 personalizes only the closing evidence debrief. Codex was the primary collaborator across concept, curriculum, implementation, accessibility, testing, and deployment.
+> Pentimento is a guided simulation that teaches a complete beginner how to lead an AI-built project without mistaking polish for proof. It first establishes the learner as project lead, explains the human goal and safe interaction model, then reveals one focused decision at a time. A fictional Repair Café page looks finished and the AI says every check passed—but it contains an unsupported guarantee, a phone contact action that is clipped and goes nowhere, and an empty execution record. The learner builds a testable outcome, durable repository context, bounded AI authority and scope, independent evidence, a precise repair, five reruns, and an evidence-derived release. A transfer challenge hides the method inside a flawed budget spreadsheet. The final Revision Trace reconstructs real decisions and support rather than awarding a hollow score. Core truth is deterministic; optional GPT‑5.6 personalizes only the closing evidence debrief. Codex was the primary collaborator across concept, curriculum, interaction architecture, implementation, accessibility, testing, and deployment.
 
 ## Under-three-minute demo storyboard
 
@@ -103,7 +103,7 @@ Aim for roughly **2:40–2:50**, leaving margin below the three-minute limit.
 ### 0:00–0:20 — hook
 
 - Show the Pentimento landing line: “See the decisions beneath the finished surface.”
-- Begin the studio and show the polished Repair Café page beside the AI’s “ready” claim.
+- Flash the case briefing—“You are the project lead”—then show that the first task appears before the polished Repair Café preview on phone and desktop.
 - Say: “Pentimento teaches first-time builders the judgment behind trustworthy AI-assisted projects—not coding and not prompt tricks.”
 
 ### 0:20–0:45 — consequence
@@ -153,6 +153,8 @@ Use original narration and interface footage. Do not include copyrighted music, 
 ### Design
 
 - Coherent conservation-studio visual language rather than a generic course dashboard
+- Plain first-use explanation and case briefing before assessment; one focused decision at a time thereafter
+- Four learner-facing chapters, editable decision trails, on-demand reference depth, contextual resume, and persistent help
 - Earlier decisions remain visible as underlayers and one continuous evidence thread
 - Consequence-first feedback, recoverable revision, semantic instruments, and a complete reusable manual
 - Desktop, phone, keyboard, focus, zoom, and reduced-motion behavior included in the acceptance contract

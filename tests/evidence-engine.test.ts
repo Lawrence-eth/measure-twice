@@ -280,14 +280,17 @@ describe("mission progress v2", () => {
 });
 
 describe("bounded decisions and evidence", () => {
-  it("requires a decision and confidence at the first-look gate", () => {
+  it("requires the independent-inspection decision at the beginner-friendly first-look gate", () => {
     const progress = completeProgress();
     progress.arrivalChoice = "";
     expect(canCompleteScene(progress, "arrival")).toBe(false);
 
+    progress.arrivalChoice = "ship";
+    expect(canCompleteScene(progress, "arrival")).toBe(false);
+
     progress.arrivalChoice = "inspect";
     delete progress.confidence.arrival;
-    expect(canCompleteScene(progress, "arrival")).toBe(false);
+    expect(canCompleteScene(progress, "arrival")).toBe(true);
   });
 
   it("requires every target answer to match the observable outcome", () => {

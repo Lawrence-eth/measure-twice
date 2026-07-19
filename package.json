@@ -2,7 +2,7 @@
   "name": "pentimento",
   "version": "0.1.0",
   "private": true,
-  "description": "A consequence-driven learning experience that teaches complete beginners how to build trustworthy projects with AI.",
+  "description": "A guided simulation that teaches complete beginners how to lead trustworthy AI-built projects without writing code.",
   "license": "MIT",
   "engines": {
     "node": ">=22"

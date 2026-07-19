@@ -2,7 +2,7 @@
 
 ## One sentence
 
-Pentimento is an interactive studio where a complete beginner learns to turn an AI draft into a project they can explain, constrain, inspect, repair, and safely share.
+Pentimento is a guided simulation where a complete beginner leads one AI-built project from a shaky draft to a version they can explain, constrain, inspect, repair, and safely share—without writing code.
 
 ## Name and metaphor
 
@@ -67,17 +67,28 @@ The AI says the page is responsive, accessible, verified, and ready. The canonic
 
 The baseline is recoverable but unverified. “Known good” is reserved for a version supported by current evidence.
 
+## First-use comprehension
+
+The artistic identity never substitutes for a plain explanation. Before any assessed choice, the experience must establish:
+
+1. **What this is** — a safe, guided educational simulation, not a project generator.
+2. **Who the learner is** — the project lead; AI proposes and the learner decides.
+3. **What they will learn** — how to define, direct, check, repair, release, and reuse an AI-assisted project method.
+4. **What happens next** — inspect one part, make one focused decision, see its result, and revise safely.
+
+The welcome leads to one case briefing. Returning learners receive a contextual resume screen instead of being dropped into unexplained controls. A persistent “How this works” panel restores the interaction model at any point.
+
 ## Ten-layer experience
 
-1. **First layer** — make a time-pressured trust decision and record confidence before seeing the consequence.
-2. **Target** — define a phone-first person, useful outcome, observable proof, non-goals, and whether runtime AI is actually needed.
-3. **Record** — construct a safe project home with durable context, trusted facts, `.gitignore`, current files, and an honestly labelled baseline.
-4. **Assign** — choose Plan rather than Implement or Review, then bound trusted context, expected return, and authority.
-5. **Scope** — review each AI-proposed plan item as Keep, Defer, or Needs an answer and expose the obligations it creates.
+1. **First layer** — inspect the approved source and main visitor path, then decide what should happen before release; no unexplained confidence gate appears here.
+2. **Target** — define a phone-first person, useful outcome, observable proof, non-goals, and whether runtime AI is actually needed, one line at a time.
+3. **Record** — review repository items sequentially, revealing GitHub vocabulary only when requested, and create an honestly labelled baseline.
+4. **Assign** — choose and confirm the work mode before reviewing the context packet one item at a time.
+5. **Scope** — review one AI-proposed plan item at a time as Keep, Defer, or Needs an answer and expose the obligations it creates.
 6. **Check** — run evidence tools and distinguish trusted-source comparisons, observed behavior, change review, execution records, and AI self-report.
 7. **Evolve** — diagnose without editing, approve three bounded changes, and rerun facts, 390px visibility, destination, keyboard, and final-file safety against one exact version.
-8. **Release** — generate a ten-row evidence record from post-repair checks, README review, build, preview, version/recovery, approval, publication, and a live smoke test.
-9. **Transfer** — catch an unsupported `$57.75` spreadsheet adjustment by inspecting `=SUM(B2:B4)+57.75`, returning to the receipts, recalculating `$385.15`, bounding the repair, and explaining what remains uncertain.
+8. **Release** — perform only the next missing release action while a ten-row generated ledger remains available for deeper inspection.
+9. **Transfer** — answer source, proof, and bounded-next-move questions sequentially, then explain what the corrected `$385.15` does and does not prove.
 10. **Revision Trace** — move through the learner’s actual path, inspect a qualitative evidence profile, write an optional reflection, and open reusable field notes.
 
 ## Learning spine: TRACE
@@ -102,7 +113,7 @@ The Evidence Ledger maps requirements to evidence threads. Each check names its 
 
 ### Revision Trace
 
-The Revision Trace is a navigable record of the learner’s real initial choice, confidence, attempts, hints, scope decisions, checks, repairs, release record, and transfer reasoning. It avoids a generic replay and avoids presenting a numeric score as mastery.
+The Revision Trace is a navigable record of the learner’s real initial choice, later confidence decisions, attempts, hints, scope decisions, checks, repairs, release record, and transfer reasoning. It avoids a generic replay and avoids presenting a numeric score as mastery.
 
 ## Reusable value
 
@@ -120,14 +131,19 @@ The complete first-project guide covers safe project selection, a fourteen-step 
 ## Interaction model
 
 ```text
-predict → commit → experience consequence → inspect evidence → revise → apply again
+orient → inspect one thing → choose → see the consequence → revise → apply again
 ```
 
+- The welcome and case briefing establish product, role, goal, interaction model, and safety before assessment.
+- Future questions are not rendered until the learner explicitly continues; hidden controls cannot receive keyboard focus.
+- Target, Record, Assign, Scope, Evolve, Release, and Transfer reveal one focused decision or next action at a time.
+- Completed decisions collapse into visible summaries and remain editable.
+- Technical glossaries and full evidence tables are optional disclosures at the moment they become useful.
 - Explanatory option details stay hidden until the learner commits.
 - Distractors are plausible incomplete professional decisions, not joke answers.
 - Incorrect choices expose a human or project consequence and remain recoverable.
 - Hints progress from a goal cue to a strategy cue to a worked action.
-- Confidence is recorded at meaningful boundaries so calibration can be discussed without rewarding bravado.
+- Confidence appears only at later meaningful boundaries, after the interaction model is understood, so calibration can be discussed without rewarding bravado.
 - Progress is versioned, validated, persisted locally, and migrates safely from the earlier mission format.
 - Scene changes move to the beginning of the new layer; dialogs contain and restore focus.
 
@@ -191,6 +207,7 @@ It stores validated progress in the learner’s browser. The optional debrief en
 
 A first-time learner should be able to:
 
+- answer “What is this, what is my role, what will I learn, and what do I do next?” within the opening moments;
 - explain why the polished AI summary was insufficient;
 - write a specific person/outcome/proof/non-goal brief;
 - distinguish a recoverable baseline from a verified version;

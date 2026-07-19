@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 
 import { AccessibleDialog } from "@/components/AccessibleDialog";
 import { AccessibleTabs } from "@/components/AccessibleTabs";
-import { RadioCardGroup, ToggleCard } from "@/components/ChoiceControls";
+import { RadioCardGroup } from "@/components/ChoiceControls";
 import { DebriefResponseSchema, type DebriefResponse } from "@/lib/debrief-contracts";
 import {
   buildCompetencies,
@@ -26,6 +26,7 @@ import {
   nextScene,
   planOptions,
   postRepairReruns,
+  productIdentity,
   projectTerms,
   repairFields,
   repositoryOptions,
@@ -37,6 +38,7 @@ import {
   workModes,
   type ScopeDisposition,
   type WorkModeId,
+  type Choice,
   type Confidence,
   type SceneId,
 } from "@/lib/mission";
@@ -44,6 +46,12 @@ import {
 const STORAGE_KEY = "pentimento:mission:v2:repair-cafe";
 const LEGACY_STORAGE_KEY = "measure-twice:mission:v1:repair-cafe";
 const RELEASE_VERSION = "c7a91e4";
+const JOURNEY_CHAPTERS = [
+  { label: "Understand", start: 0, end: 1 },
+  { label: "Direct AI", start: 2, end: 4 },
+  { label: "Check & repair", start: 5, end: 6 },
+  { label: "Release & reuse", start: 7, end: 9 },
+] as const;
 
 type Feedback = {
   scene: SceneId;
@@ -53,6 +61,40 @@ type Feedback = {
   principle: string;
   nextMove: string;
 };
+
+type MissionUiState = {
+  arrivalStage: "observe" | "decide";
+  targetStep: number;
+  recordStep: number;
+  repositoryDecisions: Record<string, boolean>;
+  handoffStage: "mode" | "context";
+  workModeReviewed: boolean;
+  contextStep: number;
+  contextDecisions: Record<string, boolean>;
+  scopeStep: number;
+  repairStep: number;
+  transferStep: number;
+};
+
+function objectRecord(value: unknown): Record<string, unknown> | null {
+  return value && typeof value === "object" && !Array.isArray(value)
+    ? value as Record<string, unknown>
+    : null;
+}
+
+function boundedStep(value: unknown, maximum: number, fallback: number): number {
+  return Number.isInteger(value) && Number(value) >= 0 && Number(value) <= maximum
+    ? Number(value)
+    : fallback;
+}
+
+function booleanDecisions(value: unknown, allowedIds: string[]): Record<string, boolean> {
+  const record = objectRecord(value);
+  if (!record) return {};
+  return Object.fromEntries(
+    allowedIds.flatMap((id) => typeof record[id] === "boolean" ? [[id, record[id] as boolean]] : []),
+  );
+}
 
 const hints: Partial<Record<SceneId, string[]>> = {
   target: [
@@ -92,10 +134,6 @@ const hints: Partial<Record<SceneId, string[]>> = {
   ],
 };
 
-function toggle(list: string[], id: string): string[] {
-  return list.includes(id) ? list.filter((item) => item !== id) : [...list, id];
-}
-
 function removeStoredMission() {
   try {
     window.localStorage.removeItem(STORAGE_KEY);
@@ -125,14 +163,14 @@ function feedbackFor(progress: MissionProgress, scene: SceneId, passed: boolean)
     }
     return {
       scene,
-      passed: true,
+      passed: false,
       goal: "Decide whether the artifact is ready.",
       evidence:
         progress.arrivalChoice === "ship"
           ? "The main action does nothing, and one public promise has no source."
           : "The AI summary repeats that everything works, but still provides no independent check.",
       principle: "The creator's assurance is not evidence that its output works.",
-      nextMove: "Return to the recoverable baseline and define what the project must prove before changing it again.",
+      nextMove: "Revise the decision and choose a move that creates independent evidence before publication.",
     };
   }
 
@@ -224,7 +262,7 @@ function feedbackFor(progress: MissionProgress, scene: SceneId, passed: boolean)
         : "At least one release claim is missing generated evidence, explicit approval, or a post-publish result.",
       principle: "Deployment is a verification boundary, not merely clicking Publish.",
       nextMove: passed
-        ? "Apply the method to a different project without the TRACE labels."
+        ? "Use the same evidence habits on a different kind of project."
         : "Generate the missing release record and verify the exact version being released.",
     },
     transfer: {
@@ -344,35 +382,18 @@ function RepairCafePreview({
   );
 }
 
-function ProgressRuler({ scene }: { scene: SceneId }) {
-  const current = sceneOrder.indexOf(scene);
-  return (
-    <div className="ruler" role="group" aria-label={`Mission progress: step ${current + 1} of ${sceneOrder.length}, ${sceneLabels[scene]}`}>
-      <span className="ruler__current"><b>{String(current + 1).padStart(2, "0")} / {sceneOrder.length}</b>{sceneLabels[scene]}</span>
-      <ol>
-        {sceneOrder.map((item, index) => (
-          <li
-            key={item}
-            className={`${index <= current ? "is-reached" : ""} ${item === scene ? "is-current" : ""}`}
-            aria-current={item === scene ? "step" : undefined}
-            aria-label={`Step ${index + 1} of ${sceneOrder.length}: ${sceneLabels[item]}${index < current ? ", completed" : item === scene ? ", current" : ""}`}
-            title={sceneLabels[item]}
-          >
-            <i aria-hidden="true" />
-            <small aria-hidden="true">{String(index + 1).padStart(2, "0")}</small>
-          </li>
-        ))}
-      </ol>
-    </div>
-  );
-}
-
-function MobileInstrument({ progress }: { progress: MissionProgress }) {
+function MobileInstrument({
+  progress,
+  workModeReviewed,
+}: {
+  progress: MissionProgress;
+  workModeReviewed: boolean;
+}) {
   const releaseRows = releaseEvidenceSnapshot(progress);
   const correctChecks = checks.filter((check) => check.correct).length;
   const scopeCounts = scopeDispositions.map((disposition) => ({
     label: disposition.label,
-    count: planOptions.filter((item) => progress.scopeDecisions[item.id] === disposition.id).length,
+    count: planOptions.filter((item) => progress.scopeReviewed.includes(item.id) && progress.scopeDecisions[item.id] === disposition.id).length,
   }));
   const transferAnswers = transferQuestions.filter((question) => progress.transfer[question.id]).length;
 
@@ -380,7 +401,7 @@ function MobileInstrument({ progress }: { progress: MissionProgress }) {
     arrival: {
       instrument: "Project preview",
       value: "AI claim · unverified",
-      detail: progress.arrivalChoice ? "Decision selected; confidence still matters." : "No evidence inspected yet.",
+      detail: progress.arrivalChoice ? "Decision selected; review its consequence next." : "The source and visitor path still need inspection.",
     },
     target: {
       instrument: "Build map",
@@ -394,13 +415,23 @@ function MobileInstrument({ progress }: { progress: MissionProgress }) {
     },
     handoff: {
       instrument: "Context Lens",
-      value: `${workModes.find((mode) => mode.id === progress.workMode)?.label} · ${progress.context.length} inputs`,
-      detail: progress.context.includes("secret") ? "A credential is exposed." : "Authority remains visible.",
+      value: workModeReviewed
+        ? `${workModes.find((mode) => mode.id === progress.workMode)?.label} · ${progress.context.length} inputs`
+        : "Work mode not chosen",
+      detail: !workModeReviewed
+        ? "Choose AI’s permission boundary before sharing context."
+        : progress.context.includes("secret")
+          ? "A credential is exposed."
+          : progress.context.includes("authority")
+            ? "Authority boundary included."
+            : "Authority boundary not selected yet.",
     },
     radius: {
       instrument: "Change footprint",
-      value: scopeCounts.map((item) => `${item.count} ${item.label.toLowerCase()}`).join(" · "),
-      detail: "The full footprint remains below this decision.",
+      value: `${progress.scopeReviewed.length} / ${planOptions.length} proposals reviewed`,
+      detail: progress.scopeReviewed.length
+        ? scopeCounts.map((item) => `${item.count} ${item.label.toLowerCase()}`).join(" · ")
+        : "No proposal has been classified yet.",
     },
     check: {
       instrument: "Evidence ledger",
@@ -417,7 +448,11 @@ function MobileInstrument({ progress }: { progress: MissionProgress }) {
     ship: {
       instrument: "Release ledger",
       value: `${releaseRows.filter((row) => row.status === "pass").length} / ${releaseRows.length} claims supported`,
-      detail: progress.published ? "Published in simulation; live proof still matters." : "Publishing remains a human-approved action.",
+      detail: progress.productionChecked
+        ? "Simulated live URL checked; exact version and visitor path match."
+        : progress.published
+          ? "Published in simulation; the live check is still missing."
+          : "Publishing remains a human-approved action.",
     },
     transfer: {
       instrument: "Transfer check",
@@ -431,13 +466,11 @@ function MobileInstrument({ progress }: { progress: MissionProgress }) {
     },
   };
   const current = state[progress.scene];
-  const currentStep = sceneOrder.indexOf(progress.scene) + 1;
-  const progressLabel = `Step ${currentStep} of ${sceneOrder.length}: ${sceneLabels[progress.scene]}`;
 
   return (
-    <aside className="mobile-instrument" aria-label={`Mission progress: ${progressLabel}. ${current.instrument}: ${current.value}`}>
+    <aside className="mobile-instrument" aria-label={`Current project status. ${current.instrument}: ${current.value}`}>
       <span aria-hidden="true"><i /></span>
-      <div><small>{String(currentStep).padStart(2, "0")} / {sceneOrder.length} · {sceneLabels[progress.scene]}</small><b>{current.instrument} · {current.value}</b></div>
+      <div><small>{sceneLabels[progress.scene]} · current workspace</small><b>{current.instrument} · {current.value}</b></div>
       <p>{current.detail}</p>
     </aside>
   );
@@ -449,7 +482,7 @@ function FieldNoteCard({ scene }: { scene: SceneId }) {
 
   return (
     <section className="field-note">
-      <div className="field-note__label"><span>Filed</span> Working note earned</div>
+      <div className="field-note__label"><span>Saved</span> Added to your practical guide</div>
       <h3>{note.title}</h3>
       <p><b>Use it when:</b> {note.whenToUse}</p>
       <pre>{note.template}</pre>
@@ -457,35 +490,377 @@ function FieldNoteCard({ scene }: { scene: SceneId }) {
   );
 }
 
-function Intro({ onStart }: { onStart: () => void }) {
+function Intro({
+  onContinue,
+  buttonRef,
+}: {
+  onContinue: () => void;
+  buttonRef: React.RefObject<HTMLButtonElement | null>;
+}) {
   return (
     <main id="studio-intro" className="intro" data-testid="intro">
       <div className="intro__measure" aria-hidden="true">P&nbsp;&nbsp;P&nbsp;&nbsp;P</div>
       <div className="intro__copy">
-        <p className="overline">Pentimento · See the decisions beneath the finished surface</p>
-        <h1>The first draft is easy.<br /><em>Knowing what to trust is the craft.</em></h1>
+        <p className="overline">A guided simulation for first-time AI builders</p>
+        <h1>Learn to lead an<br /><em>AI-built project.</em></h1>
         <p className="intro__lede">
-          Take one polished-but-broken project from idea to a version you can explain, test, repair, and safely share. No coding experience needed.
+          Pentimento is an interactive lesson for complete beginners. Guide one small website from an idea to a tested, shareable version—learning what to ask AI, what to check yourself, and how to recover when something goes wrong.
         </p>
-        <button type="button" className="primary-button primary-button--large" onClick={onStart} data-testid="start-mission">
-          Begin the 20-minute studio <span>→</span>
+        <button ref={buttonRef} type="button" className="primary-button primary-button--large" onClick={onContinue} data-testid="open-briefing">
+          See how the lesson works <span>→</span>
         </button>
         <div className="intro__meta">
-          <span><b>01</b> No experience assumed</span>
-          <span><b>02</b> One 18–20 minute mission</span>
-          <span><b>03</b> Every decision leaves a visible trace</span>
+          <span><b>20 min</b> One guided project</span>
+          <span><b>No code</b> You make the decisions</span>
+          <span><b>Safe</b> Nothing is really published</span>
         </div>
       </div>
       <aside className="intro__manifesto">
-        <p>Three practices you will prove</p>
+        <p>How the lesson works</p>
         <ol>
-          <li><span>Decide the outcome</span> before choosing features.</li>
-          <li><span>Give AI only</span> the context and permission this step needs.</li>
-          <li><span>Call work finished</span> only when evidence matches the claim.</li>
+          <li><span>Inspect</span> one part of a realistic project.</li>
+          <li><span>Choose</span> what you would do next.</li>
+          <li><span>See</span> what happens and why it matters.</li>
+          <li><span>Keep</span> a practical note for your own project.</li>
         </ol>
-        <small>Studio case 01 · The page that looks finished</small>
+        <small>{productIdentity.tagline}</small>
       </aside>
     </main>
+  );
+}
+
+function LessonBriefing({
+  onBack,
+  onStart,
+}: {
+  onBack: () => void;
+  onStart: () => void;
+}) {
+  const headingRef = useRef<HTMLHeadingElement>(null);
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+    window.requestAnimationFrame(() => headingRef.current?.focus({ preventScroll: true }));
+  }, []);
+
+  return (
+    <main id="lesson-briefing" className="briefing" data-testid="briefing">
+      <div className="briefing__progress"><span>Before the first decision</span><b>About 60 seconds</b></div>
+      <section className="briefing__hero">
+        <p className="overline">Here is the project</p>
+        <h1 ref={headingRef} tabIndex={-1}>You are the project lead.<br /><em>AI made the first draft.</em></h1>
+        <p>
+          A neighborhood Repair Café needs a simple event page. It looks polished, and the AI says every check passed. The organizer wants to share it in ten minutes.
+        </p>
+      </section>
+
+      <div className="briefing__grid">
+        <section className="briefing__card briefing__card--role">
+          <span>01 · Your role</span>
+          <h2>Guide the work. You do not need to code.</h2>
+          <p>Decide what the page must accomplish, what the AI may use and change, how its work should be checked, and whether the result is safe to release.</p>
+        </section>
+        <section className="briefing__card">
+          <span>02 · Your goal</span>
+          <h2>Help one phone visitor understand the event and contact the organizer.</h2>
+          <p>Every later decision will connect back to that simple outcome.</p>
+        </section>
+        <section className="briefing__card">
+          <span>03 · What you do</span>
+          <h2>One small task at a time.</h2>
+          <ol>
+            <li>Read the situation.</li>
+            <li>Inspect one part of the project.</li>
+            <li>Choose the next move.</li>
+            <li>See the result and revise if needed.</li>
+          </ol>
+        </section>
+      </div>
+
+      <aside className="briefing__safety">
+        <span aria-hidden="true">◇</span>
+        <p><b>Safe to explore.</b> This is a simulation. Nothing will be published, no email will be sent, and every choice can be revised.</p>
+      </aside>
+
+      <div className="briefing__actions">
+        <button type="button" className="text-button" onClick={onBack}>← Back</button>
+        <button type="button" className="primary-button primary-button--large" onClick={onStart} data-testid="start-mission">
+          Inspect the AI draft <span>→</span>
+        </button>
+      </div>
+    </main>
+  );
+}
+
+function ResumeExperience({
+  scene,
+  onContinue,
+  onRestart,
+}: {
+  scene: SceneId;
+  onContinue: () => void;
+  onRestart: () => void;
+}) {
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  const sceneIndex = sceneOrder.indexOf(scene);
+  const chapterIndex = JOURNEY_CHAPTERS.findIndex((chapter) => sceneIndex >= chapter.start && sceneIndex <= chapter.end);
+
+  useEffect(() => {
+    window.requestAnimationFrame(() => headingRef.current?.focus());
+  }, []);
+
+  return (
+    <main id="resume-experience" className="resume-experience" data-testid="resume-experience">
+      <p className="overline">Welcome back</p>
+      <h1 ref={headingRef} tabIndex={-1}>Your guided project is waiting.</h1>
+      <p>Pentimento is a safe simulation about leading an AI-built project. You stopped at <b>{sceneLabels[scene]}</b>; your decisions are still saved on this device.</p>
+      <div className="resume-experience__summary">
+        <span>Continue from</span><b>{sceneLabels[scene]}</b><small>Chapter {chapterIndex + 1} of {JOURNEY_CHAPTERS.length} · {JOURNEY_CHAPTERS[Math.max(0, chapterIndex)].label}</small>
+      </div>
+      <div className="resume-experience__actions">
+        <button type="button" className="primary-button primary-button--large" onClick={onContinue}>Continue my project <span>→</span></button>
+        <button type="button" className="text-button" onClick={onRestart}>Start over</button>
+      </div>
+    </main>
+  );
+}
+
+function SceneTask({
+  label,
+  title,
+  children,
+}: {
+  label: string;
+  title: string;
+  children: ReactNode;
+}) {
+  return (
+    <aside className="scene-task" aria-label={`${label}: ${title}`}>
+      <span>{label}</span>
+      <div><h2>{title}</h2>{children}</div>
+    </aside>
+  );
+}
+
+function DecisionTrail({
+  items,
+  activeIndex,
+  onEdit,
+}: {
+  items: Array<{ label: string; value?: string }>;
+  activeIndex: number;
+  onEdit: (index: number) => void;
+}) {
+  return (
+    <ol className="decision-trail" aria-label="Decisions in this step">
+      {items.map((item, index) => {
+        const complete = Boolean(item.value);
+        const active = index === activeIndex;
+        return (
+          <li key={item.label} className={`${complete ? "is-complete" : ""} ${active ? "is-active" : ""}`}>
+            <span aria-hidden="true">{complete ? "✓" : String(index + 1).padStart(2, "0")}</span>
+            <div><b>{item.label}</b>{complete && <small>{item.value}</small>}</div>
+            {complete && !active && <button type="button" onClick={() => onEdit(index)}>Edit</button>}
+          </li>
+        );
+      })}
+    </ol>
+  );
+}
+
+function FocusedStep({
+  stepKey,
+  announcement,
+  className = "",
+  testId,
+  children,
+}: {
+  stepKey: string | number;
+  announcement: string;
+  className?: string;
+  testId?: string;
+  children: ReactNode;
+}) {
+  const anchorRef = useRef<HTMLDivElement>(null);
+  const previousKeyRef = useRef(stepKey);
+
+  useEffect(() => {
+    if (previousKeyRef.current === stepKey) return;
+    previousKeyRef.current = stepKey;
+    const frame = window.requestAnimationFrame(() => {
+      const anchor = anchorRef.current;
+      if (!anchor) return;
+      anchor.focus({ preventScroll: true });
+      anchor.scrollIntoView({ behavior: "auto", block: "start" });
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [stepKey]);
+
+  return (
+    <div
+      ref={anchorRef}
+      className={`step-focus-anchor ${className}`.trim()}
+      tabIndex={-1}
+      role="group"
+      aria-label={announcement}
+      data-testid={testId}
+    >
+      {children}
+    </div>
+  );
+}
+
+function BinaryDecision({
+  choice,
+  index,
+  total,
+  decision,
+  positiveLabel,
+  negativeLabel,
+  instruction = "Choose where this item belongs. You can change your answer before review.",
+  onDecision,
+  revealDetail = false,
+}: {
+  choice: Choice;
+  index: number;
+  total: number;
+  decision?: boolean;
+  positiveLabel: string;
+  negativeLabel: string;
+  instruction?: string;
+  onDecision: (decision: boolean) => void;
+  revealDetail?: boolean;
+}) {
+  return (
+    <fieldset className="binary-decision">
+      <legend>
+        <span>{index + 1} of {total}</span>
+        {choice.title}
+      </legend>
+      <p>{instruction}</p>
+      <div>
+        <button type="button" className={decision === true ? "is-selected" : ""} aria-pressed={decision === true} onClick={() => onDecision(true)}>
+          <span aria-hidden="true">+</span><b>{positiveLabel}</b>
+        </button>
+        <button type="button" className={decision === false ? "is-selected" : ""} aria-pressed={decision === false} onClick={() => onDecision(false)}>
+          <span aria-hidden="true">−</span><b>{negativeLabel}</b>
+        </button>
+      </div>
+      {revealDetail && <small className="binary-decision__review">{choice.detail}</small>}
+    </fieldset>
+  );
+}
+
+function CompactJourney({ scene }: { scene: SceneId }) {
+  const current = sceneOrder.indexOf(scene);
+  const chapterIndex = JOURNEY_CHAPTERS.findIndex((chapter) => current >= chapter.start && current <= chapter.end);
+  const chapter = JOURNEY_CHAPTERS[Math.max(0, chapterIndex)];
+
+  return (
+    <div className="journey-compact" aria-label={`Learning journey: chapter ${chapterIndex + 1} of ${JOURNEY_CHAPTERS.length}, ${chapter.label}. Current layer: ${sceneLabels[scene]}.`}>
+      <span>Chapter {chapterIndex + 1} of {JOURNEY_CHAPTERS.length}</span>
+      <b>{chapter.label}</b>
+      <i><span style={{ width: `${((current + 1) / sceneOrder.length) * 100}%` }} /></i>
+    </div>
+  );
+}
+
+function ReleaseSequence({
+  progress,
+  focusRequest,
+  onRecordVersion,
+  onReviewReadme,
+  onBuild,
+  onPreview,
+  onApprove,
+  onPublish,
+  onProduction,
+}: {
+  progress: MissionProgress;
+  focusRequest: number;
+  onRecordVersion: () => void;
+  onReviewReadme: () => void;
+  onBuild: () => void;
+  onPreview: () => void;
+  onApprove: () => void;
+  onPublish: () => void;
+  onProduction: () => void;
+}) {
+  const actions = [
+    {
+      label: "Record exact version + recovery",
+      detail: progress.releaseEvidence.releaseVersion ? `Recorded · ${RELEASE_VERSION}` : "Name the exact version and how to recover if the release fails.",
+      complete: Boolean(progress.releaseEvidence.releaseVersion),
+      run: onRecordVersion,
+    },
+    {
+      label: "Review README + limitations",
+      detail: progress.releaseEvidence.readme ? "Reviewed · purpose, setup, checks, and limits match" : "Make sure another person can understand, run, and check this version.",
+      complete: Boolean(progress.releaseEvidence.readme),
+      run: onReviewReadme,
+    },
+    {
+      label: "Run production build",
+      detail: progress.releaseEvidence.build ? "Passed · npm run build exited 0" : "Produce the same kind of artifact the host will run and preserve the result.",
+      complete: Boolean(progress.releaseEvidence.build),
+      run: onBuild,
+    },
+    {
+      label: "Smoke-test hosted preview",
+      detail: progress.releaseEvidence.preview ? "Passed · facts and contact path work on the hosted preview" : "Repeat the important checks on the real preview URL.",
+      complete: Boolean(progress.releaseEvidence.preview),
+      run: onPreview,
+    },
+    {
+      label: "Approve this exact public action",
+      detail: progress.publishApproved ? `Approved · ${RELEASE_VERSION}` : "A person reviews the evidence and explicitly approves public access.",
+      complete: progress.publishApproved,
+      run: onApprove,
+    },
+    {
+      label: "Publish the simulated release",
+      detail: progress.published ? `Published in simulation · ${RELEASE_VERSION}` : "This is the external action. Approval must come first.",
+      complete: progress.published,
+      run: onPublish,
+    },
+    {
+      label: "Smoke-test the live URL",
+      detail: progress.productionChecked ? "Passed · exact live version and visitor path verified" : "Confirm the live environment serves the approved version and path.",
+      complete: progress.productionChecked,
+      run: onProduction,
+    },
+  ];
+  const nextIndex = actions.findIndex((action) => !action.complete);
+  const next = nextIndex >= 0 ? actions[nextIndex] : undefined;
+
+  return (
+    <section className="release-sequence" aria-labelledby="release-actions-title">
+      <header>
+        <div><span>Release actions</span><h3 id="release-actions-title">{next ? "Do only the next missing action." : "Release actions complete."}</h3></div>
+        <b>{actions.filter((action) => action.complete).length} / {actions.length}</b>
+      </header>
+      {actions.some((action) => action.complete) && (
+        <ol className="release-sequence__complete">
+          {actions.filter((action) => action.complete).map((action) => <li key={action.label}><span>✓</span><b>{action.label}</b><small>{action.detail}</small></li>)}
+        </ol>
+      )}
+      <FocusedStep
+        stepKey={`${nextIndex >= 0 ? nextIndex : actions.length}-${focusRequest}`}
+        announcement={next ? `Next release action: ${next.label}` : "All release actions are complete"}
+        testId="release-focused-action"
+      >
+        {next ? (
+          <div className="release-sequence__next">
+            <span>Next action · {String(nextIndex + 1).padStart(2, "0")}</span>
+            <h4>{next.label}</h4>
+            <p>{next.detail}</p>
+            <button type="button" className="primary-button" onClick={next.run}>{next.label} <span>→</span></button>
+          </div>
+        ) : (
+          <p className="release-sequence__ready" role="status"><span>✓</span><b>All release actions are complete.</b> The full ledger now connects every claim to generated evidence.</p>
+        )}
+      </FocusedStep>
+    </section>
   );
 }
 
@@ -522,7 +897,7 @@ function RepositoryRoom({ selected }: { selected: string[] }) {
   );
 }
 
-function ContextXray({ selected, workMode }: { selected: string[]; workMode: WorkModeId }) {
+function ContextXray({ selected, workMode }: { selected: string[]; workMode?: WorkModeId }) {
   const factsVisible = ["goal", "trusted-facts", "current-files", "acceptance", "authority"].every((id) =>
     selected.includes(id),
   );
@@ -530,7 +905,7 @@ function ContextXray({ selected, workMode }: { selected: string[]; workMode: Wor
     <section className="xray">
       <header>
         <div><span className="registration-mark" aria-hidden="true" /> Context Lens</div>
-        <small>{workModes.find((mode) => mode.id === workMode)?.label} mode · {selected.length} context items</small>
+        <small>{workMode ? `${workModes.find((mode) => mode.id === workMode)?.label} mode` : "mode not chosen"} · {selected.length} context items</small>
       </header>
       <div className="xray__beam">
         <div className="xray__source">
@@ -542,7 +917,7 @@ function ContextXray({ selected, workMode }: { selected: string[]; workMode: Wor
         </div>
         <div className="xray__lens">AI<br />VIEW</div>
         <div className="xray__result">
-          <p className={workMode === "plan" ? "is-known" : "is-danger"}><b>Mode</b>{workMode === "plan" ? "Plan · no edits" : `${workModes.find((mode) => mode.id === workMode)?.label} · can overreach here`}</p>
+          <p className={workMode === "plan" ? "is-known" : workMode ? "is-danger" : ""}><b>Mode</b>{workMode === "plan" ? "Plan · no edits" : workMode ? `${workModes.find((mode) => mode.id === workMode)?.label} · can overreach here` : "Not chosen"}</p>
           <p className={factsVisible ? "is-known" : ""}><b>Goal</b>{factsVisible ? "Known" : "Blind spot"}</p>
           <p className={selected.includes("trusted-facts") ? "is-known" : ""}><b>Facts</b>{selected.includes("trusted-facts") ? "Sourced" : "May be invented"}</p>
           <p className={selected.includes("authority") ? "is-known" : ""}><b>Authority</b>{selected.includes("authority") ? "Bounded" : "Unbounded"}</p>
@@ -561,7 +936,7 @@ function ScopeDecisionCard({
   revealFeedback,
 }: {
   choice: (typeof planOptions)[number];
-  value: ScopeDisposition;
+  value?: ScopeDisposition;
   reviewed: boolean;
   onChange: (value: ScopeDisposition) => void;
   revealFeedback: boolean;
@@ -598,10 +973,17 @@ function ScopeDecisionCard({
   );
 }
 
-function ChangeFootprint({ decisions }: { decisions: MissionProgress["scopeDecisions"] }) {
-  const kept = planOptions.filter((item) => decisions[item.id] === "keep");
-  const deferred = planOptions.filter((item) => decisions[item.id] === "defer");
-  const questions = planOptions.filter((item) => decisions[item.id] === "needs-answer");
+function ChangeFootprint({
+  decisions,
+  reviewed,
+}: {
+  decisions: MissionProgress["scopeDecisions"];
+  reviewed: string[];
+}) {
+  const isReviewed = (id: string) => reviewed.includes(id);
+  const kept = planOptions.filter((item) => isReviewed(item.id) && decisions[item.id] === "keep");
+  const deferred = planOptions.filter((item) => isReviewed(item.id) && decisions[item.id] === "defer");
+  const questions = planOptions.filter((item) => isReviewed(item.id) && decisions[item.id] === "needs-answer");
   const obligations = kept.reduce((sum, item) => sum + item.obligations.length, 0);
   const size = Math.min(94, 38 + obligations * 2.5);
 
@@ -609,7 +991,7 @@ function ChangeFootprint({ decisions }: { decisions: MissionProgress["scopeDecis
     <section className="blast">
       <header>
         <span>Change footprint</span>
-        <b>{kept.length} keep · {deferred.length} defer · {questions.length} ask</b>
+        <b>{reviewed.length} / {planOptions.length} reviewed</b>
       </header>
       <div className="blast__map" style={{ "--blast-size": `${size}%` } as React.CSSProperties}>
         <i className="blast__outer" />
@@ -618,10 +1000,10 @@ function ChangeFootprint({ decisions }: { decisions: MissionProgress["scopeDecis
         {planOptions.map((item, index) => (
           <span
             key={item.id}
-            className={`blast__node is-${decisions[item.id]}`}
+            className={`blast__node is-${isReviewed(item.id) ? decisions[item.id] : "pending"}`}
             style={{ "--node-index": index } as React.CSSProperties}
           >
-            <b>{scopeDispositions.find((disposition) => disposition.id === decisions[item.id])?.label}</b>{item.title}
+            <b>{isReviewed(item.id) ? scopeDispositions.find((disposition) => disposition.id === decisions[item.id])?.label : "Not reviewed"}</b>{item.title}
           </span>
         ))}
       </div>
@@ -825,6 +1207,20 @@ function FirstProjectGuide() {
 
 export function Pentimento() {
   const [progress, setProgress] = useState<MissionProgress>(initialProgress);
+  const [entryStage, setEntryStage] = useState<"welcome" | "briefing">("welcome");
+  const [resumePending, setResumePending] = useState(false);
+  const [arrivalStage, setArrivalStage] = useState<"observe" | "decide">("observe");
+  const [targetStep, setTargetStep] = useState(0);
+  const [recordStep, setRecordStep] = useState(0);
+  const [repositoryDecisions, setRepositoryDecisions] = useState<Record<string, boolean>>({});
+  const [handoffStage, setHandoffStage] = useState<"mode" | "context">("mode");
+  const [workModeReviewed, setWorkModeReviewed] = useState(false);
+  const [contextStep, setContextStep] = useState(0);
+  const [contextDecisions, setContextDecisions] = useState<Record<string, boolean>>({});
+  const [scopeStep, setScopeStep] = useState(0);
+  const [repairStep, setRepairStep] = useState(0);
+  const [transferStep, setTransferStep] = useState(0);
+  const [revisionFocusRequest, setRevisionFocusRequest] = useState(0);
   const [sessionId, setSessionId] = useState("");
   const [hydrated, setHydrated] = useState(false);
   const [feedback, setFeedback] = useState<Feedback | null>(null);
@@ -833,16 +1229,21 @@ export function Pentimento() {
   const [debriefBusy, setDebriefBusy] = useState(false);
   const [debriefError, setDebriefError] = useState("");
   const [manualOpen, setManualOpen] = useState(false);
+  const [helpOpen, setHelpOpen] = useState(false);
   const [restartOpen, setRestartOpen] = useState(false);
   const [copied, setCopied] = useState("");
   const [copyStatus, setCopyStatus] = useState("");
   const appRootRef = useRef<HTMLDivElement>(null);
   const continueButtonRef = useRef<HTMLButtonElement>(null);
   const manualCloseRef = useRef<HTMLButtonElement>(null);
+  const helpCloseRef = useRef<HTMLButtonElement>(null);
+  const introButtonRef = useRef<HTMLButtonElement>(null);
   const restartCancelRef = useRef<HTMLButtonElement>(null);
   const sceneHeadingRef = useRef<HTMLHeadingElement>(null);
+  const arrivalDecisionRef = useRef<HTMLHeadingElement>(null);
   const previousSceneRef = useRef<SceneId>(progress.scene);
   const previousStartedRef = useRef(progress.started);
+  const previousResumePendingRef = useRef(resumePending);
 
   useEffect(() => {
     try {
@@ -851,10 +1252,35 @@ export function Pentimento() {
       if (saved) {
         const parsed: unknown = JSON.parse(saved);
         if (parsed && typeof parsed === "object") {
-          const record = parsed as { sessionId?: unknown; progress?: unknown };
+          const record = parsed as { sessionId?: unknown; progress?: unknown; uiState?: unknown };
           if (typeof record.sessionId === "string") setSessionId(record.sessionId);
           const restored = parseMissionProgress(record.progress);
-          if (restored) setProgress(restored);
+          if (restored) {
+            setProgress(restored);
+            setResumePending(restored.started);
+
+            const savedUi = objectRecord(record.uiState);
+            const firstTargetGap = targetFields.findIndex((field) => !restored.target[field.id]);
+            const firstScopeGap = planOptions.findIndex((item) => !restored.scopeReviewed.includes(item.id));
+            const firstRepairGap = repairFields.findIndex((field) => !restored.repair[field.id]);
+            const firstTransferGap = transferQuestions.findIndex((question) => !restored.transfer[question.id]);
+
+            setArrivalStage(savedUi?.arrivalStage === "decide" || restored.arrivalChoice ? "decide" : "observe");
+            setTargetStep(boundedStep(savedUi?.targetStep, targetFields.length - 1, firstTargetGap >= 0 ? firstTargetGap : targetFields.length - 1));
+            setRecordStep(boundedStep(savedUi?.recordStep, repositoryOptions.length - 1, 0));
+            setRepositoryDecisions(savedUi
+              ? booleanDecisions(savedUi.repositoryDecisions, repositoryOptions.map((item) => item.id))
+              : Object.fromEntries(restored.repository.map((id) => [id, true])));
+            setHandoffStage(savedUi?.handoffStage === "context" ? "context" : "mode");
+            setWorkModeReviewed(savedUi?.workModeReviewed === true);
+            setContextStep(boundedStep(savedUi?.contextStep, contextOptions.length - 1, 0));
+            setContextDecisions(savedUi
+              ? booleanDecisions(savedUi.contextDecisions, contextOptions.map((item) => item.id))
+              : Object.fromEntries(restored.context.map((id) => [id, true])));
+            setScopeStep(boundedStep(savedUi?.scopeStep, planOptions.length - 1, firstScopeGap >= 0 ? firstScopeGap : planOptions.length - 1));
+            setRepairStep(boundedStep(savedUi?.repairStep, repairFields.length - 1, firstRepairGap >= 0 ? firstRepairGap : repairFields.length - 1));
+            setTransferStep(boundedStep(savedUi?.transferStep, transferQuestions.length, firstTransferGap >= 0 ? firstTransferGap : transferQuestions.length));
+          }
         }
       }
       try {
@@ -872,24 +1298,53 @@ export function Pentimento() {
   useEffect(() => {
     if (!hydrated || !sessionId) return;
     try {
-      window.localStorage.setItem(STORAGE_KEY, JSON.stringify({ sessionId, progress }));
+      const uiState: MissionUiState = {
+        arrivalStage,
+        targetStep,
+        recordStep,
+        repositoryDecisions,
+        handoffStage,
+        workModeReviewed,
+        contextStep,
+        contextDecisions,
+        scopeStep,
+        repairStep,
+        transferStep,
+      };
+      window.localStorage.setItem(STORAGE_KEY, JSON.stringify({ sessionId, progress, uiState }));
     } catch {
       // The mission remains usable when storage is unavailable or full.
     }
-  }, [hydrated, progress, sessionId]);
+  }, [
+    arrivalStage,
+    contextDecisions,
+    contextStep,
+    handoffStage,
+    hydrated,
+    progress,
+    recordStep,
+    repairStep,
+    repositoryDecisions,
+    scopeStep,
+    sessionId,
+    targetStep,
+    transferStep,
+    workModeReviewed,
+  ]);
 
   useEffect(() => {
     const enteredMission = !previousStartedRef.current && progress.started;
     const changedScene = previousSceneRef.current !== progress.scene;
+    const resumedMission = previousResumePendingRef.current && !resumePending && progress.started;
     previousStartedRef.current = progress.started;
     previousSceneRef.current = progress.scene;
-    if (!hydrated || (!enteredMission && !changedScene)) return;
+    previousResumePendingRef.current = resumePending;
+    if (!hydrated || (!enteredMission && !changedScene && !resumedMission)) return;
     window.scrollTo({ top: 0, left: 0, behavior: "instant" });
     window.requestAnimationFrame(() => sceneHeadingRef.current?.focus({ preventScroll: true }));
-  }, [hydrated, progress.scene, progress.started]);
+  }, [hydrated, progress.scene, progress.started, resumePending]);
 
   const currentScene = progress.scene;
-  const sceneNumber = sceneOrder.indexOf(currentScene) + 1;
   const unlockedNotes = fieldNotes.filter((note) => progress.fieldNotes.includes(note.id));
   const releaseRows = releaseEvidenceSnapshot(progress);
   const prePublishReady = releaseRows
@@ -919,6 +1374,26 @@ export function Pentimento() {
     }));
   }
 
+  function decideRepositoryItem(id: string, include: boolean) {
+    setRepositoryDecisions((current) => ({ ...current, [id]: include }));
+    setProgress((current) => ({
+      ...current,
+      repository: include
+        ? current.repository.includes(id) ? current.repository : [...current.repository, id]
+        : current.repository.filter((item) => item !== id),
+    }));
+  }
+
+  function decideContextItem(id: string, include: boolean) {
+    setContextDecisions((current) => ({ ...current, [id]: include }));
+    setProgress((current) => ({
+      ...current,
+      context: include
+        ? current.context.includes(id) ? current.context : [...current.context, id]
+        : current.context.filter((item) => item !== id),
+    }));
+  }
+
   function chooseScopeDisposition(choiceId: string, disposition: ScopeDisposition) {
     setProgress((current) => {
       const scopeDecisions = { ...current.scopeDecisions, [choiceId]: disposition };
@@ -944,14 +1419,59 @@ export function Pentimento() {
       ...progress,
       attempts: { ...progress.attempts, [scene]: (progress.attempts[scene] ?? 0) + 1 },
     };
-    const passed = scene === "arrival" ? Boolean(attempted.arrivalChoice && attempted.confidence.arrival) : canCompleteScene(attempted, scene);
+    const passed = canCompleteScene(attempted, scene);
     setProgress(attempted);
     setFeedback(feedbackFor(attempted, scene, passed));
+  }
+
+  function openArrivalDecision() {
+    setArrivalStage("decide");
+    window.requestAnimationFrame(() => arrivalDecisionRef.current?.focus());
   }
 
   function continueAfterFeedback() {
     if (!feedback) return;
     if (!feedback.passed) {
+      if (feedback.scene === "arrival") setArrivalStage("decide");
+      if (feedback.scene === "target") {
+        const firstWeakField = targetFields.findIndex((field) => {
+          const selected = field.options.find((option) => option.id === progress.target[field.id]);
+          return !selected?.correct;
+        });
+        setTargetStep(Math.max(0, firstWeakField));
+      }
+      if (feedback.scene === "record") {
+        const firstWeakItem = repositoryOptions.findIndex((item) => Boolean(item.correct) !== progress.repository.includes(item.id));
+        setRecordStep(Math.max(0, firstWeakItem));
+      }
+      if (feedback.scene === "handoff") {
+        if (progress.workMode !== "plan") {
+          setHandoffStage("mode");
+        } else {
+          const firstWeakItem = contextOptions.findIndex((item) => Boolean(item.correct) !== progress.context.includes(item.id));
+          setContextStep(Math.max(0, firstWeakItem));
+          setHandoffStage("context");
+        }
+      }
+      if (feedback.scene === "radius") {
+        const firstWeakItem = planOptions.findIndex((item) => progress.scopeDecisions[item.id] !== item.recommendedDisposition);
+        setScopeStep(Math.max(0, firstWeakItem));
+      }
+      if (feedback.scene === "evolve") {
+        const firstWeakField = repairFields.findIndex((field) => {
+          const selected = field.options.find((option) => option.id === progress.repair[field.id]);
+          return !selected?.correct;
+        });
+        setRepairStep(Math.max(0, firstWeakField));
+      }
+      if (feedback.scene === "transfer") {
+        const firstWeakQuestion = transferQuestions.findIndex((question) => {
+          const selected = question.options.find((option) => option.id === progress.transfer[question.id]);
+          return !selected || !("correct" in selected && selected.correct);
+        });
+        setTransferStep(firstWeakQuestion >= 0 ? firstWeakQuestion : transferQuestions.length);
+      }
+      setRevisionFocusRequest((request) => request + 1);
       setFeedback(null);
       return;
     }
@@ -1150,10 +1670,25 @@ export function Pentimento() {
       fieldNotes: [],
     });
     setSessionId(crypto.randomUUID());
+    setEntryStage("welcome");
+    setResumePending(false);
+    setArrivalStage("observe");
+    setTargetStep(0);
+    setRecordStep(0);
+    setRepositoryDecisions({});
+    setHandoffStage("mode");
+    setWorkModeReviewed(false);
+    setContextStep(0);
+    setContextDecisions({});
+    setScopeStep(0);
+    setRepairStep(0);
+    setTransferStep(0);
+    setRevisionFocusRequest(0);
     setFeedback(null);
     setDebrief(null);
     setDebriefError("");
     setManualOpen(false);
+    setHelpOpen(false);
     setRestartOpen(false);
   }
 
@@ -1177,15 +1712,56 @@ export function Pentimento() {
 
   if (!hydrated) return <div className="loading-screen">Opening the field studio…</div>;
 
+  if (progress.started && resumePending) {
+    return (
+      <div className="app-shell" ref={appRootRef}>
+        <a className="skip-link" href="#resume-experience">Skip to saved project</a>
+        <header className="site-header">
+          <a className="wordmark" href="/" aria-label="Pentimento home"><span aria-hidden="true">P</span><b className="wordmark__name">Pentimento</b></a>
+          <div><span>Guided simulation</span><b>Your progress is saved</b></div>
+        </header>
+        <ResumeExperience scene={progress.scene} onContinue={() => setResumePending(false)} onRestart={() => setRestartOpen(true)} />
+        <AccessibleDialog
+          open={restartOpen}
+          role="alertdialog"
+          title="Start this guided project over?"
+          description="This removes the progress saved on this device, including your decisions, notes, and debrief. It cannot be undone."
+          onDismiss={() => setRestartOpen(false)}
+          appRootRef={appRootRef}
+          initialFocusRef={restartCancelRef}
+          backdropClassName="drawer-backdrop drawer-backdrop--center"
+          dialogClassName="restart-dialog"
+          titleClassName="restart-dialog__title"
+          descriptionClassName="restart-dialog__description"
+          contentClassName="restart-dialog__actions"
+          testId="restart-dialog"
+        >
+          <button ref={restartCancelRef} type="button" className="text-button" onClick={() => setRestartOpen(false)}>Keep my progress</button>
+          <button type="button" className="danger-button" onClick={resetMission}>Erase progress and start over</button>
+        </AccessibleDialog>
+      </div>
+    );
+  }
+
   if (!progress.started) {
     return (
       <div className="app-shell" ref={appRootRef}>
-        <a className="skip-link" href="#studio-intro">Skip to studio introduction</a>
+        <a className="skip-link" href={entryStage === "welcome" ? "#studio-intro" : "#lesson-briefing"}>Skip to main content</a>
         <header className="site-header">
           <a className="wordmark" href="/" aria-label="Pentimento home"><span aria-hidden="true">P</span><b className="wordmark__name">Pentimento</b></a>
-          <div><span>Education track</span><b>Build Week 2026</b></div>
+          <div><span>Learn to build with AI</span><b>No coding required</b></div>
         </header>
-        <Intro onStart={() => patchProgress({ started: true })} />
+        {entryStage === "welcome" ? (
+          <Intro onContinue={() => setEntryStage("briefing")} buttonRef={introButtonRef} />
+        ) : (
+          <LessonBriefing
+            onBack={() => {
+              setEntryStage("welcome");
+              window.requestAnimationFrame(() => introButtonRef.current?.focus());
+            }}
+            onStart={() => patchProgress({ started: true })}
+          />
+        )}
       </div>
     );
   }
@@ -1194,83 +1770,141 @@ export function Pentimento() {
     <div className="app-shell" ref={appRootRef}>
       <a className="skip-link" href="#mission-content">Skip to the current decision</a>
       <header className="site-header site-header--mission">
-        <div className="wordmark" aria-label="Pentimento">
+        <div className="wordmark" role="img" aria-label="Pentimento">
           <span aria-hidden="true">P</span><b className="wordmark__name">Pentimento</b>
         </div>
-        <ProgressRuler scene={currentScene} />
+        <CompactJourney scene={currentScene} />
         <div className="header-actions">
-          <button type="button" onClick={() => setManualOpen(true)}>Field notes <b>{unlockedNotes.length}</b></button>
-          <button type="button" onClick={() => setRestartOpen(true)}>Restart mission</button>
+          <button type="button" onClick={() => setHelpOpen(true)} aria-label="How this lesson works"><span className="header-help__long">How this works</span><span className="header-help__short">Help</span></button>
+          {unlockedNotes.length > 0 && <button type="button" onClick={() => setManualOpen(true)}>My guide <b>{unlockedNotes.length}</b></button>}
+          <button type="button" className="header-actions__quiet" onClick={() => setRestartOpen(true)}>Start over</button>
         </div>
       </header>
 
       <main id="mission-content" className={`mission-canvas mission-canvas--${currentScene}`} data-testid={`scene-${currentScene}`}>
         <div className="mission-label">
-          <span>Mission 01</span>
-          <b>{mission.title}</b>
-          <small>{String(sceneNumber).padStart(2, "0")} / {sceneOrder.length}</small>
+          <span>Guided project</span>
+          <b>Repair Café event page</b>
+          <small>{sceneLabels[currentScene]}</small>
         </div>
-        <MobileInstrument progress={progress} />
+        {currentScene !== "arrival" && <MobileInstrument progress={progress} workModeReviewed={workModeReviewed} />}
 
         {currentScene === "arrival" && (
           <section className="scene-grid scene-grid--arrival">
             <div className="scene-copy">
               <SceneHeading
-                eyebrow="Cold open · Make the call"
-                title="The AI says it’s ready."
-                copy="A preview is a temporary version you inspect before it replaces the live page. The organizer plans to share this one in ten minutes. Decide what to trust before seeing the consequence."
+                eyebrow="First decision · Inspect the draft"
+                title="Can a visitor do what they came to do?"
+                copy="The Repair Café organizer plans to share this AI-made page in ten minutes. Your first job is not to fix it. Understand what is true and what the visitor can actually do."
                 headingRef={sceneHeadingRef}
               />
-              <div className="ai-claim"><span>AI</span><p>{mission.aiClaim}</p><b>AI claim · unverified</b></div>
-              <RadioCardGroup
-                name="arrival-choice"
-                groupLabel="Choose the next action"
-                choices={arrivalChoices}
-                value={progress.arrivalChoice}
-                onChange={(arrivalChoice) => patchProgress({ arrivalChoice })}
-                revealDetails={(progress.attempts.arrival ?? 0) > 0}
-                optionsClassName="choice-stack"
-              />
-              <ConfidencePicker value={progress.confidence.arrival} onChange={(value) => patchProgress({ confidence: { ...progress.confidence, arrival: value } })} />
-              <button type="button" className="primary-button" disabled={!progress.arrivalChoice || !progress.confidence.arrival} onClick={() => submitScene("arrival")} data-testid="commit-arrival">
-                See the consequence <span>→</span>
-              </button>
+              <SceneTask label="Do this now" title="Inspect before you decide.">
+                <ol>
+                  <li>Compare the page with the organizer’s approved facts.</li>
+                  <li>Try the page’s main “Ask about a repair” action.</li>
+                  <li>Notice whether the AI gives evidence or only an assurance.</li>
+                </ol>
+              </SceneTask>
+              <div className="ai-claim"><span>AI</span><p>{mission.aiClaim}</p><b>AI claim · not proof</b></div>
             </div>
             <div className="artifact-column">
+              <aside className="source-card">
+                <header><span>Organizer’s approved facts</span><b>Source of truth</b></header>
+                <ul>{mission.approvedFacts.map((fact) => <li key={fact}>{fact}</li>)}</ul>
+              </aside>
               <RepairCafePreview onAction={() => setPreviewNotice("Nothing happened. The action has no destination.")} />
-              <p className={`preview-notice ${previewNotice ? "is-visible" : ""}`} role="status">{previewNotice || "Try the page's main action."}</p>
+              <p className={`preview-notice ${previewNotice ? "is-visible" : ""}`} role="status">{previewNotice || "Try the page’s main action, then compare its claims with the approved facts."}</p>
             </div>
+            <FocusedStep
+              stepKey={`${arrivalStage}-${revisionFocusRequest}`}
+              announcement={arrivalStage === "observe" ? "The project draft is ready to inspect" : "One decision: choose what should happen next"}
+              className="arrival-interaction"
+            >
+              {arrivalStage === "observe" ? (
+                <div className="arrival-ready">
+                  <p>Take your time with the draft. When you have looked at the source and tried the action, continue to one decision.</p>
+                  <button type="button" className="primary-button" onClick={openArrivalDecision} data-testid="open-arrival-decision">
+                    Make the decision <span>→</span>
+                  </button>
+                </div>
+              ) : (
+                <section className="arrival-decision" aria-labelledby="arrival-decision-title" data-testid="arrival-decision">
+                  <p>One decision</p>
+                  <h2 id="arrival-decision-title" ref={arrivalDecisionRef} tabIndex={-1}>The AI says everything passed. What should happen next?</h2>
+                  <RadioCardGroup
+                    name="arrival-choice"
+                    groupLabel="Choose what should happen before the page goes live"
+                    choices={arrivalChoices}
+                    value={progress.arrivalChoice}
+                    onChange={(arrivalChoice) => patchProgress({ arrivalChoice })}
+                    revealDetails={(progress.attempts.arrival ?? 0) > 0}
+                    optionsClassName="choice-stack"
+                  />
+                  <button type="button" className="primary-button" disabled={!progress.arrivalChoice} onClick={() => submitScene("arrival")} data-testid="commit-arrival">
+                    See where this decision leads <span>→</span>
+                  </button>
+                </section>
+              )}
+            </FocusedStep>
           </section>
         )}
 
         {currentScene === "target" && (
           <section className="scene-grid">
             <div className="scene-copy">
-              <SceneHeading eyebrow="TRACE 01 · Target" title="Turn a wish into a promise." copy="The organizer’s note sounds clear until someone must decide what to build—and how to know it works." headingRef={sceneHeadingRef} />
-              <blockquote className="stakeholder-note"><span>From the organizer</span>{mission.stakeholder}</blockquote>
-              <div className="target-fields">
-                {targetFields.map((field) => (
-                  <RadioCardGroup
-                    key={field.id}
-                    name={`target-${field.id}`}
-                    legend={<><span>{field.label}</span>{field.prompt}</>}
-                    description={<span className="plain-language"><b>In plain language:</b> {field.plainLanguage}</span>}
-                    choices={field.options}
-                    value={progress.target[field.id]}
-                    onChange={(choiceId) => chooseTarget(field.id, choiceId)}
-                    revealDetails={(progress.attempts.target ?? 0) > 0}
-                  />
-                ))}
-              </div>
-              <aside className="runtime-ai-note">
-                <span>One decision beginners often miss</span>
-                <h3>Does the finished page need AI?</h3>
-                <p><b>No.</b> {mission.runtimeAI.explanation}</p>
-              </aside>
+              <SceneHeading eyebrow="Define the project · Four clear lines" title="Build a clear project promise." copy="Before AI changes anything, define four lines. We will create them one at a time." headingRef={sceneHeadingRef} />
+              <details className="case-note">
+                <summary>Read the organizer’s original request</summary>
+                <blockquote className="stakeholder-note"><span>From the organizer</span>{mission.stakeholder}</blockquote>
+              </details>
+              <DecisionTrail
+                activeIndex={targetStep}
+                onEdit={setTargetStep}
+                items={targetFields.map((field) => ({
+                  label: field.label,
+                  value: field.options.find((item) => item.id === progress.target[field.id])?.title,
+                }))}
+              />
+              <FocusedStep
+                stepKey={`${targetFields[targetStep].id}-${revisionFocusRequest}`}
+                announcement={`Project promise, question ${targetStep + 1} of ${targetFields.length}: ${targetFields[targetStep].prompt}`}
+                className="focused-decision target-fields"
+                testId="target-focused-question"
+              >
+                <RadioCardGroup
+                  key={targetFields[targetStep].id}
+                  name={`target-${targetFields[targetStep].id}`}
+                  legend={<><span>Question {targetStep + 1} of {targetFields.length}</span>{targetFields[targetStep].prompt}</>}
+                  description={<span className="plain-language"><b>In plain language:</b> {targetFields[targetStep].plainLanguage}</span>}
+                  choices={targetFields[targetStep].options}
+                  value={progress.target[targetFields[targetStep].id]}
+                  onChange={(choiceId) => chooseTarget(targetFields[targetStep].id, choiceId)}
+                  revealDetails={(progress.attempts.target ?? 0) > 0}
+                />
+              </FocusedStep>
+              {targetStep === targetFields.length - 1 && progress.target[targetFields[targetStep].id] && (
+                <aside className="runtime-ai-note">
+                  <span>One decision beginners often miss</span>
+                  <h3>Does the finished page need AI?</h3>
+                  <p><b>No.</b> {mission.runtimeAI.explanation}</p>
+                </aside>
+              )}
               {activeHint && <p className="hint" role="status"><b>Hint {progress.hints.target}/3</b>{activeHint}</p>}
               <div className="scene-actions">
                 <button type="button" className="text-button" onClick={() => requestHint("target")}>Need a hint</button>
-                <button type="button" className="primary-button" onClick={() => submitScene("target")} data-testid="commit-target">Test this brief <span>→</span></button>
+                {targetStep < targetFields.length - 1 ? (
+                  <button
+                    type="button"
+                    className="primary-button"
+                    disabled={!progress.target[targetFields[targetStep].id]}
+                    onClick={() => setTargetStep((step) => Math.min(targetFields.length - 1, step + 1))}
+                    data-testid="next-target-question"
+                  >
+                    Continue to {targetFields[targetStep + 1].label.toLowerCase()} <span>→</span>
+                  </button>
+                ) : (
+                  <button type="button" className="primary-button" disabled={!progress.target[targetFields[targetStep].id]} onClick={() => submitScene("target")} data-testid="commit-target">Review my project promise <span>→</span></button>
+                )}
               </div>
             </div>
             <aside className="build-map">
@@ -1287,32 +1921,50 @@ export function Pentimento() {
         {currentScene === "record" && (
           <section className="scene-grid">
             <div className="scene-copy">
-              <SceneHeading eyebrow="TRACE 02 · Record" title="Give the project a memory—and an undo button." copy="A chat remembers a conversation. A repository preserves facts, files, decisions, and named versions." headingRef={sceneHeadingRef} />
-              <div className="plain-language-strip">
-                <span><b>Git</b> local version history</span>
-                <span><b>GitHub</b> shared remote copy</span>
-                <span><b>Commit</b> named snapshot</span>
-                <span><b>README</b> project purpose and instructions</span>
-                <span><b>.gitignore</b> local files Git must not save</span>
-                <span><b>.env.example</b> blank settings guide—never a secret</span>
-                <span><b>API key</b> private credential for a service</span>
-              </div>
-              <p className="instruction">Choose what belongs in the first GitHub repository. The saved starting state is recoverable, but it stays unverified until its checks pass.</p>
-              <div className="toggle-grid">
-                {repositoryOptions.map((choice) => (
-                  <ToggleCard
-                    key={choice.id}
-                    choice={choice}
-                    pressed={progress.repository.includes(choice.id)}
-                    onPressedChange={() => patchProgress({ repository: toggle(progress.repository, choice.id) })}
-                    revealDetails={(progress.attempts.record ?? 0) > 0}
-                  />
-                ))}
-              </div>
+              <SceneHeading eyebrow="Save the starting point · One item at a time" title="Give the project a memory—and an undo button." copy="A repository is a project folder with saved history. It helps another person understand the work and lets you return to an earlier version." headingRef={sceneHeadingRef} />
+              <SceneTask label="Your task" title="Decide what the project should remember.">
+                <p>Review one item at a time. Put useful project context in the repository; keep secrets and irrelevant material out.</p>
+              </SceneTask>
+              <details className="terms-disclosure">
+                <summary>New to GitHub? Learn the six terms used here</summary>
+                <div className="plain-language-strip">
+                  <span><b>Git</b> saved version history</span>
+                  <span><b>GitHub</b> a shared copy of the project</span>
+                  <span><b>Commit</b> one named saved version</span>
+                  <span><b>README</b> purpose and instructions</span>
+                  <span><b>.gitignore</b> files Git must not save</span>
+                  <span><b>API key</b> a private service credential</span>
+                </div>
+              </details>
+              <FocusedStep
+                stepKey={`${repositoryOptions[recordStep].id}-${revisionFocusRequest}`}
+                announcement={`Repository review, item ${recordStep + 1} of ${repositoryOptions.length}: ${repositoryOptions[recordStep].title}`}
+                className="focused-sequence"
+                testId="repository-focused-item"
+              >
+                <div className="focused-sequence__progress"><span>Repository review</span><b>{recordStep + 1} / {repositoryOptions.length}</b></div>
+                <BinaryDecision
+                  choice={repositoryOptions[recordStep]}
+                  index={recordStep}
+                  total={repositoryOptions.length}
+                  decision={repositoryDecisions[repositoryOptions[recordStep].id]}
+                  positiveLabel="Include in the repository"
+                  negativeLabel="Keep out"
+                  onDecision={(include) => decideRepositoryItem(repositoryOptions[recordStep].id, include)}
+                  revealDetail={(progress.attempts.record ?? 0) > 0}
+                />
+              </FocusedStep>
               {activeHint && <p className="hint" role="status"><b>Hint {progress.hints.record}/3</b>{activeHint}</p>}
               <div className="scene-actions">
-                <button type="button" className="text-button" onClick={() => requestHint("record")}>Need a hint</button>
-                <button type="button" className="primary-button" onClick={() => submitScene("record")} data-testid="commit-record">Review this starting line <span>→</span></button>
+                <div className="sequence-secondary-actions">
+                  {recordStep > 0 && <button type="button" className="text-button" onClick={() => setRecordStep((step) => step - 1)}>← Previous item</button>}
+                  <button type="button" className="text-button" onClick={() => requestHint("record")}>Need a hint</button>
+                </div>
+                {recordStep < repositoryOptions.length - 1 ? (
+                  <button type="button" className="primary-button" disabled={repositoryDecisions[repositoryOptions[recordStep].id] === undefined} onClick={() => setRecordStep((step) => step + 1)} data-testid="next-repository-item">Next item <span>→</span></button>
+                ) : (
+                  <button type="button" className="primary-button" disabled={repositoryDecisions[repositoryOptions[recordStep].id] === undefined} onClick={() => submitScene("record")} data-testid="commit-record">Review this project memory <span>→</span></button>
+                )}
               </div>
             </div>
             <RepositoryRoom selected={progress.repository} />
@@ -1322,76 +1974,128 @@ export function Pentimento() {
         {currentScene === "handoff" && (
           <section className="scene-grid">
             <div className="scene-copy">
-              <SceneHeading eyebrow="TRACE 03 · Assign" title="Make the AI’s field of view visible." copy="AI cannot know a hidden requirement. It also should not receive every file or permission simply because it can." headingRef={sceneHeadingRef} />
-              <p className="instruction">First choose the work mode: what kind of help AI should provide in this turn. Then assemble the smallest trusted packet and permission boundary.</p>
-              <RadioCardGroup
-                name="work-mode"
-                legend="What may AI do in this turn?"
-                description={<span className="plain-language"><b>In plain language:</b> A mode separates thinking, editing, diagnosis, review, and verification.</span>}
-                choices={workModes.filter((mode) => ["plan", "implement", "review"].includes(mode.id)).map((mode) => ({
-                  id: mode.id,
-                  title: `${mode.label} · ${mode.mayChangeFiles ? "may change files" : "no file changes"}`,
-                  detail: `${mode.plainLanguage} Expected return: ${mode.expectedReturn}`,
-                  correct: mode.id === "plan",
-                }))}
-                value={progress.workMode}
-                onChange={(workMode) => patchProgress({ workMode: workMode as WorkModeId })}
-                revealDetails={(progress.attempts.handoff ?? 0) > 0}
-                className="work-mode-choice"
-              />
-              <div className="toggle-grid">
-                {contextOptions.map((choice) => (
-                  <ToggleCard
-                    key={choice.id}
-                    choice={choice}
-                    pressed={progress.context.includes(choice.id)}
-                    onPressedChange={() => patchProgress({ context: toggle(progress.context, choice.id) })}
+              <SceneHeading eyebrow="Direct the AI · Permission before context" title="Make the AI’s field of view visible." copy="AI cannot know a hidden requirement. It also should not receive every file or permission simply because it can." headingRef={sceneHeadingRef} />
+              <SceneTask label="Two small decisions" title={handoffStage === "mode" ? "First, choose what kind of help you want." : "Now choose what the AI needs for that one task."}>
+                <p>{handoffStage === "mode" ? "The work mode sets the boundary before any files or context are shared." : "Useful context explains the goal and evidence. It does not include secrets or unrelated personal files."}</p>
+              </SceneTask>
+              <FocusedStep
+                stepKey={`${handoffStage}-${contextStep}-${revisionFocusRequest}`}
+                announcement={handoffStage === "mode"
+                  ? "Choose what kind of help AI may provide"
+                  : `Context packet, item ${contextStep + 1} of ${contextOptions.length}: ${contextOptions[contextStep].title}`}
+                testId="handoff-focused-stage"
+              >
+              {handoffStage === "mode" ? (
+                <>
+                  <RadioCardGroup
+                    name="work-mode"
+                    legend="What may AI do in this turn?"
+                    description={<span className="plain-language"><b>Right now:</b> You want to inspect the project and review a proposed plan before allowing edits.</span>}
+                    choices={workModes.filter((mode) => ["plan", "implement", "review"].includes(mode.id)).map((mode) => ({
+                      id: mode.id,
+                      title: `${mode.label} · ${mode.mayChangeFiles ? "may change files" : "no file changes"}`,
+                      detail: `${mode.plainLanguage} Expected return: ${mode.expectedReturn}`,
+                      correct: mode.id === "plan",
+                    }))}
+                    value={workModeReviewed ? progress.workMode : undefined}
+                    onChange={(workMode) => {
+                      patchProgress({ workMode: workMode as WorkModeId });
+                      setWorkModeReviewed(true);
+                    }}
                     revealDetails={(progress.attempts.handoff ?? 0) > 0}
+                    className="work-mode-choice focused-decision"
                   />
-                ))}
-              </div>
+                  <div className="scene-actions scene-actions--end">
+                    <button type="button" className="primary-button" disabled={!workModeReviewed} onClick={() => setHandoffStage("context")} data-testid="continue-to-context">Continue to context <span>→</span></button>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="focused-sequence" data-testid="context-focused-item">
+                    <div className="focused-sequence__progress"><span>Context packet</span><b>{contextStep + 1} / {contextOptions.length}</b></div>
+                    <BinaryDecision
+                      choice={contextOptions[contextStep]}
+                      index={contextStep}
+                      total={contextOptions.length}
+                      decision={contextDecisions[contextOptions[contextStep].id]}
+                      positiveLabel="Give this to AI"
+                      negativeLabel="Leave it out"
+                      instruction="Decide whether this helps AI plan the agreed change safely. You can revise before review."
+                      onDecision={(include) => decideContextItem(contextOptions[contextStep].id, include)}
+                      revealDetail={(progress.attempts.handoff ?? 0) > 0}
+                    />
+                  </div>
+                  <div className="scene-actions">
+                    <div className="sequence-secondary-actions">
+                      <button type="button" className="text-button" onClick={() => contextStep > 0 ? setContextStep((step) => step - 1) : setHandoffStage("mode")}>← Back</button>
+                      <button type="button" className="text-button" onClick={() => requestHint("handoff")}>Need a hint</button>
+                    </div>
+                    {contextStep < contextOptions.length - 1 ? (
+                      <button type="button" className="primary-button" disabled={contextDecisions[contextOptions[contextStep].id] === undefined} onClick={() => setContextStep((step) => step + 1)} data-testid="next-context-item">Next item <span>→</span></button>
+                    ) : (
+                      <button type="button" className="primary-button" disabled={contextDecisions[contextOptions[contextStep].id] === undefined} onClick={() => submitScene("handoff")} data-testid="commit-handoff">Review the AI handoff <span>→</span></button>
+                    )}
+                  </div>
+                </>
+              )}
+              </FocusedStep>
               {activeHint && <p className="hint" role="status"><b>Hint {progress.hints.handoff}/3</b>{activeHint}</p>}
-              <div className="scene-actions">
-                <button type="button" className="text-button" onClick={() => requestHint("handoff")}>Need a hint</button>
-                <button type="button" className="primary-button" onClick={() => submitScene("handoff")} data-testid="commit-handoff">Review the handoff <span>→</span></button>
-              </div>
             </div>
-            <ContextXray selected={progress.context} workMode={progress.workMode} />
+            <ContextXray selected={progress.context} workMode={workModeReviewed ? progress.workMode : undefined} />
           </section>
         )}
 
         {currentScene === "radius" && (
           <section className="scene-grid">
             <div className="scene-copy">
-              <SceneHeading eyebrow="TRACE 03 · Assign" title="Review the change footprint before editing." copy="The AI proposed a helpful-looking plan. Every extra system creates permissions, failure states, and future work." headingRef={sceneHeadingRef} />
-              <div className="ai-plan-label"><span>AI proposed</span><b>{planOptions.length} plan items</b><small>Every proposal starts as Keep. Review each one: Keep, Defer, or Needs an answer.</small></div>
+              <SceneHeading eyebrow="Review the AI plan · One proposal at a time" title="Review the change footprint before editing." copy="Every extra system creates permissions, failure states, and future work. Decide whether each proposal belongs in this first version." headingRef={sceneHeadingRef} />
+              <div className="ai-plan-label"><span>AI proposed</span><b>{planOptions.length} plan items</b><small>Choose Keep, Defer, or Needs an answer for each item. Nothing is approved merely because AI suggested it.</small></div>
+              <div className="focused-sequence__progress"><span>Plan review</span><b>{scopeStep + 1} / {planOptions.length}</b></div>
               <div className="plan-list">
-                {planOptions.map((choice) => (
+                <FocusedStep
+                  stepKey={`${planOptions[scopeStep].id}-${revisionFocusRequest}`}
+                  announcement={`Plan review, proposal ${scopeStep + 1} of ${planOptions.length}: ${planOptions[scopeStep].title}`}
+                  testId="scope-focused-item"
+                >
                   <ScopeDecisionCard
-                    key={choice.id}
-                    choice={choice}
-                    value={progress.scopeDecisions[choice.id]}
-                    reviewed={progress.scopeReviewed.includes(choice.id)}
-                    onChange={(disposition) => chooseScopeDisposition(choice.id, disposition)}
+                    key={planOptions[scopeStep].id}
+                    choice={planOptions[scopeStep]}
+                    value={progress.scopeReviewed.includes(planOptions[scopeStep].id) ? progress.scopeDecisions[planOptions[scopeStep].id] : undefined}
+                    reviewed={progress.scopeReviewed.includes(planOptions[scopeStep].id)}
+                    onChange={(disposition) => chooseScopeDisposition(planOptions[scopeStep].id, disposition)}
                     revealFeedback={(progress.attempts.radius ?? 0) > 0}
                   />
-                ))}
+                </FocusedStep>
               </div>
-              <ConfidencePicker value={progress.confidence.radius} onChange={(value) => patchProgress({ confidence: { ...progress.confidence, radius: value } })} />
+              {scopeStep === planOptions.length - 1 && progress.scopeReviewed.includes(planOptions[scopeStep].id) && (
+                <ConfidencePicker value={progress.confidence.radius} onChange={(value) => patchProgress({ confidence: { ...progress.confidence, radius: value } })} />
+              )}
               {activeHint && <p className="hint" role="status"><b>Hint {progress.hints.radius}/3</b>{activeHint}</p>}
               <div className="scene-actions">
-                <button type="button" className="text-button" onClick={() => requestHint("radius")}>Need a hint</button>
-                <button type="button" className="primary-button" disabled={!progress.confidence.radius} onClick={() => submitScene("radius")} data-testid="commit-radius">Review the scope decision <span>→</span></button>
+                <div className="sequence-secondary-actions">
+                  {scopeStep > 0 && <button type="button" className="text-button" onClick={() => setScopeStep((step) => step - 1)}>← Previous item</button>}
+                  <button type="button" className="text-button" onClick={() => requestHint("radius")}>Need a hint</button>
+                </div>
+                {scopeStep < planOptions.length - 1 ? (
+                  <button type="button" className="primary-button" disabled={!progress.scopeReviewed.includes(planOptions[scopeStep].id)} onClick={() => setScopeStep((step) => step + 1)} data-testid="next-scope-item">Next proposal <span>→</span></button>
+                ) : (
+                  <button type="button" className="primary-button" disabled={!progress.confidence.radius} onClick={() => submitScene("radius")} data-testid="commit-radius">Review the whole plan <span>→</span></button>
+                )}
               </div>
             </div>
-            <ChangeFootprint decisions={progress.scopeDecisions} />
+            <ChangeFootprint decisions={progress.scopeDecisions} reviewed={progress.scopeReviewed} />
           </section>
         )}
 
         {currentScene === "check" && (
           <section className="scene-grid scene-grid--wide-artifact">
             <div className="scene-copy">
-              <SceneHeading eyebrow="TRACE 04 · Check" title="Put every “done” claim on trial." copy="The proposal looks plausible. Run evidence tools, then inspect what they actually prove." headingRef={sceneHeadingRef} />
+              <SceneHeading eyebrow="Inspect the AI claim · Independent evidence" title="Put every “done” claim on trial." copy="The proposal looks plausible. Run evidence tools, then inspect what they actually prove." headingRef={sceneHeadingRef} />
+              <FocusedStep
+                stepKey={`check-${revisionFocusRequest}`}
+                announcement="Run independent evidence tools and inspect what each result proves"
+                testId="check-focused-work"
+              >
               <div className="check-list">
                 {checks.map((choice) => {
                   const ran = progress.checksRun.includes(choice.id);
@@ -1417,6 +2121,7 @@ export function Pentimento() {
                 <button type="button" className="text-button" onClick={() => requestHint("check")}>Need a hint</button>
                 <button type="button" className="primary-button" onClick={() => submitScene("check")} data-testid="commit-check">Read the evidence ledger <span>→</span></button>
               </div>
+              </FocusedStep>
             </div>
             <EvidenceWorkbench progress={progress} />
           </section>
@@ -1425,25 +2130,51 @@ export function Pentimento() {
         {currentScene === "evolve" && (
           <section className="scene-grid scene-grid--wide-artifact">
             <div className="scene-copy">
-              <SceneHeading eyebrow="TRACE 05 · Evolve" title="Repair the gap—not the whole project." copy="Translate failed evidence into a reproducible correction. Then make every affected check earn green again." headingRef={sceneHeadingRef} />
-              <div className="repair-fields">
-                {repairFields.map((field) => (
+              <SceneHeading eyebrow="Repair from evidence · Four precise lines" title="Repair the gap—not the whole project." copy="Describe the observed failure, how to reproduce it, what passing looks like, and what already-working behavior must be preserved." headingRef={sceneHeadingRef} />
+              <FocusedStep
+                stepKey={`${!progress.diagnosed ? `line-${repairStep}` : !progress.repaired ? "diagnosis" : "retest"}-${revisionFocusRequest}`}
+                announcement={!progress.diagnosed
+                  ? `Repair brief, line ${repairStep + 1} of ${repairFields.length}: ${repairFields[repairStep].label}`
+                  : !progress.repaired
+                    ? "Diagnosis recorded; review the proposed bounded patch"
+                    : "Patch applied; rerun the version-matched checks"}
+                testId="repair-focus-stage"
+              >
+              {!progress.diagnosed && (
+                <>
+                  <DecisionTrail
+                    activeIndex={repairStep}
+                    onEdit={setRepairStep}
+                    items={repairFields.map((field) => ({
+                      label: field.label,
+                      value: field.options.find((item) => item.id === progress.repair[field.id])?.title,
+                    }))}
+                  />
+                  <div className="repair-fields focused-decision" data-testid="repair-focused-question">
                   <RadioCardGroup
-                    key={field.id}
-                    name={`repair-${field.id}`}
-                    legend={field.label}
-                    choices={field.options}
-                    value={progress.repair[field.id]}
-                    onChange={(choiceId) => chooseRepair(field.id, choiceId)}
+                    key={repairFields[repairStep].id}
+                    name={`repair-${repairFields[repairStep].id}`}
+                    legend={<><span>Repair line {repairStep + 1} of {repairFields.length}</span>{repairFields[repairStep].label}</>}
+                    choices={repairFields[repairStep].options}
+                    value={progress.repair[repairFields[repairStep].id]}
+                    onChange={(choiceId) => chooseRepair(repairFields[repairStep].id, choiceId)}
                     revealDetails={(progress.attempts.evolve ?? 0) > 0}
                   />
-                ))}
-              </div>
-              {activeHint && <p className="hint" role="status"><b>Hint {progress.hints.evolve}/3</b>{activeHint}</p>}
+                  </div>
+                  {activeHint && <p className="hint" role="status"><b>Hint {progress.hints.evolve}/3</b>{activeHint}</p>}
+                </>
+              )}
               {!progress.diagnosed ? (
                 <div className="scene-actions">
-                  <button type="button" className="text-button" onClick={() => requestHint("evolve")}>Need a hint</button>
-                  <button type="button" className="primary-button" onClick={diagnoseRepair}>Diagnose before editing <span>→</span></button>
+                  <div className="sequence-secondary-actions">
+                    {repairStep > 0 && <button type="button" className="text-button" onClick={() => setRepairStep((step) => step - 1)}>← Previous line</button>}
+                    <button type="button" className="text-button" onClick={() => requestHint("evolve")}>Need a hint</button>
+                  </div>
+                  {repairStep < repairFields.length - 1 ? (
+                    <button type="button" className="primary-button" disabled={!progress.repair[repairFields[repairStep].id]} onClick={() => setRepairStep((step) => step + 1)} data-testid="next-repair-line">Next repair line <span>→</span></button>
+                  ) : (
+                    <button type="button" className="primary-button" disabled={!progress.repair[repairFields[repairStep].id]} onClick={diagnoseRepair}>Diagnose before editing <span>→</span></button>
+                  )}
                 </div>
               ) : !progress.repaired ? (
                 <div className="diagnosis-panel" role="status">
@@ -1469,6 +2200,7 @@ export function Pentimento() {
                   <button type="button" className="primary-button" onClick={() => submitScene("evolve")} data-testid="commit-evolve">Review the repair evidence <span>→</span></button>
                 </div>
               )}
+              </FocusedStep>
             </div>
             <div className="repair-artifact">
               <RepairCafePreview
@@ -1493,36 +2225,40 @@ export function Pentimento() {
         {currentScene === "ship" && (
           <section className="scene-grid">
             <div className="scene-copy">
-              <SceneHeading eyebrow="Release boundary · Evidence gate" title="Publish the exact state you proved." copy="A verified preview is not the live version real people use. Name the version, test the real path, and know how to recover." headingRef={sceneHeadingRef} />
-              <p className="instruction">Inside this simulation, the ledger reads evidence produced elsewhere. Its rows turn green because a check or concrete release action exists—not because you tick a claim.</p>
+              <SceneHeading eyebrow="Release boundary · One action at a time" title="Publish the exact state you proved." copy="A verified preview is not yet the live version real people use. Name the version, produce the missing evidence, approve the public action, and check again after release." headingRef={sceneHeadingRef} />
+              <SceneTask label="How this works" title="The ledger is generated, not self-reported.">
+                <p>Rows become supported only when a real check or release action produces evidence. You cannot turn a claim green by ticking a box.</p>
+              </SceneTask>
               <p className="visually-hidden" role="status">
                 {releaseRows.filter((row) => row.status === "pass").length} of {releaseRows.length} release claims currently supported.
               </p>
-              <div className="release-ledger table-scroll" tabIndex={0}>
-                <table>
-                  <caption className="visually-hidden">Release claims, generated status, source, and evidence</caption>
-                  <thead><tr><th scope="col">Release claim</th><th scope="col">Source</th><th scope="col">Status</th></tr></thead>
-                  <tbody>{releaseRows.map((row) => (
-                    <tr key={row.id} className={`release-row release-row--${row.status}`}>
-                      <th scope="row"><span>{row.label}</span><small>{row.evidence}</small></th>
-                      <td>{row.source.replace("-", " ")}</td>
-                      <td><b>{row.status === "pass" ? "✓ PASS" : row.status === "fail" ? "× FAIL" : "○ MISSING"}</b></td>
-                    </tr>
-                  ))}</tbody>
-                </table>
-              </div>
-              <section className="release-actions" aria-labelledby="release-actions-title">
-                <h3 id="release-actions-title">Produce the missing release evidence</h3>
-                <div>
-                  <button type="button" className={progress.releaseEvidence.releaseVersion ? "is-complete" : ""} onClick={recordReleaseVersion}><span>01</span><b>Record exact version + recovery</b><small>{progress.releaseEvidence.releaseVersion ? `Complete · ${RELEASE_VERSION}` : "Required before version-matched release checks"}</small></button>
-                  <button type="button" className={progress.releaseEvidence.readme ? "is-complete" : ""} disabled={!progress.releaseEvidence.releaseVersion} onClick={reviewReadme}><span>02</span><b>Review README + limitations</b><small>{progress.releaseEvidence.readme ? "Complete · purpose, setup, checks, runtime choice, and non-goals reviewed" : "Purpose, setup, checks, no runtime AI, and non-goals"}</small></button>
-                  <button type="button" className={progress.releaseEvidence.build ? "is-complete" : ""} disabled={!progress.releaseEvidence.releaseVersion} onClick={runReleaseBuild}><span>03</span><b>Run production build</b><small>{progress.releaseEvidence.build ? "Complete · npm run build exited 0" : <><code>npm run build</code> · preserve the exit result</>}</small></button>
-                  <button type="button" className={progress.releaseEvidence.preview ? "is-complete" : ""} disabled={!progress.releaseEvidence.releaseVersion} onClick={runPreviewSmoke}><span>04</span><b>Smoke-test hosted preview</b><small>{progress.releaseEvidence.preview ? "Complete · facts and contact path passed in preview" : "Facts + desktop/390px contact path on the real URL"}</small></button>
-                  <button type="button" className={progress.publishApproved ? "is-complete" : ""} disabled={!prePublishReady} onClick={approvePublishing}><span>05</span><b>Approve this exact public action</b><small>{progress.publishApproved ? `Complete · ${RELEASE_VERSION} approved for public access` : "Human approval after evidence and limitations are visible"}</small></button>
-                  <button type="button" className={progress.published ? "is-complete" : ""} disabled={!progress.publishApproved} onClick={publishSimulatedRelease}><span>06</span><b>Publish the simulated release</b><small>{progress.published ? `Complete · ${RELEASE_VERSION} published in the simulation` : "External action · approval required"}</small></button>
-                  <button type="button" className={progress.productionChecked ? "is-complete" : ""} disabled={!progress.published} onClick={runProductionSmoke}><span>07</span><b>Smoke-test the live URL</b><small>{progress.productionChecked ? "Complete · live facts and contact path passed" : "Certificate, exact version, facts, and contact path"}</small></button>
+              <ReleaseSequence
+                progress={progress}
+                focusRequest={revisionFocusRequest}
+                onRecordVersion={recordReleaseVersion}
+                onReviewReadme={reviewReadme}
+                onBuild={runReleaseBuild}
+                onPreview={runPreviewSmoke}
+                onApprove={approvePublishing}
+                onPublish={publishSimulatedRelease}
+                onProduction={runProductionSmoke}
+              />
+              <details className="release-ledger-disclosure">
+                <summary><span>Inspect the full evidence record</span><b>{releaseRows.filter((row) => row.status === "pass").length} / {releaseRows.length} claims supported</b></summary>
+                <div className="release-ledger table-scroll" tabIndex={0}>
+                  <table aria-label="Release claims, generated status, source, and evidence">
+                    <caption className="visually-hidden">Release claims, generated status, source, and evidence</caption>
+                    <thead><tr><th scope="col">Release claim</th><th scope="col">Source</th><th scope="col">Status</th></tr></thead>
+                    <tbody>{releaseRows.map((row) => (
+                      <tr key={row.id} className={`release-row release-row--${row.status}`}>
+                        <th scope="row"><span>{row.label}</span><small>{row.evidence}</small></th>
+                        <td>{row.source.replace("-", " ")}</td>
+                        <td><b>{row.status === "pass" ? "✓ PASS" : row.status === "fail" ? "× FAIL" : "○ MISSING"}</b></td>
+                      </tr>
+                    ))}</tbody>
+                  </table>
                 </div>
-              </section>
+              </details>
               <button type="button" className="primary-button" onClick={() => submitScene("ship")} data-testid="commit-ship">Review the release record <span>→</span></button>
             </div>
             <aside className="release-card">
@@ -1542,39 +2278,71 @@ export function Pentimento() {
         {currentScene === "transfer" && (
           <section className="scene-grid scene-grid--wide-artifact">
             <div className="scene-copy">
-              <SceneHeading eyebrow="No labels · New project" title="The interface changed. Did the method transfer?" copy="An AI edited a community budget spreadsheet and says the total is correct. TRACE is hidden now." headingRef={sceneHeadingRef} />
-              <div className="transfer-questions">
-                {transferQuestions.map((question) => (
+              <SceneHeading eyebrow="Use the method again · New kind of project" title="The interface changed. Did the method transfer?" copy="An AI edited a community budget spreadsheet and says the total is correct. Use the same habits you practised in this new setting." headingRef={sceneHeadingRef} />
+              <SceneTask label="Transfer challenge" title="Make three decisions, then explain what is actually proven.">
+                <p>The website is gone, but the same questions remain: What is the trusted source? What evidence supports the claim? What is the smallest safe next move?</p>
+              </SceneTask>
+              <DecisionTrail
+                activeIndex={Math.min(transferStep, transferQuestions.length - 1)}
+                onEdit={setTransferStep}
+                items={transferQuestions.map((question) => ({
+                  label: question.id === "source" ? "Trusted source" : question.id === "proof" ? "Independent proof" : "Bounded next move",
+                  value: question.options.find((item) => item.id === progress.transfer[question.id])?.title,
+                }))}
+              />
+              <FocusedStep
+                stepKey={`${transferStep < transferQuestions.length ? transferQuestions[transferStep].id : "explanation"}-${revisionFocusRequest}`}
+                announcement={transferStep < transferQuestions.length
+                  ? `Transfer challenge, decision ${transferStep + 1} of ${transferQuestions.length}: ${transferQuestions[transferStep].label}`
+                  : "Transfer challenge: explain what is proven and what remains uncertain"}
+                className={transferStep < transferQuestions.length ? "transfer-questions focused-decision" : ""}
+                testId="transfer-focused-question"
+              >
+              {transferStep < transferQuestions.length ? (
+                <>
                   <RadioCardGroup
-                    key={question.id}
-                    name={`transfer-${question.id}`}
-                    legend={question.label}
-                    choices={question.options}
-                    value={progress.transfer[question.id]}
-                    onChange={(choiceId) => chooseTransfer(question.id, choiceId)}
+                    key={transferQuestions[transferStep].id}
+                    name={`transfer-${transferQuestions[transferStep].id}`}
+                    legend={<><span>Decision {transferStep + 1} of {transferQuestions.length}</span>{transferQuestions[transferStep].label}</>}
+                    choices={transferQuestions[transferStep].options}
+                    value={progress.transfer[transferQuestions[transferStep].id]}
+                    onChange={(choiceId) => chooseTransfer(transferQuestions[transferStep].id, choiceId)}
                     revealDetails={(progress.attempts.transfer ?? 0) > 0}
                   />
-                ))}
-              </div>
-              <div className="transfer-explanation">
-                <label htmlFor="transfer-explanation">What would you tell the budget owner is proven—and what is still uncertain?</label>
-                <p>Use the receipts, formula, independent calculation, and limits of this check. Seven useful words is the minimum; specificity matters more than length.</p>
-                <textarea
-                  id="transfer-explanation"
-                  value={progress.transferExplanation}
-                  onChange={(event) => patchProgress({ transferExplanation: event.target.value })}
-                  maxLength={1000}
-                  placeholder="The approved receipts prove… This check does not yet prove…"
-                />
-                <small className={transferExplanationIsMeaningful(progress.transferExplanation) ? "is-ready" : ""}>
-                  {progress.transferExplanation.length}/1000 · {transferExplanationIsMeaningful(progress.transferExplanation) ? "enough reasoning to review" : "include what is proven and what remains uncertain"}
-                </small>
-              </div>
-              <ConfidencePicker value={progress.confidence.transfer} onChange={(value) => patchProgress({ confidence: { ...progress.confidence, transfer: value } })} />
+                </>
+              ) : (
+                <>
+                  <div className="transfer-explanation">
+                    <label htmlFor="transfer-explanation">In your own words, what is proven—and what is still uncertain?</label>
+                    <p>Use the receipts, formula, independent calculation, and limits of this check. Specificity matters more than length.</p>
+                    <textarea
+                      id="transfer-explanation"
+                      value={progress.transferExplanation}
+                      onChange={(event) => patchProgress({ transferExplanation: event.target.value })}
+                      maxLength={1000}
+                      placeholder="The approved receipts prove… This check does not yet prove…"
+                    />
+                    <small className={transferExplanationIsMeaningful(progress.transferExplanation) ? "is-ready" : ""}>
+                      {progress.transferExplanation.length}/1000 · {transferExplanationIsMeaningful(progress.transferExplanation) ? "enough reasoning to review" : "include what is proven and what remains uncertain"}
+                    </small>
+                  </div>
+                  <ConfidencePicker value={progress.confidence.transfer} onChange={(value) => patchProgress({ confidence: { ...progress.confidence, transfer: value } })} />
+                </>
+              )}
+              </FocusedStep>
               {activeHint && <p className="hint" role="status"><b>Hint {progress.hints.transfer}/3</b>{activeHint}</p>}
               <div className="scene-actions">
-                <button type="button" className="text-button" onClick={() => requestHint("transfer")}>Need a hint</button>
-                <button type="button" className="primary-button" disabled={!progress.confidence.transfer} onClick={() => submitScene("transfer")} data-testid="commit-transfer">Test my transfer <span>→</span></button>
+                <div className="sequence-secondary-actions">
+                  {transferStep > 0 && <button type="button" className="text-button" onClick={() => setTransferStep((step) => step - 1)}>← Back</button>}
+                  <button type="button" className="text-button" onClick={() => requestHint("transfer")}>Need a hint</button>
+                </div>
+                {transferStep < transferQuestions.length ? (
+                  <button type="button" className="primary-button" disabled={!progress.transfer[transferQuestions[transferStep].id]} onClick={() => setTransferStep((step) => step + 1)} data-testid="next-transfer-question">
+                    {transferStep === transferQuestions.length - 1 ? "Explain what is proven" : "Next decision"} <span>→</span>
+                  </button>
+                ) : (
+                  <button type="button" className="primary-button" disabled={!progress.confidence.transfer || !transferExplanationIsMeaningful(progress.transferExplanation)} onClick={() => submitScene("transfer")} data-testid="commit-transfer">Review my reasoning <span>→</span></button>
+                )}
               </div>
             </div>
             <SpreadsheetTransfer />
@@ -1597,11 +2365,12 @@ export function Pentimento() {
 
       <AccessibleDialog
         open={Boolean(feedback)}
-        title={feedback?.passed ? "Consequence recorded" : "This decision needs revision"}
-        description={feedback ? `${sceneLabels[feedback.scene]} · inspect what happened before continuing.` : undefined}
+        title={feedback?.passed ? "Here’s what your choice leads to" : "Let’s revise this choice"}
+        description={feedback ? `${sceneLabels[feedback.scene]} · nothing is lost; use the result to decide what happens next.` : undefined}
         onDismiss={() => undefined}
         dismissOnEscape={false}
         dismissOnBackdrop={false}
+        restoreFocus={false}
         appRootRef={appRootRef}
         initialFocusRef={continueButtonRef}
         backdropClassName="drawer-backdrop drawer-backdrop--consequence"
@@ -1614,17 +2383,46 @@ export function Pentimento() {
         {feedback && (
           <>
           <div className="consequence__grid">
-            <div><small>Goal</small><p>{feedback.goal}</p></div>
-            <div><small>Evidence</small><p>{feedback.evidence}</p></div>
-            <div><small>Principle</small><p>{feedback.principle}</p></div>
-            <div><small>Next move</small><p>{feedback.nextMove}</p></div>
+            <div><small>What happened</small><p>{feedback.evidence}</p></div>
+            <div><small>Why it matters</small><p>{feedback.principle}</p></div>
+            <div><small>What to do next</small><p>{feedback.nextMove}</p></div>
           </div>
           {feedback.passed && <FieldNoteCard scene={feedback.scene} />}
           <button ref={continueButtonRef} type="button" className="primary-button" onClick={continueAfterFeedback} data-testid="continue-feedback">
-            {feedback.passed ? "Continue the build" : "Revise my decision"} <span>→</span>
+            {feedback.passed ? "Continue to the next small task" : "Revise this decision"} <span>→</span>
           </button>
           </>
         )}
+      </AccessibleDialog>
+
+      <AccessibleDialog
+        open={helpOpen}
+        title="How this lesson works"
+        description="A quick reminder you can open at any time."
+        onDismiss={() => setHelpOpen(false)}
+        appRootRef={appRootRef}
+        initialFocusRef={helpCloseRef}
+        backdropClassName="drawer-backdrop drawer-backdrop--center"
+        dialogClassName="lesson-help"
+        titleClassName="lesson-help__title"
+        descriptionClassName="lesson-help__description"
+        contentClassName="lesson-help__content"
+        testId="lesson-help-dialog"
+      >
+        <div className="lesson-help__role"><span>Your role</span><p>You are the project lead. AI makes proposals; you decide the outcome, boundaries, checks, and release.</p></div>
+        <ol>
+          <li><span>1</span><div><b>Read one situation</b><p>Each layer introduces one part of the same Repair Café project.</p></div></li>
+          <li><span>2</span><div><b>Make one focused decision</b><p>Choose what you would do. A wrong answer is safe and can be revised.</p></div></li>
+          <li><span>3</span><div><b>See what the choice changes</b><p>The result explains what happened, why it matters, and what to do next.</p></div></li>
+        </ol>
+        <p className="lesson-help__safety">Nothing here publishes a real project, sends an email, or needs an AI account.</p>
+        <div className="lesson-help__actions">
+          <button type="button" className="text-button" onClick={() => {
+            setHelpOpen(false);
+            setRestartOpen(true);
+          }}>Start this project over</button>
+          <button ref={helpCloseRef} type="button" className="primary-button" onClick={() => setHelpOpen(false)}>Return to my task <span>→</span></button>
+        </div>
       </AccessibleDialog>
 
       <AccessibleDialog
@@ -1670,7 +2468,7 @@ export function Pentimento() {
       <AccessibleDialog
         open={restartOpen}
         role="alertdialog"
-        title="Restart this mission?"
+        title="Start this guided project over?"
         description="This removes the progress saved on this device, including your decisions, notes, and debrief. It cannot be undone."
         onDismiss={() => setRestartOpen(false)}
         appRootRef={appRootRef}
@@ -1683,7 +2481,7 @@ export function Pentimento() {
         testId="restart-dialog"
       >
         <button ref={restartCancelRef} type="button" className="text-button" onClick={() => setRestartOpen(false)}>Keep my progress</button>
-        <button type="button" className="danger-button" onClick={resetMission}>Erase progress and restart</button>
+        <button type="button" className="danger-button" onClick={resetMission}>Erase progress and start over</button>
       </AccessibleDialog>
     </div>
   );
@@ -1713,9 +2511,9 @@ function Replay({
   const arrivalDecision = arrivalChoices.find((choice) => choice.id === progress.arrivalChoice)?.title
     ?? "No first decision recorded";
   const supportLabel = (rating: number) => {
-    if (rating === 3) return "Without support";
+    if (rating === 3) return "Independent";
     if (rating === 2) return "After revision";
-    if (rating === 1) return "With worked support";
+    if (rating === 1) return "With a hint";
     return "Not yet demonstrated";
   };
   const supportRecord = (...scenes: SceneId[]) => {
@@ -1736,7 +2534,7 @@ function Replay({
       consequence: progress.arrivalChoice === "inspect"
         ? "You inspected before the deadline became someone else’s problem."
         : "A visitor met the consequence before the polished claim was trusted again.",
-      evidence: `${confidenceLabel(progress.confidence.arrival ?? 0.4)} confidence · ${supportRecord("arrival")}`,
+      evidence: `Independent source and visitor-path inspection · ${supportRecord("arrival")}`,
     },
     {
       key: "Target",
@@ -1836,9 +2634,9 @@ function Replay({
         <section className="evidence-profile">
           <header><div><p>Evidence profile</p><h2>{competencies.length}<span> threads recorded</span></h2></div><b>One mission record</b></header>
           <div className="support-summary" aria-label="Level of support used">
-            <span><b>{independently}</b> without support</span>
+            <span><b>{independently}</b> independent</span>
             <span><b>{afterRevision}</b> after revision</span>
-            <span><b>{withSupport}</b> with worked support</span>
+            <span><b>{withSupport}</b> with a hint</span>
           </div>
           <p className="assessment-caveat">This records what happened in one mission. It does not claim mastery; later retrieval and new projects are the stronger test.</p>
           {competencies.map((competency) => (

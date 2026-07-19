@@ -24,7 +24,7 @@ Pentimento teaches a complete beginner how to take a small AI-assisted project f
 - Release status is derived from evidence produced in the mission. A learner cannot manufacture a pass by ticking a claim.
 - Publishing is a distinct authority boundary: preview verification, explicit approval, exact version, live smoke test, and recovery method are all visible.
 - Spreadsheet transfer uses `=SUM(B2:B4)+57.75`, requires a trusted source and independent recalculation, and includes a learner explanation.
-- The final Revision Trace reflects the learner’s real initial choice, confidence, attempts, hints, consequences, repairs, checks, and transfer reasoning.
+- The final Revision Trace reflects the learner’s real initial choice, later confidence decisions, attempts, hints, consequences, repairs, checks, and transfer reasoning.
 - Assessment reports demonstrated independently / after revision / with support / not yet demonstrated. Help-seeking is visible, not secretly punished by a dominant score.
 
 ## Reusable value
@@ -36,11 +36,17 @@ Pentimento teaches a complete beginner how to take a small AI-assisted project f
 
 ## Interaction and accessibility
 
+- Within the opening moments, a new learner can identify what Pentimento is, their role, what they will learn, and the single next action.
+- A dedicated case briefing appears before any assessed choice and states that the experience is simulated, reversible, code-free, and unable to publish or send email.
+- Instructions precede artifacts and decisions at every width; mobile never places the Repair Café preview before the first task explanation.
+- Dense layers reveal one focused question, item, or next action at a time. Future controls are not rendered or keyboard-focusable.
+- Completed choices remain visible in compact editable trails; comprehensive reference content moves behind labelled disclosures rather than disappearing.
+- A persistent “How this works” action can restate the learner’s role and interaction rhythm. Returning learners receive a contextual resume screen.
 - Every scene transition scrolls to the beginning and moves focus to the new scene heading.
 - Single-choice controls use native radio behavior; tabs use the WAI-ARIA tabs pattern or ordinary button semantics.
 - Dialogs contain focus, support Escape when dismissal is safe, hide/inert the background, and restore focus.
-- Restart requires confirmation and remains visibly labelled at 320px.
-- Progress communicates “step n of 10” and the stage name visually and to assistive technology at every width.
+- Restart requires confirmation and remains available at 320px through the persistent Help panel.
+- Progress groups the ten internal layers into four learner-facing chapters and communicates the current chapter visually and to assistive technology at every width.
 - The signature instrument remains reachable near the decision on mobile through a compact status/tray.
 - Status never relies on color alone. Tables use table semantics; traces use list semantics.
 - Copy success/failure and asynchronous debrief state are announced.

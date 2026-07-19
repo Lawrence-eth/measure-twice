@@ -6,6 +6,8 @@ Pentimento is an interactive education experience for someone building with AI f
 
 It is not a coding course, prompt gallery, chatbot, or project generator. It teaches the judgment that makes AI-assisted work trustworthy.
 
+The opening is deliberately explicit: Pentimento first explains that it is a safe guided simulation, gives the learner the role of project lead, introduces the Repair Café goal, and demonstrates the interaction rhythm. Only then does it reveal the first decision. Dense later layers present one focused question or item at a time; completed choices collapse into a visible decision trail while deeper reference material remains available on demand.
+
 Built for the **Education** track of OpenAI Build Week 2026.
 
 - Live experience: [pentimento.aethe.me](https://pentimento.aethe.me)
@@ -15,6 +17,8 @@ Built for the **Education** track of OpenAI Build Week 2026.
 
 ![Pentimento’s editorial field-studio landing experience](docs/screenshots/landing.png)
 
+![The case briefing establishes the learner’s role, goal, interaction model, and safety before assessment](docs/screenshots/briefing.png)
+
 ## The premise
 
 A fictional Repair Café organizer plans to share a new event page in ten minutes. The AI says it verified the facts, phone layout, keyboard path, saved files, and build. The page looks finished, but the evidence tells a different story:
@@ -23,7 +27,7 @@ A fictional Repair Café organizer plans to share a new event page in ten minute
 2. At 390px, the contact action is clipped and has no destination.
 3. The AI reports that checks passed, but the execution record contains no command, time, output, or result.
 
-The learner must decide what to trust before the lesson explains the answer. A wrong decision creates a visible consequence, stays recoverable, and becomes evidence for the final reflection.
+The learner is taught how to inspect the source and visitor path, then decides what the available evidence supports before any option explains itself. A wrong decision creates a visible consequence, stays recoverable, and becomes evidence for the final reflection.
 
 ## What the learner does
 
@@ -31,7 +35,7 @@ Pentimento uses one transferable method: **TRACE**.
 
 | Layer | Learner action | What becomes visible |
 | --- | --- | --- |
-| First layer | Decide whether to publish, ask AI again, or inspect independently | Confidence is not the same as evidence |
+| First layer | Compare the approved source with the proposed page, try its main action, then choose the safest next move | An AI assurance is not the same as independent evidence |
 | **T · Target** | Define one person, useful outcome, observable checks, and non-goals | A build brief that can actually be tested |
 | **R · Record** | Choose durable repository context and save an honestly labelled baseline | Git, GitHub, commits, `.gitignore`, and secrets in plain language |
 | **A · Assign** | Select Plan mode and assemble the smallest trusted context and authority boundary | The **Context Lens** shows what AI can see and do |
@@ -48,6 +52,8 @@ The finished Repair Café page does not need runtime AI. That is deliberate: usi
 
 Pentimento treats learning as conservation work. Earlier decisions remain visible beneath the polished result, joined by a continuous evidence thread. Its editorial studio interface uses paper, ink, ultramarine, mauve, viridian, and crimson—never a generic dashboard or gamified course shell.
 
+The interface follows one beginner-facing rhythm: **understand the situation → inspect one thing → make one decision → see what changed → continue**. The ten internal layers are grouped into four calm chapters, and the persistent help panel can restate the learner’s role and next-action model at any time.
+
 Three instruments make invisible judgment inspectable:
 
 - **Context Lens** — exposes trusted sources, current state, work mode, checks, and permission boundaries before AI edits.
@@ -58,7 +64,7 @@ The reusable field manual is part of the learning outcome, not supplementary fil
 
 ## Learning integrity
 
-The curriculum, correct decisions, defects, consequences, gates, and evidence ratings are authored and deterministic. Before a learner commits, option labels are plausible and neutral; explanatory feedback is hidden. After commitment, feedback names the goal, observed evidence, transferable principle, and next useful move.
+The curriculum, correct decisions, defects, consequences, gates, and evidence ratings are authored and deterministic. Before a learner commits, option labels are plausible and neutral; explanatory feedback is hidden. After commitment, feedback answers three questions in plain language: what happened, why it matters, and what to do next.
 
 Release readiness cannot be manufactured by ticking claims. Pentimento derives it from:
 
@@ -70,7 +76,7 @@ Release readiness cannot be manufactured by ticking claims. Pentimento derives i
 - explicit human approval for the public action; and
 - a post-publication smoke test of the live path.
 
-The final evidence profile reports **without support**, **after revision**, **with worked support**, or **not yet demonstrated**. It describes one mission record and does not claim durable mastery.
+The final evidence profile reports **independent**, **after revision**, **with a hint**, or **not yet demonstrated**. It describes one mission record and does not claim durable mastery.
 
 ![Pentimento’s evidence-derived release boundary](docs/screenshots/release-ledger.png)
 

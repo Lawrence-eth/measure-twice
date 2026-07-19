@@ -70,6 +70,27 @@ The Pentimento v2 refinement changed more than the name:
 - added accessible dialogs, native radios, keyboard tabs, semantic tables, focus restoration, and restart confirmation; and
 - rebuilt the visual system as a conservation studio using neutral paper/ink, ultramarine, mauve, viridian, and crimson.
 
+## July 19 — beginner-comprehension correction
+
+After using the deployed experience as a general user, the human identified a critical product flaw: the curriculum was deep, but the first screen exposed an unfamiliar artifact, AI claim, choices, confidence controls, progress, and utility actions before plainly explaining what Pentimento was or what the learner should do. On mobile, the preview even appeared before the instructions. The human explicitly prioritized content presentation and interaction quality—not merely adding more text.
+
+Codex audited the first two minutes as a complete beginner, inspected the real mobile ordering, and rebuilt the interaction architecture around progressive disclosure:
+
+- rewrote the welcome to state that Pentimento is a guided simulation for first-time AI builders;
+- added a dedicated case briefing that establishes the learner’s role, human goal, interaction rhythm, and safety boundary before assessment;
+- added a contextual resume screen so saved learners are never dropped into unexplained controls;
+- reordered mobile content so task instructions always precede the Repair Café artifact;
+- split the first layer into observation and decision states, revealing no radio choices until the learner explicitly chooses to decide;
+- removed the unexplained confidence gate from the first interaction while preserving calibration at later meaningful boundaries;
+- made Target, Record, Assign, Scope, Evolve, Release, and Transfer reveal one focused question, item, or next action at a time;
+- collapsed completed decisions into editable trails and moved glossaries and the full release ledger behind labelled disclosures;
+- replaced the four-column consequence report with three plain questions: what happened, why it matters, and what to do next;
+- grouped ten internal layers into four learner-facing chapters, hid empty field-guide chrome, and added persistent “How this works” help;
+- preserved native controls, focus movement, dialog containment, reversible errors, deterministic evidence logic, and the full curriculum depth; and
+- added browser assertions for briefing-before-assessment, hidden future controls, mobile instruction order, help, contextual resume, and sequential progression.
+
+This correction is a direct example of the collaboration the project teaches: a polished, passing release was treated as a proposal; observed user confusion became evidence; the team changed the presentation boundary rather than defending the existing artifact; and the revised journey earned its own tests and deployment record.
+
 ## Product decisions that remain authoritative
 
 - The curriculum, canonical defects, consequences, gates, and evidence ratings are deterministic.

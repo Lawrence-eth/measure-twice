@@ -11,6 +11,28 @@ const correctChoices = {
   transfer: ["source-receipts", "proof-recalc", "next-bounded"],
 } as const;
 
+const repositoryReview = [
+  ["readme", true],
+  ["facts", true],
+  ["files", true],
+  ["gitignore", true],
+  ["env-example", false],
+  ["checkpoint", true],
+  ["api-key", false],
+  ["chat-dump", false],
+] as const;
+
+const contextReview = [
+  ["goal", true],
+  ["trusted-facts", true],
+  ["current-files", true],
+  ["acceptance", true],
+  ["authority", true],
+  ["mobile-reference", true],
+  ["secret", false],
+  ["downloads", false],
+] as const;
+
 const evidenceChecks = [
   "Compare each public statement with facts.md",
   "Use the contact action at a 390px screen width",
@@ -109,13 +131,16 @@ async function openFresh(page: Page) {
   await page.addInitScript(() => window.localStorage.clear());
   await page.goto("/");
   await expect(page.getByTestId("intro")).toBeVisible();
-  await expect(page.getByRole("heading", { name: /The first draft is easy/i, level: 1 })).toBeVisible();
+  await expect(page.getByRole("heading", { name: /Learn to lead an AI-built project/i, level: 1 })).toBeVisible();
 }
 
 async function begin(page: Page) {
   await openFresh(page);
+  await page.getByTestId("open-briefing").click();
+  await expect(page.getByTestId("briefing")).toBeVisible();
+  await expect(page.getByRole("heading", { name: /You are the project lead.*AI made the first draft/i, level: 1 })).toBeFocused();
   await page.getByTestId("start-mission").click();
-  await expectScene(page, "arrival", "The AI says it’s ready.");
+  await expectScene(page, "arrival", "Can a visitor do what they came to do?");
 }
 
 async function submitAndContinue(
@@ -127,7 +152,7 @@ async function submitAndContinue(
   const dialog = page.getByTestId("consequence-dialog");
   await expect(dialog).toBeVisible();
   await expect(dialog).toHaveAttribute("role", "dialog");
-  await expect(dialog.getByRole("heading", { name: "Consequence recorded" })).toBeVisible();
+  await expect(dialog.getByRole("heading", { name: "Here’s what your choice leads to" })).toBeVisible();
   if (expectedEvidence) await expect(dialog).toContainText(expectedEvidence);
   await expect(page.getByTestId("continue-feedback")).toBeFocused();
   await page.getByTestId("continue-feedback").click();
@@ -135,8 +160,8 @@ async function submitAndContinue(
 }
 
 async function completeArrival(page: Page, checkTransitionFocus = false) {
+  await page.getByTestId("open-arrival-decision").click();
   await choose(page, "inspect");
-  await page.getByRole("button", { name: "Fairly sure" }).click();
   await page.getByTestId("commit-arrival").click();
 
   const dialog = page.getByTestId("consequence-dialog");
@@ -145,21 +170,34 @@ async function completeArrival(page: Page, checkTransitionFocus = false) {
 
   if (checkTransitionFocus) await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
   await page.getByTestId("continue-feedback").click();
-  await expectScene(page, "target", "Turn a wish into a promise.");
+  await expectScene(page, "target", "Build a clear project promise.");
   if (checkTransitionFocus) {
-    await expect(page.getByRole("heading", { name: "Turn a wish into a promise.", level: 1 })).toBeFocused();
+    await expect(page.getByRole("heading", { name: "Build a clear project promise.", level: 1 })).toBeFocused();
     await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0);
   }
 }
 
 async function completeTarget(page: Page) {
-  await chooseMany(page, correctChoices.target);
+  for (let index = 0; index < correctChoices.target.length; index += 1) {
+    await choose(page, correctChoices.target[index]);
+    if (index < correctChoices.target.length - 1) {
+      await page.getByTestId("next-target-question").click();
+      await expect(page.getByTestId("target-focused-question")).toBeFocused();
+    }
+  }
   await submitAndContinue(page, "commit-target", /phone-first person, a meaningful outcome, observable checks/i);
   await expectScene(page, "record", "Give the project a memory—and an undo button.");
 }
 
 async function completeRecord(page: Page) {
-  await chooseMany(page, correctChoices.repository);
+  for (let index = 0; index < repositoryReview.length; index += 1) {
+    const [, include] = repositoryReview[index];
+    await page.getByRole("button", { name: include ? "Include in the repository" : "Keep out", exact: true }).click();
+    if (index < repositoryReview.length - 1) {
+      await page.getByTestId("next-repository-item").click();
+      await expect(page.getByTestId("repository-focused-item")).toBeFocused();
+    }
+  }
   await expect(page.getByLabel("Simulated GitHub repository")).toContainText("baseline saved · unverified");
   await expect(page.getByLabel("Simulated GitHub repository")).not.toContainText("baseline saved · known good");
   await submitAndContinue(page, "commit-record", /unverified baseline/i);
@@ -167,8 +205,18 @@ async function completeRecord(page: Page) {
 }
 
 async function completeHandoff(page: Page) {
+  await expect(page.getByLabel(/Current project status.*Context Lens.*Work mode not chosen/i)).toBeAttached();
   await choose(page, "plan");
-  await chooseMany(page, correctChoices.context);
+  await page.getByTestId("continue-to-context").click();
+  await expect(page.getByTestId("handoff-focused-stage")).toBeFocused();
+  for (let index = 0; index < contextReview.length; index += 1) {
+    const [, include] = contextReview[index];
+    await page.getByRole("button", { name: include ? "Give this to AI" : "Leave it out", exact: true }).click();
+    if (index < contextReview.length - 1) {
+      await page.getByTestId("next-context-item").click();
+      await expect(page.getByTestId("handoff-focused-stage")).toBeFocused();
+    }
+  }
   await submitAndContinue(page, "commit-handoff", /Plan mode, goal, sources, current state, checks, permission boundary/i);
   await expectScene(page, "radius", "Review the change footprint before editing.");
 }
@@ -181,9 +229,23 @@ async function setScope(page: Page, id: string, disposition: "keep" | "defer" | 
 }
 
 async function completeScope(page: Page) {
-  for (const id of ["facts-section", "mobile-action", "verify"]) await setScope(page, id, "keep");
-  for (const id of ["accounts", "database", "admin"]) await setScope(page, id, "defer");
-  await setScope(page, "joining-flow", "needs-answer");
+  const decisions = [
+    ["facts-section", "keep"],
+    ["mobile-action", "keep"],
+    ["verify", "keep"],
+    ["accounts", "defer"],
+    ["database", "defer"],
+    ["admin", "defer"],
+    ["joining-flow", "needs-answer"],
+  ] as const;
+  await expect(page.getByLabel(/Current project status.*Change footprint.*0 \/ 7 proposals reviewed/i)).toBeAttached();
+  for (let index = 0; index < decisions.length; index += 1) {
+    await setScope(page, decisions[index][0], decisions[index][1]);
+    if (index < decisions.length - 1) {
+      await page.getByTestId("next-scope-item").click();
+      await expect(page.getByTestId("scope-focused-item")).toBeFocused();
+    }
+  }
   await page.getByRole("button", { name: "Very sure" }).click();
   await submitAndContinue(page, "commit-radius", /kept, deferred, or held for a stakeholder answer/i);
   await expectScene(page, "check", "Put every “done” claim on trial.");
@@ -232,11 +294,19 @@ async function completeCheck(page: Page, testTabs = false) {
 }
 
 async function completeRepair(page: Page) {
-  await chooseMany(page, correctChoices.repair);
+  for (let index = 0; index < correctChoices.repair.length; index += 1) {
+    await choose(page, correctChoices.repair[index]);
+    if (index < correctChoices.repair.length - 1) {
+      await page.getByTestId("next-repair-line").click();
+      await expect(page.getByTestId("repair-focus-stage")).toBeFocused();
+    }
+  }
   await page.getByRole("button", { name: /Diagnose before editing/i }).click();
+  await expect(page.getByTestId("repair-focus-stage")).toBeFocused();
   await expect(page.getByText("Diagnosis recorded · no files changed")).toBeVisible();
   await expect(page.locator(".diagnosis-panel")).toContainText("Likely causes:");
   await page.getByRole("button", { name: /Approve this bounded patch/i }).click();
+  await expect(page.getByTestId("repair-focus-stage")).toBeFocused();
 
   const repairedAction = page.locator('a.mock-cta[href="mailto:hello@repair-cafe.example"]');
   await expect(repairedAction).toBeVisible();
@@ -257,22 +327,24 @@ async function completeRepair(page: Page) {
 }
 
 async function completeRelease(page: Page, screenshotPath?: string) {
-  const ledger = page.getByRole("table", { name: "Release claims, generated status, source, and evidence" });
+  const ledger = page.locator('table[aria-label="Release claims, generated status, source, and evidence"]');
   await expect(ledger.locator("tbody tr")).toHaveCount(10);
   await expect(ledger.getByRole("checkbox")).toHaveCount(0);
   await expect(ledger.locator("tbody tr.release-row--missing")).not.toHaveCount(0);
 
   for (let index = 0; index < releaseActions.length; index += 1) {
     const action = page.getByRole("button", { name: releaseActions[index], exact: false });
-    if (index > 0) await expect(action).toBeEnabled();
+    await expect(action).toBeEnabled();
     await action.click();
-    await expect(action).toHaveClass(/is-complete/);
+    await expect(page.getByTestId("release-focused-action")).toBeFocused();
+    await expect(page.locator(".release-sequence__complete")).toContainText(releaseActions[index]);
   }
 
   await expect(ledger.locator("tbody tr.release-row--pass")).toHaveCount(10);
   await expect(ledger.locator("tbody tr.release-row--missing")).toHaveCount(0);
   await expect(page.locator(".release-card")).toContainText("c7a91e4");
   await expect(page.locator(".release-card")).toContainText("Exact live version verified");
+  await expect(page.getByText(/Simulated live URL checked; exact version and visitor path match/i)).toBeAttached();
   await expectAxeClean(page);
   if (screenshotPath) {
     await prepareScreenshot(page);
@@ -283,8 +355,12 @@ async function completeRelease(page: Page, screenshotPath?: string) {
 }
 
 async function completeTransfer(page: Page) {
-  await chooseMany(page, correctChoices.transfer);
-  await page.getByLabel(/What would you tell the budget owner/i).fill(
+  for (let index = 0; index < correctChoices.transfer.length; index += 1) {
+    await choose(page, correctChoices.transfer[index]);
+    await page.getByTestId("next-transfer-question").click();
+    await expect(page.getByTestId("transfer-focused-question")).toBeFocused();
+  }
+  await page.getByLabel(/In your own words, what is proven/i).fill(
     "The approved receipts and independent B2–B4 calculation prove $385.15. This check does not yet prove the rest of the workbook is correct.",
   );
   await expect(page.getByText("enough reasoning to review")).toBeVisible();
@@ -307,10 +383,17 @@ test("completes the independent evidence path, releases a derived record, and re
     await page.screenshot({ path: `docs/screenshots/landing${screenshotSuffix}.png`, fullPage: true });
   }
   await expectAxeClean(page);
-  await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
+  await page.getByTestId("open-briefing").click();
+  await expect(page.getByTestId("briefing")).toBeVisible();
+  await expect(page.getByRole("heading", { name: /You are the project lead.*AI made the first draft/i, level: 1 })).toBeFocused();
+  await expectAxeClean(page);
+  if (captureScreenshots) {
+    await prepareScreenshot(page);
+    await page.screenshot({ path: `docs/screenshots/briefing${screenshotSuffix}.png`, fullPage: true });
+  }
   await page.getByTestId("start-mission").click();
-  await expectScene(page, "arrival", "The AI says it’s ready.");
-  await expect(page.getByRole("heading", { name: "The AI says it’s ready.", level: 1 })).toBeFocused();
+  await expectScene(page, "arrival", "Can a visitor do what they came to do?");
+  await expect(page.getByRole("heading", { name: "Can a visitor do what they came to do?", level: 1 })).toBeFocused();
   await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0);
   if (captureScreenshots) {
     await prepareScreenshot(page);
@@ -318,12 +401,13 @@ test("completes the independent evidence path, releases a derived record, and re
   }
   await expectAxeClean(page);
 
+  await page.getByTestId("open-arrival-decision").click();
+  await expect(page.getByTestId("arrival-decision")).toBeVisible();
   await choose(page, "inspect");
-  await page.getByRole("button", { name: "Fairly sure" }).click();
   await page.getByTestId("commit-arrival").click();
   await expectAxeClean(page, '[data-testid="consequence-dialog"]');
   await page.getByTestId("continue-feedback").click();
-  await expectScene(page, "target", "Turn a wish into a promise.");
+  await expectScene(page, "target", "Build a clear project promise.");
 
   await completeTarget(page);
   await completeRecord(page);
@@ -348,6 +432,7 @@ test("completes the independent evidence path, releases a derived record, and re
   await expect(replay).toContainText("10 / 10 release claims supported");
   await expect(replay).toContainText(/Your reasoning:.*approved receipts and independent B2–B4 calculation prove \$385\.15/i);
   await expect(replay).not.toContainText("100/100");
+  await expect(replay).not.toContainText("Unsure confidence");
   await expectAxeClean(page);
   if (captureScreenshots) {
     await prepareScreenshot(page);
@@ -367,29 +452,47 @@ test("completes the independent evidence path, releases a derived record, and re
 
 test("keeps plausible-choice teaching hidden until commitment, then gives precise repair feedback", async ({ page }) => {
   await begin(page);
+  await expect(choice(page, "inspect")).toHaveCount(0);
+  await page.getByTestId("open-arrival-decision").click();
+
+  await choose(page, "ship");
+  await page.getByTestId("commit-arrival").click();
+  const consequence = page.getByTestId("consequence-dialog");
+  await expect(consequence.getByRole("heading", { name: "Let’s revise this choice" })).toBeVisible();
+  await expect(consequence).toContainText(/main action does nothing/i);
+  await page.getByTestId("continue-feedback").click();
+  await expectScene(page, "arrival", "Can a visitor do what they came to do?");
+  await expect(page.locator(".arrival-interaction")).toBeFocused();
+  await expect(choice(page, "ship").locator("small")).toContainText(/deadline does not turn an unchecked claim into evidence/i);
+
   await choose(page, "inspect");
-  await page.getByRole("button", { name: "Fairly sure" }).click();
   await page.getByTestId("commit-arrival").click();
 
-  const consequence = page.getByTestId("consequence-dialog");
+  await expect(consequence.getByRole("heading", { name: "Here’s what your choice leads to" })).toBeVisible();
   await expect(page.getByTestId("continue-feedback")).toBeFocused();
   await page.keyboard.press("Escape");
   await expect(consequence, "consequences cannot be dismissed before they are read").toBeVisible();
   await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
   await page.getByTestId("continue-feedback").click();
-  await expectScene(page, "target", "Turn a wish into a promise.");
-  await expect(page.getByRole("heading", { name: "Turn a wish into a promise.", level: 1 })).toBeFocused();
+  await expectScene(page, "target", "Build a clear project promise.");
+  await expect(page.getByRole("heading", { name: "Build a clear project promise.", level: 1 })).toBeFocused();
   await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0);
+  await expect(page.getByTestId("target-focused-question").getByRole("group")).toHaveCount(1);
+  await expect(choice(page, "outcome-attend"), "future project-promise questions stay hidden until the learner continues").toHaveCount(0);
 
   const plausibleChoice = choice(page, "audience-everyone");
   await expect(plausibleChoice).toContainText("Local people interested in community repair events");
   await expect(plausibleChoice.locator("small"), "explanation should not coach the learner before commitment").toHaveCount(0);
-  await chooseMany(page, ["audience-everyone", "outcome-impressive", "proof-ai", "nongoal-none"]);
+  const weakChoices = ["audience-everyone", "outcome-impressive", "proof-ai", "nongoal-none"];
+  for (let index = 0; index < weakChoices.length; index += 1) {
+    await choose(page, weakChoices[index]);
+    if (index < weakChoices.length - 1) await page.getByTestId("next-target-question").click();
+  }
   await page.getByTestId("commit-target").click();
 
-  await expect(consequence.getByRole("heading", { name: "This decision needs revision" })).toBeVisible();
+  await expect(consequence.getByRole("heading", { name: "Let’s revise this choice" })).toBeVisible();
   await expect(consequence).toContainText(/broad, subjective, or dependent on the AI judging itself/i);
-  await expect(page.getByTestId("continue-feedback")).toHaveText(/Revise my decision/i);
+  await expect(page.getByTestId("continue-feedback")).toHaveText(/Revise this decision/i);
   await page.keyboard.press("Escape");
   await expect(consequence).toBeVisible();
   await page.getByTestId("continue-feedback").click();
@@ -402,9 +505,87 @@ test("keeps plausible-choice teaching hidden until commitment, then gives precis
   await expect(boundedAudience, "native radio groups should retain browser keyboard behavior").toBeChecked();
 });
 
+test("explains the experience before assessment and restores a saved learner with context", async ({ page }) => {
+  await openFresh(page);
+  await expect(page.getByText(/interactive lesson for complete beginners/i)).toBeVisible();
+  await expect(page.getByTestId("scene-arrival")).toHaveCount(0);
+
+  const briefingTrigger = page.getByTestId("open-briefing");
+  await briefingTrigger.click();
+  await expect(page.getByTestId("briefing")).toBeVisible();
+  await expect(page.getByText(/You are the project lead/i).first()).toBeVisible();
+  await expect(page.getByText(/Nothing will be published, no email will be sent/i)).toBeVisible();
+  await expectAxeClean(page);
+
+  await page.getByRole("button", { name: "← Back" }).click();
+  await expect(briefingTrigger).toBeFocused();
+  await briefingTrigger.click();
+  await page.getByTestId("start-mission").click();
+  await expect(choice(page, "inspect")).toHaveCount(0);
+  await expect(page.getByText("Inspect before you decide.")).toBeVisible();
+
+  await page.getByRole("button", { name: "How this lesson works" }).click();
+  const help = page.getByTestId("lesson-help-dialog");
+  await expect(help).toBeVisible();
+  await expect(page.getByRole("button", { name: /Return to my task/i })).toBeFocused();
+  await expectAxeClean(page, '[data-testid="lesson-help-dialog"]');
+  await page.getByRole("button", { name: /Return to my task/i }).click();
+
+  await expect.poll(() => page.evaluate(() => window.localStorage.getItem("pentimento:mission:v2:repair-cafe"))).toContain('"started":true');
+  const saved = await page.evaluate(() => window.localStorage.getItem("pentimento:mission:v2:repair-cafe"));
+  expect(saved).not.toBeNull();
+  const resumedPage = await page.context().newPage();
+  await resumedPage.addInitScript((record) => {
+    window.localStorage.setItem("pentimento:mission:v2:repair-cafe", record);
+  }, saved!);
+  await resumedPage.goto("/");
+  const resume = resumedPage.getByTestId("resume-experience");
+  await expect(resume).toBeVisible();
+  await expect(resume).toContainText(/safe simulation about leading an AI-built project/i);
+  await expect(resume).toContainText("First layer");
+  await resumedPage.getByRole("button", { name: /Continue my project/i }).click();
+  await expectScene(resumedPage, "arrival", "Can a visitor do what they came to do?");
+  await expect(resumedPage.getByRole("heading", { name: "Can a visitor do what they came to do?", level: 1 })).toBeFocused();
+  await resumedPage.close();
+});
+
+test("restores the exact in-scene question and both include and exclude decisions", async ({ page }) => {
+  await begin(page);
+  await completeArrival(page);
+  await completeTarget(page);
+
+  await page.getByRole("button", { name: "Include in the repository", exact: true }).click();
+  await page.getByTestId("next-repository-item").click();
+  await page.getByRole("button", { name: "Keep out", exact: true }).click();
+  await page.getByTestId("next-repository-item").click();
+  await expect(page.getByTestId("repository-focused-item")).toContainText(/project files/i);
+  await expect.poll(() => page.evaluate(() => window.localStorage.getItem("pentimento:mission:v2:repair-cafe"))).toContain('"recordStep":2');
+
+  const saved = await page.evaluate(() => window.localStorage.getItem("pentimento:mission:v2:repair-cafe"));
+  expect(saved).not.toBeNull();
+  const resumedPage = await page.context().newPage();
+  await resumedPage.addInitScript((record) => {
+    window.localStorage.setItem("pentimento:mission:v2:repair-cafe", record);
+  }, saved!);
+  await resumedPage.goto("/");
+  await expect(resumedPage.getByTestId("resume-experience")).toBeVisible();
+  await resumedPage.getByRole("button", { name: /Continue my project/i }).click();
+  await expectScene(resumedPage, "record", "Give the project a memory—and an undo button.");
+  await expect(resumedPage.getByTestId("repository-focused-item")).toContainText(/project files/i);
+
+  await resumedPage.getByRole("button", { name: "← Previous item" }).click();
+  await expect(resumedPage.getByTestId("repository-focused-item")).toBeFocused();
+  await expect(resumedPage.getByRole("button", { name: "Keep out", exact: true })).toHaveAttribute("aria-pressed", "true");
+  await resumedPage.getByRole("button", { name: "← Previous item" }).click();
+  await expect(resumedPage.getByRole("button", { name: "Include in the repository", exact: true })).toHaveAttribute("aria-pressed", "true");
+  await resumedPage.close();
+});
+
 test("traps and restores focus for the manual and requires confirmation before restart", async ({ page }) => {
   await begin(page);
-  const manualTrigger = page.getByRole("button", { name: /^Field notes/ });
+  await completeArrival(page);
+  await completeTarget(page);
+  const manualTrigger = page.getByRole("button", { name: /^My guide/ });
   await manualTrigger.click();
   const manual = page.getByTestId("field-manual-dialog");
   const manualClose = page.getByRole("button", { name: "Close field manual" });
@@ -417,11 +598,15 @@ test("traps and restores focus for the manual and requires confirmation before r
   await expect(manual).toBeHidden();
   await expect(manualTrigger).toBeFocused();
 
-  const restartTrigger = page.getByRole("button", { name: "Restart mission" });
+  const mobile = (page.viewportSize()?.width ?? 1_000) <= 560;
+  const restartTrigger = mobile
+    ? page.getByRole("button", { name: "Start this project over" })
+    : page.getByRole("button", { name: "Start over" });
+  if (mobile) await page.getByRole("button", { name: "How this lesson works" }).click();
   await restartTrigger.click();
   const restart = page.getByTestId("restart-dialog");
   const keep = page.getByRole("button", { name: "Keep my progress" });
-  const erase = page.getByRole("button", { name: "Erase progress and restart" });
+  const erase = page.getByRole("button", { name: "Erase progress and start over" });
   await expect(restart).toHaveAttribute("role", "alertdialog");
   await expect(restart).toContainText("It cannot be undone");
   await expect(keep).toBeFocused();
@@ -431,14 +616,38 @@ test("traps and restores focus for the manual and requires confirmation before r
   await expect(keep, "Tab from the final control should remain inside the modal").toBeFocused();
   await page.keyboard.press("Escape");
   await expect(restart).toBeHidden();
-  await expect(restartTrigger).toBeFocused();
-  await expect(page.getByTestId("scene-arrival")).toBeVisible();
+  if (!mobile) await expect(restartTrigger).toBeFocused();
+  await expect(page.getByTestId("scene-record")).toBeVisible();
 
+  if (mobile) await page.getByRole("button", { name: "How this lesson works" }).click();
   await restartTrigger.click();
   await erase.click();
   await expect(page.getByTestId("intro")).toBeVisible();
-  await expect(page.getByTestId("scene-arrival")).toHaveCount(0);
+  await expect(page.getByTestId("scene-record")).toHaveCount(0);
   await expect.poll(() => page.evaluate(() => window.localStorage.getItem("pentimento:mission:v2:repair-cafe"))).not.toContain("\"started\":true");
+});
+
+test("returns focus to unfinished evidence work after a premature review", async ({ page }) => {
+  await begin(page);
+  await completeArrival(page);
+  await completeTarget(page);
+  await completeRecord(page);
+  await completeHandoff(page);
+  await completeScope(page);
+
+  await page.getByTestId("commit-check").click();
+  const consequence = page.getByTestId("consequence-dialog");
+  await expect(consequence.getByRole("heading", { name: "Let’s revise this choice" })).toBeVisible();
+  await page.getByTestId("continue-feedback").click();
+  await expect(page.getByTestId("check-focused-work")).toBeFocused();
+
+  await completeCheck(page);
+  await completeRepair(page);
+  await page.getByTestId("commit-ship").click();
+  await expect(consequence.getByRole("heading", { name: "Let’s revise this choice" })).toBeVisible();
+  await page.getByTestId("continue-feedback").click();
+  await expect(page.getByTestId("release-focused-action")).toBeFocused();
+  await expect(page.getByTestId("release-focused-action")).toContainText("Record exact version + recovery");
 });
 
 test("fits and remains operable at 320px, 390px, and 768px", async ({ page }) => {
@@ -446,11 +655,24 @@ test("fits and remains operable at 320px, 390px, and 768px", async ({ page }) =>
     await page.setViewportSize({ width, height: 844 });
     await openFresh(page);
     await expectNoHorizontalOverflow(page);
+    await page.getByTestId("open-briefing").click();
+    await expect(page.getByTestId("briefing")).toBeVisible();
+    await expectNoHorizontalOverflow(page);
     await page.getByTestId("start-mission").click();
-    await expectScene(page, "arrival", "The AI says it’s ready.");
-    await expect(page.getByLabel(/Mission progress: Step 1 of 10: First layer/i)).toBeVisible();
-    await expect(page.getByRole("button", { name: /^Field notes/ })).toBeVisible();
-    await expect(page.getByRole("button", { name: "Restart mission" })).toBeVisible();
+    await expectScene(page, "arrival", "Can a visitor do what they came to do?");
+    await expect(page.getByLabel(/Learning journey: chapter 1 of 4, Understand/i)).toBeVisible();
+    await expect(choice(page, "inspect")).toHaveCount(0);
+
+    const [headingBox, artifactBox, decisionReadyBox] = await Promise.all([
+      page.getByRole("heading", { name: "Can a visitor do what they came to do?", level: 1 }).boundingBox(),
+      page.locator(".scene-grid--arrival .artifact-column").boundingBox(),
+      page.locator(".scene-grid--arrival .arrival-interaction").boundingBox(),
+    ]);
+    expect(headingBox).not.toBeNull();
+    expect(artifactBox).not.toBeNull();
+    expect(decisionReadyBox).not.toBeNull();
+    expect(headingBox!.y).toBeLessThan(artifactBox!.y);
+    expect(artifactBox!.y + artifactBox!.height).toBeLessThan(decisionReadyBox!.y);
 
     const previewAction = page.getByRole("button", { name: /Ask about a repair/i });
     await previewAction.scrollIntoViewIfNeeded();
