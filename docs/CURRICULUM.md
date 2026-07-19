@@ -1,5 +1,25 @@
 # Pentimento curriculum and content standard
 
+This document is the long-form content bank behind the current v5 experience.
+The exact screen order, interaction count, and progressive-disclosure contract
+live in [FINAL_EXPERIENCE.md](FINAL_EXPERIENCE.md). Templates and examples below
+may appear as contextual field notes or in the five-card Playbook; they are not
+all required actions in the 15-minute route.
+
+The current delivery groups the same lifecycle into four chapters:
+
+| Chapter | Stops |
+| --- | --- |
+| **Shape the promise** | Idea |
+| **Ground the work** | Tools · Project home |
+| **Direct the build** | Ask AI · Build |
+| **Prove the release** | Check · Go live · Improve |
+
+The learner makes 13 consequential decisions. After each stop, successful
+feedback remains visible while the learner inspects and saves one **Playbook
+note**. Eight stop-level notes accumulate into the existing five-card take-home
+Playbook; they do not create eight additional cards.
+
 ## Audience promise
 
 Pentimento assumes the learner has never used Git, GitHub, an AI coding agent, a project repository, a test suite, environment variables, preview hosting, or deployment tooling.
@@ -559,22 +579,19 @@ If the update introduces identity, money, private data, live operations, or runt
 
 A small content request quietly becoming a redesign, new platform, or unreviewed system.
 
-## First AI Build Playbook
+## Persistent Field Guide and five-card Playbook
 
-All ten cards are available from the beginning:
+The **Field guide** is available beside the current task and opens the existing
+five-card Playbook:
 
-1. Choose a starting lane.
-2. Define the first complete version.
-3. Create a recoverable project home.
-4. Ask AI to plan.
-5. Request one build cycle.
-6. Inspect without reading every line of code.
-7. Report and repair a defect.
-8. Protect credentials and private data.
-9. Publish one checked version.
-10. Make a safe post-launch update.
+1. Shape the first version.
+2. Choose a route and project home.
+3. Ask, inspect, and save.
+4. Check and repair.
+5. Release and improve.
 
-Every card contains:
+Each card may combine several of the templates in this content bank. Every card
+contains:
 
 - **Use moment:** when the learner needs it.
 - **Exact action:** an executable sequence.
@@ -635,26 +652,31 @@ The result is an AI-assisted reflection, not curriculum truth. Structured valida
 The interaction grammar is:
 
 ```text
-orient → see a worked example → take one action →
-observe the consequence → keep a reusable artifact
+why it matters → take one consequential action → observe the consequence →
+inspect the Playbook note → explicitly save the layer
 ```
 
 Scaffolding changes across the route:
 
-- the welcome explains the whole outcome before asking for a decision;
-- the role map gives a durable model before product categories;
-- the layer reveal creates curiosity without withholding literal instructions;
-- Idea sorts one feature at a time;
+- the welcome identifies the field guide, learner, time, and take-home artifacts;
+- the learner tests one polished generated action before receiving the lesson;
+- raking light reveals Promise, Project home, Evidence, and Release beneath the
+  visitor surface;
+- Idea narrows one tempting wishlist to a complete first-version path;
 - Tools compares two tradeoffs rather than presenting a winner;
-- Project home assembles one foundation step at a time;
-- Ask AI constructs one useful context group at a time;
-- Build repeats the same five-phase loop across three cycles;
-- Check moves from observation to report to repair to rerun;
-- Go live reveals one environment state at a time;
-- Improve repeats the method with less scaffolding; and
-- the Playbook makes every artifact available outside the lesson sequence.
+- Project home establishes recoverable custody and the runtime-AI boundary;
+- Ask AI creates a bounded agreement and one approval point;
+- Build requires evidence beyond AI's completion claim;
+- Check moves from observed failure to bounded repair to required retry;
+- Go live distinguishes an exact checked version from deployment status;
+- Improve updates a trusted source before its visible surface; and
+- eight saved Playbook notes accumulate into five reusable milestone cards.
 
-Future controls are not rendered as a wall of choices. Completed steps remain revisitable. Optional depth answers “Why this matters” only after the current action is clear.
+Future controls are not rendered as a wall of choices. Completed steps remain
+revisitable. A correct decision does not auto-advance: its causal consequence,
+use moment, and prevented failure remain visible until the learner saves the
+note. Optional depth answers “Why this matters,” “Make,” “Proof,” and “Avoid”
+without becoming required reading.
 
 ## Content quality gate
 

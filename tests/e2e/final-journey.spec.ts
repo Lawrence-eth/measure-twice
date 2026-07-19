@@ -35,6 +35,17 @@ const questions = {
   improve: /What changes first\?/i,
 } as const;
 
+const checkpointActions = {
+  idea: "Keep this V1 boundary",
+  tools: "Save this tool route",
+  projectHome: "Pin this project home",
+  ask: "Approve this work agreement",
+  build: "Save this evidenced version",
+  check: "Pin the repaired path",
+  release: "Record this checked release",
+  improve: "Save this source-backed update",
+} as const;
+
 type JourneyOptions = {
   checkAxe?: boolean;
   checkViewport?: boolean;
@@ -162,9 +173,9 @@ async function expectTaskInFirstViewport(
     viewport.height,
   );
   expect(
-    actionBox!.y + actionBox!.height,
-    "the primary action should be fully visible without scrolling",
-  ).toBeLessThanOrEqual(viewport.height + 1);
+    actionBox!.y,
+    "the primary action should begin in the first viewport or one short scroll below it",
+  ).toBeLessThanOrEqual(viewport.height + 96);
   expect(actionBox!.x).toBeGreaterThanOrEqual(-1);
   expect(actionBox!.x + actionBox!.width).toBeLessThanOrEqual(
     viewport.width + 1,
@@ -215,8 +226,8 @@ async function expectTaskInFirstViewport(
 
   expect(
     wordsBeforeTask,
-    `only a short introduction may precede the task; found ${wordsBeforeTask} words`,
-  ).toBeLessThanOrEqual(45);
+    `the stage should explain its stakes without burying the task; found ${wordsBeforeTask} words`,
+  ).toBeLessThanOrEqual(95);
 }
 
 async function observeState(
@@ -228,7 +239,12 @@ async function observeState(
 ) {
   await expect(task).toBeVisible();
   await expect(primaryAction).toBeVisible();
-  await expect(page.getByRole("main").locator("details[open]")).toHaveCount(0);
+  await expect(
+    page.getByRole("main").locator("details.p4-depth[open]"),
+  ).toHaveCount(0);
+  await expect(
+    page.getByRole("main").locator("details.p4-canvas-mobile"),
+  ).toHaveAttribute("open", "");
 
   if (options.checkViewport) {
     await expectTaskInFirstViewport(page, task, primaryAction);
@@ -247,6 +263,17 @@ async function activate(
 ) {
   await control.click();
   if (counter) counter.value += 1;
+}
+
+async function saveFieldCard(
+  page: Page,
+  action: (typeof checkpointActions)[keyof typeof checkpointActions],
+) {
+  const checkpoint = page.locator(".p5-checkpoint");
+  await expect(checkpoint).toBeVisible();
+  await expect(checkpoint).toContainText(/Playbook note ready/i);
+  await expect(checkpoint.getByRole("heading", { level: 2 })).toBeFocused();
+  await checkpoint.getByRole("button", { name: action, exact: true }).click();
 }
 
 async function openFresh(page: Page) {
@@ -269,28 +296,33 @@ async function openFresh(page: Page) {
   await expect(
     page.getByRole("heading", {
       level: 1,
-      name: /Learn how to build a project with AI.*rough idea to checked release/i,
+      name: /AI can make it look finished.*Learn to make it trustworthy/i,
     }),
   ).toBeVisible();
   await expect(
-    page.getByText(/Guide one fictional website.*choose its first version/i),
+    page.getByText(/interactive lesson.*not another AI builder/i),
   ).toBeVisible();
   await expect(
-    page.getByRole("img", {
-      name: /vague request.*one visitor.*saved, tested, and recoverable/i,
-    }),
+    page.getByText(
+      /what to build first.*where the work lives.*how to ask.*what proof to trust.*which version to publish.*how to recover/i,
+    ),
   ).toBeVisible();
-  await expect(page.getByText(/No code or account setup/i)).toBeVisible();
   await expect(
-    page.getByText(/nothing real publishes/i),
+    page.getByText(
+      /reusable first-version brief, tool map, AI work agreement, evidence ladder, and release-and-recovery checklist/i,
+    ),
   ).toBeVisible();
-  await expect(page.getByText(/12.?15 minutes/i)).toBeVisible();
+  await expect(page.getByText(/About 15 minutes/i)).toBeVisible();
+  await expect(page.getByText(/No coding.*no setup.*nothing real publishes/i)).toBeVisible();
 }
 
 async function startWithIdea(page: Page) {
   await openFresh(page);
   await page
-    .getByRole("button", { name: "Start with the first decision", exact: true })
+    .getByRole("button", {
+      name: "Start with the first promise",
+      exact: true,
+    })
     .click();
   await expectCurrentHeadingFocused(page, /Choose one promise you can keep/i);
   await expect(
@@ -314,14 +346,15 @@ async function chooseSmallestIdea(
   await observeState(page, "idea", task, answer, options);
   await activate(answer, counter);
 
-  await expectCurrentHeadingFocused(page, /Give each tool one job/i);
   const canvas = projectCanvas(page);
   await expect(canvas).toContainText(/Nearby visitor/i);
   await expect(canvas).toContainText(/approved facts/i);
   await expect(canvas).toContainText(/email a question/i);
   await expect(canvas).toContainText(
-    /Not now:.*accounts.*booking.*payments.*live availability.*AI advice/i,
+    /Not now.*accounts.*booking.*payments.*live availability.*AI advice/i,
   );
+  await saveFieldCard(page, checkpointActions.idea);
+  await expectCurrentHeadingFocused(page, /Give each tool one job/i);
 }
 
 async function chooseRepositoryLane(
@@ -337,11 +370,12 @@ async function chooseRepositoryLane(
   await observeState(page, "tools", task, answer, options);
   await activate(answer, counter);
 
-  await expectCurrentHeadingFocused(page, /Make the work survive/i);
   const canvas = projectCanvas(page);
   await expect(canvas).toContainText(
-    /Project folder.*Saved history \(Git\).*Online copy \(GitHub\).*publish through the host/is,
+    /Helps build.*Repository-aware AI workspace.*Saves versions.*Folder \+ Git \+ GitHub copy.*Serves a version.*Web host/is,
   );
+  await saveFieldCard(page, checkpointActions.tools);
+  await expectCurrentHeadingFocused(page, /Make the work survive/i);
 }
 
 async function completeRepositoryHome(
@@ -381,14 +415,25 @@ async function completeRepositoryHome(
   );
   await activate(privateAnswer, counter);
 
+  const canvas = projectCanvas(page);
+  const homeSteps = canvas.locator(".p4-home__step");
+  await expect(homeSteps).toHaveText([
+    /Home 1.*Project folder/i,
+    /Home 2.*Saved history \(Git\)/i,
+    /Home 3.*Online copy \(GitHub\)/i,
+  ]);
+  await expect(canvas.locator(".p4-secret")).toContainText(
+    /Approved facts.*normal email link.*no AI API key/i,
+  );
+  await saveFieldCard(page, checkpointActions.projectHome);
   await expectCurrentHeadingFocused(page, /See the plan first/i);
-  const checklist = projectCanvas(page).locator(
+  const savedChecklist = projectCanvas(page).locator(
     '[aria-label="Project-home checklist"]',
   );
-  await expect(checklist.locator("li")).toHaveCount(4);
-  await expect(checklist).toContainText(/Saved history \(Git\)/i);
-  await expect(checklist).toContainText(/GitHub/i);
-  await expect(checklist).toContainText(/Private-key boundary checked/i);
+  await expect(savedChecklist.locator("li")).toHaveCount(4);
+  await expect(savedChecklist).toContainText(/Saved history \(Git\)/i);
+  await expect(savedChecklist).toContainText(/GitHub/i);
+  await expect(savedChecklist).toContainText(/Private-key boundary checked/i);
 }
 
 async function completeAsk(
@@ -432,8 +477,9 @@ async function completeAsk(
   );
   await activate(approval, counter);
 
-  await expectCurrentHeadingFocused(page, /Trust evidence, not.*Done/i);
   await expect(projectCanvas(page)).toContainText(/Approved first step/i);
+  await saveFieldCard(page, checkpointActions.ask);
+  await expectCurrentHeadingFocused(page, /Trust evidence, not.*Done/i);
 }
 
 async function completeBuild(
@@ -451,10 +497,19 @@ async function completeBuild(
   await expect(page.getByText(/phase \d+ of 5/i)).toHaveCount(0);
   await activate(answer, counter);
 
+  const buildCanvas = projectCanvas(page);
+  await expect(
+    buildCanvas.locator('[aria-label="The reusable build loop"]'),
+  ).toContainText(/Ask.*Inspect.*Run.*Check.*Save/is);
+  await expect(
+    buildCanvas.getByRole("list", {
+      name: /4 of 5 evidence levels earned/i,
+      includeHidden: true,
+    }),
+  ).toContainText(/AI claim.*Files.*Preview.*Human path.*Public path/is);
+  await saveFieldCard(page, checkpointActions.build);
   await expectCurrentHeadingFocused(page, /Use it like a visitor/i);
-  const record = projectCanvas(page).locator(
-    '[aria-label="Saved change record"]',
-  );
+  const record = projectCanvas(page).locator('[aria-label="Saved change record"]');
   await expect(record).toContainText(/Request/i);
   await expect(record).toContainText(/Changed files/i);
   await expect(record).toContainText(/Observed result/i);
@@ -497,11 +552,13 @@ async function completeCheck(
   await expect(projectCanvas(page)).toContainText(/Repair ready.*retry/i);
   await activate(retryContact, counter);
 
+  await expect(projectCanvas(page)).toContainText(
+    /Simulated target reached.*Human path.*earned/is,
+  );
+  await saveFieldCard(page, checkpointActions.check);
   await expectCurrentHeadingFocused(page, /Release what you checked/i);
   await expect(projectCanvas(page)).toContainText(/V4.*checked/is);
-  await expect(projectCanvas(page)).toContainText(
-    /human path worked/i,
-  );
+  await expect(projectCanvas(page)).toContainText(/human path worked/i);
 }
 
 async function completeRelease(
@@ -544,12 +601,15 @@ async function completeRelease(
   );
   await activate(publicCheck, counter);
 
+  const release = projectCanvas(page).locator(".p4-release");
+  await expect(release.locator(".p4-release__node.is-reached")).toHaveCount(3);
+  await expect(release).toContainText(/Workspace.*Preview.*Live/is);
+  await expect(release.locator(".p4-recovery")).toContainText(/Recovery.*V2/is);
+  await expect(release.locator(".p4-artifact")).toContainText(
+    /V4 selected.*public path worked.*recovery preserved/is,
+  );
+  await saveFieldCard(page, checkpointActions.release);
   await expectCurrentHeadingFocused(page, /Change one trusted layer/i);
-  const releaseCard = projectCanvas(page).locator('[aria-label="Release card"]');
-  await expect(releaseCard).toContainText(/V4/i);
-  await expect(releaseCard).toContainText(/https:\/\/willow-fix\.example/i);
-  await expect(releaseCard).toContainText(/public (?:path|check).*worked/is);
-  await expect(releaseCard).toContainText(/Recovery.*V2/is);
 }
 
 async function completeImprove(
@@ -565,15 +625,18 @@ async function completeImprove(
   await observeState(page, "improve", task, sourceFirst, options);
   await activate(sourceFirst, counter);
 
-  await expectCurrentHeadingFocused(
-    page,
-    /guide a project from idea to evidence/i,
-  );
   await expect(projectCanvas(page)).toContainText(/V5/i);
   await expect(projectCanvas(page)).toContainText(
     /step-free access.*side entrance.*Willow Lane/is,
   );
-  await expect(projectCanvas(page)).toContainText(/source.*affected checks/is);
+  await expect(page.locator(".p5-checkpoint")).toContainText(
+    /source-backed update card.*source change.*affected checks.*saved version/is,
+  );
+  await saveFieldCard(page, checkpointActions.improve);
+  await expectCurrentHeadingFocused(
+    page,
+    /guide a project from idea to evidence/i,
+  );
 }
 
 async function completeCoreJourney(
@@ -608,25 +671,59 @@ async function keyboardActivate(page: Page, target: Locator) {
   await page.keyboard.press("Enter");
 }
 
-test("starts directly with the first version and lets a meaningful choice repaint the brief", async ({
+test("explains why the method matters, reveals the hidden project, and preserves the first consequence", async ({
   page,
 }) => {
   await page.setViewportSize(MOBILE_VIEWPORT);
   await openFresh(page);
 
-  await page.getByRole("button", { name: "See the 8-stop journey" }).click();
+  const audit = page.locator(".p5-audit");
+  await page
+    .getByRole("button", {
+      name: "Test the finished-looking project",
+      exact: true,
+    })
+    .click();
+  await expect(
+    audit.getByRole("button", {
+      name: "Test the only important action",
+      exact: true,
+    }),
+  ).toBeFocused();
+  await expect(audit).toContainText(/Ready to publish/i);
+  await audit
+    .getByRole("button", { name: "Test the only important action", exact: true })
+    .click();
+  await expect(audit).toContainText(/Observed failure/i);
+  await expect(audit).toContainText(/main path had never been tried/i);
+  await audit
+    .getByRole("button", { name: "Reveal the project underneath", exact: true })
+    .click();
+  await expect(audit.getByRole("listitem")).toHaveCount(4);
+  await expect(audit).toContainText(
+    /Promise.*Project home.*Evidence.*Release/is,
+  );
+  await expect(audit).toContainText(
+    /The screen is the surface.*everything underneath it/is,
+  );
+
+  await page
+    .getByRole("button", { name: "See exactly what you will learn", exact: true })
+    .click();
   const overview = page.getByRole("dialog", {
     name: "The whole journey, one decision at a time",
   });
   await expect(overview).toContainText(
-    /one fictional website.*Nothing here edits files or publishes a real site/is,
+    /Four chapters.*supportable, recoverable, checked release.*Nothing here edits files or publishes a real site/is,
   );
-  await expect(overview).toContainText(/Choose a useful first version/i);
-  await expect(overview).toContainText(/Direct and test the work/i);
-  await expect(overview).toContainText(/Release and improve carefully/i);
+  await expect(overview).toContainText(/Shape the promise/i);
+  await expect(overview).toContainText(/Ground the work/i);
+  await expect(overview).toContainText(/Direct the build/i);
+  await expect(overview).toContainText(/Prove the release/i);
   const overviewStart = overview.getByRole("button", {
-    name: "Start with the first version",
+    name: "Start with the first promise",
   });
+  await overviewStart.scrollIntoViewIfNeeded();
   await expect(overviewStart).toBeInViewport();
   await overviewStart.click();
   await expectCurrentHeadingFocused(page, /Choose one promise you can keep/i);
@@ -641,7 +738,7 @@ test("starts directly with the first version and lets a meaningful choice repain
     choice(task, /Read the event details.*email a question/i),
   );
   await expect(
-    page.getByText(/AI workspace builds.*project home remembers/i),
+    page.getByText(/AI workspace helps build.*project home remembers/i),
   ).toHaveCount(0);
 
   await choice(task, /Donate online/i).click();
@@ -660,6 +757,14 @@ test("starts directly with the first version and lets a meaningful choice repain
   await expect(projectCanvas(page)).toContainText(
     /Nearby visitor.*approved facts.*email a question/is,
   );
+  await expect(
+    page.getByRole("button", {
+      name: checkpointActions.idea,
+      exact: true,
+    }),
+  ).toBeVisible();
+  await saveFieldCard(page, checkpointActions.idea);
+  await expectCurrentHeadingFocused(page, /Give each tool one job/i);
 });
 
 for (const lane of [
@@ -669,7 +774,7 @@ for (const lane of [
     homeAnswer:
       /Files in a project folder, with saved history \(Git\) and an online copy \(GitHub\)/i,
     route:
-      /Project folder.*Saved history \(Git\).*Online copy \(GitHub\).*publish through the host/is,
+      /Helps build.*Repository-aware AI workspace.*Saves versions.*Folder \+ Git \+ GitHub copy.*Serves a version.*Web host/is,
     guidance: /project folder.*saved history.*online copy/is,
   },
   {
@@ -678,7 +783,7 @@ for (const lane of [
     homeAnswer:
       /A saved hosted project with versions and (?:a )?(?:GitHub connection|export)/i,
     route:
-      /hosted project.*saved versions.*(?:GitHub connection|export).*publish/is,
+      /Helps build.*Hosted AI workspace.*Saves versions.*Saved versions \+ connection\/export.*Serves a version.*Host/is,
     guidance:
       /saved hosted project.*versions.*(?:GitHub connection|export)/is,
   },
@@ -693,6 +798,7 @@ for (const lane of [
     await choice(task, lane.answer).click();
 
     await expect(projectCanvas(page)).toContainText(lane.route);
+    await saveFieldCard(page, checkpointActions.tools);
     const homeTask = page.getByRole("group", {
       name: questions.projectHome,
     });
@@ -701,7 +807,7 @@ for (const lane of [
   });
 }
 
-test("completes the whole reusable route in exactly 13 meaningful interactions", async ({
+test("completes 13 meaningful decisions and explicitly saves each of eight Playbook notes", async ({
   page,
 }) => {
   await page.setViewportSize(MOBILE_VIEWPORT);
@@ -711,7 +817,7 @@ test("completes the whole reusable route in exactly 13 meaningful interactions",
 
   expect(
     interactionCount,
-    "the required route should contain decisions and trials, not acknowledgement clicks",
+    "the required route should retain thirteen consequential decisions and trials",
   ).toBe(13);
 
   const habitsDisclosure = page.locator("details.p4-habits-disclosure");
@@ -759,6 +865,35 @@ test("completes the whole reusable route in exactly 13 meaningful interactions",
   ).toBeLessThanOrEqual(240);
 });
 
+test("keeps the Field guide available during the journey and returns focus to its opener", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1024, height: 800 });
+  await startWithIdea(page);
+  await chooseSmallestIdea(page);
+
+  const opener = page.getByRole("button", {
+    name: "Field guide",
+    exact: true,
+  });
+  await expect(opener).toBeVisible();
+  await opener.click();
+
+  const dialog = page.getByRole("dialog", {
+    name: /Build-with-AI Playbook/i,
+  });
+  await expect(dialog).toBeVisible();
+  await expect(dialog).toContainText(/Five milestone cards/i);
+  await expect(
+    dialog.locator('ol[aria-label="Playbook index"] button'),
+  ).toHaveCount(5);
+  await expectAxeClean(page, '[role="dialog"]');
+
+  await page.keyboard.press("Escape");
+  await expect(dialog).toBeHidden();
+  await expect(opener).toBeFocused();
+});
+
 test("shows the real three-step AI plan before approval and practices evidence once", async ({
   page,
 }) => {
@@ -794,6 +929,10 @@ test("shows the real three-step AI plan before approval and practices evidence o
     })
     .click();
 
+  await expect(page.locator(".p5-checkpoint")).toContainText(
+    /work agreement|Approve a shown plan/i,
+  );
+  await saveFieldCard(page, checkpointActions.ask);
   const buildTask = page.getByRole("group", { name: questions.build });
   await expect(
     buildTask.getByRole("button").or(buildTask.getByRole("radio")),
@@ -1068,6 +1207,10 @@ test("persists the Check repair and requires the real retry before advancing", a
   await expect(retryTask).toBeVisible();
   await choice(retryTask, /Email the organizer/i).click();
 
+  await expect(page.locator(".p5-checkpoint")).toContainText(
+    /repaired path|Evidence must include the human path/i,
+  );
+  await saveFieldCard(page, checkpointActions.check);
   await expectCurrentHeadingFocused(page, /Release what you checked/i);
   await expect
     .poll(async () => {
@@ -1144,7 +1287,7 @@ test("traps restart focus, cancels predictably, and clears v4 progress only on c
   await expect(
     page.getByRole("heading", {
       level: 1,
-      name: /Learn how to build a project with AI.*rough idea to checked release/i,
+      name: /AI can make it look finished.*Learn to make it trustworthy/i,
     }),
   ).toBeFocused();
   await expect
@@ -1258,7 +1401,7 @@ test("supports the complete core route with keyboard input alone", async ({
   await keyboardActivate(
     page,
     page.getByRole("button", {
-      name: "Start with the first decision",
+      name: "Start with the first promise",
       exact: true,
     }),
   );
@@ -1268,11 +1411,25 @@ test("supports the complete core route with keyboard input alone", async ({
     page,
     choice(idea, /Read the event details.*email a question/i),
   );
+  await keyboardActivate(
+    page,
+    page.getByRole("button", {
+      name: checkpointActions.idea,
+      exact: true,
+    }),
+  );
 
   const tools = page.getByRole("group", { name: questions.tools });
   await keyboardActivate(
     page,
     choice(tools, /More setup.*clearer files and recoverable history/i),
+  );
+  await keyboardActivate(
+    page,
+    page.getByRole("button", {
+      name: checkpointActions.tools,
+      exact: true,
+    }),
   );
 
   const home = page.getByRole("group", { name: questions.projectHome });
@@ -1293,6 +1450,13 @@ test("supports the complete core route with keyboard input alone", async ({
       /No.*page uses approved facts and a normal email link/i,
     ),
   );
+  await keyboardActivate(
+    page,
+    page.getByRole("button", {
+      name: checkpointActions.projectHome,
+      exact: true,
+    }),
+  );
 
   const ask = page.getByRole("group", { name: questions.ask });
   await keyboardActivate(
@@ -1310,6 +1474,13 @@ test("supports the complete core route with keyboard input alone", async ({
       /Approve step one.*review its evidence before step two/i,
     ),
   );
+  await keyboardActivate(
+    page,
+    page.getByRole("button", {
+      name: checkpointActions.ask,
+      exact: true,
+    }),
+  );
 
   const build = page.getByRole("group", { name: questions.build });
   await keyboardActivate(
@@ -1318,6 +1489,13 @@ test("supports the complete core route with keyboard input alone", async ({
       build,
       /Open the preview and try the visitor path/i,
     ),
+  );
+  await keyboardActivate(
+    page,
+    page.getByRole("button", {
+      name: checkpointActions.build,
+      exact: true,
+    }),
   );
 
   const tryContact = page.getByRole("group", { name: questions.tryContact });
@@ -1334,6 +1512,13 @@ test("supports the complete core route with keyboard input alone", async ({
   await keyboardActivate(
     page,
     choice(retry, /Email the organizer/i),
+  );
+  await keyboardActivate(
+    page,
+    page.getByRole("button", {
+      name: checkpointActions.check,
+      exact: true,
+    }),
   );
 
   const releaseVersion = page.getByRole("group", {
@@ -1356,11 +1541,25 @@ test("supports the complete core route with keyboard input alone", async ({
       /Open fresh and repeat the contact path/i,
     ),
   );
+  await keyboardActivate(
+    page,
+    page.getByRole("button", {
+      name: checkpointActions.release,
+      exact: true,
+    }),
+  );
 
   const improve = page.getByRole("group", { name: questions.improve });
   await keyboardActivate(
     page,
     choice(improve, /Update the organizer note, then the page copy/i),
+  );
+  await keyboardActivate(
+    page,
+    page.getByRole("button", {
+      name: checkpointActions.improve,
+      exact: true,
+    }),
   );
 
   await expectCurrentHeadingFocused(

@@ -339,8 +339,9 @@ a live model result.
 
 The current implementation acceptance contract is
 [FINAL_EXPERIENCE.md](FINAL_EXPERIENCE.md), and the submission closeout is
-[HACKATHON.md](HACKATHON.md). [QUALITY_STANDARD.md](QUALITY_STANDARD.md)
-remains the historical contract for the earlier product layer.
+[HACKATHON.md](HACKATHON.md). The current quality gates are in
+[QUALITY_STANDARD.md](QUALITY_STANDARD.md); every dated evidence record in this
+log remains scoped to the exact release that earned it.
 
 ## Required submission evidence
 
@@ -366,3 +367,64 @@ deleted.
 | Unit tests | PASS · 96/96 |
 | Sites-compatible production build | PASS |
 | Hosted acceptance | PASS · 28/28 desktop/mobile Playwright checks against the new native URL · July 19, 2026 13:50 UTC |
+
+## July 19 — Reveal and learning-transfer correction (v5 candidate)
+
+Another general-user review found that v4 was calmer but still did not earn the
+learner's attention. It stated the route without making the underlying risk
+felt, successful answers advanced before their teaching could be absorbed, and
+the mobile layout hid the central project canvas by default. The human asked
+for more useful depth, clearer importance, stronger step-by-step motivation,
+and a more elegant interactive experience—not simply more copy.
+
+Codex audited the implemented journey, separated content depth from required
+screen density, and rebuilt the candidate around a stronger educational arc:
+
+- an opening **Reveal** presents a polished AI-made page, lets the learner
+  observe its important action fail, and exposes Promise, Project home,
+  Evidence, and Release beneath the surface;
+- the thesis is now explicit: AI can make the surface quickly, while the human
+  must decide what to build first, where the work lives, how to ask for changes,
+  what counts as proof, which version publishes, and how it can be recovered;
+- eight stops are grouped into four chapters—Shape the promise, Ground the
+  work, Direct the build, and Prove the release—so the route has a memorable
+  conceptual structure;
+- correct decisions no longer auto-advance; causal feedback stays visible
+  while the learner inspects a reusable rule, its use moment, and the failure it
+  prevents;
+- each stop ends with an explicitly named Playbook-note checkpoint, and the
+  eight stop-level notes accumulate into the existing five-card take-home
+  Playbook rather than implying eight new cards;
+- the persistent **Field guide** makes those five milestone cards reachable
+  beside the current task;
+- the project canvas switches between **Visitor surface** and **Project
+  underneath**, keeping the Pentimento metaphor interactive and available on
+  narrow screens; and
+- contextual field notes organize detailed instruction around Why, Make, Proof,
+  and Avoid so comprehensive content remains useful without becoming a wall of
+  text.
+
+Codex contributed the beginner audit, information architecture, authored
+content refinement, interaction-state correction, component and visual-system
+implementation, accessibility-minded focus behavior, test adaptation, and
+documentation alignment. The human made the decisive product judgments: the
+site must first explain itself, demonstrate why the problem matters, value
+content quality over feature count, preserve a beginner's agency, and use an
+elegant interaction rather than a conventional course interface.
+
+Local v5 candidate verification completed on July 19, 2026 at 14:55 UTC:
+
+| Check | Result |
+| --- | --- |
+| Typecheck | PASS |
+| Unit tests | PASS · 96/96 |
+| Full browser suite | PASS · 30/30 across desktop and mobile Chromium |
+| Core keyboard route | PASS · desktop and mobile |
+| Automated accessibility | PASS · no Axe violations across the core route |
+| Responsive overflow | PASS · complete route at 320, 390, 768, and 1440px |
+| Experience-density audit | PASS · desktop and mobile · zero threshold violations |
+| Sites-compatible production build | PASS |
+| Visual review | PASS · opening, Reveal, first decision, checkpoint, and default-open mobile canvas |
+
+Hosted v5 verification and deployment evidence remain intentionally unrecorded
+until the exact saved Sites version is live.

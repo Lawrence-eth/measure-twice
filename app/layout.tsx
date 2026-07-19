@@ -6,12 +6,12 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://pentimento.law-ender.chatgpt.site"),
   title: "Pentimento — Learn to build with AI",
   description:
-    "A guided simulation for complete beginners: make 13 useful decisions and practice a reusable method from first idea to checked release.",
+    "A 15-minute interactive field guide for first-time AI builders: learn to scope, direct, verify, release, and recover a trustworthy project.",
   applicationName: "Pentimento",
   openGraph: {
     title: "Pentimento — Learn to build with AI",
     description:
-      "Guide one small project from a rough idea to a checked release in 13 meaningful decisions.",
+      "AI can make a project look finished. Learn the decisions that make it trustworthy—from first promise to checked, recoverable release.",
     type: "website",
     url: "/",
     siteName: "Pentimento",
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Pentimento — Learn to build with AI",
     description:
-      "Learn a reusable AI-building method through one complete, interactive project.",
+      "A beautiful, interactive field lesson for building trustworthy projects with AI.",
   },
   alternates: {
     canonical: "/",

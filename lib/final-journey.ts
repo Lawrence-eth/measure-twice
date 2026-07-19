@@ -56,15 +56,90 @@ export type FinalChoice<Id extends string> = {
 };
 
 export const finalOpening = {
-  kicker: "A guided simulation · no experience with AI tools needed",
-  promise: "Learn how to build a project with AI.",
-  destination: "From rough idea to checked release.",
+  kicker: "A 15-minute field guide for first-time AI builders",
+  promise: "AI can make it look finished.",
+  destination: "Learn to make it trustworthy.",
   explanation:
-    "Guide one fictional website: choose its first version, direct AI in small steps, test the visitor path, and decide what goes live.",
-  reassurance: "No code · nothing real publishes · about 12–15 minutes",
-  primaryAction: "Start with the first decision",
-  overviewAction: "See the 8-stop journey",
+    "Pentimento is an interactive lesson—not another AI builder. Direct one simulated project and practice the decisions AI cannot own: what to build first, where the work lives, how to ask, what proof to trust, which version to publish, and how to recover.",
+  payoff:
+    "Leave with a reusable first-version brief, tool map, AI work agreement, evidence ladder, and release-and-recovery checklist for your own project.",
+  reassurance: "No coding · no setup · nothing real publishes",
+  primaryAction: "Test the finished-looking project",
+  overviewAction: "See exactly what you will learn",
 } as const;
+
+export const welcomeAuditLayers = [
+  {
+    id: "promise",
+    label: "Promise",
+    issue: "No one defined the one visitor result this first version must finish.",
+  },
+  {
+    id: "custody",
+    label: "Project home",
+    issue: "A chat response is not a recoverable home for files and version history.",
+  },
+  {
+    id: "evidence",
+    label: "Evidence",
+    issue: "The polished contact action was never tried by a person.",
+  },
+  {
+    id: "release",
+    label: "Release",
+    issue: "No exact checked version or recovery version was named.",
+  },
+] as const;
+
+export const welcomeOutcomes = [
+  {
+    title: "Shape a first version you can finish",
+    detail: "Turn a feature wishlist into one person, one complete path, and a clear Not now boundary.",
+  },
+  {
+    title: "Choose tools by responsibility",
+    detail: "Know where AI builds, where the work survives, and which host serves the chosen version.",
+  },
+  {
+    title: "Control AI work",
+    detail: "Use a copyable work agreement that names context, boundaries, evidence, and a stopping point.",
+  },
+  {
+    title: "Prove and release",
+    detail: "Separate confident claims from evidence, repair an observed failure, publish an exact version, and keep recovery.",
+  },
+] as const;
+
+export const finalChapters = [
+  {
+    id: "shape",
+    number: 1,
+    title: "Shape the promise",
+    summary: "Decide what this first version can honestly finish.",
+    stages: ["idea"],
+  },
+  {
+    id: "ground",
+    number: 2,
+    title: "Ground the work",
+    summary: "Give the tools clear jobs and the project a recoverable home.",
+    stages: ["tools", "project-home"],
+  },
+  {
+    id: "direct",
+    number: 3,
+    title: "Direct the build",
+    summary: "Control AI changes and demand evidence before trust.",
+    stages: ["ask-ai", "build"],
+  },
+  {
+    id: "prove",
+    number: 4,
+    title: "Prove the release",
+    summary: "Repair what fails, publish the checked layer, and update its source.",
+    stages: ["check", "go-live", "improve"],
+  },
+] as const;
 
 export const ideaChoices = [
   {
@@ -363,6 +438,10 @@ export type FinalJourneyStop = {
   requiredInteractions: 1 | 2 | 3;
   canvasLayer: string;
   reusableRule: string;
+  stakes: string;
+  artifact: string;
+  fieldUse: string;
+  failurePrevented: string;
   artifactId: FinalArtifactId;
   optionalDepth: string;
 };
@@ -381,6 +460,14 @@ export const finalJourney = [
     canvasLayer: "First-version brief",
     reusableRule:
       "A small complete path teaches more than a large unfinished feature list.",
+    stakes:
+      "A visible feature is also a promise about data, people, operations, and failure states. Beginners often commit to those invisible obligations by accident.",
+    artifact:
+      "A V1 brief naming one person, one complete path, approved facts, a Not now boundary, and an observable finish line.",
+    fieldUse:
+      "Use it before asking AI to build anything that contains several audiences, features, or uncertain facts.",
+    failurePrevented:
+      "An impressive feature list that never becomes complete or supportable.",
     artifactId: "first-version-brief",
     optionalDepth: "See what booking and payments would add.",
   },
@@ -396,6 +483,14 @@ export const finalJourney = [
     requiredInteractions: 1,
     canvasLayer: "Connected tool route",
     reusableRule: "Choose tools by their jobs, not their product names.",
+    stakes:
+      "Tool names change quickly. Build, custody, and publishing responsibilities do not.",
+    artifact:
+      "A route receipt showing where AI builds, where versions survive, how files can leave, and which host publishes.",
+    fieldUse:
+      "Use it whenever a tool promises to build and publish in one click.",
+    failurePrevented:
+      "A project trapped in one service with unclear ownership, export, cost, or recovery.",
     artifactId: "tool-route",
     optionalDepth: "Open the tool decoder.",
   },
@@ -412,6 +507,14 @@ export const finalJourney = [
     canvasLayer: "Files, history, remote copy, and private boundary",
     reusableRule:
       "Keep the project recoverable; add AI inside the product only when the visitor truly needs it.",
+    stakes:
+      "A conversation can disappear, and a generated preview can outlive the only copy you control.",
+    artifact:
+      "A route-specific project-home checklist covering files, run notes, saved history, remote copy, restore, and private settings.",
+    fieldUse:
+      "Use it before substantial work or before placing an API key anywhere.",
+    failurePrevented:
+      "Losing the project with the chat—or adding cost, privacy, and failure work that visitors never needed.",
     artifactId: "project-home-checklist",
     optionalDepth: "Decode Git, GitHub, saved versions, and export.",
   },
@@ -427,6 +530,14 @@ export const finalJourney = [
     requiredInteractions: 2,
     canvasLayer: "Work agreement and approved first step",
     reusableRule: "Approve a shown plan one understandable step at a time.",
+    stakes:
+      "A vague request transfers hidden product decisions to AI and lets unrelated changes accumulate before review.",
+    artifact:
+      "A copyable work agreement with source, finish, boundaries, preserve list, evidence, and a stopping point.",
+    fieldUse:
+      "Use it whenever AI is about to change more than one file or make a product decision for you.",
+    failurePrevented:
+      "A large confident change whose scope, assumptions, and evidence you cannot inspect.",
     artifactId: "planning-request",
     optionalDepth: "Open the full copyable planning request.",
   },
@@ -442,6 +553,14 @@ export const finalJourney = [
     requiredInteractions: 1,
     canvasLayer: "Visible change and saved V1",
     reusableRule: "Ask → inspect → run → check → save.",
+    stakes:
+      "AI confidence, changed files, automated checks, previews, and human behavior are different kinds of evidence.",
+    artifact:
+      "An evidence ladder and change record that say exactly what each check proves—and what it does not.",
+    fieldUse:
+      "Use it every time AI says “Done,” especially before saving or publishing.",
+    failurePrevented:
+      "Treating a typecheck, screenshot, or tool claim as proof that a person can finish the important path.",
     artifactId: "change-record",
     optionalDepth: "Scrub through the later V2 and V3 saved layers.",
   },
@@ -458,6 +577,14 @@ export const finalJourney = [
     canvasLayer: "Exposed defect, bounded repair, and checked V4",
     reusableRule:
       "Report what you observed, repair the smallest cause, and repeat the path.",
+    stakes:
+      "A polished interface can hide a dead end that screenshots and build logs never reveal.",
+    artifact:
+      "A defect note with Observed, Steps, Expected, Preserve, Repair only, and Repeat after repair.",
+    fieldUse:
+      "Use it when behavior fails, a fact looks wrong, or AI proposes a broad redesign as the repair.",
+    failurePrevented:
+      "Guessing at causes, changing working behavior, and declaring success without repeating the failed path.",
     artifactId: "defect-report",
     optionalDepth: "Also inspect approved facts and the 390px layout.",
   },
@@ -474,6 +601,14 @@ export const finalJourney = [
     canvasLayer: "Selected V4, verified Live layer, and pinned Recovery",
     reusableRule:
       "A successful deployment is not a release until the public path works.",
+    stakes:
+      "A host can finish successfully while serving the wrong version or a broken public path.",
+    artifact:
+      "A release card naming the exact version, public result, known limit, and one recovery action.",
+    fieldUse:
+      "Use it for every public release, even when the hosting dashboard is green.",
+    failurePrevented:
+      "Publishing a mood—“the latest one looks right”—instead of a checked, recoverable version.",
     artifactId: "release-card",
     optionalDepth: "Open the release and recovery checklist.",
   },
@@ -490,6 +625,14 @@ export const finalJourney = [
     canvasLayer: "Trusted access fact and saved V5",
     reusableRule:
       "Change the trusted source first, then rerun only affected checks.",
+    stakes:
+      "Editing the visible surface without its source creates quiet contradictions and makes later updates unsafe.",
+    artifact:
+      "A source-backed update card naming the source change, bounded request, affected checks, and saved version.",
+    fieldUse:
+      "Use it when a fact, requirement, or policy changes after release.",
+    failurePrevented:
+      "Source drift, unnecessary redesign, and retesting everything without knowing what the change affected.",
     artifactId: "update-card",
     optionalDepth: "Open the complete bounded update request.",
   },

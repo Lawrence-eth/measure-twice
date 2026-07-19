@@ -4,7 +4,8 @@ import path from "node:path";
 
 // Example:
 // AUDIT_BASE_URL=http://127.0.0.1:3000 AUDIT_SUMMARY_ONLY=1 \
-//   AUDIT_SCREENSHOT_DIR=/tmp/pentimento-v4-audit \
+//   AUDIT_TARGET=mobile \
+//   AUDIT_SCREENSHOT_DIR=/tmp/pentimento-v5-audit \
 //   node scripts/audit-experience-density.mjs
 // Set AUDIT_FAIL_ON_THRESHOLDS=1 when the four interaction-density gates should
 // make this command exit non-zero.
@@ -14,6 +15,7 @@ const screenshotDirectory = process.env.AUDIT_SCREENSHOT_DIR;
 const screenshotFullPage = process.env.AUDIT_SCREENSHOT_FULL_PAGE === "1";
 const summaryOnly = process.env.AUDIT_SUMMARY_ONLY === "1";
 const failOnThresholds = process.env.AUDIT_FAIL_ON_THRESHOLDS === "1";
+const requestedTarget = process.env.AUDIT_TARGET;
 const storageKey = "pentimento-studio-v4";
 
 const learningStages = [
@@ -140,8 +142,9 @@ const scenarios = [
     group: "optional",
     progress: progressAt("welcome"),
     action: "open-route",
-    taskSelector: ".p4-route-sheet",
-    actionOptional: true,
+    taskSelector: ".p4-overview-phases",
+    actionSelector: ".p4-overview-start",
+    gateTaskDensity: false,
   },
   {
     name: "idea-initial",
@@ -154,6 +157,14 @@ const scenarios = [
     group: "feedback",
     progress: progressAt("idea", { ideaChoice: "booking" }),
     ...coreTask,
+  },
+  {
+    name: "idea-playbook-note",
+    group: "checkpoint",
+    progress: progressAt("idea", completionChoices.idea),
+    taskSelector: ".p5-checkpoint",
+    actionSelector: ".p5-checkpoint .p4-primary",
+    gateTaskDensity: false,
   },
   {
     name: "tools-initial",
@@ -242,6 +253,14 @@ const scenarios = [
     ...coreTask,
   },
   {
+    name: "go-live-playbook-note",
+    group: "checkpoint",
+    progress: progressAt("go-live", completionChoices["go-live"]),
+    taskSelector: ".p5-checkpoint",
+    actionSelector: ".p5-checkpoint .p4-primary",
+    gateTaskDensity: false,
+  },
+  {
     name: "improve-initial",
     group: "core",
     progress: progressAt("improve"),
@@ -311,13 +330,24 @@ const scenarios = [
 const targets = [
   { name: "desktop", viewport: { width: 1440, height: 900 } },
   { name: "mobile", viewport: { width: 390, height: 844 } },
-];
+].filter((target) => !requestedTarget || target.name === requestedTarget);
+
+if (targets.length === 0) {
+  throw new Error(
+    `Unknown AUDIT_TARGET "${requestedTarget}". Use "desktop" or "mobile".`,
+  );
+}
 
 async function applyScenarioAction(page, action) {
   if (!action) return;
 
   if (action === "open-route") {
-    await page.getByRole("button", { name: "See the 8-stop journey" }).click();
+    await page
+      .getByRole("button", {
+        name: "See exactly what you will learn",
+        exact: true,
+      })
+      .click();
     await page
       .getByRole("dialog", { name: "The whole journey, one decision at a time" })
       .waitFor();
@@ -442,6 +472,7 @@ async function measure(page, scenario) {
           );
           if (!rects.length) return NodeFilter.FILTER_REJECT;
           textNodes.push({
+            element: node.parentElement,
             text: node.textContent.replace(/\s+/g, " ").trim(),
             rects: rects.map((rect) => ({
               top: rect.top,
@@ -501,12 +532,17 @@ async function measure(page, scenario) {
       const taskPosition = position(task);
       const actionPosition = position(action);
       const taskTop = taskPosition?.topPx ?? null;
+      const taskTextScope = task?.closest("section") ?? root;
       const wordsBeforeTask =
         taskTop === null
           ? null
           : wordCount(
               textNodes
-                .filter((item) => item.rects.every((rect) => rect.bottom <= taskTop))
+                .filter(
+                  (item) =>
+                    taskTextScope.contains(item.element) &&
+                    item.rects.every((rect) => rect.bottom <= taskTop),
+                )
                 .map((item) => item.text)
                 .join(" "),
             );
@@ -573,16 +609,16 @@ async function measure(page, scenario) {
       const nav = performance.getEntriesByType("navigation")[0];
       const resources = performance.getEntriesByType("resource");
       const thresholdChecks = {
-        wordsBeforeTaskAtMost45:
-          wordsBeforeTask === null ? null : wordsBeforeTask <= 45,
+        wordsBeforeTaskAtMost95:
+          wordsBeforeTask === null ? null : wordsBeforeTask <= 95,
         taskStartsInFirstViewport:
           taskPosition === null ? null : taskPosition.startsInFirstViewport,
-        primaryActionStartsInFirstViewport:
+        primaryActionWithinShortScroll:
           actionPosition === null
             ? actionOptional
               ? null
               : false
-            : actionPosition.startsInFirstViewport,
+            : actionPosition.distanceBelowViewportPx <= 96,
         noPageHorizontalOverflow: pageHorizontalOverflowPx === 0,
       };
 
@@ -651,17 +687,19 @@ function compactResult(result) {
 function scenarioViolations(viewport, scenario, result) {
   const violations = [];
   const checks = result.thresholdChecks;
-  if (checks.wordsBeforeTaskAtMost45 === false) {
-    violations.push(`${viewport}/${scenario}: more than 45 words before the task`);
-  }
-  if (checks.taskStartsInFirstViewport === false) {
-    violations.push(`${viewport}/${scenario}: task starts below the first viewport`);
-  }
-  if (checks.primaryActionStartsInFirstViewport === false) {
-    violations.push(`${viewport}/${scenario}: primary action starts below the first viewport`);
+  if (scenario.gateTaskDensity !== false) {
+    if (checks.wordsBeforeTaskAtMost95 === false) {
+      violations.push(`${viewport}/${scenario.name}: more than 95 words before the task`);
+    }
+    if (checks.taskStartsInFirstViewport === false) {
+      violations.push(`${viewport}/${scenario.name}: task starts below the first viewport`);
+    }
+    if (checks.primaryActionWithinShortScroll === false) {
+      violations.push(`${viewport}/${scenario.name}: primary action needs more than a 96px short scroll`);
+    }
   }
   if (checks.noPageHorizontalOverflow === false) {
-    violations.push(`${viewport}/${scenario}: page has horizontal overflow`);
+    violations.push(`${viewport}/${scenario.name}: page has horizontal overflow`);
   }
   return violations;
 }
@@ -719,7 +757,7 @@ try {
           group: scenario.group,
           ...result,
         };
-        violations.push(...scenarioViolations(target.name, scenario.name, result));
+        violations.push(...scenarioViolations(target.name, scenario, result));
 
         if (screenshotDirectory) {
           await page.screenshot({
@@ -759,8 +797,9 @@ console.log(
           baseUrl,
           storageKey,
           thresholds: {
-            wordsBeforePrimaryTask: 45,
-            taskAndPrimaryAction: "start inside first viewport",
+            wordsBeforePrimaryTask: 95,
+            taskAndPrimaryAction:
+              "task starts inside first viewport; action is no more than 96px below it",
             horizontalPageOverflowPx: 0,
           },
           summary,

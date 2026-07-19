@@ -1,22 +1,25 @@
 # Pentimento
 
-> **Learn how to build a project with AI. From rough idea to checked release.**
+> **AI can make it look finished. Learn to make it trustworthy.**
 
-Pentimento is an interactive education experience for complete beginners who
-have an idea but do not know how AI-built projects move from a rough request to
-a checked release.
+Pentimento is a **15-minute interactive field guide** for complete beginners
+who want to build with AI but do not yet know what happens between a prompt and
+a trustworthy release.
 
 The learner guides one fictional **Willow Fix Day** event page through eight
-focused stops. Each stop asks for one useful decision or trial, changes a
-persistent project canvas, and leaves behind a reusable rule or artifact. The
-core route contains **13 meaningful interactions** and takes about **12–15
-minutes**.
+focused stops in four chapters. The route contains **13 consequential
+decisions**. After each stop, the learner must inspect what changed and
+explicitly save its reusable **Playbook note** before continuing. Eight
+stop-level notes accumulate into the existing five-card take-home Playbook.
+This pause turns a
+correct answer into a transferable method instead of a disappearing quiz
+result.
 
-Pentimento does not teach coding syntax, rank AI products, or build a real
-project for the learner. It teaches the durable judgment beneath the tools:
-scope one complete path, give files a recoverable home, direct AI in small
-steps, distinguish claims from evidence, repair an observed failure, release
-one exact version, and improve from a trusted source.
+Pentimento is not a coding course, prompt library, product ranking, or AI
+generator. It teaches the durable human work beneath AI tools: define a
+supportable promise, keep custody of the files, bound AI changes, distinguish
+claims from evidence, repair an observed failure, release one exact version,
+and improve from a trusted source.
 
 Built for the **Education** track of OpenAI Build Week 2026.
 
@@ -29,9 +32,9 @@ Built for the **Education** track of OpenAI Build Week 2026.
 A first-time builder now encounters browser AI builders, coding agents,
 editors, Git, GitHub, hosting dashboards, API keys, and model names before they
 have a mental model for a project. A polished generated screen can make the
-confusion worse: it looks finished even when the files are not recoverable, a
-visitor path has never been tried, or the deployed version is not the checked
-version.
+confusion worse: the surface looks finished even when no one defined the
+promise, the files are not recoverable, the visitor path has never been tried,
+or the deployed version is not the checked version.
 
 Pentimento teaches a tool-independent map:
 
@@ -44,43 +47,58 @@ different. A chat is not automatically a project home. A repository is not a
 public website. A completed deployment is not proof that a visitor can finish
 the important path.
 
-## The v4 learning experience
+## The v5 learning experience
 
-The experience opens with a literal promise, the time and safety boundary, and
-one primary action. There is no prerequisite lecture. The learner starts with
-the project immediately, while definitions, full prompts, checklists, and
-examples remain available as optional depth.
+### The Reveal
 
-| Stop | Required actions | What the learner practices | What appears on the canvas |
-| --- | ---: | --- | --- |
-| **1. First version** | 1 | Reduce an ambitious wishlist to one person and one supportable finish | A first-version brief with a clear “Not now” boundary |
-| **2. Tools** | 1 | Choose between a faster hosted route and a more transferable repository route | Build, save, and publish responsibilities |
-| **3. Project home** | 2 | Put the work somewhere recoverable and decide whether the finished page needs runtime AI | Route-specific files/history with no unnecessary runtime dependency |
-| **4. Ask AI** | 2 | Ask AI to inspect and plan before editing, then approve one shown step | A bounded work agreement |
-| **5. Build** | 1 | Move beyond “AI says done” by opening the preview and trying the visitor path | A change record and saved V1 layer |
-| **6. Check** | 3 | Discover a dead contact action, request the smallest repair, and repeat the same path | A defect report and checked V4 layer |
-| **7. Go live** | 2 | Select the exact checked version and verify behavior at the public address | Release evidence and a pinned recovery version |
-| **8. Improve** | 1 | Change an approved source before changing the page | A source-backed V5 layer without erasing V4 |
+The opening does not begin with a menu or a lecture. It presents a convincing
+AI-made page and asks the learner to test its only important action. The action
+fails. A raking-light reveal then exposes four hidden layers:
 
-Only the current task asks for attention. Completed layers collapse into a
-compact trail; the route, project canvas, and optional references remain
-available without placing the whole curriculum on one screen.
+1. **Promise** — what one result this version must honestly finish.
+2. **Project home** — where its files and history survive.
+3. **Evidence** — what a person actually observed.
+4. **Release** — which checked version is public and recoverable.
+
+This interaction establishes the thesis before the curriculum begins:
+**the screen is the surface; building means directing and checking everything
+underneath it.**
+
+### Four chapters, eight stops
+
+| Chapter | Stops | Consequential decisions | Reusable outcome |
+| --- | --- | ---: | --- |
+| **1. Shape the promise** | First version | 1 | A V1 brief with one person, one complete path, and a “Not now” boundary |
+| **2. Ground the work** | Tools · Project home | 3 | A tool route, recoverable project home, and honest runtime-AI decision |
+| **3. Direct the build** | Ask AI · Build | 3 | A bounded work agreement and an evidenced saved version |
+| **4. Prove the release** | Check · Go live · Improve | 6 | A repaired path, checked release record, recovery version, and source-backed update |
+| **Total** | **8 stops** | **13** | **A complete idea → evidence → release method** |
+
+Only the current task asks for attention. Every stop names why the decision
+matters and what the learner will leave with. Correct decisions stay on screen
+with their causal consequence, reusable rule, use moment, and prevented
+failure. The learner then saves the Playbook note explicitly. Completed layers
+remain visible as a compact trail.
 
 ## What makes the interaction educational
 
-### One consequential action at a time
+### Decide, inspect, then save
 
-The core route contains no acknowledgement clicks. A correct action advances
-only after it changes the learner's route, artifact, evidence, or understanding.
-Wrong choices remain useful: they reveal the extra systems or missing proof
-that the choice would introduce.
+The 13 required choices and trials change the project, its evidence, or its
+release state. A correct choice no longer skips straight to the next stop. The
+learner first inspects the consequence and completed Playbook note, then uses an
+explicit checkpoint such as **Keep this V1 boundary**, **Approve this work
+agreement**, or **Record this checked release**. Wrong choices remain useful:
+they reveal the extra systems or missing proof that choice would introduce.
 
 ### A persistent pentimento
 
 A *pentimento* is an earlier layer visible beneath a finished work. The
-interface uses that idea literally. The event page is the surface; its brief,
+interface uses that idea literally. The canvas can switch between **Visitor
+surface** and **Project underneath**. The event page is the surface; its brief,
 tool route, files, AI request, checks, versions, release proof, and recovery
-remain visible underneath it as the learner works.
+remain visible underneath it as the learner works. The canvas stays available
+on small screens instead of hiding the central metaphor.
 
 ### Evidence instead of AI confidence
 
@@ -116,10 +134,11 @@ latency, privacy exposure, unsafe input, and another failure mode merely because
 AI was useful during development. Runtime AI belongs in a product only when the
 visitor's useful result actually requires it.
 
-## Five-card Build-with-AI Playbook
+## Persistent Field Guide
 
-The optional Playbook groups the full method into five milestone cards instead
-of presenting a large handbook inline:
+The **Field guide** is reachable beside every current task. It groups the full
+method into five copyable milestone cards instead of placing a handbook in the
+required path:
 
 1. **Shape the first version**
 2. **Choose a route and project home**
@@ -129,7 +148,9 @@ of presenting a large handbook inline:
 
 Each card answers four practical questions: when to use it, what to do, what
 counts as proof, and what template to copy. Route-specific guidance changes for
-the hosted and repository lanes. Only one card opens at a time.
+the hosted and repository lanes. Only one card opens at a time. At completion,
+the same reference is labelled the learner's **5-card Playbook**; it is not
+locked until completion.
 
 ## Teaching Mirror: transfer the method to a real idea
 
@@ -172,16 +193,19 @@ the submitted experience.
 1. Open
    [pentimento.law-ender.chatgpt.site](https://pentimento.law-ender.chatgpt.site)
    in a current desktop or mobile browser.
-2. Select **Start with the first decision**. Use **See the 8-stop journey** only
-   if you want the three-phase overview first.
-3. Follow either tool lane. The repository lane makes the folder → Git → GitHub
+2. Try **Test the only important action**, then select **Reveal the project
+   underneath** to see why the lesson matters.
+3. Select **Learn the method that catches this** after the Reveal, or **Start
+   with the first promise** below the chapter overview. **See exactly what you
+   will learn** opens the compact four-chapter route.
+4. Follow either tool lane. The repository lane makes the folder → Git → GitHub
    → host path most explicit; the hosted lane demonstrates the export and
    ownership tradeoff.
-4. In **Check**, try the contact action, choose the bounded link repair, and try
+5. In **Check**, try the contact action, choose the bounded link repair, and try
    the repaired action again. The retry is required.
-5. In **Go live**, distinguish the checked V4 from the polished but untested V3,
+6. In **Go live**, distinguish the checked V4 from the polished but untested V3,
    then repeat the path at the simulated public address.
-6. At completion, open one of the five Playbook cards and select **Shape my own
+7. At completion, open one of the five Playbook cards and select **Shape my own
    V1 brief**. The brief works in deterministic demo mode; the GPT reflection is
    explicitly optional.
 
@@ -190,8 +214,8 @@ actions inside the lesson are fictional or simulated. The lesson never changes
 a real repository, sends email, creates an account, or publishes a site.
 
 Progress is saved in the current browser. **Start over** opens a confirmation
-dialog before removing the v4 route, project layers, and Teaching Mirror draft
-from that device.
+dialog before removing the current route, project layers, and Teaching Mirror
+draft from that device.
 
 ## Run locally
 
@@ -240,9 +264,9 @@ npm run build:next
 npm run build
 ```
 
-- `npm test` covers the v4 progress model, saved-state validation, and bounded
+- `npm test` covers the progress model, saved-state validation, and bounded
   Teaching Mirror API behavior.
-- `npm run test:e2e` exercises both tool lanes, the 13-interaction route,
+- `npm run test:e2e` exercises both tool lanes, the 13-decision route,
   fail/repair/retry persistence, keyboard-only operation, dialog focus,
   accessibility scans, and 320–1440px layouts.
 - `npm run build:next` checks the conventional Next.js production build.
@@ -292,12 +316,15 @@ Codex was the primary implementation collaborator. It accelerated:
 - turning the broad “teach people to build with AI” idea into a bounded
   Education-track curriculum for complete beginners;
 - writing and revising the Willow Fix Day case, wrong-choice consequences,
-  artifacts, and five-card Playbook;
-- replacing an overwhelming interface with the one-task-at-a-time v4 route;
+  stop-level Playbook notes and five-card take-home Playbook;
+- replacing an overwhelming interface with the Reveal opening, four-chapter
+  route, persistent guide, and explicit consequence checkpoints;
+- finding and correcting the auto-advance behavior that hid successful
+  feedback before learners could study it;
 - modeling strict progress, exact substep restoration, and the bounded Teaching
   Mirror boundary;
-- implementing the responsive project canvas, dialogs, persistence, API route,
-  and Cloudflare build path; and
+- implementing the surface/underlayers canvas, responsive dialogs, persistence,
+  API route, and Cloudflare build path; and
 - adversarial content review, accessibility review, density measurement,
   browser tests, and release preparation.
 
@@ -330,11 +357,12 @@ Devpost submission form before the deadline.
 
 ## Project map
 
-- [`components/PentimentoFinal.tsx`](components/PentimentoFinal.tsx) — v4
-  one-task-at-a-time interface, project canvas, Playbook, and Teaching Mirror
+- [`components/PentimentoFinal.tsx`](components/PentimentoFinal.tsx) — v5
+  Reveal, four-chapter interface, project canvas, Field Guide, and Teaching
+  Mirror
 - [`lib/final-journey.ts`](lib/final-journey.ts) — authored eight-stop
   curriculum, choices, artifacts, and five-card index
-- [`lib/final-progress.ts`](lib/final-progress.ts) — validated v4 state,
+- [`lib/final-progress.ts`](lib/final-progress.ts) — validated versioned state,
   persistence, reachability, and progression
 - [`app/api/debrief/route.ts`](app/api/debrief/route.ts) — bounded demo/live
   reflection boundary
@@ -342,7 +370,7 @@ Devpost submission form before the deadline.
   fallback
 - [`tests/e2e/final-journey.spec.ts`](tests/e2e/final-journey.spec.ts) — desktop,
   mobile, keyboard, accessibility, persistence, and density coverage
-- [`docs/FINAL_EXPERIENCE.md`](docs/FINAL_EXPERIENCE.md) — beginner-first v4
+- [`docs/FINAL_EXPERIENCE.md`](docs/FINAL_EXPERIENCE.md) — beginner-first v5
   experience contract
 - [`docs/BUILD_LOG.md`](docs/BUILD_LOG.md) — dated collaboration and historical
   release record

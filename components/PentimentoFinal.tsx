@@ -16,6 +16,7 @@ import {
   defectReportArtifact,
   durableHabits,
   evidenceLadder,
+  finalChapters,
   finalJourney,
   finalLearningStages,
   finalOpening,
@@ -41,6 +42,8 @@ import {
   updateArtifact,
   updateRequest,
   vagueBuildRequest,
+  welcomeAuditLayers,
+  welcomeOutcomes,
   type FinalChoice,
   type FinalLearningStage,
   type FinalStage,
@@ -74,6 +77,18 @@ type MirrorResult = {
 const stageById = Object.fromEntries(
   finalJourney.map((stage) => [stage.id, stage]),
 ) as Record<FinalLearningStage, (typeof finalJourney)[number]>;
+
+const chapterByStage = Object.fromEntries(
+  finalChapters.flatMap((chapter) =>
+    chapter.stages.map((stage) => [stage, chapter]),
+  ),
+) as Record<FinalLearningStage, (typeof finalChapters)[number]>;
+
+function chapterForStage(stage: FinalStage) {
+  if (stage === "welcome") return finalChapters[0];
+  if (stage === "completion") return finalChapters.at(-1)!;
+  return chapterByStage[stage];
+}
 
 function cloneInitialProgress(): FinalProgress {
   return {
@@ -165,6 +180,9 @@ function ChoiceFeedback({
     >
       <b>{choice.recommended ? successLabel : riskLabel}</b>
       <p>{choice.consequence}</p>
+      <small>
+        <span aria-hidden="true">↳</span> {choice.canvasChange}
+      </small>
     </div>
   );
 }
@@ -585,18 +603,12 @@ function LastSavedRule({ progress }: { progress: FinalProgress }) {
     ? finalJourney.at(-1)
     : finalJourney[finalLearningStages.indexOf(progress.stage) - 1];
   if (!previous || !progress.completedStages.includes(previous.id)) return null;
-  const reason = savedDecisionReason(previous.id, progress);
   return (
-    <details className="p4-saved-rule">
-      <summary>
-        <span>{previous.navLabel} saved</span>
-        <b>{previous.savedLabel}</b>
-      </summary>
-      <div>
-        <p>{previous.reusableRule}</p>
-        {reason && <p>{reason}</p>}
-      </div>
-    </details>
+    <aside className="p5-saved-receipt" aria-label={`${previous.navLabel} field card saved`}>
+      <span>{previous.navLabel} field card saved</span>
+      <p>{previous.reusableRule}</p>
+      <small>{previous.savedLabel}</small>
+    </aside>
   );
 }
 
@@ -736,18 +748,108 @@ function canvasDisclosureLabel(stage: FinalStage): string {
   }
 }
 
+function ProjectSurfaceVisual({ progress }: { progress: FinalProgress }) {
+  const stage = progress.stage;
+  const built =
+    stage === "build" ||
+    stage === "check" ||
+    stage === "go-live" ||
+    stage === "improve" ||
+    stage === "completion";
+  const failed = stage === "check" && Boolean(progress.checkAttemptChoice) && !progress.checkRetryChoice;
+  const checked =
+    (stage === "check" && Boolean(progress.checkRetryChoice)) ||
+    (stage === "go-live" && progress.releaseVersionChoice === "v4-checked") ||
+    stage === "improve" ||
+    stage === "completion";
+  const updated = stage === "completion" || progress.improveChoice === "source-then-page";
+  const status = !built
+    ? "Not built yet"
+    : failed
+      ? "Dead path observed"
+      : checked
+        ? updated
+          ? "V5 · source-backed"
+          : "V4 · checked"
+        : "AI says: ready";
+
+  return (
+    <div className="p5-surface">
+      <div className="p5-surface__bar">
+        <span>willow-fix.preview</span>
+        <b className={cx(failed && "is-failed", checked && "is-checked")}>{status}</b>
+      </div>
+      {built ? (
+        <div className="p5-surface__page">
+          <p>Neighborhood repair day · West Hall</p>
+          <h3>Bring it broken.<br />Leave with a plan.</h3>
+          <span>Small appliances · clothing · bicycles</span>
+          {updated && <mark>Step-free access · Willow Lane entrance</mark>}
+          <div className={cx("p5-surface__action", failed && "is-failed", checked && "is-checked")}>
+            {failed
+              ? "Email action · nothing happened"
+              : checked
+                ? "Email path · checked"
+                : "Email the organizer"}
+          </div>
+        </div>
+      ) : (
+        <div className="p5-surface__empty">
+          <span aria-hidden="true">＋</span>
+          <b>The visible page comes later.</b>
+          <p>First decide what it can honestly promise and where the work will live.</p>
+        </div>
+      )}
+      <p className="p5-surface__caption">
+        The surface shows what a visitor sees. The underlayers show why it can be trusted.
+      </p>
+    </div>
+  );
+}
+
+function CanvasLens({ progress }: { progress: FinalProgress }) {
+  const [view, setView] = useState<"surface" | "underlayers">("underlayers");
+  return (
+    <section className="p5-canvas-lens" aria-label="Surface and project underlayers">
+      <div className="p5-canvas-lens__controls" role="group" aria-label="Project canvas view">
+        <button
+          type="button"
+          aria-pressed={view === "surface"}
+          onClick={() => setView("surface")}
+        >
+          Visitor surface
+        </button>
+        <button
+          type="button"
+          aria-pressed={view === "underlayers"}
+          onClick={() => setView("underlayers")}
+        >
+          Project underneath
+        </button>
+      </div>
+      {view === "surface" ? (
+        <CanvasFrame layer="Visitor surface">
+          <ProjectSurfaceVisual progress={progress} />
+        </CanvasFrame>
+      ) : (
+        <ProjectCanvas progress={progress} />
+      )}
+    </section>
+  );
+}
+
 function ResponsiveProjectCanvas({ progress }: { progress: FinalProgress }) {
   return (
     <>
       <div className="p4-canvas-desktop">
-        <ProjectCanvas progress={progress} />
+        <CanvasLens progress={progress} />
       </div>
-      <details className="p4-canvas-mobile">
+      <details className="p4-canvas-mobile" open>
         <summary>
           <span>Project canvas</span>
           <b>{canvasDisclosureLabel(progress.stage)}</b>
         </summary>
-        <ProjectCanvas progress={progress} />
+        <CanvasLens progress={progress} />
       </details>
     </>
   );
@@ -1240,6 +1342,52 @@ function StageTask(props: StageTaskProps) {
   }
 }
 
+const checkpointActions: Record<FinalLearningStage, string> = {
+  idea: "Keep this V1 boundary",
+  tools: "Save this tool route",
+  "project-home": "Pin this project home",
+  "ask-ai": "Approve this work agreement",
+  build: "Save this evidenced version",
+  check: "Pin the repaired path",
+  "go-live": "Record this checked release",
+  improve: "Save this source-backed update",
+};
+
+function StageCheckpoint({
+  stage,
+  progress,
+  onContinue,
+}: {
+  stage: FinalLearningStage;
+  progress: FinalProgress;
+  onContinue: () => void;
+}) {
+  const stop = stageById[stage];
+  const reason = savedDecisionReason(stage, progress);
+  return (
+    <section className="p5-checkpoint" aria-labelledby={`${stage}-checkpoint-title`}>
+      <span>Playbook note ready · {stop.artifact}</span>
+      <h2 id={`${stage}-checkpoint-title`} tabIndex={-1}>
+        {stop.reusableRule}
+      </h2>
+      {reason && <p>{reason}</p>}
+      <dl>
+        <div>
+          <dt>Use this when</dt>
+          <dd>{stop.fieldUse}</dd>
+        </div>
+        <div>
+          <dt>Prevents</dt>
+          <dd>{stop.failurePrevented}</dd>
+        </div>
+      </dl>
+      <button className="p4-primary" type="button" onClick={onContinue}>
+        {checkpointActions[stage]}
+      </button>
+    </section>
+  );
+}
+
 function SavedStageReview({
   stage,
   currentStage,
@@ -1270,11 +1418,14 @@ function SavedStageReview({
 function StageDepth({ progress }: { progress: FinalProgress }) {
   const stage = progress.stage;
   if (stage === "welcome" || stage === "completion") return null;
+  const stop = stageById[stage];
+  let specific: React.ReactNode = null;
+
   if (stage === "tools") {
-    return (
-      <details className="p4-depth">
-        <summary>Optional · decode common tool language</summary>
-        <div className="p4-depth__content">
+    specific = (
+      <div className="p5-field-note__specific">
+        <h3>Tool language, decoded</h3>
+        <div className="p5-tool-decoder">
           {toolDecoder.map((item) => (
             <article key={item.id}>
               <h3>{item.label}</h3>
@@ -1283,77 +1434,88 @@ function StageDepth({ progress }: { progress: FinalProgress }) {
             </article>
           ))}
         </div>
-      </details>
+      </div>
     );
-  }
-  if (stage === "ask-ai") {
+  } else if (stage === "ask-ai") {
     const request = progress.toolChoice === "hosted"
       ? "Inspect the saved project and its approved brief. Return three small steps. Preserve the Not now list. Do not edit or publish until I approve a shown step."
       : planningArtifact.conciseRequest;
-    return (
-      <details className="p4-depth">
-        <summary>Optional · copy the complete planning request</summary>
-        <div className="p4-depth__content">
-          <p>{request}</p>
-          <p><b>Why it works:</b> it gives AI a source, boundary, sequence, and stopping point.</p>
-        </div>
-      </details>
+    specific = (
+      <div className="p5-field-note__specific">
+        <h3>Copyable work agreement</h3>
+        <blockquote>{request}</blockquote>
+        <p><b>Why it works:</b> it gives AI a source, finish, boundary, sequence, evidence request, and stopping point.</p>
+      </div>
     );
-  }
-  if (stage === "project-home") {
+  } else if (stage === "project-home") {
     const route = progress.toolChoice ?? "repository";
-    return (
-      <details className="p4-depth">
-        <summary>Optional · if a future project truly needs a private key</summary>
-        <div className="p4-depth__content">
-          <p>
-            Keep it outside AI chat, shared files, exports, and browser-visible code.
-            {route === "repository"
-              ? " Use an ignored local environment file such as .env.local, then verify it is absent from Git."
-              : " Use the platform’s protected Secrets or Environment settings, then verify it is absent from exports."}
-          </p>
-          <p><b>Rule:</b> first decide whether runtime AI is necessary; only then create and protect a key.</p>
-        </div>
-      </details>
+    specific = (
+      <div className="p5-field-note__specific">
+        <h3>If a future project truly needs a private key</h3>
+        <p>
+          Keep it outside AI chat, shared files, exports, and browser-visible code.
+          {route === "repository"
+            ? " Use an ignored local environment file such as .env.local, then verify it is absent from Git."
+            : " Use the platform’s protected Secrets or Environment settings, then verify it is absent from exports."}
+        </p>
+        <p><b>Rule:</b> first decide whether runtime AI is necessary; only then create and protect a key.</p>
+      </div>
+    );
+  } else if (stage === "check") {
+    specific = (
+      <div className="p5-field-note__specific">
+        <h3>Two more checking lenses</h3>
+        <p><b>Facts:</b> compare every public statement with the approved brief.</p>
+        <p><b>Phone and keyboard:</b> repeat the path at 390px and without a pointer; appearance alone is not the check.</p>
+      </div>
+    );
+  } else if (stage === "go-live") {
+    specific = (
+      <div className="p5-field-note__specific">
+        <h3>Version story, release, and recovery</h3>
+        <p><b>Version story:</b> V1 structure → V2 working email path → V3 phone polish introduced the inactive link → V4 small repair passed the repeated path.</p>
+        <p><b>Exact version:</b> {releaseArtifact.exactVersion}</p>
+        <p><b>Known limit:</b> {releaseArtifact.knownLimit}</p>
+        <p><b>Restore:</b> {releaseArtifact.restoreAction}</p>
+      </div>
+    );
+  } else if (stage === "improve") {
+    specific = (
+      <div className="p5-field-note__specific">
+        <h3>Bounded update record</h3>
+        <p><b>Source:</b> {updateArtifact.sourceChange}</p>
+        <p><b>Request:</b> {updateArtifact.boundedRequest}</p>
+        <ul>{updateArtifact.affectedChecks.map((check) => <li key={check}>{check}</li>)}</ul>
+      </div>
     );
   }
-  if (stage === "check") {
-    return (
-      <details className="p4-depth">
-        <summary>Optional · two more checking lenses</summary>
-        <div className="p4-depth__content">
-          <p><b>Facts:</b> compare every public statement with the approved brief.</p>
-          <p><b>Phone:</b> repeat the path at 390px and by keyboard; appearance alone is not the check.</p>
+
+  return (
+    <details className="p4-depth">
+      <summary>Field note · use {stop.navLabel.toLowerCase()} on your own project</summary>
+      <div className="p4-depth__content p5-field-note">
+        <div className="p5-field-note__grid">
+          <article>
+            <span>Why</span>
+            <p>{stop.stakes}</p>
+          </article>
+          <article>
+            <span>Make</span>
+            <p>{stop.artifact}</p>
+          </article>
+          <article>
+            <span>Proof</span>
+            <p>{stop.reusableRule}</p>
+          </article>
+          <article>
+            <span>Avoid</span>
+            <p>{stop.failurePrevented}</p>
+          </article>
         </div>
-      </details>
-    );
-  }
-  if (stage === "go-live") {
-    return (
-      <details className="p4-depth">
-        <summary>Optional · version story, release, and recovery</summary>
-        <div className="p4-depth__content">
-          <p><b>Version story:</b> V1 structure → V2 working email path → V3 phone polish introduced the inactive link → V4 small repair passed the repeated path.</p>
-          <p><b>Exact version:</b> {releaseArtifact.exactVersion}</p>
-          <p><b>Known limit:</b> {releaseArtifact.knownLimit}</p>
-          <p><b>Restore:</b> {releaseArtifact.restoreAction}</p>
-        </div>
-      </details>
-    );
-  }
-  if (stage === "improve") {
-    return (
-      <details className="p4-depth">
-        <summary>Optional · bounded update record</summary>
-        <div className="p4-depth__content">
-          <p><b>Source:</b> {updateArtifact.sourceChange}</p>
-          <p><b>Request:</b> {updateArtifact.boundedRequest}</p>
-          <ul>{updateArtifact.affectedChecks.map((check) => <li key={check}>{check}</li>)}</ul>
-        </div>
-      </details>
-    );
-  }
-  return null;
+        {specific}
+      </div>
+    </details>
+  );
 }
 
 function Welcome({
@@ -1365,52 +1527,191 @@ function Welcome({
   onStart: () => void;
   onOverview: () => void;
 }) {
+  const [auditStep, setAuditStep] = useState<"surface" | "failed" | "revealed">(
+    "surface",
+  );
+  const [activeOutcome, setActiveOutcome] = useState(0);
+  const outcome = welcomeOutcomes[activeOutcome];
+
+  function focusAudit() {
+    const target = document.getElementById("welcome-audit-action");
+    target?.scrollIntoView({ block: "center", behavior: "smooth" });
+    window.requestAnimationFrame(() => target?.focus());
+  }
+
   return (
-    <div className="p4-welcome">
+    <div className="p4-welcome p5-welcome">
       <header className="p4-welcome__header">
         <Brand />
-        <span>Interactive lesson · build projects with AI</span>
+        <span>Interactive field guide · build projects with AI</span>
       </header>
-      <main className="p4-welcome__main" id="main-content">
-        <div className="p4-welcome__copy">
-          <p className="p4-kicker">{finalOpening.kicker}</p>
-          <h1 ref={headingRef} tabIndex={-1}>
-            {finalOpening.promise}{" "}
-            <em>{finalOpening.destination}</em>
-          </h1>
-          <p className="p4-welcome__lede">
-            {finalOpening.explanation}
-          </p>
-          <button className="p4-primary" type="button" onClick={onStart}>
-            {finalOpening.primaryAction}
-          </button>
-          <button className="p4-text-button" type="button" onClick={onOverview}>
-            {finalOpening.overviewAction}
-          </button>
-          <ul className="p4-welcome__facts">
-            <li>12–15 minutes</li>
-            <li>No code or account setup</li>
-            <li>Nothing real publishes</li>
-          </ul>
-        </div>
-        <div
-          className="p4-welcome-art"
-          role="img"
-          aria-label="A vague request to build the whole idea becomes one visitor with one working path, then a small version that is saved, tested, and recoverable."
-        >
-          <article className="p4-welcome-art__layer" aria-hidden="true">
-            <span>Rough idea</span>
-            <strong>“Build my whole idea.”</strong>
-          </article>
-          <article className="p4-welcome-art__layer" aria-hidden="true">
-            <span>Clear first version</span>
-            <strong>One visitor. One working path.</strong>
-          </article>
-          <article className="p4-welcome-art__layer" aria-hidden="true">
-            <span>Checked version</span>
-            <strong>Small. Saved. Tested. Recoverable.</strong>
-          </article>
-        </div>
+      <main id="main-content">
+        <section className="p4-welcome__main p5-welcome__hero">
+          <div className="p4-welcome__copy">
+            <p className="p4-kicker">{finalOpening.kicker}</p>
+            <h1 ref={headingRef} tabIndex={-1}>
+              {finalOpening.promise}{" "}
+              <em>{finalOpening.destination}</em>
+            </h1>
+            <p className="p4-welcome__lede">
+              {finalOpening.explanation}
+            </p>
+            <p className="p5-welcome__payoff">{finalOpening.payoff}</p>
+            <div className="p5-welcome__actions">
+              <button className="p4-primary" type="button" onClick={focusAudit}>
+                {finalOpening.primaryAction}
+              </button>
+              <button className="p4-text-button" type="button" onClick={onOverview}>
+                {finalOpening.overviewAction}
+              </button>
+            </div>
+            <ul className="p4-welcome__facts">
+              <li>About 15 minutes</li>
+              <li>Reusable method, not one tool</li>
+              <li>Eight decisions become five Playbook cards</li>
+            </ul>
+          </div>
+
+          <section
+            className={cx("p5-audit", `is-${auditStep}`)}
+            aria-labelledby="welcome-audit-title"
+          >
+            <div className="p5-audit__status">
+              <span>AI status</span>
+              <b>{auditStep === "surface" ? "Ready to publish" : "Claim unproven"}</b>
+            </div>
+            <div className="p5-audit__surface">
+              <span>Willow Fix Day · generated preview</span>
+              <h2 id="welcome-audit-title">Bring it broken.<br />Leave with a plan.</h2>
+              <p>Saturday · West Hall · repairs depend on volunteer availability</p>
+              <button
+                id="welcome-audit-action"
+                type="button"
+                className={cx("p5-audit__action", auditStep !== "surface" && "is-failed")}
+                onClick={() => setAuditStep("failed")}
+                disabled={auditStep !== "surface"}
+              >
+                {auditStep === "surface"
+                  ? "Test the only important action"
+                  : "Email action · nothing happened"}
+              </button>
+            </div>
+
+            {auditStep === "surface" && (
+              <p className="p5-audit__instruction">
+                It looks finished. Try the one action a visitor actually needs.
+              </p>
+            )}
+
+            {auditStep === "failed" && (
+              <div className="p5-audit__reveal" role="status">
+                <span>Observed failure</span>
+                <p>
+                  The page looked complete, but its main path had never been tried.
+                  What else can a polished screen hide?
+                </p>
+                <button
+                  className="p4-secondary"
+                  type="button"
+                  onClick={() => setAuditStep("revealed")}
+                >
+                  Reveal the project underneath
+                </button>
+              </div>
+            )}
+
+            {auditStep === "revealed" && (
+              <div className="p5-audit__underlayers" role="status">
+                <span>Raking-light inspection · four hidden layers</span>
+                <ol>
+                  {welcomeAuditLayers.map((layer) => (
+                    <li key={layer.id}>
+                      <b>{layer.label}</b>
+                      <p>{layer.issue}</p>
+                    </li>
+                  ))}
+                </ol>
+                <p className="p5-audit__thesis">
+                  <b>The screen is the surface.</b> Building means directing and
+                  checking everything underneath it.
+                </p>
+                <button className="p4-primary" type="button" onClick={onStart}>
+                  Learn the method that catches this
+                </button>
+              </div>
+            )}
+          </section>
+        </section>
+
+        <section className="p5-welcome-section p5-why">
+          <div className="p5-section-heading">
+            <p className="p4-kicker">Why this matters now</p>
+            <h2>The hard part moved beneath the screen.</h2>
+            <p>
+              AI removed the blank page. It did not remove responsibility.
+              Beginners still need to decide what is supportable, keep custody of
+              the work, control changes, demand evidence, and recover a release.
+            </p>
+          </div>
+          <div className="p5-outcome-explorer">
+            <div className="p5-outcome-explorer__nav" role="group" aria-label="What you will learn">
+              {welcomeOutcomes.map((item, index) => (
+                <button
+                  key={item.title}
+                  type="button"
+                  aria-pressed={activeOutcome === index}
+                  onClick={() => setActiveOutcome(index)}
+                >
+                  <span>0{index + 1}</span>
+                  {item.title}
+                </button>
+              ))}
+            </div>
+            <article className="p5-outcome-explorer__detail" aria-live="polite">
+              <span>Capability {String(activeOutcome + 1).padStart(2, "0")}</span>
+              <h3>{outcome.title}</h3>
+              <p>{outcome.detail}</p>
+              <small>
+                You practice it on one safe project, then keep the reusable rule
+                for your own.
+              </small>
+            </article>
+          </div>
+          <aside className="p5-not-builder">
+            <b>This is not a coding course or project generator.</b>
+            <p>
+              It teaches the operating method underneath ChatGPT, Codex, hosted AI
+              builders, repository agents, and whatever tools arrive next.
+            </p>
+          </aside>
+        </section>
+
+        <section className="p5-welcome-section p5-chapters">
+          <div className="p5-section-heading">
+            <p className="p4-kicker">One project · four chapters · eight stops</p>
+            <h2>Learn the whole loop without seeing the whole course at once.</h2>
+          </div>
+          <ol>
+            {finalChapters.map((chapter) => (
+              <li key={chapter.id}>
+                <span>Chapter {chapter.number}</span>
+                <h3>{chapter.title}</h3>
+                <p>{chapter.summary}</p>
+                <small>
+                  {chapter.stages
+                    .map((stage) => stageById[stage].navLabel)
+                    .join(" · ")}
+                </small>
+              </li>
+            ))}
+          </ol>
+          <div className="p5-chapters__action">
+            <button className="p4-primary" type="button" onClick={onStart}>
+              Start with the first promise
+            </button>
+            <span>{finalOpening.reassurance}</span>
+          </div>
+        </section>
       </main>
     </div>
   );
@@ -1468,11 +1769,13 @@ function ResumeWelcome({
 function JourneyHeader({
   progress,
   onRoute,
+  onPlaybook,
   onRestart,
   restartRef,
 }: {
   progress: FinalProgress;
   onRoute: () => void;
+  onPlaybook: () => void;
   onRestart: () => void;
   restartRef: RefObject<HTMLButtonElement | null>;
 }) {
@@ -1483,15 +1786,21 @@ function JourneyHeader({
       : progress.stage === "welcome"
         ? 0
         : finalLearningStages.indexOf(progress.stage) + 1;
+  const chapter = chapterForStage(progress.stage);
   return (
     <>
       <header className="p4-header">
         <Brand onClick={onRoute} />
         <button className="p4-header__center" type="button" onClick={onRoute}>
-          <span>{progress.stage === "completion" ? "Route complete" : `Stop ${currentNumber} of 8`}</span>
-          <b>{stageLabel(progress.stage)}</b>
+          <span>
+            {progress.stage === "completion"
+              ? "Route complete"
+              : `Chapter ${chapter.number} of 4 · Stop ${currentNumber} of 8`}
+          </span>
+          <b>{chapter.title} · {stageLabel(progress.stage)}</b>
         </button>
         <div className="p4-header__actions">
+          <button type="button" onClick={onPlaybook}>Field guide</button>
           <button type="button" onClick={onRoute}>Route</button>
           <button ref={restartRef} type="button" onClick={onRestart}>Start over</button>
         </div>
@@ -1599,7 +1908,7 @@ function RouteDialog({
       description={
         progress.started
           ? "Only the current stop asks for attention. Completed stops remain available for review."
-          : "Guide one fictional website from a first-version choice to a checked update. Nothing here edits files or publishes a real site."
+          : "Four chapters take one fictional project from a tempting AI-made surface to a supportable, recoverable, checked release. Nothing here edits files or publishes a real site."
       }
       onDismiss={onClose}
       appRootRef={appRootRef}
@@ -1613,21 +1922,17 @@ function RouteDialog({
       {!progress.started ? (
         <>
           <div className="p4-overview-phases">
-            <article>
-              <span>01 · Choose a useful first version</span>
-              <h3>Decide what can work now</h3>
-              <p>First version → Tools → Project home</p>
-            </article>
-            <article>
-              <span>02 · Direct and test the work</span>
-              <h3>Tell AI one step; prove the result</h3>
-              <p>Ask AI → Build → Check</p>
-            </article>
-            <article>
-              <span>03 · Release and improve carefully</span>
-              <h3>Choose what goes live; update the source</h3>
-              <p>Go live → Improve</p>
-            </article>
+            {finalChapters.map((chapter) => (
+              <article key={chapter.id}>
+                <span>0{chapter.number} · {chapter.title}</span>
+                <h3>{chapter.summary}</h3>
+                <p>
+                  {chapter.stages
+                    .map((stage) => stageById[stage].navLabel)
+                    .join(" → ")}
+                </p>
+              </article>
+            ))}
           </div>
           <div className="p4-overview-footer">
             <button
@@ -1638,7 +1943,7 @@ function RouteDialog({
                 onStart();
               }}
             >
-              Start with the first version
+              Start with the first promise
             </button>
           </div>
         </>
@@ -2223,6 +2528,7 @@ export function PentimentoFinal() {
   const [restartOpen, setRestartOpen] = useState(false);
   const [restartFromRoute, setRestartFromRoute] = useState(false);
   const [taskRevision, setTaskRevision] = useState(0);
+  const [checkpointRevision, setCheckpointRevision] = useState(0);
   const [announcement, setAnnouncement] = useState("");
   const appRootRef = useRef<HTMLDivElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
@@ -2272,6 +2578,19 @@ export function PentimentoFinal() {
     return () => window.cancelAnimationFrame(frame);
   }, [hydrated, taskRevision]);
 
+  useEffect(() => {
+    if (!hydrated || checkpointRevision === 0) return;
+    const frame = window.requestAnimationFrame(() => {
+      const checkpoint = document.querySelector<HTMLElement>(".p5-checkpoint h2");
+      checkpoint?.focus({ preventScroll: true });
+      checkpoint?.closest(".p5-checkpoint")?.scrollIntoView({
+        block: "nearest",
+        behavior: "auto",
+      });
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [checkpointRevision, hydrated]);
+
   function choose(
     stage: FinalLearningStage,
     patch: Partial<FinalProgress>,
@@ -2289,11 +2608,18 @@ export function PentimentoFinal() {
         setAnnouncement("The project canvas changed. Inspect the consequence before choosing again.");
         return patched;
       }
+      setCheckpointRevision((revision) => revision + 1);
+      setAnnouncement(
+        `${stageLabel(stage)} decision ready. Inspect the consequence and field card before saving the layer.`,
+      );
+      return patched;
+    });
+  }
 
-      const advanced = completeFinalStage(patched, stage);
-      if (advanced === patched || advanced.stage === patched.stage) {
-        return patched;
-      }
+  function saveCurrentLayer(stage: FinalLearningStage) {
+    setProgress((current) => {
+      const advanced = completeFinalStage(current, stage);
+      if (advanced === current || advanced.stage === current.stage) return current;
       setAnnouncement(
         `${stageLabel(stage)} layer saved. Next: ${stageLabel(advanced.stage)}.`,
       );
@@ -2366,11 +2692,17 @@ export function PentimentoFinal() {
       progress.completedStages.includes(progress.stage);
     const currentReachableStage =
       finalLearningStages[progress.completedStages.length] ?? "completion";
+    const activeLearningStage = progress.stage as FinalLearningStage;
+    const currentStageReady =
+      progress.stage !== "completion" &&
+      !reviewingSavedStage &&
+      completeFinalStage(progress, activeLearningStage).stage !== progress.stage;
     content = (
       <>
         <JourneyHeader
           progress={progress}
           onRoute={() => setRouteOpen(true)}
+          onPlaybook={() => setPlaybookOpen(true)}
           onRestart={() => setRestartOpen(true)}
           restartRef={restartButtonRef}
         />
@@ -2393,18 +2725,39 @@ export function PentimentoFinal() {
                     {stageById[progress.stage].heading}
                   </h1>
                   <p>{stageById[progress.stage].introduction}</p>
+                  <aside className="p5-stage-contract" aria-label="Learning purpose and outcome">
+                    <div>
+                      <span>Why this matters</span>
+                      <p>{stageById[progress.stage].stakes}</p>
+                    </div>
+                    <div>
+                      <span>You will leave with</span>
+                      <p>{stageById[progress.stage].canvasLayer}</p>
+                    </div>
+                  </aside>
                   <LastSavedRule progress={progress} />
                 </header>
                 <div className="p4-workspace">
-                  {reviewingSavedStage ? (
-                    <SavedStageReview
-                      stage={progress.stage as FinalLearningStage}
-                      currentStage={currentReachableStage}
-                      onReturn={returnToCurrentStage}
-                    />
-                  ) : (
-                    <StageTask progress={progress} choose={choose} />
-                  )}
+                  <div className="p5-learning-column">
+                    {reviewingSavedStage ? (
+                      <SavedStageReview
+                        stage={progress.stage as FinalLearningStage}
+                        currentStage={currentReachableStage}
+                        onReturn={returnToCurrentStage}
+                      />
+                    ) : (
+                      <>
+                        <StageTask progress={progress} choose={choose} />
+                        {currentStageReady && (
+                          <StageCheckpoint
+                            stage={activeLearningStage}
+                            progress={progress}
+                            onContinue={() => saveCurrentLayer(activeLearningStage)}
+                          />
+                        )}
+                      </>
+                    )}
+                  </div>
                   <ResponsiveProjectCanvas progress={progress} />
                 </div>
               </section>
