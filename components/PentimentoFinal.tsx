@@ -811,7 +811,12 @@ function CanvasLens({ progress }: { progress: FinalProgress }) {
   const [view, setView] = useState<"surface" | "underlayers">("underlayers");
   return (
     <section className="p5-canvas-lens" aria-label="Surface and project underlayers">
-      <div className="p5-canvas-lens__controls" role="group" aria-label="Project canvas view">
+      <div
+        className="p5-canvas-lens__controls"
+        data-view={view}
+        role="group"
+        aria-label="Project canvas view"
+      >
         <button
           type="button"
           aria-pressed={view === "surface"}
@@ -827,13 +832,15 @@ function CanvasLens({ progress }: { progress: FinalProgress }) {
           Project underneath
         </button>
       </div>
-      {view === "surface" ? (
-        <CanvasFrame layer="Visitor surface">
-          <ProjectSurfaceVisual progress={progress} />
-        </CanvasFrame>
-      ) : (
-        <ProjectCanvas progress={progress} />
-      )}
+      <div className="p5-canvas-lens__view" key={view}>
+        {view === "surface" ? (
+          <CanvasFrame layer="Visitor surface">
+            <ProjectSurfaceVisual progress={progress} />
+          </CanvasFrame>
+        ) : (
+          <ProjectCanvas progress={progress} />
+        )}
+      </div>
     </section>
   );
 }
@@ -1531,11 +1538,28 @@ function Welcome({
     "surface",
   );
   const [activeOutcome, setActiveOutcome] = useState(0);
+  const auditRevealRef = useRef<HTMLButtonElement>(null);
+  const auditStartRef = useRef<HTMLButtonElement>(null);
   const outcome = welcomeOutcomes[activeOutcome];
+
+  useEffect(() => {
+    if (auditStep === "failed") {
+      auditRevealRef.current?.focus({ preventScroll: true });
+    }
+    if (auditStep === "revealed") {
+      auditStartRef.current?.focus({ preventScroll: true });
+    }
+  }, [auditStep]);
 
   function focusAudit() {
     const target = document.getElementById("welcome-audit-action");
-    target?.scrollIntoView({ block: "center", behavior: "smooth" });
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    target?.scrollIntoView({
+      block: "center",
+      behavior: prefersReducedMotion ? "auto" : "smooth",
+    });
     window.requestAnimationFrame(() => target?.focus());
   }
 
@@ -1587,7 +1611,11 @@ function Welcome({
               <button
                 id="welcome-audit-action"
                 type="button"
-                className={cx("p5-audit__action", auditStep !== "surface" && "is-failed")}
+                className={cx(
+                  "p4-primary",
+                  "p5-audit__action",
+                  auditStep !== "surface" && "is-failed",
+                )}
                 onClick={() => setAuditStep("failed")}
                 disabled={auditStep !== "surface"}
               >
@@ -1611,6 +1639,7 @@ function Welcome({
                   What else can a polished screen hide?
                 </p>
                 <button
+                  ref={auditRevealRef}
                   className="p4-secondary"
                   type="button"
                   onClick={() => setAuditStep("revealed")}
@@ -1635,7 +1664,12 @@ function Welcome({
                   <b>The screen is the surface.</b> Building means directing and
                   checking everything underneath it.
                 </p>
-                <button className="p4-primary" type="button" onClick={onStart}>
+                <button
+                  ref={auditStartRef}
+                  className="p4-primary"
+                  type="button"
+                  onClick={onStart}
+                >
                   Learn the method that catches this
                 </button>
               </div>
@@ -1662,12 +1696,16 @@ function Welcome({
                   aria-pressed={activeOutcome === index}
                   onClick={() => setActiveOutcome(index)}
                 >
-                  <span>0{index + 1}</span>
+                  <span aria-hidden="true">0{index + 1}</span>
                   {item.title}
                 </button>
               ))}
             </div>
-            <article className="p5-outcome-explorer__detail" aria-live="polite">
+            <article
+              className="p5-outcome-explorer__detail"
+              aria-live="polite"
+              key={outcome.title}
+            >
               <span>Capability {String(activeOutcome + 1).padStart(2, "0")}</span>
               <h3>{outcome.title}</h3>
               <p>{outcome.detail}</p>
