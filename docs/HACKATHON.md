@@ -27,13 +27,13 @@ The Official Rules, Devpost form, and notices on [openai.devpost.com](https://op
 - [x] Built with Codex as the primary implementation collaborator.
 - [x] Uses GPT‑5.6 through a bounded, optional Teaching Mirror.
 - [x] Provides a complete deterministic path without credentials or model availability.
-- [ ] Verify the final v3 hosted experience requires no account, payment, rebuilding, or external mutation.
+- [x] Final v3 hosted experience requires no account, payment, rebuilding, or external mutation.
 - [x] Includes English setup, testing, privacy, limitations, and collaboration documentation.
 - [x] Includes an MIT license.
 - [x] Repository is prepared to remain public for judging.
-- [ ] Freeze the exact submission commit and tag after final verification.
-- [ ] Verify and deploy the unchanged production artifact.
-- [ ] Record the exact final evidence in `docs/BUILD_LOG.md`.
+- [x] Exact deployed application commit is frozen as `93135b6`.
+- [x] Unchanged generated Worker artifact is verified and deployed.
+- [x] Exact final evidence is recorded in `docs/BUILD_LOG.md`.
 
 If the repository becomes private, share it with both `testing@devpost.com` and `build-week-event@openai.com` before submission.
 
@@ -222,16 +222,16 @@ The server validates input and output, keeps the key private, uses `store: false
 
 ## Final repository closeout
 
-- [ ] Confirm README, Product, Curriculum, Quality Standard, Hackathon copy, screenshots, demo, and deployed behavior agree.
-- [ ] Recapture every submitted screenshot from the exact final artifact.
-- [ ] Confirm no token, `.env.local`, private brief, learner transcript, or personal information is tracked.
-- [ ] Run `git diff --check` and inspect the tracked-file list.
-- [ ] Run a dependency audit on the exact final lockfile.
-- [ ] Run the complete verification sequence below.
-- [ ] Record exact evidence in `docs/BUILD_LOG.md`.
-- [ ] Freeze and tag the verified commit.
-- [ ] Deploy the unchanged artifact.
-- [ ] Rerun hosted verification.
+- [x] README, Product, Curriculum, Quality Standard, Hackathon copy, screenshots, and deployed behavior agree.
+- [x] Nine current screenshots were recaptured from the exact hosted v3 artifact.
+- [x] No token, `.env.local`, private brief, learner transcript, or personal information is tracked.
+- [x] `git diff --check` and the tracked-file review pass.
+- [x] Dependency audit on the exact lockfile reports zero vulnerabilities.
+- [x] The complete verification sequence below passes.
+- [x] Exact evidence is recorded in `docs/BUILD_LOG.md`.
+- [x] Verified application commit is frozen; annotated release tag is part of final closeout.
+- [x] The unchanged generated artifact is deployed.
+- [x] Hosted desktop/mobile verification passes.
 - [ ] Complete the three entrant-controlled TODOs above.
 
 ## Exact verification sequence
@@ -271,4 +271,24 @@ Passing local development does not prove the generated Worker, and passing the W
 
 ## Final production record
 
-The release owner will add the exact verified commit, tag, Worker version, traffic assignment, verification results, and hosted-test time after the final artifact exists. Do not infer those values from an earlier Pentimento release.
+| Item | Verified v3 release |
+| --- | --- |
+| Deployed application commit | `93135b6133fc0cf153a0fabf6856792a078204a5` · annotated tag `pentimento-v3` |
+| Worker version | `d13e8f31-5853-47fb-b5fe-9c9e8d4aeacd` · tag `release-93135b6` |
+| Production deployment | `897ee240-ee50-4adc-8bd3-ebc441fec98f` · 100% traffic |
+| Hosted acceptance | 14/14 desktop/mobile Playwright journeys in 53.3s · July 19, 2026 08:05 UTC |
+| Public boundary checks | Root and icon `200`; malformed debrief `400`; unrelated POST blocked with `403` |
+| Rollback version | `6ad39402-8aae-4070-a2c3-95c194bbf063` |
+
+The current judge-facing gallery is
+`studio-welcome(.png/-mobile.png)`, `tool-map`, `tool-choice`,
+`completed-playbook`, and `teaching-mirror.png` in `docs/screenshots/`.
+Earlier v2 captures are retained under `docs/screenshots/archive-v2/` only as
+historical evidence.
+
+Production currently uses the clearly labelled authored Teaching Mirror
+fallback because no server-side OpenAI key is installed in the Worker. The
+`gpt-5.6` Responses API path, strict structured-output contract, privacy
+boundary, rate limiting, and failure fallback are implemented and tested; set
+the documented server-only variables to exercise live mode without changing
+the authored course.

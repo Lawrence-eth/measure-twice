@@ -14,6 +14,8 @@ Built for the **Education** track of OpenAI Build Week 2026.
 - Source: [github.com/Lawrence-eth/measure-twice](https://github.com/Lawrence-eth/measure-twice)
 - Current release evidence: [docs/HACKATHON.md](docs/HACKATHON.md)
 
+![Pentimento opening: Build your first project with AI—from idea to live link](docs/screenshots/studio-welcome.png)
+
 ## The problem
 
 AI building products expose different buttons, names, and combinations of capabilities. A complete beginner can generate an impressive screen without knowing:
@@ -187,6 +189,13 @@ Run the browser suite against an already-hosted candidate with:
 
 ```bash
 PLAYWRIGHT_BASE_URL=https://pentimento.aethe.me npm run test:e2e
+```
+
+Recapture the judge-facing desktop and mobile gallery from an exact hosted
+candidate with:
+
+```bash
+SCREENSHOT_BASE_URL=https://pentimento.aethe.me node scripts/capture-release-screenshots.mjs
 ```
 
 Passing a local development journey does not prove the generated Worker or deployed custom domain. Final evidence belongs to the exact release artifact and is recorded in [docs/HACKATHON.md](docs/HACKATHON.md).

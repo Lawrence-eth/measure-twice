@@ -126,9 +126,18 @@ Codex accelerated inspection, implementation, cross-file consistency work, adver
 
 ## How GPT‑5.6 contributes to the product
 
-GPT‑5.6 is used only for an optional closing debrief. After the server validates the complete v2 mission and recomputes its deterministic evidence profile, the model receives those derived observations plus the learner’s optional reflection. It returns schema-constrained language describing a strongest observed habit, the next habit to repeat, concrete next-project moves, and a practice challenge.
+GPT‑5.6 is used only for the optional Teaching Mirror at completion. The
+learner deliberately submits a first-version brief for their own idea and the
+starting lane they selected. The model returns a schema-constrained reflection:
+one clear strength, exactly two unresolved assumptions, one candidate feature
+to postpone with a reason, one honest tool-lane tradeoff, and exactly three
+small next moves.
 
-The integration uses the OpenAI Responses API, Zod Structured Outputs, `store: false`, bounded output, low reasoning effort, a hashed safety identifier, and deterministic fallback. The model never decides whether the learner was correct or whether a release is ready.
+The integration uses the OpenAI Responses API, Zod Structured Outputs,
+`store: false`, bounded output, low reasoning effort, a hashed safety
+identifier, request limiting, and deterministic fallback. The model never sees
+route history, decides lesson correctness, grades the learner, builds a
+project, accesses a repository, or performs an external action.
 
 ## Initial production evidence record (v1)
 
@@ -173,6 +182,82 @@ Observed beginner confusion triggered a presentation redesign rather than a cont
 | Screenshot review | PASS · ten desktop/mobile captures recaptured from the generated Worker and visually inspected |
 | Hosted acceptance test | PASS · 14/14 Playwright journeys against `https://pentimento.aethe.me` in 2.0m · July 19, 2026 06:01 UTC |
 | Public URL and deployed commit agree | PASS · Worker version `6ad39402-8aae-4070-a2c3-95c194bbf063` carries tag `release-8acdddb` and deployment message `Pentimento 8acdddb beginner-first release`; Cloudflare reports 100% traffic and the public root returns HTTP 200 |
+
+## July 19 — complete AI-build route correction
+
+The beginner-first v2 opening fixed presentation order, but a second general-user
+review exposed a deeper issue: the experience still began from an unfamiliar
+artifact and taught the project through its defects. A first-time builder needed
+the whole route from nothing—what kind of tool to open, where the work lives,
+what to ask, how to build in small changes, how to check it, and how one saved
+version becomes a public link.
+
+The human clarified that Pentimento must be a deep educational experience, not
+a project generator or a real tool that builds on the learner’s behalf. Content
+quality and interaction quality remained the primary bar.
+
+Codex then rebuilt the product around eight literal stops:
+
+1. reduce an overloaded idea to one complete first version;
+2. distinguish an AI workspace, project home, and web host;
+3. create a recoverable folder, Git history, and GitHub copy;
+4. assemble a bounded planning request before edits;
+5. work through three ask → inspect → run → check → save cycles;
+6. find and repair factual, phone-layout, and contact-path defects;
+7. distinguish local, GitHub, preview, live, and recovery states; and
+8. make one approved post-launch update without rebuilding the project.
+
+The correction also:
+
+- replaced technical lane names with the beginner-facing choices “Everything in
+  one website” and “Files and history you control” while preserving the real
+  tradeoffs underneath;
+- introduced a current product-name decoder only after the durable three-role
+  map;
+- made all ten First AI Build Playbook cards, the glossary, and the first
+  seven-day route available from the beginning;
+- kept one coherent Repair Café project across every stop;
+- added strict v3 saved-state parsing and exact sub-step restoration;
+- made the mobile route keep the current stop visible;
+- rebuilt the optional GPT‑5.6 boundary as a Teaching Mirror for the learner’s
+  own first-version brief, with no score, generation, publication, repository
+  access, or external action; and
+- recaptured the final desktop/mobile gallery from the public production
+  artifact.
+
+## Complete-route production evidence record (v3)
+
+The exact deployed application is commit
+`93135b6133fc0cf153a0fabf6856792a078204a5`, preserved by annotated tag
+`pentimento-v3`. Its generated Worker was tested locally before upload,
+uploaded as an immutable Cloudflare version, assigned 100% of production
+traffic, and then tested again through the public custom domain.
+
+| Evidence | Exact result for complete-route release |
+| --- | --- |
+| Deployed application commit | `93135b6133fc0cf153a0fabf6856792a078204a5` · annotated tag `pentimento-v3` |
+| `npm ci` | PASS · 233 packages installed from the exact lockfile; audit reported 0 vulnerabilities |
+| `npm run typecheck` | PASS · TypeScript completed with no diagnostics |
+| `npm test` | PASS · 90/90 authored-state, persistence, schema-boundary, fallback, and API tests |
+| Development acceptance | PASS · 14/14 desktop/mobile Playwright journeys in 1.1m |
+| `npm run build:next` | PASS · Next.js 16.2.10 production build; static root/icon and dynamic debrief route classified |
+| `npm run build` | PASS · all five Vinext environments built; Sites metadata copied into `dist/.openai/hosting.json` |
+| Generated-Worker acceptance | PASS · unchanged `dist` Worker at `127.0.0.1:8787`; 14/14 desktop/mobile journeys in 57.0s |
+| Dependency and diff review | PASS · 0 audit vulnerabilities; `git diff --check` clean; no credential file tracked |
+| Screenshot review | PASS · nine v3 desktop/mobile captures recaptured from `https://pentimento.aethe.me` and visually inspected; 320px/390px browser contract reports no document overflow |
+| Hosted acceptance | PASS · 14/14 Playwright journeys against `https://pentimento.aethe.me` in 53.3s · July 19, 2026 08:05 UTC |
+| Public URL and deployed commit agree | PASS · Worker version `d13e8f31-5853-47fb-b5fe-9c9e8d4aeacd` carries tag `release-93135b6` and deployment message `Pentimento 93135b6 AI project studio release`; deployment `897ee240-ee50-4adc-8bd3-ebc441fec98f` assigns it 100% traffic |
+| Public boundary checks | PASS · root and icon return `200`; valid Teaching Mirror request returns structured authored fallback; malformed request returns application `400`; unrelated POST remains blocked with Cloudflare `403` |
+
+Production currently returns the explicitly labelled authored Teaching Mirror
+fallback because the Worker has no server-side OpenAI key. The `gpt-5.6`
+Responses API path, strict input/output schemas, `store: false`, bounded output,
+hashed safety identifier, rate limit, and deterministic failure fallback are
+implemented and tested. Live mode can be enabled with the documented
+server-only variables without changing the authored route.
+
+The previous production Worker version
+`6ad39402-8aae-4070-a2c3-95c194bbf063` remains the known rollback target.
 
 The implementation acceptance contract is [QUALITY_STANDARD.md](QUALITY_STANDARD.md), and the submission closeout is [HACKATHON.md](HACKATHON.md).
 
