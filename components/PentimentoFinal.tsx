@@ -793,8 +793,8 @@ function IdeaTask({ progress, choose }: StageTaskProps) {
     <TaskShell
       id="idea"
       eyebrow="Your first boundary"
-      question="What should the first visitor be able to finish?"
-      hint="The organizer approved facts and an email. No one operates bookings or payments yet."
+      question="What should a visitor be able to do from start to finish?"
+      hint="Choose what can work completely today—not what sounds most impressive."
     >
       <ChoiceButtons
         choices={ideaChoices}
@@ -1369,17 +1369,17 @@ function Welcome({
     <div className="p4-welcome">
       <header className="p4-welcome__header">
         <Brand />
-        <span>Learning studio · one worked project</span>
+        <span>Interactive lesson · build projects with AI</span>
       </header>
       <main className="p4-welcome__main" id="main-content">
         <div className="p4-welcome__copy">
-          <p className="p4-kicker">A guided simulation for complete beginners</p>
+          <p className="p4-kicker">{finalOpening.kicker}</p>
           <h1 ref={headingRef} tabIndex={-1}>
-            Learn to build with AI.{" "}
-            <em>One clear step at a time.</em>
+            {finalOpening.promise}{" "}
+            <em>{finalOpening.destination}</em>
           </h1>
           <p className="p4-welcome__lede">
-            Make 13 decisions for one small event page. Learn how to scope, direct AI, check the result, release it, and improve it.
+            {finalOpening.explanation}
           </p>
           <button className="p4-primary" type="button" onClick={onStart}>
             {finalOpening.primaryAction}
@@ -1393,16 +1393,23 @@ function Welcome({
             <li>Nothing real publishes</li>
           </ul>
         </div>
-        <div className="p4-welcome-art" aria-label="A project becoming clearer in saved layers">
-          <article className="p4-welcome-art__layer">
+        <div
+          className="p4-welcome-art"
+          role="img"
+          aria-label="A vague request to build the whole idea becomes one visitor with one working path, then a small version that is saved, tested, and recoverable."
+        >
+          <article className="p4-welcome-art__layer" aria-hidden="true">
             <span>Rough idea</span>
-            <h2>“Build my whole idea.”</h2>
+            <strong>“Build my whole idea.”</strong>
           </article>
-          <article className="p4-welcome-art__layer">
-            <span>Checked layer</span>
-            <h2>One person. One path. Real evidence.</h2>
+          <article className="p4-welcome-art__layer" aria-hidden="true">
+            <span>Clear first version</span>
+            <strong>One visitor. One working path.</strong>
           </article>
-          <div className="p4-welcome-art__trail" aria-hidden="true" />
+          <article className="p4-welcome-art__layer" aria-hidden="true">
+            <span>Checked version</span>
+            <strong>Small. Saved. Tested. Recoverable.</strong>
+          </article>
         </div>
       </main>
     </div>
@@ -1588,11 +1595,11 @@ function RouteDialog({
   return (
     <AccessibleDialog
       open={open}
-      title={progress.started ? "Your eight-stop route" : "How the lesson works"}
+      title={progress.started ? "Your eight-stop route" : "The whole journey, one decision at a time"}
       description={
         progress.started
           ? "Only the current stop asks for attention. Completed stops remain available for review."
-          : "You will decide, build and check, then release and improve one worked example."
+          : "Guide one fictional website from a first-version choice to a checked update. Nothing here edits files or publishes a real site."
       }
       onDismiss={onClose}
       appRootRef={appRootRef}
@@ -1607,18 +1614,18 @@ function RouteDialog({
         <>
           <div className="p4-overview-phases">
             <article>
-              <span>01 · Decide</span>
-              <h3>Shape a supportable start</h3>
-              <p>Idea → Tools → Project home</p>
+              <span>01 · Choose a useful first version</span>
+              <h3>Decide what can work now</h3>
+              <p>First version → Tools → Project home</p>
             </article>
             <article>
-              <span>02 · Build and check</span>
-              <h3>Direct small, observable work</h3>
+              <span>02 · Direct and test the work</span>
+              <h3>Tell AI one step; prove the result</h3>
               <p>Ask AI → Build → Check</p>
             </article>
             <article>
-              <span>03 · Release and improve</span>
-              <h3>Prove one version and preserve recovery</h3>
+              <span>03 · Release and improve carefully</span>
+              <h3>Choose what goes live; update the source</h3>
               <p>Go live → Improve</p>
             </article>
           </div>
@@ -1631,7 +1638,7 @@ function RouteDialog({
                 onStart();
               }}
             >
-              Start with the first decision
+              Start with the first version
             </button>
           </div>
         </>

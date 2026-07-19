@@ -111,7 +111,7 @@ async function captureOpening(browser, suffix, viewport) {
   await page
     .getByRole("heading", {
       level: 1,
-      name: /Learn to build with AI.*One clear step at a time/i,
+      name: /Learn how to build a project with AI.*rough idea to checked release/i,
     })
     .waitFor();
   await settle(page);
@@ -121,9 +121,11 @@ async function captureOpening(browser, suffix, viewport) {
   });
 
   await page
-    .getByRole("button", { name: "Preview how the lesson works" })
+    .getByRole("button", { name: "See the 8-stop journey" })
     .click();
-  await page.getByRole("dialog", { name: "How the lesson works" }).waitFor();
+  await page
+    .getByRole("dialog", { name: "The whole journey, one decision at a time" })
+    .waitFor();
   await settle(page);
   await page.screenshot({
     path: path.join(outputDirectory, `tool-map${suffix}.png`),

@@ -20,7 +20,7 @@ const wcagTags = [
 ] as const;
 
 const questions = {
-  idea: /What should the first visitor be able to finish\?/i,
+  idea: /What should a visitor be able to do from start to finish\?/i,
   tools: /Which tradeoff matters more for your first project\?/i,
   projectHome: /Where should the work survive after this chat closes\?/i,
   privateBoundary: /Does this finished page need an AI API key\?/i,
@@ -269,11 +269,16 @@ async function openFresh(page: Page) {
   await expect(
     page.getByRole("heading", {
       level: 1,
-      name: /Learn to build with AI.*one clear step at a time/i,
+      name: /Learn how to build a project with AI.*rough idea to checked release/i,
     }),
   ).toBeVisible();
   await expect(
-    page.getByText(/13 decisions for one small event page/i),
+    page.getByText(/Guide one fictional website.*choose its first version/i),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("img", {
+      name: /vague request.*one visitor.*saved, tested, and recoverable/i,
+    }),
   ).toBeVisible();
   await expect(page.getByText(/No code or account setup/i)).toBeVisible();
   await expect(
@@ -285,9 +290,12 @@ async function openFresh(page: Page) {
 async function startWithIdea(page: Page) {
   await openFresh(page);
   await page
-    .getByRole("button", { name: "Begin the guided build", exact: true })
+    .getByRole("button", { name: "Start with the first decision", exact: true })
     .click();
-  await expectCurrentHeadingFocused(page, /Start with one finish/i);
+  await expectCurrentHeadingFocused(page, /Choose one promise you can keep/i);
+  await expect(
+    page.getByText(/Willow Fix Day.*approved event details.*organizer email.*No one can run bookings or payments/i),
+  ).toBeVisible();
   await expect(
     page.getByRole("group", { name: questions.idea }),
   ).toBeVisible();
@@ -301,7 +309,7 @@ async function chooseSmallestIdea(
   const task = page.getByRole("group", { name: questions.idea });
   const answer = choice(
     task,
-    /See approved event facts and email the organizer/i,
+    /Read the event details.*email a question/i,
   );
   await observeState(page, "idea", task, answer, options);
   await activate(answer, counter);
@@ -600,11 +608,28 @@ async function keyboardActivate(page: Page, target: Locator) {
   await page.keyboard.press("Enter");
 }
 
-test("starts directly with Idea and lets a meaningful choice repaint the brief", async ({
+test("starts directly with the first version and lets a meaningful choice repaint the brief", async ({
   page,
 }) => {
   await page.setViewportSize(MOBILE_VIEWPORT);
-  await startWithIdea(page);
+  await openFresh(page);
+
+  await page.getByRole("button", { name: "See the 8-stop journey" }).click();
+  const overview = page.getByRole("dialog", {
+    name: "The whole journey, one decision at a time",
+  });
+  await expect(overview).toContainText(
+    /one fictional website.*Nothing here edits files or publishes a real site/is,
+  );
+  await expect(overview).toContainText(/Choose a useful first version/i);
+  await expect(overview).toContainText(/Direct and test the work/i);
+  await expect(overview).toContainText(/Release and improve carefully/i);
+  const overviewStart = overview.getByRole("button", {
+    name: "Start with the first version",
+  });
+  await expect(overviewStart).toBeInViewport();
+  await overviewStart.click();
+  await expectCurrentHeadingFocused(page, /Choose one promise you can keep/i);
 
   const task = page.getByRole("group", { name: questions.idea });
   await expect(task.getByRole("button").or(task.getByRole("radio"))).toHaveCount(
@@ -613,7 +638,7 @@ test("starts directly with Idea and lets a meaningful choice repaint the brief",
   await expectTaskInFirstViewport(
     page,
     task,
-    choice(task, /See approved event facts and email the organizer/i),
+    choice(task, /Read the event details.*email a question/i),
   );
   await expect(
     page.getByText(/AI workspace builds.*project home remembers/i),
@@ -630,7 +655,7 @@ test("starts directly with Idea and lets a meaningful choice repaint the brief",
 
   await choice(
     task,
-    /See approved event facts and email the organizer/i,
+    /Read the event details.*email a question/i,
   ).click();
   await expect(projectCanvas(page)).toContainText(
     /Nearby visitor.*approved facts.*email a question/is,
@@ -1119,7 +1144,7 @@ test("traps restart focus, cancels predictably, and clears v4 progress only on c
   await expect(
     page.getByRole("heading", {
       level: 1,
-      name: /Learn to build with AI.*one clear step at a time/i,
+      name: /Learn how to build a project with AI.*rough idea to checked release/i,
     }),
   ).toBeFocused();
   await expect
@@ -1233,7 +1258,7 @@ test("supports the complete core route with keyboard input alone", async ({
   await keyboardActivate(
     page,
     page.getByRole("button", {
-      name: "Begin the guided build",
+      name: "Start with the first decision",
       exact: true,
     }),
   );
@@ -1241,7 +1266,7 @@ test("supports the complete core route with keyboard input alone", async ({
   const idea = page.getByRole("group", { name: questions.idea });
   await keyboardActivate(
     page,
-    choice(idea, /See approved event facts and email the organizer/i),
+    choice(idea, /Read the event details.*email a question/i),
   );
 
   const tools = page.getByRole("group", { name: questions.tools });

@@ -14,7 +14,8 @@ TBD must be resolved before submission.
 
 **Project name:** Pentimento
 
-**Tagline:** Learn to build with AI, one clear step at a time.
+**Tagline:** Learn how to build a project with AI. From rough idea to checked
+release.
 
 **Category:** Education
 
@@ -73,7 +74,7 @@ The required route is deliberately small:
 
 | Stop | Meaningful interactions | Learning move |
 | --- | ---: | --- |
-| Idea | 1 | Choose one person and one complete, supportable path |
+| First version | 1 | Choose one person and one complete, supportable path |
 | Tools | 1 | Choose a faster hosted route or more transferable repository route |
 | Project home | 2 | Preserve the work and separate build-time AI from runtime AI |
 | Ask AI | 2 | Request a plan, inspect it, and approve one shown step |
@@ -81,7 +82,7 @@ The required route is deliberately small:
 | Check | 3 | Try the path, make the smallest repair, and retry it |
 | Go live | 2 | Select the checked version and repeat the path publicly |
 | Improve | 1 | Update the trusted source before the page |
-| **Total** | **13** | **Idea → checked release → source-backed improvement** |
+| **Total** | **13** | **First version → checked release → source-backed improvement** |
 
 ## Public judge testing instructions
 
@@ -89,7 +90,7 @@ Use this copy only after the final v4 candidate is verified at the public URL:
 
 > Open https://pentimento.aethe.me in a current desktop or mobile browser. No
 > account, API key, installation, or real deployment is required. Select
-> **Begin the guided build**; **Preview how the lesson works** is an optional
+> **Start with the first decision**; **See the 8-stop journey** is an optional
 > overview. Follow either tool route through all eight stops. In **Check**, try
 > the contact action, choose the bounded repair, and try the repaired action
 > again—the retry is required. In **Go live**, choose checked V4 instead of the
@@ -133,8 +134,8 @@ judgment.”
 
 ### 0:18–0:45 — scope and tool roles
 
-**Show:** Choose the smallest complete Idea path, compare the two Tools routes,
-and reveal the Project home layer.
+**Show:** Choose the smallest supportable path in First version, compare the two
+Tools routes, and reveal the Project home layer.
 
 **Say:** “The learner guides one fictional event page through eight stops and
 exactly 13 useful interactions. Tools may change, but the responsibilities stay
@@ -200,8 +201,8 @@ accounts, publishes, or takes an external action.”
 
 **Show:** The completed canvas with earlier layers visible.
 
-**Say:** “Pentimento helps a first-time builder move from AI confidence to
-project evidence—one clear step at a time.”
+**Say:** “Pentimento helps a first-time builder move from a rough idea to a
+checked release they can explain, test, and recover.”
 
 If production is using the authored fallback, label it as the fallback in the
 video; do not describe authored output as a live GPT-5.6 response. A live

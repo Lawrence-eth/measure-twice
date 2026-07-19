@@ -1,6 +1,6 @@
 # Pentimento
 
-> **Learn to build with AI, one clear step at a time.**
+> **Learn how to build a project with AI. From rough idea to checked release.**
 
 Pentimento is an interactive education experience for complete beginners who
 have an idea but do not know how AI-built projects move from a rough request to
@@ -53,7 +53,7 @@ examples remain available as optional depth.
 
 | Stop | Required actions | What the learner practices | What appears on the canvas |
 | --- | ---: | --- | --- |
-| **1. Idea** | 1 | Reduce an ambitious wishlist to one person and one supportable finish | A first-version brief with a clear “Not now” boundary |
+| **1. First version** | 1 | Reduce an ambitious wishlist to one person and one supportable finish | A first-version brief with a clear “Not now” boundary |
 | **2. Tools** | 1 | Choose between a faster hosted route and a more transferable repository route | Build, save, and publish responsibilities |
 | **3. Project home** | 2 | Put the work somewhere recoverable and decide whether the finished page needs runtime AI | Route-specific files/history with no unnecessary runtime dependency |
 | **4. Ask AI** | 2 | Ask AI to inspect and plan before editing, then approve one shown step | A bounded work agreement |
@@ -171,7 +171,7 @@ the submitted experience.
 
 1. Open [pentimento.aethe.me](https://pentimento.aethe.me) in a current desktop
    or mobile browser.
-2. Select **Begin the guided build**. Use **Preview how the lesson works** only
+2. Select **Start with the first decision**. Use **See the 8-stop journey** only
    if you want the three-phase overview first.
 3. Follow either tool lane. The repository lane makes the folder → Git → GitHub
    → host path most explicit; the hosted lane demonstrates the export and

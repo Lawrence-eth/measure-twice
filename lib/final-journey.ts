@@ -56,20 +56,22 @@ export type FinalChoice<Id extends string> = {
 };
 
 export const finalOpening = {
-  promise: "Learn to build with AI. One clear step at a time.",
-  example:
-    "Make thirteen decisions for one small page, from rough idea to checked release.",
+  kicker: "A guided simulation · no experience with AI tools needed",
+  promise: "Learn how to build a project with AI.",
+  destination: "From rough idea to checked release.",
+  explanation:
+    "Guide one fictional website: choose its first version, direct AI in small steps, test the visitor path, and decide what goes live.",
   reassurance: "No code · nothing real publishes · about 12–15 minutes",
-  primaryAction: "Begin the guided build",
-  overviewAction: "Preview how the lesson works",
+  primaryAction: "Start with the first decision",
+  overviewAction: "See the 8-stop journey",
 } as const;
 
 export const ideaChoices = [
   {
     id: "facts-email",
-    label: "See approved event facts and email the organizer",
+    label: "Read the event details, decide if the item fits, and email a question",
     consequence:
-      "This is one complete visitor path. It needs approved facts and a standard email link, not a new service.",
+      "Complete and supportable. It uses only approved facts and a normal email link, so the whole visitor path can work today.",
     canvasChange: "Adds the first-version brief.",
     recommended: true,
   },
@@ -369,12 +371,12 @@ export const finalJourney = [
   {
     id: "idea",
     number: 1,
-    navLabel: "Idea",
-    heading: "Start with one finish",
+    navLabel: "First version",
+    heading: "Choose one promise you can keep",
     introduction:
-      "Small enough to complete. Useful enough to matter.",
-    savedLabel: "one visitor + one complete path",
-    question: "What should the first visitor be able to finish?",
+      "For Willow Fix Day, approved event details and organizer email are ready. No one can run bookings or payments.",
+    savedLabel: "one visitor → one complete, supportable path",
+    question: "What should a visitor be able to do from start to finish?",
     requiredInteractions: 1,
     canvasLayer: "First-version brief",
     reusableRule:

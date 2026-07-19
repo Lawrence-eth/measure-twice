@@ -316,8 +316,10 @@ async function applyScenarioAction(page, action) {
   if (!action) return;
 
   if (action === "open-route") {
-    await page.getByRole("button", { name: "Preview how the lesson works" }).click();
-    await page.getByRole("dialog", { name: "How the lesson works" }).waitFor();
+    await page.getByRole("button", { name: "See the 8-stop journey" }).click();
+    await page
+      .getByRole("dialog", { name: "The whole journey, one decision at a time" })
+      .waitFor();
     return;
   }
   if (action === "open-depth") {
