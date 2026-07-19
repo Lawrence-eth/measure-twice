@@ -426,5 +426,16 @@ Local v5 candidate verification completed on July 19, 2026 at 14:55 UTC:
 | Sites-compatible production build | PASS |
 | Visual review | PASS · opening, Reveal, first decision, checkpoint, and default-open mobile canvas |
 
-Hosted v5 verification and deployment evidence remain intentionally unrecorded
-until the exact saved Sites version is live.
+The exact candidate was then saved and verified in production on July 19, 2026
+at 15:05 UTC:
+
+| Check | Result |
+| --- | --- |
+| Deployed source | PASS · `84304ce0440ff6ab2a606b4902b4dfe197203b6e` |
+| Sites version | PASS · version 3 |
+| Production deployment | PASS · `appgdep_6a5ce5ef6e588191a682e7a37d5e65d5` |
+| Native public URL | PASS · `https://pentimento.law-ender.chatgpt.site` returned HTTP `200` |
+| Hosted browser suite | PASS · 30/30 desktop/mobile Chromium checks |
+| Hosted interaction coverage | PASS · Reveal, four chapters, 13 decisions, eight Playbook-note saves, Field Guide, canvas lenses, persistence, restart, keyboard, Axe, reduced motion, and 320/390/768/1440px overflow |
+| Production reflection mode | PASS · no runtime environment entries; `/api/debrief` returned `mode: "demo"` with two questions and three next moves |
+| Rollback target | PASS · Sites version 2 · `ada4a48615f7931324dc3afc70d99880ec4e2b1d` |

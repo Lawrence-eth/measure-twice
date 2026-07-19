@@ -251,20 +251,20 @@ appear in the footage.
   private repository with both testing@devpost.com and
   build-week-event@openai.com.
 - [x] Confirm the Devpost repository URL resolves for a signed-out judge.
-- [ ] Freeze and record the exact final v5 commit and release/version metadata.
+- [x] Freeze and record the exact final v5 commit and release/version metadata.
 
 ### Public experience
 
-- [ ] Deploy the final verified v5 artifact to
+- [x] Deploy the final verified v5 artifact to
   pentimento.law-ender.chatgpt.site.
-- [ ] Run the full hosted desktop/mobile suite against that exact artifact.
-- [ ] Verify the Reveal, four chapters, eight-stop route, 13 decisions,
+- [x] Run the full hosted desktop/mobile suite against that exact artifact.
+- [x] Verify the Reveal, four chapters, eight-stop route, 13 decisions,
   Playbook-note checkpoints, persistent Field Guide, two canvas lenses, local V1
   brief, optional reflection boundary, restart, keyboard path, focus,
   reduced-motion behavior, and narrow layouts.
-- [ ] Record the final Sites version/deployment, hosted test result, date, and
+- [x] Record the final Sites version/deployment, hosted test result, date, and
   rollback target in docs/BUILD_LOG.md.
-- [ ] Confirm whether the submitted deployment uses live GPT-5.6 or the
+- [x] Confirm whether the submitted deployment uses live GPT-5.6 or the
   deterministic fallback, and describe it accurately.
 
 ### Devpost
@@ -288,11 +288,11 @@ values remain in [BUILD_LOG.md](BUILD_LOG.md).
 | --- | --- |
 | Public YouTube demo URL | **TBD — entrant uploads and verifies public visibility** |
 | Primary Codex /feedback Session ID | **TBD — entrant obtains it from the primary build thread** |
-| Exact final v5 commit and release/version metadata | **TBD — record only after the candidate is committed and saved** |
-| Final Sites deployment version | **TBD — record only after the saved v5 version is deployed** |
-| Hosted v5 acceptance result and timestamp | **TBD — run against the exact native URL after deployment** |
-| Rollback version confirmed for final release | **TBD — confirm from Sites deployment history** |
-| Production reflection mode and evidence | **TBD — verify on the exact v5 deployment** |
+| Exact final v5 deployed source | `84304ce0440ff6ab2a606b4902b4dfe197203b6e` |
+| Final Sites deployment version | Version 3 · deployment `appgdep_6a5ce5ef6e588191a682e7a37d5e65d5` |
+| Hosted v5 acceptance result and timestamp | PASS · 30/30 desktop/mobile Chromium checks · July 19, 2026 15:05 UTC |
+| Rollback version confirmed for final release | Sites version 2 · `ada4a48615f7931324dc3afc70d99880ec4e2b1d` |
+| Production reflection mode and evidence | Deterministic demo fallback · no Sites runtime environment entries · hosted endpoint returned `mode: "demo"` with the required 2 questions and 3 next moves |
 | Repository public-access or private-sharing confirmation | Public signed-out request returned `200`; MIT license visible |
 | Devpost submission confirmation | **TBD — entrant submits and records it** |
 
