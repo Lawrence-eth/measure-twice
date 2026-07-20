@@ -474,3 +474,45 @@ The exact refinement was verified and published on July 19, 2026 at 16:15 UTC:
 | Production action separation | PASS · 22px at 320/390px; 24px at 768/1440px |
 | Production responsive overflow | PASS · zero opening overflow at 320, 390, 768, and 1440px |
 | Rollback target | PASS · Sites version 3 · `84304ce0440ff6ab2a606b4902b4dfe197203b6e` |
+
+## July 20 — Conservation Lab v6 production release
+
+The final presentation pass rebuilt Pentimento as a quieter Conservation Lab:
+a single orientation screen, one worked spectral inspection, a deliberately
+separated primary and optional opening action, restrained motion, flatter
+controls, and a more explicit eight-stop learning contract. The content,
+interaction, and responsive checks were frozen before the release artifact was
+built.
+
+The exact application source was committed, pushed to the public GitHub
+repository and the configured Sites source branch, built once from that source,
+saved as immutable Sites version 5, and deployed to the existing public
+Pentimento address.
+
+| Check | Result |
+| --- | --- |
+| Deployed source | PASS · `f0934095791555d3bc7c089a9136599a47595df4` · annotated tag `pentimento-v6` |
+| Sites version | PASS · version 5 · `appgprj_6a5cd40f4f5c81919c4fcd84e7ef2709~appgver_6b8e33c852d08191aa022bf4799d4d0b` |
+| Production deployment | PASS · `appgdep_6a5d9f4f207481919ff4869f65d00b8e` |
+| Native public URL | PASS · `https://pentimento.law-ender.chatgpt.site` returned HTTP `200` |
+| Typecheck | PASS · no diagnostics |
+| Unit tests | PASS · 96/96 |
+| Next.js production build | PASS |
+| Sites-compatible Vinext build | PASS · 514 client modules; 73-file deploy artifact |
+| Dependency audit | PASS · 0 high-severity vulnerabilities |
+| Local browser suite | PASS · 30/30 desktop/mobile Chromium checks |
+| Local experience-density audit | PASS · zero gated violations |
+| Generated Worker | PASS · root/icon `200`, invalid reflection `400`, valid reflection `200` |
+| Production endpoint boundary | PASS · root/icon `200`, invalid reflection `400`, valid reflection `200` |
+| Hosted browser suite | PASS · 30/30 desktop/mobile Chromium · July 20, 2026 04:20 UTC |
+| Hosted interaction coverage | PASS · both tool lanes, 13 decisions, eight note saves, Build kit, V1 brief workshop, persistence, fail/repair/retry, restart, keyboard-only route, dialog focus, Axe, reduced motion, and full 320/390/768/1440px reflow |
+| Hosted experience-density audit | PASS · desktop and mobile · zero gated violations and no horizontal overflow |
+| Production reflection mode | PASS · deterministic fallback; valid response reported `mode: "demo"`, two unresolved questions, and three next moves |
+| Public repository | PASS · signed-out GitHub request returned HTTP `200` |
+| Rollback target | PASS · Sites version 4 · `0ac40c9b7f08acafa687322cd4d4188785f03f44` |
+
+The first hosted matrix began while production edge propagation was still
+settling: one browser received the previous v4 opening while 29 v5 checks
+passed. After propagation, the affected route passed five consecutive
+fresh-browser repetitions and the complete hosted matrix passed 30/30. The
+final acceptance result above is the clean post-propagation run.

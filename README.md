@@ -22,7 +22,7 @@ and improve from a trusted source.
 
 Built for the **Education** track of OpenAI Build Week 2026.
 
-- Target public experience (final v6 verification pending):
+- Verified public v6 experience:
   [pentimento.law-ender.chatgpt.site](https://pentimento.law-ender.chatgpt.site)
 - Source: [github.com/Lawrence-eth/measure-twice](https://github.com/Lawrence-eth/measure-twice)
 - License: [MIT](LICENSE)
@@ -181,19 +181,16 @@ The configured model comes from `OPENAI_MODEL`; the repository's Build Week
 default is `gpt-5.6`. The authored learning route itself is deterministic and
 does not depend on model availability.
 
-The intended public configuration uses deterministic fallback unless the final
-release record proves that live server-side model access is enabled. The
+The verified public v6 configuration uses the deterministic fallback. The
 bounded GPT‑5.6 path is implemented and can be enabled with the server-only
-configuration below; final v6 production mode and hosted behavior remain
-pending verification. Fallback output must never be presented as a live model
-result.
+configuration below, but the current public result must be described as
+authored fallback output—not as a live model response.
 
 ## Judge walkthrough
 
-Use this walkthrough only against the exact hosted v6 candidate after its
-verification is recorded. Until then, use the local setup below. The intended
-public experience requires no installation, account, API key, or real
-deployment action from a judge.
+This walkthrough was verified against Sites version 5 at the public URL below.
+The experience requires no installation, account, API key, or real deployment
+action from a judge.
 
 1. Open
    [pentimento.law-ender.chatgpt.site](https://pentimento.law-ender.chatgpt.site)

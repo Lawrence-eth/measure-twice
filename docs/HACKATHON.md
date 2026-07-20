@@ -7,9 +7,8 @@ Submission deadline: **July 21, 2026 at 5:00 PM Pacific** (**July 22 at
 
 The Official Rules, Devpost form, and notices on
 [openai.devpost.com](https://openai.devpost.com) are the source of truth. This
-file contains submission-ready copy for the Pentimento v6 candidate; every TBD
-must be resolved against the exact final commit and deployment before
-submission.
+file contains submission-ready copy for the verified Pentimento v6 release.
+Only entrant-controlled submission values remain TBD.
 
 ## Devpost summary
 
@@ -30,8 +29,7 @@ after each stop.
 
 **Target public experience:**
 [pentimento.law-ender.chatgpt.site](https://pentimento.law-ender.chatgpt.site)
-— native ChatGPT Sites address; the v6 candidate must be verified there before
-this copy is submitted.
+— verified native ChatGPT Sites release.
 
 **Repository:** [github.com/Lawrence-eth/measure-twice](https://github.com/Lawrence-eth/measure-twice)
 
@@ -99,7 +97,7 @@ The required route is deliberately small:
 
 ## Public judge testing instructions
 
-Use this copy only after the final v6 candidate is verified at the public URL:
+Verified public testing instructions:
 
 > Open https://pentimento.law-ender.chatgpt.site in a current desktop or mobile
 > browser. No account, API key, installation, or real deployment is required.
@@ -258,20 +256,20 @@ appear in the footage.
   private repository with both testing@devpost.com and
   build-week-event@openai.com.
 - [x] Confirm the Devpost repository URL resolves for a signed-out judge.
-- [ ] Freeze and record the exact final v6 commit and release/version metadata.
+- [x] Freeze and record the exact final v6 commit and release/version metadata.
 
 ### Public experience
 
-- [ ] Deploy the final verified v6 artifact to
+- [x] Deploy the final verified v6 artifact to
   pentimento.law-ender.chatgpt.site.
-- [ ] Run the full hosted desktop/mobile suite against that exact artifact.
-- [ ] Verify the worked inspection, four chapters, eight-stop route, 13
+- [x] Run the full hosted desktop/mobile suite against that exact artifact.
+- [x] Verify the worked inspection, four chapters, eight-stop route, 13
   decisions, build-kit-note checkpoints, persistent Build kit, two
   project-layer views, local V1 brief, optional reflection boundary, restart,
   keyboard path, focus, reduced-motion behavior, and narrow layouts.
-- [ ] Record the final Sites version/deployment, hosted test result, date, and
+- [x] Record the final Sites version/deployment, hosted test result, date, and
   rollback target in docs/BUILD_LOG.md.
-- [ ] Confirm whether the submitted deployment uses live GPT-5.6 or the
+- [x] Confirm whether the submitted deployment uses live GPT-5.6 or the
   deterministic fallback, and describe it accurately.
 
 ### Devpost
@@ -286,21 +284,22 @@ appear in the footage.
 - [ ] Add the primary project thread’s /feedback Session ID.
 - [ ] Submit before the deadline and capture the confirmation.
 
-## Values that must remain TBD until verified
+## Final hand-in values
 
-Do not invent or copy v3–v5 release values into the final v6 form. Historical
-values remain in [BUILD_LOG.md](BUILD_LOG.md).
+The release-controlled values below were verified against the exact public v6
+artifact. The remaining TBD values require entrant action outside the
+repository.
 
 | Field | Final value |
 | --- | --- |
 | Public YouTube demo URL | **TBD — entrant uploads and verifies public visibility** |
 | Primary Codex /feedback Session ID | **TBD — entrant obtains it from the primary build thread** |
-| Exact final v6 deployed source | **TBD — record the exact reviewed commit after deployment** |
-| Final Sites deployment version | **TBD — record the saved v6 version and deployment ID** |
-| Hosted v6 acceptance result and timestamp | **TBD — rerun the hosted suite against the exact v6 deployment** |
-| Rollback version confirmed for final release | **TBD — select and verify after the v6 deployment exists** |
-| Production reflection mode and evidence | **TBD — verify the final deployment and describe live or deterministic mode accurately** |
-| Repository public-access or private-sharing confirmation | **TBD — reconfirm signed-out access for the final submission** |
+| Exact final v6 deployed source | `f0934095791555d3bc7c089a9136599a47595df4` · annotated tag `pentimento-v6` |
+| Final Sites deployment version | Version 5 · `appgdep_6a5d9f4f207481919ff4869f65d00b8e` |
+| Hosted v6 acceptance result and timestamp | PASS · 30/30 desktop/mobile Chromium · July 20, 2026 04:20 UTC |
+| Rollback version confirmed for final release | Sites version 4 · `0ac40c9b7f08acafa687322cd4d4188785f03f44` |
+| Production reflection mode and evidence | Deterministic fallback · valid `/api/debrief` returned `mode: "demo"`, two unresolved questions, and three next moves |
+| Repository public-access or private-sharing confirmation | PASS · signed-out GitHub request returned HTTP `200` |
 | Devpost submission confirmation | **TBD — entrant submits and records it** |
 
 The primary build thread's /feedback Session ID and the public YouTube URL are
