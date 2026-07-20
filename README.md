@@ -188,7 +188,7 @@ authored fallback output—not as a live model response.
 
 ## Judge walkthrough
 
-This walkthrough was verified against Sites version 5 at the public URL below.
+This walkthrough was verified against Sites version 6 at the public URL below.
 The experience requires no installation, account, API key, or real deployment
 action from a judge.
 

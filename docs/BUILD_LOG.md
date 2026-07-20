@@ -516,3 +516,50 @@ settling: one browser received the previous v4 opening while 29 v5 checks
 passed. After propagation, the affected route passed five consecutive
 fresh-browser repetitions and the complete hosted matrix passed 30/30. The
 final acceptance result above is the clean post-propagation run.
+
+## July 20 — Interaction rhythm refinement
+
+A final general-user review found that the Conservation Lab still felt more
+static than interactive and that several adjacent controls read as one crowded
+cluster. The refinement keeps the curriculum intact while giving decisions,
+feedback, dialogs, and workshop steps a coherent motion and spacing language.
+
+Choice rows now behave like deliberate instruments: they have distinct
+boundaries, a restrained selection rail, and an arrow-to-check state change.
+Consequences expand in place instead of appearing abruptly. Stage, task,
+canvas, Build kit, and workshop transitions share one easing system; explicit
+scrolls respect reduced motion. Primary, secondary, text, header, completion,
+and restart actions now use consistent separation and state feedback.
+
+The pass also corrected the less visible interaction details:
+
+- the Build kit no longer scrolls its own title and close control out of view
+  on a 720px-high desktop;
+- the mobile route overview footer follows the final chapter with a measured
+  17px gap instead of covering it;
+- mobile lesson chrome was tightened without reducing the 10px separation
+  between decision controls;
+- live-region feedback no longer announces the same state twice; and
+- each V1 workshop step re-enters as a distinct, focused scene.
+
+The exact refinement was saved and published on July 20, 2026 at 05:20 UTC:
+
+| Check | Result |
+| --- | --- |
+| Deployed source | PASS · `e468794af3c214a30afb742ef3a572b852e79677` |
+| Sites version | PASS · version 6 · `appgprj_6a5cd40f4f5c81919c4fcd84e7ef2709~appgver_87e40fb7ee7c8191acdbbdd0c39c314d` |
+| Production deployment | PASS · `appgdep_6a5dafe545c081919dd279abca80bc58` |
+| Native public URL | PASS · `https://pentimento.law-ender.chatgpt.site` returned HTTP `200` |
+| Typecheck | PASS · no diagnostics |
+| Unit tests | PASS · 96/96 |
+| Next.js and Sites-compatible Vinext builds | PASS |
+| Runtime dependency audit | PASS · zero vulnerabilities |
+| Local interaction coverage | PASS · core route, Build kit, workshop, persistence, repair/retry, restart, keyboard, Axe, and reduced motion |
+| Local responsive matrix | PASS · 320, 390, 768, and 1440px; zero horizontal overflow |
+| Generated Worker | PASS · root/icon `200`, invalid reflection `400`, valid reflection `200` |
+| Hosted critical paths | PASS · desktop and mobile core journey, Build kit, workshop, reduced motion, and Axe |
+| Hosted experience-density audit | PASS · desktop and mobile · zero gated violations |
+| Production endpoint boundary | PASS · root/icon `200`, invalid reflection `400`, valid reflection `200` |
+| Short-desktop Build kit geometry | PASS · `0px` position and scroll shift before/open/close at 1440×720 |
+| Mobile route overview | PASS · `17px` chapter-to-footer gap and `0px` overlap at 390×844 |
+| Rollback target | PASS · Sites version 5 · `f0934095791555d3bc7c089a9136599a47595df4` |
