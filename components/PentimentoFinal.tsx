@@ -107,6 +107,12 @@ function cx(...classes: Array<string | false | null | undefined>) {
   return classes.filter(Boolean).join(" ");
 }
 
+function preferredScrollBehavior(): ScrollBehavior {
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ? "auto"
+    : "smooth";
+}
+
 function Brand({ onClick }: { onClick?: () => void }) {
   const content = (
     <>
@@ -161,7 +167,8 @@ function ChoiceButtons({
               {showHints && <small>{choice.canvasChange}</small>}
             </span>
             <span className="p6-choice__marker" aria-hidden="true">
-              {isSelected ? "✓" : "→"}
+              <span className="p6-choice__marker-idle">→</span>
+              <span className="p6-choice__marker-selected">✓</span>
             </span>
           </button>
         );
@@ -179,17 +186,45 @@ function ChoiceFeedback({
   successLabel?: string;
   riskLabel?: string;
 }) {
-  if (!choice) return null;
+  const shellRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!choice || choice.recommended) return;
+    const behavior = preferredScrollBehavior();
+    const timer = window.setTimeout(() => {
+      shellRef.current?.scrollIntoView({
+        block: "nearest",
+        behavior,
+      });
+    }, behavior === "auto" ? 0 : 340);
+    return () => window.clearTimeout(timer);
+  }, [choice]);
+
   return (
     <div
-      className={cx("p4-feedback", choice.recommended ? "is-success" : "is-risk")}
+      className={cx("p6-feedback-shell", choice && "is-visible")}
+      ref={shellRef}
       role="status"
+      aria-live="polite"
+      aria-atomic="true"
     >
-      <b>{choice.recommended ? successLabel : riskLabel}</b>
-      <p>{choice.consequence}</p>
-      <small>
-        <span aria-hidden="true">↳</span> {choice.canvasChange}
-      </small>
+      <div className="p6-feedback-shell__inner">
+        {choice && (
+          <div
+            className={cx(
+              "p4-feedback",
+              choice.recommended ? "is-success" : "is-risk",
+            )}
+            key={choice.id}
+          >
+            <b>{choice.recommended ? successLabel : riskLabel}</b>
+            <p>{choice.consequence}</p>
+            <small>
+              <span aria-hidden="true">↳</span> {choice.canvasChange}
+            </small>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
@@ -761,6 +796,26 @@ function canvasDisclosureLabel(stage: FinalStage): string {
   }
 }
 
+function canvasStateSignature(progress: FinalProgress): string {
+  return [
+    progress.stage,
+    progress.completedStages.length,
+    progress.ideaChoice,
+    progress.toolChoice,
+    progress.projectHomeChoice,
+    progress.secretChoice,
+    progress.aiFirstChoice,
+    progress.planApprovalChoice,
+    progress.buildEvidenceChoice,
+    progress.checkAttemptChoice,
+    progress.repairChoice,
+    progress.checkRetryChoice,
+    progress.releaseVersionChoice,
+    progress.releaseProofChoice,
+    progress.improveChoice,
+  ].join(":");
+}
+
 function ProjectSurfaceVisual({ progress }: { progress: FinalProgress }) {
   const stage = progress.stage;
   const built =
@@ -822,6 +877,7 @@ function ProjectSurfaceVisual({ progress }: { progress: FinalProgress }) {
 
 function CanvasLens({ progress }: { progress: FinalProgress }) {
   const [view, setView] = useState<"surface" | "underlayers">("underlayers");
+  const transitionKey = `${view}:${canvasStateSignature(progress)}`;
   return (
     <section className="p5-canvas-lens" aria-label="Visitor surface and project layers">
       <div
@@ -845,7 +901,7 @@ function CanvasLens({ progress }: { progress: FinalProgress }) {
           Layers underneath
         </button>
       </div>
-      <div className="p5-canvas-lens__view" key={view}>
+      <div className="p5-canvas-lens__view" key={transitionKey}>
         {view === "surface" ? (
           <CanvasFrame layer="Visitor surface">
             <ProjectSurfaceVisual progress={progress} />
@@ -1578,7 +1634,10 @@ function Welcome({
       const frame = window.requestAnimationFrame(() => {
         auditRevealRef.current
           ?.closest(".p5-audit__reveal")
-          ?.scrollIntoView({ block: "center", behavior: "auto" });
+          ?.scrollIntoView({
+            block: "center",
+            behavior: preferredScrollBehavior(),
+          });
         auditRevealRef.current?.focus({ preventScroll: true });
       });
       return () => window.cancelAnimationFrame(frame);
@@ -1587,7 +1646,10 @@ function Welcome({
       const frame = window.requestAnimationFrame(() => {
         auditLayersHeadingRef.current
           ?.closest(".p5-audit__underlayers")
-          ?.scrollIntoView({ block: "start", behavior: "auto" });
+          ?.scrollIntoView({
+            block: "start",
+            behavior: preferredScrollBehavior(),
+          });
         auditLayersHeadingRef.current?.focus({ preventScroll: true });
       });
       return () => window.cancelAnimationFrame(frame);
@@ -2202,15 +2264,25 @@ function PlaybookDialog({
       const restoreCard = restoreCardRef.current;
       if (!open || !restoreCard) return;
       const frame = window.requestAnimationFrame(() => {
-        cardButtonRefs.current[restoreCard]?.focus();
-        cardButtonRefs.current[restoreCard]?.scrollIntoView({ block: "nearest", behavior: "auto" });
+        cardButtonRefs.current[restoreCard]?.focus({ preventScroll: true });
+        if (window.matchMedia("(max-width: 820px)").matches) {
+          cardButtonRefs.current[restoreCard]?.scrollIntoView({
+            block: "nearest",
+            behavior: preferredScrollBehavior(),
+          });
+        }
         restoreCardRef.current = null;
       });
       return () => window.cancelAnimationFrame(frame);
     }
     const frame = window.requestAnimationFrame(() => {
       cardRef.current?.focus({ preventScroll: true });
-      cardRef.current?.scrollIntoView({ block: "nearest", behavior: "auto" });
+      if (window.matchMedia("(max-width: 820px)").matches) {
+        cardRef.current?.scrollIntoView({
+          block: "nearest",
+          behavior: preferredScrollBehavior(),
+        });
+      }
     });
     return () => window.cancelAnimationFrame(frame);
   }, [activeCard, open]);
@@ -2256,39 +2328,44 @@ function PlaybookDialog({
             </li>
           ))}
         </ol>
-        <article ref={cardRef} className={cx("p4-guide__card", !active && "is-empty")} tabIndex={-1} aria-live="polite">
-          {active && detail ? (
-            <>
-              <button
-                className="p4-guide__back"
-                type="button"
-                onClick={() => {
-                  restoreCardRef.current = active.id;
-                  setActiveCard(null);
-                }}
-              >
-                ← All milestones
-              </button>
-              <span>When · {detail.when}</span>
-              <h3>{active.title}</h3>
-              <p><b>Do</b></p>
-              <ol>{detail.actions.map((action) => <li key={action}>{action}</li>)}</ol>
-              <p><b>Proof:</b> {detail.proof}</p>
-              <details>
-                <summary>Template and Willow Fix Day example</summary>
-                <pre><code>{detail.template}</code></pre>
-                <p><b>Worked example:</b> {detail.example}</p>
-                <button className="p4-secondary" type="button" onClick={copyTemplate}>Copy template</button>
-              </details>
-            </>
-          ) : (
-            <>
-              <span>Index</span>
-              <h3>Choose one milestone</h3>
-              <p>The full method stays available without placing every instruction on one screen.</p>
-            </>
-          )}
-          <p role="status" aria-live="polite">{copyStatus}</p>
+        <article ref={cardRef} className={cx("p4-guide__card", !active && "is-empty")} tabIndex={-1}>
+          <div
+            className="p6-guide-card__content"
+            key={active?.id ?? "build-kit-index"}
+          >
+            {active && detail ? (
+              <>
+                <button
+                  className="p4-guide__back"
+                  type="button"
+                  onClick={() => {
+                    restoreCardRef.current = active.id;
+                    setActiveCard(null);
+                  }}
+                >
+                  ← All milestones
+                </button>
+                <span>When · {detail.when}</span>
+                <h3>{active.title}</h3>
+                <p><b>Do</b></p>
+                <ol>{detail.actions.map((action) => <li key={action}>{action}</li>)}</ol>
+                <p><b>Proof:</b> {detail.proof}</p>
+                <details>
+                  <summary>Template and Willow Fix Day example</summary>
+                  <pre><code>{detail.template}</code></pre>
+                  <p><b>Worked example:</b> {detail.example}</p>
+                  <button className="p4-secondary" type="button" onClick={copyTemplate}>Copy template</button>
+                </details>
+              </>
+            ) : (
+              <>
+                <span>Index</span>
+                <h3>Choose one milestone</h3>
+                <p>The full method stays available without placing every instruction on one screen.</p>
+              </>
+            )}
+            <p role="status" aria-live="polite">{copyStatus}</p>
+          </div>
         </article>
       </div>
     </AccessibleDialog>
@@ -2383,8 +2460,11 @@ function MirrorDialog({
     if (!open) return;
     const frame = window.requestAnimationFrame(() => {
       const target = briefReady ? briefHeadingRef.current : stepHeadingRef.current;
-      target?.focus();
-      target?.scrollIntoView({ block: "nearest", behavior: "auto" });
+      target?.focus({ preventScroll: true });
+      target?.scrollIntoView({
+        block: "nearest",
+        behavior: preferredScrollBehavior(),
+      });
     });
     return () => window.cancelAnimationFrame(frame);
   }, [briefReady, open, step]);
@@ -2504,7 +2584,7 @@ function MirrorDialog({
               </span>
             ))}
           </div>
-          <section className="p4-wizard__step">
+          <section className="p4-wizard__step" key={`workshop-step-${step}`}>
             <span>Step {step} of 4</span>
             <h3 ref={stepHeadingRef} tabIndex={-1}>{stepData.title}</h3>
             <p className="p4-wizard__hint">
@@ -2535,19 +2615,22 @@ function MirrorDialog({
               ))}
             </div>
             {step === 4 && (
-              <div className="p4-options" role="group" aria-label="Selected tool route">
-                {toolChoices.map((choice) => (
-                  <button
-                    className={cx("p4-choice", route === choice.id && "is-selected")}
-                    type="button"
-                    aria-pressed={route === choice.id}
-                    key={choice.id}
-                    onClick={() => updateDraft("toolRoute", choice.id)}
-                  >
-                    <b>{choice.label}</b>
-                  </button>
-                ))}
-              </div>
+              <fieldset className="p6-wizard-route">
+                <legend>Choose a starter route</legend>
+                <div className="p4-options" role="group" aria-label="Selected tool route">
+                  {toolChoices.map((choice) => (
+                    <button
+                      className={cx("p4-choice", route === choice.id && "is-selected")}
+                      type="button"
+                      aria-pressed={route === choice.id}
+                      key={choice.id}
+                      onClick={() => updateDraft("toolRoute", choice.id)}
+                    >
+                      <b>{choice.label}</b>
+                    </button>
+                  ))}
+                </div>
+              </fieldset>
             )}
           </section>
           <div className="p4-wizard__actions">
@@ -2673,7 +2756,7 @@ export function PentimentoFinal() {
       question?.focus({ preventScroll: true });
       question?.closest(".p4-task")?.scrollIntoView({
         block: "start",
-        behavior: "auto",
+        behavior: preferredScrollBehavior(),
       });
     });
     return () => window.cancelAnimationFrame(frame);
@@ -2681,15 +2764,21 @@ export function PentimentoFinal() {
 
   useEffect(() => {
     if (!hydrated || checkpointRevision === 0) return;
+    let scrollTimer: number | undefined;
     const frame = window.requestAnimationFrame(() => {
       const checkpoint = document.querySelector<HTMLElement>(".p5-checkpoint h2");
       checkpoint?.focus({ preventScroll: true });
-      checkpoint?.closest(".p5-checkpoint")?.scrollIntoView({
-        block: "nearest",
-        behavior: "auto",
-      });
+      scrollTimer = window.setTimeout(() => {
+        checkpoint?.closest(".p5-checkpoint")?.scrollIntoView({
+          block: "nearest",
+          behavior: preferredScrollBehavior(),
+        });
+      }, preferredScrollBehavior() === "auto" ? 0 : 340);
     });
-    return () => window.cancelAnimationFrame(frame);
+    return () => {
+      window.cancelAnimationFrame(frame);
+      if (scrollTimer !== undefined) window.clearTimeout(scrollTimer);
+    };
   }, [checkpointRevision, hydrated]);
 
   function choose(
@@ -2705,14 +2794,8 @@ export function PentimentoFinal() {
         return current;
       }
       const patched = { ...current, ...patch };
-      if (!complete) {
-        setAnnouncement("The project canvas changed. Inspect the consequence before choosing again.");
-        return patched;
-      }
+      if (!complete) return patched;
       setCheckpointRevision((revision) => revision + 1);
-      setAnnouncement(
-        `${stageLabel(stage)} decision ready. Inspect the consequence and field card before saving the layer.`,
-      );
       return patched;
     });
   }
@@ -2818,7 +2901,10 @@ export function PentimentoFinal() {
           <>
             <main id="main-content">
               <section className="p4-stage">
-                <header className="p4-stage__intro">
+                <header
+                  className="p4-stage__intro"
+                  key={`stage-intro-${progress.stage}`}
+                >
                   <p className="p4-kicker">
                     Stop {stageById[progress.stage].number} · {stageById[progress.stage].navLabel}
                   </p>
@@ -2839,7 +2925,10 @@ export function PentimentoFinal() {
                   <LastSavedRule progress={progress} />
                 </header>
                 <div className="p4-workspace">
-                  <div className="p5-learning-column">
+                  <div
+                    className="p5-learning-column"
+                    key={`learning-column-${progress.stage}`}
+                  >
                     {reviewingSavedStage ? (
                       <SavedStageReview
                         stage={progress.stage as FinalLearningStage}
@@ -2848,7 +2937,11 @@ export function PentimentoFinal() {
                       />
                     ) : (
                       <>
-                        <StageTask progress={progress} choose={choose} />
+                        <StageTask
+                          key={`${progress.stage}:${taskRevision}`}
+                          progress={progress}
+                          choose={choose}
+                        />
                         {currentStageReady && (
                           <StageCheckpoint
                             stage={activeLearningStage}
