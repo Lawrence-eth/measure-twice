@@ -1,8 +1,8 @@
-# Pentimento v6 quality standard
+# Pentimento v7 quality standard
 
 This is the acceptance contract for the current OpenAI Build Week candidate.
 Pentimento is ready only when the product follows the careful build discipline
-it teaches. A passing result from v1–v5 is not evidence for v6.
+it teaches. A passing result from v1–v6 is not evidence for v7.
 
 ## Product truth
 
@@ -48,7 +48,7 @@ it teaches. A passing result from v1–v5 is not evidence for v6.
   live → Improve.
 - The header groups those stops into Shape the promise, Ground the work, Direct
   the build, and Prove the release.
-- The required curriculum contains exactly 13 consequential decisions.
+- The required curriculum contains exactly 14 consequential decisions.
 - Willow Fix Day facts, files, defect, repair, versions, release, and update
   remain consistent.
 - Idea selects one complete supportable visitor path and names a Not now
@@ -69,7 +69,7 @@ it teaches. A passing result from v1–v5 is not evidence for v6.
   layer.
 - The finished Willow Fix Day page does not require runtime AI.
 
-## Decide, inspect, save
+## Decide, inspect, learn
 
 - Every stop names why the decision matters and what the learner will leave
   with.
@@ -77,10 +77,10 @@ it teaches. A passing result from v1–v5 is not evidence for v6.
   state.
 - Correct feedback remains visible; it never auto-advances before the learner
   can inspect it.
-- The stop-level build-kit note states the reusable rule, when to use it, and the
+- The in-place lesson receipt states the reusable rule, when to use it, and the
   failure it prevents.
-- The learner explicitly saves that note with a meaningfully named checkpoint
-  before the next stop.
+- The learner explicitly opens that receipt, then continues with a predictable
+  next-stop label.
 - Eight stop-level notes accumulate into the existing five-guide take-home
   Build kit; the product never implies that eight new guides were created.
 - Wrong choices explain a concrete cost, missing proof, or additional system
@@ -159,7 +159,7 @@ Additional gates:
 - Semantic landmarks, headings, lists, forms, buttons, links, definition lists,
   code blocks, and dialogs match their meaning.
 - Every control has an accessible name, visible focus, and keyboard operation.
-- Feedback and build-kit-note checkpoints receive useful focus without hiding
+- Feedback and lesson receipts receive useful focus without hiding
   content before it can be read.
 - Dialogs contain focus, support safe dismissal, and restore focus.
 - Status updates and copy results are announced without stealing focus.
@@ -176,7 +176,7 @@ Additional gates:
 
 - Progress uses the dedicated versioned key `pentimento-studio-v4`.
 - The exact stop, decision state, selected route, check/repair state, release
-  state, improvement, saved build-kit notes, and completion survive refresh.
+  state, improvement, saved lesson receipts, and completion survive refresh.
 - Invalid or partial storage falls back to a usable state.
 - Storage failure does not prevent the authored journey.
 - Returning learners receive contextual resume information.
@@ -211,8 +211,8 @@ Additional gates:
 - API tests cover V1 brief reflection validation, deterministic fallback,
   structured response, limits, and live failure fallback.
 - Browser tests cover the worked inspection, four chapters, all eight stops,
-  13 decisions,
-  build-kit-note checkpoints, Build kit availability, both project-layer
+  14 decisions,
+  lesson receipts, Build kit availability, both project-layer
   views,
   fail/repair/retry, complete desktop/mobile paths, restoration, dialogs,
   keyboard operation, focus, accessibility scans, and narrow layouts.

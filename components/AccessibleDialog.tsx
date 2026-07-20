@@ -50,6 +50,8 @@ const FOCUSABLE_SELECTOR = [
   "[tabindex]:not([tabindex='-1'])",
 ].join(",");
 
+const DIALOG_EXIT_DURATION_MS = 220;
+
 let bodyLockCount = 0;
 let originalBodyOverflow = "";
 let originalBodyPaddingRight = "";
@@ -173,6 +175,7 @@ export function AccessibleDialog({
   testId,
 }: AccessibleDialogProps) {
   const [portalReady, setPortalReady] = useState(false);
+  const [present, setPresent] = useState(open);
   const dialogRef = useRef<HTMLDivElement>(null);
   const lastFocusedInsideRef = useRef<HTMLElement | null>(null);
   const generatedId = useId();
@@ -185,7 +188,26 @@ export function AccessibleDialog({
   }, []);
 
   useEffect(() => {
-    if (!open || !portalReady) return;
+    if (open) {
+      setPresent(true);
+      return;
+    }
+
+    if (!present) return;
+
+    const prefersReducedMotion =
+      typeof window.matchMedia === "function" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const exitTimer = window.setTimeout(
+      () => setPresent(false),
+      prefersReducedMotion ? 0 : DIALOG_EXIT_DURATION_MS,
+    );
+
+    return () => window.clearTimeout(exitTimer);
+  }, [open, present]);
+
+  useEffect(() => {
+    if (!open || !portalReady || !present) return;
 
     const dialog = dialogRef.current;
     if (!dialog) return;
@@ -234,13 +256,18 @@ export function AccessibleDialog({
     initialFocusRef,
     open,
     portalReady,
+    present,
     restoreFocus,
     returnFocusRef,
   ]);
 
-  if (!open || !portalReady) return null;
+  if (!present || !portalReady) return null;
+
+  const dialogState = open ? "open" : "closing";
 
   function handleKeyDown(event: ReactKeyboardEvent<HTMLDivElement>) {
+    if (!open) return;
+
     const dialog = dialogRef.current;
     if (!dialog) return;
 
@@ -277,13 +304,17 @@ export function AccessibleDialog({
     <div
       className={backdropClassName}
       data-accessible-dialog-backdrop=""
+      data-state={dialogState}
+      aria-hidden={open ? undefined : "true"}
+      inert={open ? undefined : true}
       onPointerDown={(event) => {
-        if (event.target === event.currentTarget && dismissOnBackdrop) onDismiss("backdrop");
+        if (open && event.target === event.currentTarget && dismissOnBackdrop) onDismiss("backdrop");
       }}
     >
       <div
         ref={dialogRef}
         className={dialogClassName}
+        data-state={dialogState}
         role={role}
         aria-modal="true"
         aria-labelledby={titleId}

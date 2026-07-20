@@ -7,8 +7,9 @@ Submission deadline: **July 21, 2026 at 5:00 PM Pacific** (**July 22 at
 
 The Official Rules, Devpost form, and notices on
 [openai.devpost.com](https://openai.devpost.com) are the source of truth. This
-file contains submission-ready copy for the verified Pentimento v6 release.
-Only entrant-controlled submission values remain TBD.
+file contains submission-ready copy for the Pentimento v7 release candidate.
+Release-controlled values are filled after production verification; only
+entrant-controlled submission values otherwise remain TBD.
 
 ## Devpost summary
 
@@ -24,8 +25,8 @@ release.
 
 **Experience:** An authored 15-minute guided practice in a contemporary
 Conservation Lab, with a worked spectral inspection, four chapters, eight
-stops, 13 consequential decisions, and an explicit build-kit-note checkpoint
-after each stop.
+stops, 14 consequential decisions, and an in-place lesson receipt after each
+stop.
 
 **Target public experience:**
 [pentimento.law-ender.chatgpt.site](https://pentimento.law-ender.chatgpt.site)
@@ -47,14 +48,14 @@ after each stop.
 > the organizer**, observes **Nothing happened**, then uses **Reveal what the
 > screen hid**. A spectral scan exposes four hidden layers: promise, project
 > home, evidence, and release. The learner
-> then guides the Willow Fix Day page through four chapters, eight stops, and 13
+> then guides the Willow Fix Day page through four chapters, eight stops, and 14
 > consequential decisions: shape one supportable first version, choose a tool
 > route, create a recoverable project home, direct AI with a bounded plan,
-> inspect a build, discover and repair a failed visitor path, release one
-> checked version, and improve it from a trusted source. After each stop,
-> successful feedback remains visible until the learner inspects and files its
-> reusable build-kit note. The eight stop-level notes connect to the existing
-> five-guide Build kit.
+> recognize a preview as a candidate, discover and repair a failed visitor
+> path, release one checked version, and improve it from a trusted source.
+> Each task becomes a concise lesson receipt in the same place, so the learner
+> sees the decision, its visible consequence, and the reusable rule before
+> continuing. The eight receipts connect to the existing five-guide Build kit.
 >
 > A persistent canvas switches between **Visitor surface** and **Layers
 > underneath**, so scope, files, prompts, evidence, defects, versions, and
@@ -78,7 +79,7 @@ transferable way to scope a useful first version, separate tool roles, protect
 recoverable work, direct AI in reviewable steps, distinguish claims from
 evidence, repair an observed failure, publish an exact checked version, and
 update the source before the surface. The simulation is the practice
-environment; the Build kit, saved build-kit notes, and locally generated V1
+environment; the Build kit, saved lesson receipts, and locally generated V1
 brief let the learner apply the method to any later project or AI workspace.
 
 The required route is deliberately small:
@@ -89,11 +90,11 @@ The required route is deliberately small:
 | Tools | 1 | Choose a faster hosted route or more transferable repository route |
 | Project home | 2 | Preserve the work and separate build-time AI from runtime AI |
 | Ask AI | 2 | Request a plan, inspect it, and approve one shown step |
-| Build | 1 | Move from an AI claim toward human-path evidence |
+| Build | 1 | Treat the preview as a candidate and hand it to a visitor-path check |
 | Check | 3 | Try the path, make the smallest repair, and retry it |
 | Go live | 2 | Select the checked version and repeat the path publicly |
-| Improve | 1 | Update the trusted source before the page |
-| **Total** | **13** | **First version → checked release → source-backed improvement** |
+| Improve | 2 | Update the trusted source, then target the affected reading and check |
+| **Total** | **14** | **First version → checked release → source-backed improvement** |
 
 ## Public judge testing instructions
 
@@ -106,8 +107,9 @@ Verified public testing instructions:
 > continue with **Start with layer 1 · define the promise**. **Preview the four
 > chapters** is the optional overview ending with **Start with the first
 > promise**. Follow either tool route through all eight stops. After each
-> correct stop, inspect the consequence and build-kit note before saving the
-> layer. The persistent **Build kit** remains available beside the task. In
+> correct stop, open its lesson receipt, inspect the consequence and reusable
+> rule, then continue. The persistent **Build kit** remains available beside
+> the task. In
 > **Check**, try the contact action, choose the bounded repair, and try the
 > repaired action again—the retry is required. In **Go live**, choose checked
 > V4 instead of the polished but untested V3, then repeat the path at the
@@ -155,11 +157,12 @@ released version. Pentimento turns those hidden responsibilities into a
 
 **Show:** Reveal Promise, Project home, Evidence, and Release; continue with
 **Start with layer 1 · define the promise**, choose the smallest supportable
-path in First version, and file its build-kit note.
+path in First version, then open its lesson receipt.
 
 **Say:** “The screen is the surface. Building means directing and checking
-the layers underneath. Four chapters turn 13 consequential decisions into
-reusable build-kit notes. First, the learner narrows the promise. Then tools get
+the layers underneath. Four chapters turn 14 consequential decisions into
+eight reusable lesson receipts. First, the learner narrows the promise. Then
+tools get
 clear jobs: AI helps build, the project home remembers, and the host
 publishes.”
 
@@ -172,8 +175,8 @@ agreement and inspect its checkpoint.
 **Say:** “A useful request gives AI trusted facts, a Not now boundary, a finish
 line, and permission for one shown step. Correct choices do not disappear:
 the learner inspects what changed, when to reuse the rule, and what failure it
-prevents before filing the build-kit note. An AI completion message is only the
-first evidence level.”
+prevents before moving forward. An AI completion message is only the first
+evidence level.”
 
 ### 1:10–1:38 — fail, repair, retry
 
@@ -237,8 +240,8 @@ appear in the footage.
 
 | Criterion | Evidence to show |
 | --- | --- |
-| **Technological Implementation** | Typed and validated progress with exact substep restoration; two route-dependent curricula; 13 consequential decisions plus explicit build-kit-note checkpoints; a persistent Visitor surface/Layers underneath canvas; a bounded server-only reflection endpoint with structured input/output and deterministic fallback; unit, API, responsive browser, accessibility, Worker, and hosted-runtime verification paths. The README documents how Codex shaped and accelerated the implementation. |
-| **Design** | A contemporary Conservation Lab and spectral inspection that prove the problem before explaining it; four chapters across eight stops; successful feedback that remains visible until the learner files the artifact; a persistent Build kit; useful wrong-choice consequences; mobile/desktop layouts; native controls, managed focus, reduced-motion support, and a literal pentimento that preserves earlier decisions. |
+| **Technological Implementation** | Typed and validated progress with exact substep restoration; two route-dependent curricula; 14 consequential decisions plus in-place lesson receipts; a persistent Visitor surface/Layers underneath canvas; a bounded server-only reflection endpoint with structured input/output and deterministic fallback; unit, API, responsive browser, accessibility, Worker, and hosted-runtime verification paths. The README documents how Codex shaped and accelerated the implementation. |
+| **Design** | A contemporary Conservation Lab and spectral inspection that prove the problem before explaining it; four chapters across eight stops; task-to-receipt transitions that keep cause and consequence in one reading position; a persistent Build kit; useful wrong-choice consequences; mobile/desktop layouts; native controls, managed focus, reduced-motion support, and a literal pentimento that preserves earlier decisions. |
 | **Potential Impact** | A specific audience—people with an idea and no AI-building mental model—and a specific risk: polished output without ownership, evidence, or recovery. Learners finish with reusable rules, route-specific next actions, templates, and their own local V1 brief. |
 | **Quality of the Idea** | A full idea-to-release education experience rather than a coding course, prompt library, tool ranking, or project generator. It separates build-time AI from runtime AI, makes evidence levels tangible, requires a fail → repair → retry loop, and uses earlier visible layers as the core teaching metaphor. |
 
@@ -249,22 +252,22 @@ appear in the footage.
 - [x] Repository URL is included.
 - [x] MIT license is included.
 - [x] README explains the audience, education problem, worked spectral
-  inspection, four chapters, eight stops, 13 decisions plus build-kit-note
-  checkpoints, persistent Build kit, V1 brief workshop boundary, local setup,
+  inspection, four chapters, eight stops, 14 decisions plus in-place lesson
+  receipts, persistent Build kit, V1 brief workshop boundary, local setup,
   verification commands, deployment path, privacy, and Codex collaboration.
 - [x] Confirm the final repository is public with relevant licensing, or share a
   private repository with both testing@devpost.com and
   build-week-event@openai.com.
 - [x] Confirm the Devpost repository URL resolves for a signed-out judge.
-- [x] Freeze and record the exact final v6 commit and release/version metadata.
+- [ ] Freeze and record the exact final v7 commit and release/version metadata.
 
 ### Public experience
 
-- [x] Deploy the final verified v6 artifact to
+- [ ] Deploy the final verified v7 artifact to
   pentimento.law-ender.chatgpt.site.
-- [x] Run the full hosted desktop/mobile suite against that exact artifact.
-- [x] Verify the worked inspection, four chapters, eight-stop route, 13
-  decisions, build-kit-note checkpoints, persistent Build kit, two
+- [ ] Run the hosted desktop/mobile acceptance checks against that exact artifact.
+- [ ] Verify the worked inspection, four chapters, eight-stop route, 14
+  decisions, in-place lesson receipts, persistent Build kit, two
   project-layer views, local V1 brief, optional reflection boundary, restart,
   keyboard path, focus, reduced-motion behavior, and narrow layouts.
 - [x] Record the final Sites version/deployment, hosted test result, date, and
@@ -286,18 +289,18 @@ appear in the footage.
 
 ## Final hand-in values
 
-The release-controlled values below were verified against the exact public v6
-artifact. The remaining TBD values require entrant action outside the
-repository.
+The release-controlled values below are completed after the exact public v7
+artifact is verified. The remaining entrant-controlled values require action
+outside the repository.
 
 | Field | Final value |
 | --- | --- |
 | Public YouTube demo URL | **TBD — entrant uploads and verifies public visibility** |
 | Primary Codex /feedback Session ID | **TBD — entrant obtains it from the primary build thread** |
-| Exact final v6 deployed source | `f0934095791555d3bc7c089a9136599a47595df4` · annotated tag `pentimento-v6` |
-| Final Sites deployment version | Version 5 · `appgdep_6a5d9f4f207481919ff4869f65d00b8e` |
-| Hosted v6 acceptance result and timestamp | PASS · 30/30 desktop/mobile Chromium · July 20, 2026 04:20 UTC |
-| Rollback version confirmed for final release | Sites version 4 · `0ac40c9b7f08acafa687322cd4d4188785f03f44` |
+| Exact final v7 deployed source | **TBD — recorded after deployment** |
+| Final Sites deployment version | **TBD — recorded after deployment** |
+| Hosted v7 acceptance result and timestamp | **TBD — recorded after production verification** |
+| Rollback version confirmed for final release | Sites version 6 · `e468794af3c214a30afb742ef3a572b852e79677` |
 | Production reflection mode and evidence | Deterministic fallback · valid `/api/debrief` returned `mode: "demo"`, two unresolved questions, and three next moves |
 | Repository public-access or private-sharing confirmation | PASS · signed-out GitHub request returned HTTP `200` |
 | Devpost submission confirmation | **TBD — entrant submits and records it** |

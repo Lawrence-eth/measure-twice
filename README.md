@@ -7,12 +7,12 @@ who want to build with AI but do not yet know what happens between a prompt and
 a trustworthy release.
 
 The learner guides one fictional **Willow Fix Day** event page through eight
-focused stops in four chapters. The route contains **13 consequential
-decisions**. After each stop, the learner must inspect what changed and
-explicitly file its reusable **build-kit note** before continuing. Eight
-stop-level notes connect to a five-guide take-home **Build kit**. This pause turns a
-correct answer into a transferable method instead of a disappearing quiz
-result.
+focused stops in four chapters. The route contains **14 consequential
+decisions**. Each final decision settles into a visible consequence, then
+transforms in place into a concise **lesson receipt** before the learner
+continues. Eight receipts connect to a five-guide take-home **Build kit**. This
+pause turns a correct answer into a transferable method instead of a
+disappearing quiz result.
 
 Pentimento is not a coding course, prompt library, product ranking, or AI
 generator. It teaches the durable human work beneath AI tools: define a
@@ -22,7 +22,7 @@ and improve from a trusted source.
 
 Built for the **Education** track of OpenAI Build Week 2026.
 
-- Verified public v6 experience:
+- Verified public v7 experience:
   [pentimento.law-ender.chatgpt.site](https://pentimento.law-ender.chatgpt.site)
 - Source: [github.com/Lawrence-eth/measure-twice](https://github.com/Lawrence-eth/measure-twice)
 - License: [MIT](LICENSE)
@@ -47,7 +47,7 @@ different. A chat is not automatically a project home. A repository is not a
 public website. A completed deployment is not proof that a visitor can finish
 the important path.
 
-## The v6 Conservation Lab experience
+## The v7 authored-rhythm experience
 
 ### The worked inspection
 
@@ -73,25 +73,26 @@ beneath it.**
 | **1. Shape the promise** | First version | 1 | A V1 brief with one person, one complete path, and a “Not now” boundary |
 | **2. Ground the work** | Tools · Project home | 3 | A tool route, recoverable project home, and honest runtime-AI decision |
 | **3. Direct the build** | Ask AI · Build | 3 | A bounded work agreement and an evidenced saved version |
-| **4. Prove the release** | Check · Go live · Improve | 6 | A repaired path, checked release record, recovery version, and source-backed update |
-| **Total** | **8 stops** | **13** | **A complete idea → evidence → release method** |
+| **4. Prove the release** | Check · Go live · Improve | 7 | A repaired path, checked release record, recovery version, and source-backed update |
+| **Total** | **8 stops** | **14** | **A complete idea → evidence → release method** |
 
 Only the current task asks for attention. Every stop names why the decision
 matters and what the learner will leave with. Correct decisions stay on screen
 with their causal consequence, reusable rule, use moment, and prevented
-failure. The learner then files the build-kit note explicitly. Completed layers
-remain visible as a compact trail.
+failure. The learner then opens the in-place lesson receipt explicitly.
+Completed layers remain visible as a compact trail.
 
 ## What makes the interaction educational
 
-### Decide, inspect, then save
+### Decide, inspect, then learn
 
-The 13 required choices and trials change the project, its evidence, or its
-release state. A correct choice no longer skips straight to the next stop. The
-learner first inspects the consequence and completed build-kit note, then uses an
-explicit checkpoint such as **Keep this V1 boundary**, **Approve this work
-agreement**, or **Record this checked release**. Wrong choices remain useful:
-they reveal the extra systems or missing proof that choice would introduce.
+The 14 required choices and trials change the project, its evidence, or its
+release state. A correct choice no longer skips straight to the next stop or
+appends a distant card below it. The learner first sees the consequence, then
+deliberately opens a lesson receipt that replaces the task in the same reading
+position. Predictable continuation labels make the eight-stop route clear.
+Wrong choices remain useful: they reveal the extra systems or missing proof
+that choice would introduce.
 
 ### A persistent pentimento
 
@@ -165,7 +166,9 @@ It first creates a reusable V1 brief locally from:
 - a repeatable finish line; and
 - the selected starter route.
 
-The V1 brief is complete and copyable without a model call. The learner may
+Every field keeps a worked example visible after typing, and later steps carry
+forward a compact “brief so far.” The V1 brief is complete and copyable without
+a model call. The learner may
 then explicitly request an optional bounded GPT reflection. It returns one
 strength, exactly two unresolved questions, one feature to postpone, one honest
 route tradeoff, and exactly three next moves.
@@ -181,14 +184,14 @@ The configured model comes from `OPENAI_MODEL`; the repository's Build Week
 default is `gpt-5.6`. The authored learning route itself is deterministic and
 does not depend on model availability.
 
-The verified public v6 configuration uses the deterministic fallback. The
+The verified public v7 configuration uses the deterministic fallback. The
 bounded GPT‑5.6 path is implemented and can be enabled with the server-only
 configuration below, but the current public result must be described as
 authored fallback output—not as a live model response.
 
 ## Judge walkthrough
 
-This walkthrough was verified against Sites version 6 at the public URL below.
+This walkthrough was verified against Sites version 7 at the public URL below.
 The experience requires no installation, account, API key, or real deployment
 action from a judge.
 
@@ -207,8 +210,8 @@ action from a judge.
    the repaired action again. The retry is required.
 6. In **Go live**, distinguish the checked V4 from the polished but untested V3,
    then repeat the path at the simulated public address.
-7. At completion, open one of the five **Build kit** guides and select **Shape
-   my own V1 brief**. The V1 brief workshop works in deterministic demo mode;
+7. At completion, open one of the five **Build kit** guides and select **Apply
+   the method to my idea**. The V1 brief workshop works in deterministic demo mode;
    the GPT reflection is explicitly optional.
 
 All Willow Fix Day people, addresses, versions, URLs, releases, and external
@@ -270,7 +273,7 @@ npm run build
 
 - `npm test` covers the progress model, saved-state validation, and bounded
   V1 brief reflection API behavior.
-- `npm run test:e2e` exercises both tool lanes, the 13-decision route,
+- `npm run test:e2e` exercises both tool lanes, the 14-decision route,
   fail/repair/retry persistence, keyboard-only operation, dialog focus,
   accessibility scans, and 320–1440px layouts.
 - `npm run build:next` checks the conventional Next.js production build.
@@ -320,7 +323,7 @@ Codex was the primary implementation collaborator. It accelerated:
 - turning the broad “teach people to build with AI” idea into a bounded
   Education-track curriculum for complete beginners;
 - writing and revising the Willow Fix Day case, wrong-choice consequences,
-  stop-level build-kit notes and five-guide Build kit;
+  stop-level lesson receipts and five-guide Build kit;
 - replacing an overwhelming interface with the Conservation Lab opening,
   four-chapter route, persistent Build kit, and explicit consequence
   checkpoints;
@@ -362,8 +365,8 @@ Devpost submission form before the deadline.
 
 ## Project map
 
-- [`components/PentimentoFinal.tsx`](components/PentimentoFinal.tsx) — v6
-  Conservation Lab opening, four-chapter interface, project layers, Build kit,
+- [`components/PentimentoFinal.tsx`](components/PentimentoFinal.tsx) — v7
+  authored-rhythm opening, four-chapter interface, project layers, Build kit,
   and V1 brief workshop
 - [`lib/final-journey.ts`](lib/final-journey.ts) — authored eight-stop
   curriculum, choices, artifacts, and five-guide Build kit index
@@ -375,8 +378,8 @@ Devpost submission form before the deadline.
   fallback
 - [`tests/e2e/final-journey.spec.ts`](tests/e2e/final-journey.spec.ts) — desktop,
   mobile, keyboard, accessibility, persistence, and density coverage
-- [`docs/FINAL_EXPERIENCE.md`](docs/FINAL_EXPERIENCE.md) — beginner-first v6
-  Conservation Lab experience contract
+- [`docs/FINAL_EXPERIENCE.md`](docs/FINAL_EXPERIENCE.md) — beginner-first v7
+  experience contract
 - [`docs/BUILD_LOG.md`](docs/BUILD_LOG.md) — dated collaboration and historical
   release record
 

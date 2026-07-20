@@ -6,9 +6,11 @@ import {
   useState,
   type RefObject,
 } from "react";
+import { flushSync } from "react-dom";
 
 import { AccessibleDialog } from "@/components/AccessibleDialog";
 import {
+  affectedCheckChoices,
   aiFirstChoices,
   buildArtifact,
   buildEvidenceChoices,
@@ -64,6 +66,13 @@ import {
 
 type ChoiceId = string;
 type ChoiceItem = FinalChoice<ChoiceId>;
+type HandoffId =
+  | "runtime-ai"
+  | "approve-plan"
+  | "repair"
+  | "retry-contact"
+  | "release-proof"
+  | "affected-checks";
 
 type MirrorResult = {
   clearStrength: string;
@@ -111,6 +120,58 @@ function preferredScrollBehavior(): ScrollBehavior {
   return window.matchMedia("(prefers-reduced-motion: reduce)").matches
     ? "auto"
     : "smooth";
+}
+
+type TransitionKind = "choice" | "substep" | "scene" | "canvas" | "workshop";
+
+type NativeViewTransition = {
+  finished: Promise<void>;
+};
+
+type ViewTransitionDocument = Document & {
+  activeViewTransition?: NativeViewTransition;
+  startViewTransition?: (update: () => void) => NativeViewTransition;
+};
+
+function runViewTransition(
+  update: () => void,
+  kind: TransitionKind = "choice",
+) {
+  const viewDocument = document as ViewTransitionDocument;
+  const reducedMotion = preferredScrollBehavior() === "auto";
+
+  if (
+    reducedMotion ||
+    !viewDocument.startViewTransition ||
+    viewDocument.activeViewTransition
+  ) {
+    update();
+    return;
+  }
+
+  const root = document.documentElement;
+  root.dataset.pentimentoTransition = kind;
+  const transition = viewDocument.startViewTransition(() => {
+    flushSync(update);
+  });
+  transition.finished.finally(() => {
+    delete root.dataset.pentimentoTransition;
+  });
+}
+
+function bringIntoViewIfNeeded(
+  element: HTMLElement | null,
+  block: ScrollLogicalPosition = "nearest",
+) {
+  if (!element) return;
+  const rect = element.getBoundingClientRect();
+  const safeTop = 24;
+  const safeBottom = window.innerHeight - 24;
+  if (rect.top >= safeTop && rect.bottom <= safeBottom) return;
+  element.scrollIntoView({
+    block,
+    behavior: preferredScrollBehavior(),
+  });
 }
 
 function Brand({ onClick }: { onClick?: () => void }) {
@@ -181,22 +242,25 @@ function ChoiceFeedback({
   choice,
   successLabel = "Useful choice",
   riskLabel = "More work appears beneath the surface",
+  lessonRule,
+  continueLabel,
+  onContinue,
 }: {
   choice: ChoiceItem | undefined;
   successLabel?: string;
   riskLabel?: string;
+  lessonRule?: string;
+  continueLabel?: string;
+  onContinue?: () => void;
 }) {
   const shellRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!choice || choice.recommended) return;
+    if (!choice || (choice.recommended && !onContinue)) return;
     const behavior = preferredScrollBehavior();
     const timer = window.setTimeout(() => {
-      shellRef.current?.scrollIntoView({
-        block: "nearest",
-        behavior,
-      });
-    }, behavior === "auto" ? 0 : 340);
+      bringIntoViewIfNeeded(shellRef.current);
+    }, behavior === "auto" ? 0 : choice.recommended ? 440 : 340);
     return () => window.clearTimeout(timer);
   }, [choice]);
 
@@ -219,9 +283,34 @@ function ChoiceFeedback({
           >
             <b>{choice.recommended ? successLabel : riskLabel}</b>
             <p>{choice.consequence}</p>
-            <small>
-              <span aria-hidden="true">↳</span> {choice.canvasChange}
-            </small>
+            <dl className="p7-feedback__details">
+              <div>
+                <dt>Project change</dt>
+                <dd>{choice.canvasChange}</dd>
+              </div>
+              {!choice.recommended && lessonRule && (
+                <div>
+                  <dt>Working rule</dt>
+                  <dd>{lessonRule}</dd>
+                </div>
+              )}
+            </dl>
+            <p className="p7-feedback__guidance">
+              {choice.recommended
+                ? onContinue
+                  ? "The consequence is now visible. Continue when you are ready."
+                  : "Decision complete. Open the lesson receipt below when you are ready."
+                : "Keep this consequence in view, then choose another route to continue."}
+            </p>
+            {choice.recommended && onContinue && continueLabel && (
+              <button
+                className="p4-secondary p7-feedback__continue"
+                type="button"
+                onClick={onContinue}
+              >
+                {continueLabel}
+              </button>
+            )}
           </div>
         )}
       </div>
@@ -436,7 +525,7 @@ function EvidenceLadder({ earned }: { earned: number }) {
   );
 }
 
-function BuildVisual({ checked }: { checked: boolean }) {
+function BuildVisual({ candidateReady }: { candidateReady: boolean }) {
   return (
     <div className="p4-build">
       <div className="p4-ai-report">
@@ -444,18 +533,26 @@ function BuildVisual({ checked }: { checked: boolean }) {
         <p>Done — the Willow Fix Day page is ready.</p>
       </div>
       <div className="p4-build__loop" aria-label="The reusable build loop">
-        {["Ask", "Inspect", "Run", "Check", "Save"].map((step) => (
-          <span className={cx(checked && "is-complete")} key={step}>
+        {["Ask", "Inspect", "Run", "Check", "Save"].map((step, index) => (
+          <span
+            className={cx(
+              index < 3 && "is-complete",
+              index === 3 && "is-next",
+            )}
+            key={step}
+          >
             {step}
           </span>
         ))}
       </div>
       <div className="p4-versions" aria-label="Saved layers">
-        <span className={cx("p4-version", checked && "is-current")}>V1</span>
-        <span className="p4-version">V2</span>
-        <span className="p4-version">V3</span>
+        <span className={cx("p4-version", candidateReady && "is-candidate")}>
+          {candidateReady ? "V1 candidate" : "V1 preview"}
+        </span>
+        <span className="p4-version">Not checked</span>
+        <span className="p4-version">Not saved</span>
       </div>
-      <EvidenceLadder earned={checked ? 4 : 3} />
+      <EvidenceLadder earned={3} />
     </div>
   );
 }
@@ -522,7 +619,13 @@ function ReleaseVisual({ progress }: { progress: FinalProgress }) {
   );
 }
 
-function ImproveVisual({ completed }: { completed: boolean }) {
+function ImproveVisual({
+  sourceUpdated,
+  saved,
+}: {
+  sourceUpdated: boolean;
+  saved: boolean;
+}) {
   return (
     <div className="p4-diff">
       <article>
@@ -531,7 +634,13 @@ function ImproveVisual({ completed }: { completed: boolean }) {
       </article>
       <span aria-hidden="true">→</span>
       <article>
-        <small>{completed ? "V5 · source + page" : "Requested layer"}</small>
+        <small>
+          {saved
+            ? "V5 · checked source + page"
+            : sourceUpdated
+              ? "V5 candidate · targeted checks pending"
+              : "Requested layer"}
+        </small>
         <p>Step-free access: side entrance on Willow Lane</p>
       </article>
     </div>
@@ -652,8 +761,11 @@ function LastSavedRule({ progress }: { progress: FinalProgress }) {
     : finalJourney[finalLearningStages.indexOf(progress.stage) - 1];
   if (!previous || !progress.completedStages.includes(previous.id)) return null;
   return (
-    <aside className="p5-saved-receipt" aria-label={`${previous.navLabel} build-kit note saved`}>
-      <span>{previous.navLabel} build-kit note saved</span>
+    <aside
+      className="p5-saved-receipt"
+      aria-label={`${previous.navLabel} lesson added to the build kit`}
+    >
+      <span>Previous lesson saved · {previous.navLabel}</span>
       <p>{previous.reusableRule}</p>
       <small>{previous.savedLabel}</small>
     </aside>
@@ -727,7 +839,7 @@ function ProjectCanvas({ progress }: { progress: FinalProgress }) {
       <CanvasFrame layer={`${layerNumber} / 8`}>
         <FoundationSummary progress={progress} />
         <SavedArtifact progress={progress} />
-        <BuildVisual checked={progress.buildEvidenceChoice === "full-evidence"} />
+        <BuildVisual candidateReady={progress.buildEvidenceChoice === "full-evidence"} />
       </CanvasFrame>
     );
   }
@@ -754,10 +866,10 @@ function ProjectCanvas({ progress }: { progress: FinalProgress }) {
   if (stage === "go-live") {
     return (
       <CanvasFrame layer={`${layerNumber} / 8`}>
-        <FoundationSummary progress={progress} />
-        <FixedPathVisual />
-        <EvidenceLadder earned={progress.releaseProofChoice ? 5 : 4} />
-        <ReleaseVisual progress={progress} />
+      <FoundationSummary progress={progress} />
+      <FixedPathVisual />
+      <EvidenceLadder earned={progress.releaseProofChoice === "public-path" ? 5 : 4} />
+      <ReleaseVisual progress={progress} />
         <SavedArtifact progress={progress} />
       </CanvasFrame>
     );
@@ -765,7 +877,10 @@ function ProjectCanvas({ progress }: { progress: FinalProgress }) {
   return (
     <CanvasFrame layer={`${layerNumber} / 8`}>
       <FoundationSummary progress={progress} />
-      <ImproveVisual completed={progress.improveChoice === "source-then-page"} />
+      <ImproveVisual
+        sourceUpdated={progress.improveChoice === "source-then-page"}
+        saved={progress.completedStages.includes("improve")}
+      />
       <SavedArtifact progress={progress} />
     </CanvasFrame>
   );
@@ -933,12 +1048,16 @@ function ResponsiveProjectCanvas({ progress }: { progress: FinalProgress }) {
 
 type StageTaskProps = {
   progress: FinalProgress;
+  pendingHandoff: HandoffId | null;
+  receiptReady: boolean;
   choose: (
     stage: FinalLearningStage,
     patch: Partial<FinalProgress>,
     complete?: boolean,
-    focusNextQuestion?: boolean,
+    handoff?: HandoffId,
   ) => void;
+  onContinueHandoff: (handoff: HandoffId) => void;
+  onRevealReceipt: () => void;
 };
 
 function TaskShell({
@@ -965,7 +1084,53 @@ function TaskShell({
   );
 }
 
-function IdeaTask({ progress, choose }: StageTaskProps) {
+function LessonHandoff({
+  eyebrow,
+  title,
+  body,
+  action,
+  onContinue,
+  tone = "progress",
+}: {
+  eyebrow: string;
+  title: string;
+  body: string;
+  action: string;
+  onContinue: () => void;
+  tone?: "progress" | "observed";
+}) {
+  const handoffRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const behavior = preferredScrollBehavior();
+    const timer = window.setTimeout(() => {
+      bringIntoViewIfNeeded(handoffRef.current);
+    }, behavior === "auto" ? 0 : 440);
+    return () => window.clearTimeout(timer);
+  }, []);
+
+  return (
+    <section
+      ref={handoffRef}
+      className={cx("p7-handoff", tone === "observed" && "is-observed")}
+      aria-label={eyebrow}
+    >
+      <span>{eyebrow}</span>
+      <h3>{title}</h3>
+      <p>{body}</p>
+      <button className="p4-secondary" type="button" onClick={onContinue}>
+        {action}
+      </button>
+    </section>
+  );
+}
+
+function IdeaTask({
+  progress,
+  choose,
+  receiptReady,
+  onRevealReceipt,
+}: StageTaskProps) {
   const selected = ideaChoices.find((choice) => choice.id === progress.ideaChoice);
   return (
     <TaskShell
@@ -985,20 +1150,33 @@ function IdeaTask({ progress, choose }: StageTaskProps) {
         choice={selected}
         successLabel="A small, complete path"
         riskLabel="Useful later; unsupported in this first version"
+        lessonRule={stageById.idea.reusableRule}
+        continueLabel={!receiptReady ? "Open the lesson receipt" : undefined}
+        onContinue={!receiptReady ? onRevealReceipt : undefined}
       />
     </TaskShell>
   );
 }
 
-function ToolsTask({ progress, choose }: StageTaskProps) {
+function ToolsTask({
+  progress,
+  choose,
+  receiptReady,
+  onRevealReceipt,
+}: StageTaskProps) {
   const selected = toolChoices.find((choice) => choice.id === progress.toolChoice);
   return (
     <TaskShell
       id="tools"
       eyebrow="One route, three jobs"
       question="Which tradeoff matters more for your first project?"
-      hint="Both routes can work. Choose the tradeoff you prefer—not a product brand."
+      hint="Both routes can work. Choose the starting experience that suits you today—not a product brand."
     >
+      <div className="p7-role-primer" aria-label="The three jobs every AI project needs covered">
+        <div><span>01 · Build</span><b>Where AI changes the project</b></div>
+        <div><span>02 · Remember</span><b>Where files and versions survive</b></div>
+        <div><span>03 · Publish</span><b>Where one chosen version becomes available</b></div>
+      </div>
       <ChoiceButtons
         choices={toolChoices}
         selected={progress.toolChoice}
@@ -1006,14 +1184,28 @@ function ToolsTask({ progress, choose }: StageTaskProps) {
           choose("tools", { toolChoice: id as FinalProgress["toolChoice"] }, true)
         }
       />
-      <ChoiceFeedback choice={selected} successLabel="A deliberate starter route" />
+      <ChoiceFeedback
+        choice={selected}
+        successLabel="A deliberate starter route"
+        lessonRule={stageById.tools.reusableRule}
+        continueLabel={!receiptReady ? "Open the lesson receipt" : undefined}
+        onContinue={!receiptReady ? onRevealReceipt : undefined}
+      />
     </TaskShell>
   );
 }
 
-function ProjectHomeTask({ progress, choose }: StageTaskProps) {
+function ProjectHomeTask({
+  progress,
+  choose,
+  pendingHandoff,
+  receiptReady,
+  onContinueHandoff,
+  onRevealReceipt,
+}: StageTaskProps) {
   const route = progress.toolChoice ?? "repository";
-  if (progress.projectHomeChoice === "route-home") {
+  const holdingProjectHome = pendingHandoff === "runtime-ai";
+  if (progress.projectHomeChoice === "route-home" && !holdingProjectHome) {
     const privateChoices: readonly ChoiceItem[] = [secretChoices[1], secretChoices[0]];
     const selected = privateChoices.find((choice) => choice.id === progress.secretChoice);
     return (
@@ -1038,6 +1230,9 @@ function ProjectHomeTask({ progress, choose }: StageTaskProps) {
           choice={selected}
           successLabel="Build-time AI is not runtime AI"
           riskLabel="An unnecessary system was added"
+          lessonRule={stageById["project-home"].reusableRule}
+          continueLabel={!receiptReady ? "Open the lesson receipt" : undefined}
+          onContinue={!receiptReady ? onRevealReceipt : undefined}
         />
       </TaskShell>
     );
@@ -1070,20 +1265,35 @@ function ProjectHomeTask({ progress, choose }: StageTaskProps) {
           choose("project-home", {
             projectHomeChoice: id as FinalProgress["projectHomeChoice"],
             secretChoice: null,
-          }, false, id === "route-home")
+          }, false, id === "route-home" ? "runtime-ai" : undefined)
         }
       />
       <ChoiceFeedback
         choice={selected}
         successLabel="The work has a home"
         riskLabel="The work would disappear with the chat"
+        lessonRule={stageById["project-home"].reusableRule}
+        continueLabel={holdingProjectHome ? "Continue · decide whether runtime AI is needed" : undefined}
+        onContinue={
+          holdingProjectHome
+            ? () => onContinueHandoff("runtime-ai")
+            : undefined
+        }
       />
     </TaskShell>
   );
 }
 
-function AskTask({ progress, choose }: StageTaskProps) {
-  if (progress.aiFirstChoice === "inspect-plan") {
+function AskTask({
+  progress,
+  choose,
+  pendingHandoff,
+  receiptReady,
+  onContinueHandoff,
+  onRevealReceipt,
+}: StageTaskProps) {
+  const holdingRequest = pendingHandoff === "approve-plan";
+  if (progress.aiFirstChoice === "inspect-plan" && !holdingRequest) {
     const selected = planApprovalChoices.find(
       (choice) => choice.id === progress.planApprovalChoice,
     );
@@ -1132,6 +1342,9 @@ function AskTask({ progress, choose }: StageTaskProps) {
           choice={selected}
           successLabel="One shown step approved"
           riskLabel="Too much work before the next review"
+          lessonRule={stageById["ask-ai"].reusableRule}
+          continueLabel={!receiptReady ? "Open the lesson receipt" : undefined}
+          onContinue={!receiptReady ? onRevealReceipt : undefined}
         />
       </TaskShell>
     );
@@ -1152,27 +1365,39 @@ function AskTask({ progress, choose }: StageTaskProps) {
           choose("ask-ai", {
             aiFirstChoice: id as FinalProgress["aiFirstChoice"],
             planApprovalChoice: null,
-          }, false, id === "inspect-plan")
+          }, false, id === "inspect-plan" ? "approve-plan" : undefined)
         }
       />
       <ChoiceFeedback
         choice={selected}
         successLabel="Plan before change"
         riskLabel="Too much changes before you can review it"
+        lessonRule={stageById["ask-ai"].reusableRule}
+        continueLabel={holdingRequest ? "See the bounded request and proposed plan" : undefined}
+        onContinue={
+          holdingRequest
+            ? () => onContinueHandoff("approve-plan")
+            : undefined
+        }
       />
     </TaskShell>
   );
 }
 
-function BuildTask({ progress, choose }: StageTaskProps) {
+function BuildTask({
+  progress,
+  choose,
+  receiptReady,
+  onRevealReceipt,
+}: StageTaskProps) {
   const choices: readonly ChoiceItem[] = buildEvidenceChoices;
   const selected = choices.find((choice) => choice.id === progress.buildEvidenceChoice);
   return (
     <TaskShell
       id="build"
-      eyebrow="AI says “Done”"
-      question="Which action earns the next evidence level?"
-      hint="AI made a claim, files changed, and a preview appeared. None proves the visitor can finish."
+      eyebrow="AI says “Done” · three evidence levels earned"
+      question="The preview is open. What must happen before this candidate can be trusted?"
+      hint="The AI claim, changed files, and preview prove three different things. Human-path evidence is still missing."
     >
       <EvidenceLadder earned={3} />
       <ChoiceButtons
@@ -1188,40 +1413,113 @@ function BuildTask({ progress, choose }: StageTaskProps) {
       />
       <ChoiceFeedback
         choice={selected}
-        successLabel="Evidence before trust"
+        successLabel="Correct next action · evidence still pending"
         riskLabel="Evidence is still missing"
+        lessonRule="A preview is a candidate—not proof that the visitor path works."
+        continueLabel={!receiptReady ? "Open the lesson receipt" : undefined}
+        onContinue={!receiptReady ? onRevealReceipt : undefined}
       />
     </TaskShell>
   );
 }
 
 function ContactPractice({
-  repaired,
+  state,
   onTry,
+  context = "preview",
 }: {
-  repaired: boolean;
-  onTry: () => void;
+  state: "ready" | "failed" | "repaired" | "reached";
+  onTry?: () => void;
+  context?: "preview" | "public";
 }) {
+  const interactive = state === "ready" || state === "repaired";
   return (
     <div className="p4-browser p4-browser--practice">
-      <div className="p4-browser__bar">simulated preview · no email is sent</div>
+      <div className="p4-browser__bar">
+        {context === "public"
+          ? "willow-fix.example · public V4"
+          : "simulated preview · no email is sent"}
+      </div>
       <div className="p4-browser__page">
         <span>Willow Fix Day · contact</span>
         <h3>Questions before you come?</h3>
-        <p>The address is fictional. This checks link behavior, not delivery.</p>
+        <p>
+          {context === "public"
+            ? "This fresh public page confirms what a visitor actually received."
+            : "The address is fictional. This checks link behavior, not delivery."}
+        </p>
         <button
           type="button"
-          className={cx("p4-contact", repaired && "is-fixed")}
+          className={cx(
+            "p4-contact",
+            (state === "repaired" || state === "reached") && "is-fixed",
+            state === "failed" && "is-broken",
+          )}
           onClick={onTry}
+          disabled={!interactive}
         >
-          Email the organizer
+          {state === "failed"
+            ? "Email the organizer · no response"
+            : state === "reached"
+              ? "Public path reached ✓"
+              : "Email the organizer"}
         </button>
       </div>
     </div>
   );
 }
 
-function CheckTask({ progress, choose }: StageTaskProps) {
+function CheckTask({
+  progress,
+  choose,
+  pendingHandoff,
+  receiptReady,
+  onContinueHandoff,
+  onRevealReceipt,
+}: StageTaskProps) {
+  if (progress.checkRetryChoice === "retry-contact") {
+    return (
+      <TaskShell
+        id="check-complete"
+        eyebrow="Human-path evidence earned"
+        question="The same visitor path now finishes"
+        hint="You reproduced the failure, repaired only its cause, and repeated the exact action."
+      >
+        <ContactPractice state="reached" />
+        {!receiptReady && (
+          <LessonHandoff
+            eyebrow="Observation → repair → proof"
+            title="A passing repeat is stronger than a confident report."
+            body="The evidence belongs to the checked version because you performed the path after the repair."
+            action="Open the lesson receipt"
+            onContinue={onRevealReceipt}
+          />
+        )}
+      </TaskShell>
+    );
+  }
+
+  if (pendingHandoff === "repair") {
+    return (
+      <TaskShell
+        id="try-contact-result"
+        eyebrow="Observed result"
+        question="The polished path has a real dead end"
+        hint="You turned appearance into an observation. Record what happened before asking AI to repair anything."
+      >
+        <ContactPractice state="failed" />
+        <LessonHandoff
+          eyebrow="Evidence captured"
+          title="Nothing happened when the important action was used."
+          body="Now describe the observed result, the expected result, and what the repair must preserve."
+          action="Continue · write the defect"
+          onContinue={() => onContinueHandoff("repair")}
+          tone="observed"
+        />
+      </TaskShell>
+    );
+  }
+
   if (!progress.checkAttemptChoice) {
     return (
       <TaskShell
@@ -1231,14 +1529,24 @@ function CheckTask({ progress, choose }: StageTaskProps) {
         hint="The preview looks polished. Find out what the important path actually does."
       >
         <ContactPractice
-          repaired={false}
-          onTry={() => choose("check", { checkAttemptChoice: "try-contact" }, false, true)}
+          state="ready"
+          onTry={() =>
+            choose(
+              "check",
+              { checkAttemptChoice: "try-contact" },
+              false,
+              "repair",
+            )
+          }
         />
       </TaskShell>
     );
   }
 
-  if (progress.repairChoice === "bounded-repair" && !progress.checkRetryChoice) {
+  if (
+    progress.repairChoice === "bounded-repair" &&
+    pendingHandoff !== "retry-contact"
+  ) {
     return (
       <TaskShell
         id="retry-contact"
@@ -1247,7 +1555,7 @@ function CheckTask({ progress, choose }: StageTaskProps) {
         hint="Repeat the same action. This simulation should reach the mailto target; it will not open or send email."
       >
         <ContactPractice
-          repaired
+          state="repaired"
           onTry={() =>
             choose(
               "check",
@@ -1302,7 +1610,7 @@ function CheckTask({ progress, choose }: StageTaskProps) {
             "check",
             { repairChoice: id as FinalProgress["repairChoice"] },
             false,
-            id === "bounded-repair",
+            id === "bounded-repair" ? "retry-contact" : undefined,
           )
         }
       />
@@ -1310,19 +1618,85 @@ function CheckTask({ progress, choose }: StageTaskProps) {
         choice={selected}
         successLabel="Smallest safe repair"
         riskLabel="The repair expanded beyond the observed defect"
+        lessonRule={stageById.check.reusableRule}
+        continueLabel={
+          pendingHandoff === "retry-contact"
+            ? "Continue · repeat the same visitor path"
+            : undefined
+        }
+        onContinue={
+          pendingHandoff === "retry-contact"
+            ? () => onContinueHandoff("retry-contact")
+            : undefined
+        }
       />
     </TaskShell>
   );
 }
 
-function GoLiveTask({ progress, choose }: StageTaskProps) {
-  if (progress.releaseVersionChoice === "v4-checked") {
+function GoLiveTask({
+  progress,
+  choose,
+  pendingHandoff,
+  receiptReady,
+  onContinueHandoff,
+  onRevealReceipt,
+}: StageTaskProps) {
+  if (progress.releaseProofChoice === "public-path") {
+    return (
+      <TaskShell
+        id="release-complete"
+        eyebrow="Public evidence earned"
+        question="The checked V4 path also works in public"
+        hint="The exact version, the fresh public result, and the recovery version now belong on one release record."
+      >
+        <ContactPractice state="reached" context="public" />
+        {!receiptReady && (
+          <LessonHandoff
+            eyebrow="Release verified"
+            title="The dashboard and the visitor path now tell the same story."
+            body="Hosting finished, V4 was served, and the important public action still worked."
+            action="Open the lesson receipt"
+            onContinue={onRevealReceipt}
+          />
+        )}
+      </TaskShell>
+    );
+  }
+
+  if (progress.releaseProofChoice === "dashboard-success") {
+    return (
+      <TaskShell
+        id="public-path"
+        eyebrow="Public version · V4"
+        question="Does the visitor path still work at the public address?"
+        hint="Repeat the important action on the fresh public version. The address and email are fictional."
+      >
+        <ContactPractice
+          state="repaired"
+          context="public"
+          onTry={() =>
+            choose(
+              "go-live",
+              { releaseProofChoice: "public-path" },
+              true,
+            )
+          }
+        />
+      </TaskShell>
+    );
+  }
+
+  if (
+    progress.releaseVersionChoice === "v4-checked" &&
+    pendingHandoff !== "release-proof"
+  ) {
     return (
       <TaskShell
         id="release-proof"
         eyebrow="Deployment finished · public behavior unproven"
-        question="Prove the release where a visitor reaches it"
-        hint="Open the public address fresh and repeat the same important path. This is a safe simulation."
+        question="What does the green hosting dashboard actually prove?"
+        hint="It proves that hosting finished. It does not prove which version a visitor received."
       >
         <div className="p4-public-check">
           <div>
@@ -1333,9 +1707,15 @@ function GoLiveTask({ progress, choose }: StageTaskProps) {
           <button
             className="p4-primary"
             type="button"
-            onClick={() => choose("go-live", { releaseProofChoice: "public-path" }, true)}
+            onClick={() =>
+              choose(
+                "go-live",
+                { releaseProofChoice: "dashboard-success" },
+                false,
+              )
+            }
           >
-            Open fresh and repeat the contact path
+            Open the public version
           </button>
         </div>
       </TaskShell>
@@ -1359,20 +1739,79 @@ function GoLiveTask({ progress, choose }: StageTaskProps) {
           choose("go-live", {
             releaseVersionChoice: id as FinalProgress["releaseVersionChoice"],
             releaseProofChoice: null,
-          }, false, id === "v4-checked")
+          }, false, id === "v4-checked" ? "release-proof" : undefined)
         }
       />
       <ChoiceFeedback
         choice={selected}
         successLabel="Release candidate selected"
         riskLabel="Known evidence does not support this version"
+        lessonRule={stageById["go-live"].reusableRule}
+        continueLabel={
+          pendingHandoff === "release-proof"
+            ? "Continue · inspect the public release"
+            : undefined
+        }
+        onContinue={
+          pendingHandoff === "release-proof"
+            ? () => onContinueHandoff("release-proof")
+            : undefined
+        }
       />
     </TaskShell>
   );
 }
 
-function ImproveTask({ progress, choose }: StageTaskProps) {
+function ImproveTask({
+  progress,
+  choose,
+  pendingHandoff,
+  receiptReady,
+  onContinueHandoff,
+  onRevealReceipt,
+}: StageTaskProps) {
+  const [affectedCheckChoice, setAffectedCheckChoice] = useState<string | null>(null);
+  const holdingSourceChange = pendingHandoff === "affected-checks";
   const selected = improveChoices.find((choice) => choice.id === progress.improveChoice);
+
+  if (progress.improveChoice === "source-then-page" && !holdingSourceChange) {
+    const affectedSelected = affectedCheckChoices.find(
+      (choice) => choice.id === affectedCheckChoice,
+    );
+    return (
+      <TaskShell
+        id="affected-checks"
+        eyebrow="Source and surface now agree"
+        question="Which evidence should be refreshed for this one-fact update?"
+        hint="Follow what the fact can affect, then run one small check for accidental breakage."
+      >
+        <ChoiceButtons
+          choices={affectedCheckChoices}
+          selected={affectedCheckChoice}
+          onChoose={(id) =>
+            runViewTransition(() => setAffectedCheckChoice(id), "choice")
+          }
+        />
+        <ChoiceFeedback
+          choice={affectedSelected}
+          successLabel="Checks follow the dependency"
+          riskLabel="The evidence no longer matches the size of the change"
+          lessonRule={stageById.improve.reusableRule}
+          continueLabel={
+            affectedSelected?.recommended && !receiptReady
+              ? "Open the lesson receipt"
+              : undefined
+          }
+          onContinue={
+            affectedSelected?.recommended && !receiptReady
+              ? onRevealReceipt
+              : undefined
+          }
+        />
+      </TaskShell>
+    );
+  }
+
   return (
     <TaskShell
       id="improve"
@@ -1387,7 +1826,8 @@ function ImproveTask({ progress, choose }: StageTaskProps) {
           choose(
             "improve",
             { improveChoice: id as FinalProgress["improveChoice"] },
-            id === "source-then-page",
+            false,
+            id === "source-then-page" ? "affected-checks" : undefined,
           )
         }
       />
@@ -1395,6 +1835,17 @@ function ImproveTask({ progress, choose }: StageTaskProps) {
         choice={selected}
         successLabel="Source before surface"
         riskLabel="The source or scope is still wrong"
+        lessonRule={stageById.improve.reusableRule}
+        continueLabel={
+          holdingSourceChange
+            ? "Continue · trace the affected checks"
+            : undefined
+        }
+        onContinue={
+          holdingSourceChange
+            ? () => onContinueHandoff("affected-checks")
+            : undefined
+        }
       />
     </TaskShell>
   );
@@ -1424,14 +1875,14 @@ function StageTask(props: StageTaskProps) {
 }
 
 const checkpointActions: Record<FinalLearningStage, string> = {
-  idea: "Keep this V1 boundary",
-  tools: "Save this tool route",
-  "project-home": "Pin this project home",
-  "ask-ai": "Approve this work agreement",
-  build: "Save this evidenced version",
-  check: "Pin the repaired path",
-  "go-live": "Record this checked release",
-  improve: "Save this source-backed update",
+  idea: "Continue to 2 · Choose a tool route",
+  tools: "Continue to 3 · Give the work a home",
+  "project-home": "Continue to 4 · Make AI show its plan",
+  "ask-ai": "Continue to 5 · Build with evidence",
+  build: "Continue to 6 · Test it like a visitor",
+  check: "Continue to 7 · Release the checked version",
+  "go-live": "Continue to 8 · Update from a trusted source",
+  improve: "Finish the field lesson",
 };
 
 function StageCheckpoint({
@@ -1447,7 +1898,7 @@ function StageCheckpoint({
   const reason = savedDecisionReason(stage, progress);
   return (
     <section className="p5-checkpoint" aria-labelledby={`${stage}-checkpoint-title`}>
-      <span>Build-kit note ready · {stop.artifact}</span>
+      <span>Lesson learned · added to your build kit</span>
       <h2 id={`${stage}-checkpoint-title`} tabIndex={-1}>
         {stop.reusableRule}
       </h2>
@@ -1632,25 +2083,21 @@ function Welcome({
   useEffect(() => {
     if (auditStep === "failed") {
       const frame = window.requestAnimationFrame(() => {
-        auditRevealRef.current
-          ?.closest(".p5-audit__reveal")
-          ?.scrollIntoView({
-            block: "center",
-            behavior: preferredScrollBehavior(),
-          });
         auditRevealRef.current?.focus({ preventScroll: true });
+        bringIntoViewIfNeeded(
+          auditRevealRef.current?.closest<HTMLElement>(".p5-audit__reveal") ?? null,
+          "center",
+        );
       });
       return () => window.cancelAnimationFrame(frame);
     }
     if (auditStep === "revealed") {
       const frame = window.requestAnimationFrame(() => {
-        auditLayersHeadingRef.current
-          ?.closest(".p5-audit__underlayers")
-          ?.scrollIntoView({
-            block: "start",
-            behavior: preferredScrollBehavior(),
-          });
         auditLayersHeadingRef.current?.focus({ preventScroll: true });
+        bringIntoViewIfNeeded(
+          auditLayersHeadingRef.current?.closest<HTMLElement>(".p5-audit__underlayers") ?? null,
+          "start",
+        );
       });
       return () => window.cancelAnimationFrame(frame);
     }
@@ -1689,7 +2136,7 @@ function Welcome({
                   </div>
                   <div>
                     <dt>Method</dt>
-                    <dd>Eight stops, 13 decisions</dd>
+                    <dd>Eight stops, 14 decisions</dd>
                   </div>
                   <div>
                     <dt>Keep</dt>
@@ -1703,7 +2150,9 @@ function Welcome({
                 <button
                   className="p4-primary"
                   type="button"
-                  onClick={() => setScreen("inspection")}
+                  onClick={() =>
+                    runViewTransition(() => setScreen("inspection"), "scene")
+                  }
                 >
                   {finalOpening.primaryAction}
                 </button>
@@ -1739,7 +2188,9 @@ function Welcome({
               <button
                 className="p4-text-button p6-inspection__back"
                 type="button"
-                onClick={() => setScreen("orientation")}
+                onClick={() =>
+                  runViewTransition(() => setScreen("orientation"), "scene")
+                }
               >
                 Back to the introduction
               </button>
@@ -1747,7 +2198,7 @@ function Welcome({
 
             <section
               className={cx("p5-audit", `is-${auditStep}`)}
-              aria-labelledby="welcome-audit-title"
+              aria-label="Willow Fix Day project inspection"
             >
               <div className="p5-audit__status">
                 <span>
@@ -1763,88 +2214,97 @@ function Welcome({
                       : "Underlayers visible"}
                 </b>
               </div>
-              <div className="p5-audit__surface">
-                <span>Visitor surface · one important path</span>
-                <h2 id="welcome-audit-title">
-                  Bring it broken.
-                  <br />
-                  Leave with a plan.
-                </h2>
-                <p>
-                  Saturday · West Hall · repairs depend on volunteer availability
-                </p>
-                <button
-                  id="welcome-audit-action"
-                  type="button"
-                  className={cx(
-                    "p4-primary",
-                    "p5-audit__action",
-                    auditStep !== "surface" && "is-failed",
-                  )}
-                  onClick={() => setAuditStep("failed")}
-                  disabled={auditStep !== "surface"}
+              <div className="p7-audit-scene">
+                <div
+                  className="p5-audit__surface"
+                  aria-hidden={auditStep === "revealed" ? "true" : undefined}
                 >
-                  {auditStep === "surface"
-                    ? "Email the organizer"
-                    : "Email action · nothing happened"}
-                </button>
+                  <span>Visitor surface · one important path</span>
+                  <h2 id="welcome-audit-title">
+                    Bring it broken.
+                    <br />
+                    Leave with a plan.
+                  </h2>
+                  <p>
+                    Saturday · West Hall · repairs depend on volunteer availability
+                  </p>
+                  <button
+                    id="welcome-audit-action"
+                    type="button"
+                    className={cx(
+                      "p4-primary",
+                      "p5-audit__action",
+                      auditStep !== "surface" && "is-failed",
+                    )}
+                    onClick={() =>
+                      runViewTransition(() => setAuditStep("failed"), "canvas")
+                    }
+                    disabled={auditStep !== "surface"}
+                  >
+                    {auditStep === "surface"
+                      ? "Email the organizer"
+                      : "Email action · nothing happened"}
+                  </button>
+                </div>
+
+                {auditStep === "failed" && (
+                  <div className="p5-audit__reveal" role="status">
+                    <span>Observed failure</span>
+                    <h3>Nothing happened.</h3>
+                    <p>
+                      The preview proved appearance. Your click tested behavior.
+                      Now inspect what the polished screen kept out of view.
+                    </p>
+                    <button
+                      ref={auditRevealRef}
+                      className="p4-secondary"
+                      type="button"
+                      onClick={() =>
+                        runViewTransition(() => setAuditStep("revealed"), "canvas")
+                      }
+                    >
+                      Reveal what the screen hid
+                    </button>
+                  </div>
+                )}
+
+                {auditStep === "revealed" && (
+                  <div className="p5-audit__underlayers" role="status">
+                    <span>Under the surface · four responsibilities the preview hid</span>
+                    <h3 ref={auditLayersHeadingRef} tabIndex={-1}>
+                      The screen was only the surface.
+                    </h3>
+                    <ol>
+                      {welcomeAuditLayers.map((layer, index) => (
+                        <li key={layer.id}>
+                          <span aria-hidden="true">0{index + 1}</span>
+                          <div>
+                            <b>{layer.label}</b>
+                            <p>{layer.issue}</p>
+                          </div>
+                        </li>
+                      ))}
+                    </ol>
+                    <p className="p5-audit__thesis">
+                      Pentimento teaches you to control these layers before the
+                      visible surface goes live.
+                    </p>
+                    <button
+                      ref={auditStartRef}
+                      className="p4-primary"
+                      type="button"
+                      onClick={onStart}
+                    >
+                      Start with layer 1 · define the promise
+                    </button>
+                  </div>
+                )}
               </div>
 
               {auditStep === "surface" && (
                 <p className="p5-audit__instruction">
                   The report proves a claim. Your click checks the behavior.
                 </p>
-              )}
-
-              {auditStep === "failed" && (
-                <div className="p5-audit__reveal" role="status">
-                  <span>Observed failure</span>
-                  <h3>Nothing happened.</h3>
-                  <p>
-                    The preview proved appearance. Your click tested behavior.
-                    Now inspect what the polished screen kept out of view.
-                  </p>
-                  <button
-                    ref={auditRevealRef}
-                    className="p4-secondary"
-                    type="button"
-                    onClick={() => setAuditStep("revealed")}
-                  >
-                    Reveal what the screen hid
-                  </button>
-                </div>
-              )}
-
-              {auditStep === "revealed" && (
-                <div className="p5-audit__underlayers" role="status">
-                  <span>Spectral inspection · four hidden layers</span>
-                  <h3 ref={auditLayersHeadingRef} tabIndex={-1}>
-                    The screen was only the surface.
-                  </h3>
-                  <ol>
-                    {welcomeAuditLayers.map((layer, index) => (
-                      <li key={layer.id}>
-                        <span aria-hidden="true">0{index + 1}</span>
-                        <div>
-                          <b>{layer.label}</b>
-                          <p>{layer.issue}</p>
-                        </div>
-                      </li>
-                    ))}
-                  </ol>
-                  <p className="p5-audit__thesis">
-                    Pentimento teaches you to control these layers before the
-                    visible surface goes live.
-                  </p>
-                  <button
-                    ref={auditStartRef}
-                    className="p4-primary"
-                    type="button"
-                    onClick={onStart}
-                  >
-                    Start with layer 1 · define the promise
-                  </button>
-                </div>
               )}
             </section>
           </section>
@@ -1929,13 +2389,15 @@ function JourneyHeader({
       <header className="p4-header">
         <Brand onClick={onRoute} />
         <button className="p4-header__center" type="button" onClick={onRoute}>
-          <span>
-            {progress.stage === "completion"
-              ? "Route complete"
-              : `${String(currentNumber).padStart(2, "0")} / 08`}
+          <span className="p7-header-state" key={progress.stage}>
+            <span>
+              {progress.stage === "completion"
+                ? "Route complete"
+                : `${String(currentNumber).padStart(2, "0")} / 08`}
+            </span>
+            <b>{stageLabel(progress.stage)}</b>
+            <small>{chapter.title}</small>
           </span>
-          <b>{stageLabel(progress.stage)}</b>
-          <small>{chapter.title}</small>
         </button>
         <div className="p4-header__actions">
           <button type="button" onClick={onPlaybook}>Build kit</button>
@@ -1944,7 +2406,11 @@ function JourneyHeader({
         </div>
       </header>
       <div className="p4-progress" aria-hidden="true">
-        <i style={{ width: `${Math.max(completed, currentNumber - 1) / 8 * 100}%` }} />
+        <i
+          style={{
+            transform: `scaleX(${Math.max(completed, currentNumber - 1) / 8})`,
+          }}
+        />
       </div>
     </>
   );
@@ -1980,19 +2446,20 @@ function Completion({
       <div className="p4-complete__hero">
         <p className="p4-kicker">Eight layers · one complete path</p>
         <h1 ref={headingRef} tabIndex={-1}>
-          You can guide{" "}
-          <em>a project from idea to evidence.</em>
+          You now have a method,{" "}
+          <em>not merely a finished example.</em>
         </h1>
         <p>
-          You completed a simulated release. Next, use the same method on a project you care about.
+          You can turn an idea into a bounded brief, direct AI one visible step
+          at a time, prove the important path, and release a version you can recover.
         </p>
         <LastSavedRule progress={progress} />
       </div>
       <div className="p4-complete__actions">
         <button className="p4-primary" type="button" onClick={onMirror}>
-          Shape my own V1 brief
+          Apply the method to my idea
         </button>
-        <button className="p4-secondary" type="button" onClick={onPlaybook}>
+        <button className="p4-text-button p7-completion-kit" type="button" onClick={onPlaybook}>
           Open my build kit
         </button>
       </div>
@@ -2260,6 +2727,7 @@ function PlaybookDialog({
   }, [open]);
 
   useEffect(() => {
+    setCopyStatus("");
     if (!activeCard) {
       const restoreCard = restoreCardRef.current;
       if (!open || !restoreCard) return;
@@ -2323,7 +2791,11 @@ function PlaybookDialog({
                 aria-expanded={activeCard === card.id}
                 onClick={() => setActiveCard((current) => current === card.id ? null : card.id)}
               >
-                {card.title}
+                <span className="p7-guide-index__copy">
+                  <b>{card.title}</b>
+                  <small>{card.summary}</small>
+                </span>
+                <span aria-hidden="true">→</span>
               </button>
             </li>
           ))}
@@ -2347,6 +2819,12 @@ function PlaybookDialog({
                 </button>
                 <span>When · {detail.when}</span>
                 <h3>{active.title}</h3>
+                <div className="p7-guide-includes" aria-label="Artifacts in this guide">
+                  <span>Produces</span>
+                  <ul>
+                    {active.includes.map((item) => <li key={item}>{item}</li>)}
+                  </ul>
+                </div>
                 <p><b>Do</b></p>
                 <ol>{detail.actions.map((action) => <li key={action}>{action}</li>)}</ol>
                 <p><b>Proof:</b> {detail.proof}</p>
@@ -2354,7 +2832,9 @@ function PlaybookDialog({
                   <summary>Template and Willow Fix Day example</summary>
                   <pre><code>{detail.template}</code></pre>
                   <p><b>Worked example:</b> {detail.example}</p>
-                  <button className="p4-secondary" type="button" onClick={copyTemplate}>Copy template</button>
+                  <button className="p4-secondary" type="button" onClick={copyTemplate}>
+                    {copyStatus.includes("copied") ? "Copied ✓" : "Copy template"}
+                  </button>
                 </details>
               </>
             ) : (
@@ -2373,14 +2853,14 @@ function PlaybookDialog({
 }
 
 const mirrorLabels: Record<Exclude<TeachingMirrorFieldKey, "toolRoute">, string> = {
-  person: "Who is this for?",
-  situation: "What situation are they in?",
-  usefulResult: "What useful result should they get?",
-  completePath: "What complete path should they finish?",
-  trustedFacts: "What facts can you trust?",
-  mustHave: "What must the first version include?",
-  notNow: "What is not now?",
-  doneWhen: "What proves it is done?",
+  person: "Who exactly will use it?",
+  situation: "In what moment will they use it?",
+  usefulResult: "What should become possible for them?",
+  completePath: "What 3–5 steps will they finish?",
+  trustedFacts: "Which source can you verify, and which facts come from it?",
+  mustHave: "What is essential to that path?",
+  notNow: "Which tempting features are deliberately later?",
+  doneWhen: "What observable action proves the path works?",
 };
 
 const mirrorSteps: ReadonlyArray<{
@@ -2394,14 +2874,26 @@ const mirrorSteps: ReadonlyArray<{
 ];
 
 const mirrorPlaceholders: Record<Exclude<TeachingMirrorFieldKey, "toolRoute">, string> = {
-  person: "e.g. a first-time visitor",
-  situation: "e.g. checking details by phone",
-  usefulResult: "e.g. confirm details, then email",
-  completePath: "e.g. open → compare → email",
-  trustedFacts: "e.g. organizer-approved note",
-  mustHave: "e.g. date, place, list, contact",
-  notNow: "e.g. accounts, booking, payments",
-  doneWhen: "e.g. another person completes it at 390px",
+  person: "Write one specific kind of person",
+  situation: "Name the moment or decision",
+  usefulResult: "Describe the useful change",
+  completePath: "Beginning → middle → finish",
+  trustedFacts: "Source: … Facts: …",
+  mustHave: "Only what the path needs",
+  notNow: "Useful later, outside V1",
+  doneWhen: "A person can … on phone and desktop",
+};
+
+const mirrorExamples: Record<Exclude<TeachingMirrorFieldKey, "toolRoute">, string> = {
+  person: "A first-time visitor considering Willow Fix Day",
+  situation: "They are on their phone deciding whether their broken item fits",
+  usefulResult: "They can confirm the event details and reach the organizer",
+  completePath: "Open the page → compare the accepted items → email one question",
+  trustedFacts: "Source: organizer-approved note. Facts: date, venue, accepted items, email",
+  mustHave: "Event facts in reading order, accepted-item list, and one working email action",
+  notNow: "Accounts, booking, payment, live availability, and an AI chat",
+  doneWhen:
+    "A first-time visitor can decide whether the event fits and reach the email action on phone and desktop",
 };
 
 function listFromText(value: string): string[] {
@@ -2429,12 +2921,15 @@ function MirrorDialog({
   const [status, setStatus] = useState<"idle" | "loading" | "error">("idle");
   const [briefReady, setBriefReady] = useState(false);
   const [copyStatus, setCopyStatus] = useState("");
+  const [stepDirection, setStepDirection] = useState<"forward" | "back">("forward");
   const stepHeadingRef = useRef<HTMLHeadingElement>(null);
   const briefHeadingRef = useRef<HTMLHeadingElement>(null);
   const step = progress.mirrorStep;
   const stepData = mirrorSteps[step - 1];
   const route = progress.mirrorDraft.toolRoute || progress.toolChoice || "repository";
-  const fieldsReady = stepData.fields.every((field) => progress.mirrorDraft[field].trim().length >= 2);
+  const fieldsReady = stepData.fields.every(
+    (field) => progress.mirrorDraft[field].trim().length >= 8,
+  );
   const briefCopy = [
     `PERSON: ${progress.mirrorDraft.person.trim()}`,
     `SITUATION: ${progress.mirrorDraft.situation.trim()}`,
@@ -2461,10 +2956,7 @@ function MirrorDialog({
     const frame = window.requestAnimationFrame(() => {
       const target = briefReady ? briefHeadingRef.current : stepHeadingRef.current;
       target?.focus({ preventScroll: true });
-      target?.scrollIntoView({
-        block: "nearest",
-        behavior: preferredScrollBehavior(),
-      });
+      bringIntoViewIfNeeded(target ?? null);
     });
     return () => window.cancelAnimationFrame(frame);
   }, [briefReady, open, step]);
@@ -2520,9 +3012,10 @@ function MirrorDialog({
     <AccessibleDialog
       open={open}
       title="V1 brief workshop"
-      description="Shape a reusable first-version brief on this device. Your text stays here until you request the optional teaching reflection; that sends the brief to the server. Never include secrets or personal information."
+      description="Bring one project you want to make. In four short passes, turn it into a first version AI can plan without guessing. Your text stays on this device unless you request the optional teaching reflection. Never include secrets or personal information."
       onDismiss={onClose}
       appRootRef={appRootRef}
+      initialFocusRef={stepHeadingRef}
       ariaBusy={status === "loading"}
       backdropClassName="p4-dialog-backdrop"
       dialogClassName="p4-dialog"
@@ -2584,14 +3077,30 @@ function MirrorDialog({
               </span>
             ))}
           </div>
-          <section className="p4-wizard__step" key={`workshop-step-${step}`}>
+          <section
+            className={cx(
+              "p4-wizard__step",
+              stepDirection === "back" ? "is-back" : "is-forward",
+            )}
+            key={`workshop-step-${step}`}
+          >
             <span>Step {step} of 4</span>
             <h3 ref={stepHeadingRef} tabIndex={-1}>{stepData.title}</h3>
             <p className="p4-wizard__hint">
               {step === 1
-                ? "Complete the three short prompts. Specific beats impressive."
-                : "Use the example inside each field as a shape, not an answer."}
+                ? "Start with one person and one moment. Specific beats impressive."
+                : "The brief above carries forward. Add only what this pass needs."}
             </p>
+            {step > 1 && (
+              <div className="p7-brief-thread" aria-label="Brief so far">
+                <span>Brief so far</span>
+                <p>
+                  <b>{progress.mirrorDraft.person}</b>
+                  <span aria-hidden="true">→</span>
+                  {progress.mirrorDraft.usefulResult}
+                </p>
+              </div>
+            )}
             <div className="p4-wizard__fields">
               {stepData.fields.map((field) => (
                 <label key={field}>
@@ -2611,6 +3120,10 @@ function MirrorDialog({
                       rows={4}
                     />
                   )}
+                  <small className="p7-field-example">
+                    <span>Example</span>
+                    {mirrorExamples[field]}
+                  </small>
                 </label>
               ))}
             </div>
@@ -2638,7 +3151,14 @@ function MirrorDialog({
               className="p4-secondary"
               type="button"
               disabled={step === 1}
-              onClick={() => onProgress({ mirrorStep: Math.max(1, step - 1) as 1 | 2 | 3 | 4 })}
+              onClick={() =>
+                runViewTransition(() => {
+                  setStepDirection("back");
+                  onProgress({
+                    mirrorStep: Math.max(1, step - 1) as 1 | 2 | 3 | 4,
+                  });
+                }, "workshop")
+              }
             >
               Back
             </button>
@@ -2647,12 +3167,26 @@ function MirrorDialog({
                 className="p4-primary"
                 type="button"
                 disabled={!fieldsReady}
-                onClick={() => onProgress({ mirrorStep: (step + 1) as 1 | 2 | 3 | 4 })}
+                onClick={() =>
+                  runViewTransition(() => {
+                    setStepDirection("forward");
+                    onProgress({
+                      mirrorStep: (step + 1) as 1 | 2 | 3 | 4,
+                    });
+                  }, "workshop")
+                }
               >
                 Next
               </button>
             ) : (
-              <button className="p4-primary" type="button" disabled={!fieldsReady} onClick={() => setBriefReady(true)}>
+              <button
+                className="p4-primary"
+                type="button"
+                disabled={!fieldsReady}
+                onClick={() =>
+                  runViewTransition(() => setBriefReady(true), "workshop")
+                }
+              >
                 Create my V1 brief
               </button>
             )}
@@ -2711,6 +3245,8 @@ export function PentimentoFinal() {
   const [mirrorOpen, setMirrorOpen] = useState(false);
   const [restartOpen, setRestartOpen] = useState(false);
   const [restartFromRoute, setRestartFromRoute] = useState(false);
+  const [pendingHandoff, setPendingHandoff] = useState<HandoffId | null>(null);
+  const [receiptReady, setReceiptReady] = useState(false);
   const [taskRevision, setTaskRevision] = useState(0);
   const [checkpointRevision, setCheckpointRevision] = useState(0);
   const [announcement, setAnnouncement] = useState("");
@@ -2753,11 +3289,17 @@ export function PentimentoFinal() {
     if (!hydrated || taskRevision === 0) return;
     const frame = window.requestAnimationFrame(() => {
       const question = document.querySelector<HTMLElement>(".p4-task h2");
+      const task = question?.closest<HTMLElement>(".p4-task") ?? null;
+      if (task) {
+        const rect = task.getBoundingClientRect();
+        if (rect.top < 92 || rect.bottom > window.innerHeight - 24) {
+          window.scrollTo({
+            top: Math.max(0, window.scrollY + rect.top - 96),
+            behavior: "auto",
+          });
+        }
+      }
       question?.focus({ preventScroll: true });
-      question?.closest(".p4-task")?.scrollIntoView({
-        block: "start",
-        behavior: preferredScrollBehavior(),
-      });
     });
     return () => window.cancelAnimationFrame(frame);
   }, [hydrated, taskRevision]);
@@ -2767,13 +3309,20 @@ export function PentimentoFinal() {
     let scrollTimer: number | undefined;
     const frame = window.requestAnimationFrame(() => {
       const checkpoint = document.querySelector<HTMLElement>(".p5-checkpoint h2");
-      checkpoint?.focus({ preventScroll: true });
+      const receipt =
+        checkpoint?.closest<HTMLElement>(".p5-checkpoint") ?? null;
+      if (receipt) {
+        const rect = receipt.getBoundingClientRect();
+        if (rect.top < 92 || rect.bottom > window.innerHeight - 24) {
+          window.scrollTo({
+            top: Math.max(0, window.scrollY + rect.top - 96),
+            behavior: "auto",
+          });
+        }
+      }
       scrollTimer = window.setTimeout(() => {
-        checkpoint?.closest(".p5-checkpoint")?.scrollIntoView({
-          block: "nearest",
-          behavior: preferredScrollBehavior(),
-        });
-      }, preferredScrollBehavior() === "auto" ? 0 : 340);
+        checkpoint?.focus({ preventScroll: true });
+      }, preferredScrollBehavior() === "auto" ? 0 : 260);
     });
     return () => {
       window.cancelAnimationFrame(frame);
@@ -2785,30 +3334,50 @@ export function PentimentoFinal() {
     stage: FinalLearningStage,
     patch: Partial<FinalProgress>,
     complete = false,
-    focusNextQuestion = false,
+    handoff?: HandoffId,
   ) {
-    if (focusNextQuestion) setTaskRevision((current) => current + 1);
-    setProgress((current) => {
-      if (current.completedStages.includes(stage)) {
-        setAnnouncement(`${stageLabel(stage)} is a saved, read-only layer.`);
-        return current;
-      }
-      const patched = { ...current, ...patch };
-      if (!complete) return patched;
-      setCheckpointRevision((revision) => revision + 1);
-      return patched;
-    });
+    runViewTransition(() => {
+      setReceiptReady(false);
+      setPendingHandoff(handoff ?? null);
+      setProgress((current) => {
+        if (current.completedStages.includes(stage)) {
+          setAnnouncement(`${stageLabel(stage)} is a saved, read-only layer.`);
+          return current;
+        }
+        return { ...current, ...patch };
+      });
+    }, handoff ? "substep" : "choice");
+  }
+
+  function continueHandoff(handoff: HandoffId) {
+    runViewTransition(() => {
+      setPendingHandoff((current) => current === handoff ? null : current);
+      setTaskRevision((current) => current + 1);
+    }, "substep");
+  }
+
+  function revealReceipt() {
+    runViewTransition(() => {
+      setPendingHandoff(null);
+      setReceiptReady(true);
+      setCheckpointRevision((current) => current + 1);
+    }, "choice");
   }
 
   function saveCurrentLayer(stage: FinalLearningStage) {
-    setProgress((current) => {
-      const advanced = completeFinalStage(current, stage);
-      if (advanced === current || advanced.stage === current.stage) return current;
-      setAnnouncement(
-        `${stageLabel(stage)} layer saved. Next: ${stageLabel(advanced.stage)}.`,
-      );
-      return advanced;
-    });
+    runViewTransition(() => {
+      setPendingHandoff(null);
+      setReceiptReady(false);
+      window.scrollTo({ top: 0, behavior: "auto" });
+      setProgress((current) => {
+        const advanced = completeFinalStage(current, stage);
+        if (advanced === current || advanced.stage === current.stage) return current;
+        setAnnouncement(
+          `${stageLabel(stage)} layer saved. Next: ${stageLabel(advanced.stage)}.`,
+        );
+        return advanced;
+      });
+    }, "scene");
   }
 
   function updateProgress(patch: Partial<FinalProgress>) {
@@ -2816,9 +3385,13 @@ export function PentimentoFinal() {
   }
 
   function begin() {
-    setProgress((current) => startFinalJourney(current));
-    setResumePending(false);
-    setAnnouncement("Idea opened. Choose one useful finish for the first visitor.");
+    runViewTransition(() => {
+      setPendingHandoff(null);
+      setReceiptReady(false);
+      setProgress((current) => startFinalJourney(current));
+      setResumePending(false);
+      setAnnouncement("Idea opened. Choose one useful finish for the first visitor.");
+    }, "scene");
   }
 
   function resetJourney() {
@@ -2830,21 +3403,31 @@ export function PentimentoFinal() {
     setRouteOpen(false);
     setPlaybookOpen(false);
     setMirrorOpen(false);
+    setPendingHandoff(null);
+    setReceiptReady(false);
     setAnnouncement("Progress removed. The journey is ready to begin again.");
   }
 
   function navigateTo(stage: FinalLearningStage) {
-    setProgress((current) => navigateFinalStage(current, stage));
-    setRouteOpen(false);
-    setAnnouncement(`${stageLabel(stage)} opened for review.`);
+    runViewTransition(() => {
+      setPendingHandoff(null);
+      setReceiptReady(false);
+      setProgress((current) => navigateFinalStage(current, stage));
+      setRouteOpen(false);
+      setAnnouncement(`${stageLabel(stage)} opened for review.`);
+    }, "scene");
   }
 
   function returnToCurrentStage() {
-    setProgress((current) => {
-      const currentStage = finalLearningStages[current.completedStages.length] ?? "completion";
-      setAnnouncement(`${stageLabel(currentStage)} restored.`);
-      return { ...current, stage: currentStage };
-    });
+    runViewTransition(() => {
+      setPendingHandoff(null);
+      setReceiptReady(false);
+      setProgress((current) => {
+        const currentStage = finalLearningStages[current.completedStages.length] ?? "completion";
+        setAnnouncement(`${stageLabel(currentStage)} restored.`);
+        return { ...current, stage: currentStage };
+      });
+    }, "scene");
   }
 
   let content: React.ReactNode;
@@ -2912,16 +3495,10 @@ export function PentimentoFinal() {
                     {stageById[progress.stage].heading}
                   </h1>
                   <p>{stageById[progress.stage].introduction}</p>
-                  <aside className="p5-stage-contract" aria-label="Learning purpose and outcome">
-                    <div>
-                      <span>Why this matters</span>
-                      <p>{stageById[progress.stage].stakes}</p>
-                    </div>
-                    <div>
-                      <span>You will leave with</span>
-                      <p>{stageById[progress.stage].canvasLayer}</p>
-                    </div>
-                  </aside>
+                  <p className="p7-stage-output">
+                    <span>Make at this stop</span>
+                    <b>{stageById[progress.stage].canvasLayer}</b>
+                  </p>
                   <LastSavedRule progress={progress} />
                 </header>
                 <div className="p4-workspace">
@@ -2937,16 +3514,22 @@ export function PentimentoFinal() {
                       />
                     ) : (
                       <>
-                        <StageTask
-                          key={`${progress.stage}:${taskRevision}`}
-                          progress={progress}
-                          choose={choose}
-                        />
-                        {currentStageReady && (
+                        {currentStageReady && receiptReady ? (
                           <StageCheckpoint
+                            key={`receipt:${progress.stage}:${checkpointRevision}`}
                             stage={activeLearningStage}
                             progress={progress}
                             onContinue={() => saveCurrentLayer(activeLearningStage)}
+                          />
+                        ) : (
+                          <StageTask
+                            key={`${progress.stage}:${taskRevision}`}
+                            progress={progress}
+                            pendingHandoff={pendingHandoff}
+                            receiptReady={receiptReady}
+                            choose={choose}
+                            onContinueHandoff={continueHandoff}
+                            onRevealReceipt={revealReceipt}
                           />
                         )}
                       </>

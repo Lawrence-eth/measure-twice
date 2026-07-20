@@ -1,7 +1,7 @@
 /**
  * Authored content for the final Pentimento journey.
  *
- * The core route is deliberately small: eight stops, thirteen meaningful
+ * The core route is deliberately small: eight stops, fourteen meaningful
  * interactions, and one project canvas that gains a layer at every stop.
  * Optional reference content lives outside the required route.
  */
@@ -46,6 +46,10 @@ export type ImproveChoice =
   | "page-only"
   | "source-then-page"
   | "redesign-everything";
+export type AffectedCheckChoice =
+  | "affected-plus-smoke"
+  | "surface-only"
+  | "retest-redesign";
 
 export type FinalChoice<Id extends string> = {
   id: Id;
@@ -171,17 +175,17 @@ export const ideaChoices = [
 export const toolChoices = [
   {
     id: "hosted",
-    label: "Faster preview · more dependence on one service",
+    label: "Start in one browser workspace",
     consequence:
-      "A hosted builder reduces setup, but you must check version history, export, ownership, limits, and cost.",
+      "This is the fastest route to a first preview, but more of the project depends on one service. Check version history, export, ownership, limits, and cost.",
     canvasChange: "Connects a hosted workspace to saved versions and a host.",
     recommended: true,
   },
   {
     id: "repository",
-    label: "More setup · clearer files and recoverable history",
+    label: "Start with visible files and saved history",
     consequence:
-      "A repository route makes files and history clearer, but adds local setup and a separate publishing step.",
+      "This route makes files and recoverable history clearer, but adds local setup and a separate publishing step.",
     canvasChange: "Connects a repository-aware workspace to Git, GitHub, and a host.",
     recommended: true,
   },
@@ -282,10 +286,10 @@ export const buildEvidenceChoices = [
   },
   {
     id: "full-evidence",
-    label: "Open the preview and try the visitor path",
+    label: "Hand this candidate to a visitor-path check",
     consequence:
-      "This opens the Check stop, where your next action supplies the missing behavior evidence.",
-    canvasChange: "Hands the saved candidate to the visitor-path check.",
+      "Correct next action. The preview proves appearance; human-path evidence is still pending.",
+    canvasChange: "Marks the preview as a candidate awaiting a visitor-path check.",
     recommended: true,
   },
 ] as const satisfies readonly FinalChoice<BuildEvidenceChoice>[];
@@ -396,8 +400,35 @@ export const improveChoices = [
   },
 ] as const satisfies readonly FinalChoice<ImproveChoice>[];
 
+export const affectedCheckChoices = [
+  {
+    id: "affected-plus-smoke",
+    label: "Compare the source, read the changed access fact, then smoke-test the core path",
+    consequence:
+      "The checks follow the dependency: source first, affected reading second, one core-path check for accidental breakage.",
+    canvasChange: "Adds three targeted checks to the V5 update record.",
+    recommended: true,
+  },
+  {
+    id: "surface-only",
+    label: "Check only that the visible sentence changed",
+    consequence:
+      "The sentence may look right while contradicting its source—or while the main visitor path has broken.",
+    canvasChange: "Leaves source agreement and core behavior unproven.",
+    recommended: false,
+  },
+  {
+    id: "retest-redesign",
+    label: "Retest every screen and redesign anything that feels dated",
+    consequence:
+      "The fact update expands into unrelated work, making the new risk harder to understand.",
+    canvasChange: "Spreads a one-fact change across unrelated layers.",
+    recommended: false,
+  },
+] as const satisfies readonly FinalChoice<AffectedCheckChoice>[];
+
 /**
- * The keys are the thirteen required interactions in route order.
+ * The keys are the fourteen required interactions in route order.
  */
 export const finalChoices = {
   idea: ideaChoices,
@@ -413,9 +444,10 @@ export const finalChoices = {
   releaseVersion: releaseVersionChoices,
   releaseProof: releaseProofChoices,
   improve: improveChoices,
+  affectedChecks: affectedCheckChoices,
 } as const;
 
-export const FINAL_REQUIRED_INTERACTIONS = 13;
+export const FINAL_REQUIRED_INTERACTIONS = 14;
 
 export type FinalArtifactId =
   | "first-version-brief"
@@ -479,12 +511,12 @@ export const finalJourney = [
     introduction:
       "AI helps build. A project home remembers. A host publishes.",
     savedLabel: "build here + save here + publish here",
-    question: "Which tradeoff matters more for your first project?",
+    question: "Which starting route fits how you want to work?",
     requiredInteractions: 1,
-    canvasLayer: "Connected tool route",
+    canvasLayer: "Tool route · who builds, remembers, and publishes",
     reusableRule: "Choose tools by their jobs, not their product names.",
     stakes:
-      "Tool names change quickly. Build, custody, and publishing responsibilities do not.",
+      "Tool names change quickly. The responsibilities—who builds, where the work survives, and what publishes it—do not.",
     artifact:
       "A route receipt showing where AI builds, where versions survive, how files can leave, and which host publishes.",
     fieldUse:
@@ -547,22 +579,23 @@ export const finalJourney = [
     navLabel: "Build",
     heading: "Trust evidence, not “Done”",
     introduction:
-      "Inspect, run, try the path, then save.",
-    savedLabel: "evidence collected before saving",
-    question: "What evidence do you need before saving this version?",
+      "AI changed the files, passed a typecheck, and opened a preview. The visitor path is still untried.",
+    savedLabel: "V1 preview candidate · human-path evidence pending",
+    question: "The preview is open. What must happen before this candidate can be trusted?",
     requiredInteractions: 1,
-    canvasLayer: "Visible change and saved V1",
-    reusableRule: "Ask → inspect → run → check → save.",
+    canvasLayer: "V1 candidate · preview awaiting a human check",
+    reusableRule:
+      "A preview is a candidate, not proof that the visitor path works.",
     stakes:
       "AI confidence, changed files, automated checks, previews, and human behavior are different kinds of evidence.",
     artifact:
-      "An evidence ladder and change record that say exactly what each check proves—and what it does not.",
+      "A candidate change record and evidence ladder separating what AI claimed, what changed, what appeared, and what a person actually finished.",
     fieldUse:
       "Use it every time AI says “Done,” especially before saving or publishing.",
     failurePrevented:
       "Treating a typecheck, screenshot, or tool claim as proof that a person can finish the important path.",
     artifactId: "change-record",
-    optionalDepth: "Scrub through the later V2 and V3 saved layers.",
+    optionalDepth: "Compare this candidate with the later V2 and V3 saved layers.",
   },
   {
     id: "check",
@@ -621,7 +654,7 @@ export const finalJourney = [
       "Update the source, then only what depends on it.",
     savedLabel: "source changed before the surface",
     question: "What changes first?",
-    requiredInteractions: 1,
+    requiredInteractions: 2,
     canvasLayer: "Trusted access fact and saved V5",
     reusableRule:
       "Change the trusted source first, then rerun only affected checks.",
@@ -755,14 +788,15 @@ export const planningArtifact = {
 } as const;
 
 export const buildArtifact = {
-  title: "Change record · V1",
+  title: "Candidate change record · V1",
   request: planningArtifact.approvedFirstStep,
   changedFiles: ["docs/brief.md", "app/page.tsx"],
   commandResult:
     "npm run typecheck → exited successfully (code/type consistency only)",
   visibleResult: "Approved event facts appear in the visitor’s reading order.",
-  visitorCheck: "Open → read the event facts → reach the contact action.",
-  savedVersion: "V1 · Clear structure",
+  visitorCheck:
+    "Pending · open → read the event facts → reach and try the contact action.",
+  savedVersion: "Not saved · awaiting human-path evidence",
   laterLayers: [
     "V2 · Working contact path",
     "V3 · Responsive polish, with a hidden defect not yet checked",

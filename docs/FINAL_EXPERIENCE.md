@@ -1,6 +1,6 @@
-# Pentimento v6 experience contract
+# Pentimento v7 experience contract
 
-This is the implementation contract for the final Conservation Lab experience.
+This is the implementation contract for the authored-rhythm experience.
 Earlier release evidence in [BUILD_LOG.md](BUILD_LOG.md) remains historical.
 
 ## Product in one sentence
@@ -25,7 +25,7 @@ AI can make the surface quickly. The learner still has to direct four layers:
 4. **Release** — which exact version is public and recoverable.
 
 The visual system makes these layers literal through three objects: the visitor
-surface, the project underlayers, and filed build-kit notes.
+surface, the project underlayers, and saved lesson receipts.
 
 ## Opening architecture
 
@@ -33,7 +33,7 @@ The first screen answers five beginner questions before asking for action:
 
 - **What is this?** Guided practice for people who have never built with AI.
 - **Why does it matter?** A polished screen can hide an unfinished system.
-- **What will I do?** Direct one fictional website through eight stops and 13
+- **What will I do?** Direct one fictional website through eight stops and 14
   decisions.
 - **What will I keep?** A brief, tool map, work agreement, evidence ladder,
   release checklist, and reusable build kit.
@@ -59,7 +59,7 @@ observe the failure, and explains the principle only after the evidence exists.
 
 ## Route
 
-The route contains four chapters, eight stops, and 13 consequential decisions.
+The route contains four chapters, eight stops, and 14 consequential decisions.
 
 | Chapter | Stops | Learner capability |
 | --- | --- | --- |
@@ -70,12 +70,13 @@ The route contains four chapters, eight stops, and 13 consequential decisions.
 
 Each scene uses the same five-beat grammar:
 
-1. **Where you are** — current stop, chapter, stakes, and artifact.
+1. **Where you are** — current stop, one-sentence context, and artifact.
 2. **See the reasoning** — a worked or partially worked project state.
 3. **Make one decision** — no more than three literal options.
 4. **Understand the consequence** — what changed, why it matters, and the rule
    to keep.
-5. **File the note** — explicitly save the build-kit note before continuing.
+5. **Open the lesson** — transform the task in place into its reusable receipt,
+   then continue with a predictable route label.
 
 Guidance fades across the route. Early scenes show the reasoning; middle scenes
 ask the learner to complete a bounded plan and evidence chain; later scenes ask
@@ -191,7 +192,7 @@ The release is acceptable only when:
 
 - 96 unit/API/state tests pass;
 - the complete desktop and mobile browser matrix passes;
-- the 13 decisions and eight explicit saves complete by keyboard and pointer;
+- the 14 decisions and eight explicit saves complete by keyboard and pointer;
 - Axe reports no serious or critical violations through the core route;
 - 320, 390, 768, and 1440px routes have no task-blocking horizontal overflow;
 - reduced motion, refresh restoration, restart confirmation, and focus return

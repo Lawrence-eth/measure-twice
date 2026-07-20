@@ -26,24 +26,26 @@ const questions = {
   privateBoundary: /Does this finished page need an AI API key\?/i,
   ask: /What should AI do first\?/i,
   approve: /How much should AI do before you review again\?/i,
-  build: /Which action earns the next evidence level\?/i,
+  build: /The preview is open\. What must happen before this candidate can be trusted\?/i,
   tryContact: /Try the (?:visitor )?contact (?:action|path)/i,
   repair: /What should (?:you do|happen) after the (?:contact action )?fails\?/i,
   checkRetry: /Does the repaired contact path now finish\?/i,
   releaseVersion: /Which version should go live\?/i,
-  releaseProof: /Prove the release where a visitor reaches it/i,
+  releaseDashboard: /What does the green hosting dashboard actually prove\?/i,
+  releaseProof: /Does the visitor path still work at the public address\?/i,
   improve: /What changes first\?/i,
+  affectedChecks: /Which evidence should be refreshed for this one-fact update\?/i,
 } as const;
 
 const checkpointActions = {
-  idea: "Keep this V1 boundary",
-  tools: "Save this tool route",
-  projectHome: "Pin this project home",
-  ask: "Approve this work agreement",
-  build: "Save this evidenced version",
-  check: "Pin the repaired path",
-  release: "Record this checked release",
-  improve: "Save this source-backed update",
+  idea: "Continue to 2 · Choose a tool route",
+  tools: "Continue to 3 · Give the work a home",
+  projectHome: "Continue to 4 · Make AI show its plan",
+  ask: "Continue to 5 · Build with evidence",
+  build: "Continue to 6 · Test it like a visitor",
+  check: "Continue to 7 · Release the checked version",
+  release: "Continue to 8 · Update from a trusted source",
+  improve: "Finish the field lesson",
 } as const;
 
 type JourneyOptions = {
@@ -76,6 +78,9 @@ async function expectAxeClean(page: Page, include?: string) {
     id: violation.id,
     impact: violation.impact,
     targets: violation.nodes.map((node) => node.target.join(" ")),
+    details: violation.nodes.map((node) =>
+      node.any.map((check) => check.data),
+    ),
   }));
 
   expect(
@@ -267,9 +272,16 @@ async function saveFieldCard(
   page: Page,
   action: (typeof checkpointActions)[keyof typeof checkpointActions],
 ) {
+  const reveal = page.getByRole("button", {
+    name: "Open the lesson receipt",
+    exact: true,
+  });
+  await expect(reveal).toBeVisible();
+  await reveal.click();
+
   const checkpoint = page.locator(".p5-checkpoint");
   await expect(checkpoint).toBeVisible();
-  await expect(checkpoint).toContainText(/Build-kit note ready/i);
+  await expect(checkpoint).toContainText(/Lesson learned.*added to your build kit/i);
   await expect(checkpoint.getByRole("heading", { level: 2 })).toBeFocused();
   await checkpoint.getByRole("button", { name: action, exact: true }).click();
 }
@@ -374,7 +386,7 @@ async function chooseRepositoryLane(
   const task = page.getByRole("group", { name: questions.tools });
   const answer = choice(
     task,
-    /More setup.*clearer files and recoverable history/i,
+    /Start with visible files and saved history/i,
   );
   await observeState(page, "tools", task, answer, options);
   await activate(answer, counter);
@@ -407,6 +419,12 @@ async function completeRepositoryHome(
     options,
   );
   await activate(survivalAnswer, counter);
+  await page
+    .getByRole("button", {
+      name: "Continue · decide whether runtime AI is needed",
+      exact: true,
+    })
+    .click();
 
   const privateTask = page.getByRole("group", {
     name: questions.privateBoundary,
@@ -460,6 +478,12 @@ async function completeAsk(
   ).toHaveCount(0);
   await observeState(page, "ask-ai", task, answer, options);
   await activate(answer, counter);
+  await page
+    .getByRole("button", {
+      name: "See the bounded request and proposed plan",
+      exact: true,
+    })
+    .click();
 
   const plan = page.getByRole("region", {
     name: /AI(?:'s)? three-step plan/i,
@@ -499,7 +523,7 @@ async function completeBuild(
   const task = page.getByRole("group", { name: questions.build });
   const answer = choice(
     task,
-    /Open the preview and try the visitor path/i,
+    /Hand this candidate to a visitor-path check/i,
   );
   await observeState(page, "build", task, answer, options);
   await expect(page.getByText(/Cycle \d+ of 3/i)).toHaveCount(0);
@@ -512,7 +536,7 @@ async function completeBuild(
   ).toContainText(/Ask.*Inspect.*Run.*Check.*Save/is);
   await expect(
     buildCanvas.getByRole("list", {
-      name: /4 of 5 evidence levels earned/i,
+      name: /3 of 5 evidence levels earned/i,
       includeHidden: true,
     }),
   ).toContainText(/AI claim.*Files.*Preview.*Human path.*Public path/is);
@@ -539,6 +563,12 @@ async function completeCheck(
   const tryContact = choice(tryTask, /Email the organizer/i);
   await observeState(page, "check", tryTask, tryContact, options);
   await activate(tryContact, counter);
+  await page
+    .getByRole("button", {
+      name: "Continue · write the defect",
+      exact: true,
+    })
+    .click();
 
   const report = page.getByRole("region", { name: /Defect report/i });
   await expect(report).toContainText(/Observed.*nothing happened/is);
@@ -554,6 +584,12 @@ async function completeCheck(
   );
   await observeState(page, "check-repair", repairTask, repair, options);
   await activate(repair, counter);
+  await page
+    .getByRole("button", {
+      name: "Continue · repeat the same visitor path",
+      exact: true,
+    })
+    .click();
 
   const retryTask = page.getByRole("group", { name: questions.checkRetry });
   const retryContact = choice(retryTask, /Email the organizer/i);
@@ -593,14 +629,33 @@ async function completeRelease(
     /V3.*visual review passed.*contact path not run/is,
   );
   await activate(checkedV4, counter);
+  await page
+    .getByRole("button", {
+      name: "Continue · inspect the public release",
+      exact: true,
+    })
+    .click();
+
+  const dashboardTask = page.getByRole("group", {
+    name: questions.releaseDashboard,
+  });
+  const openPublic = dashboardTask.getByRole("button", {
+    name: "Open the public version",
+    exact: true,
+  });
+  await observeState(
+    page,
+    "go-live-dashboard",
+    dashboardTask,
+    openPublic,
+    options,
+  );
+  await openPublic.click();
 
   const proofTask = page.getByRole("group", {
     name: questions.releaseProof,
   });
-  const publicCheck = choice(
-    proofTask,
-    /Open fresh and repeat the contact path/i,
-  );
+  const publicCheck = choice(proofTask, /Email the organizer/i);
   await observeState(
     page,
     "go-live-public-proof",
@@ -633,18 +688,37 @@ async function completeImprove(
   );
   await observeState(page, "improve", task, sourceFirst, options);
   await activate(sourceFirst, counter);
+  await page
+    .getByRole("button", {
+      name: "Continue · trace the affected checks",
+      exact: true,
+    })
+    .click();
+
+  const affectedTask = page.getByRole("group", {
+    name: questions.affectedChecks,
+  });
+  const affectedAnswer = choice(
+    affectedTask,
+    /Compare the source.*read the changed access fact.*smoke-test the core path/i,
+  );
+  await observeState(
+    page,
+    "improve-affected-checks",
+    affectedTask,
+    affectedAnswer,
+    options,
+  );
+  await activate(affectedAnswer, counter);
 
   await expect(projectCanvas(page)).toContainText(/V5/i);
   await expect(projectCanvas(page)).toContainText(
     /step-free access.*side entrance.*Willow Lane/is,
   );
-  await expect(page.locator(".p5-checkpoint")).toContainText(
-    /source-backed update card.*source change.*affected checks.*saved version/is,
-  );
   await saveFieldCard(page, checkpointActions.improve);
   await expectCurrentHeadingFocused(
     page,
-    /guide a project from idea to evidence/i,
+    /You now have a method, not merely a finished example/i,
   );
 }
 
@@ -678,6 +752,23 @@ async function tabTo(page: Page, target: Locator, maximumTabs = 40) {
 async function keyboardActivate(page: Page, target: Locator) {
   await tabTo(page, target);
   await page.keyboard.press("Enter");
+}
+
+async function keyboardSaveFieldCard(
+  page: Page,
+  action: (typeof checkpointActions)[keyof typeof checkpointActions],
+) {
+  await keyboardActivate(
+    page,
+    page.getByRole("button", {
+      name: "Open the lesson receipt",
+      exact: true,
+    }),
+  );
+  await keyboardActivate(
+    page,
+    page.getByRole("button", { name: action, exact: true }),
+  );
 }
 
 test("explains why the method matters, reveals the hidden project, and preserves the first consequence", async ({
@@ -773,7 +864,7 @@ test("explains why the method matters, reveals the hidden project, and preserves
   );
   await expect(
     page.getByRole("button", {
-      name: checkpointActions.idea,
+      name: "Open the lesson receipt",
       exact: true,
     }),
   ).toBeVisible();
@@ -784,7 +875,7 @@ test("explains why the method matters, reveals the hidden project, and preserves
 for (const lane of [
   {
     name: "repository",
-    answer: /More setup.*clearer files and recoverable history/i,
+    answer: /Start with visible files and saved history/i,
     homeAnswer:
       /Files in a project folder, with saved history \(Git\) and an online copy \(GitHub\)/i,
     route:
@@ -793,7 +884,7 @@ for (const lane of [
   },
   {
     name: "hosted",
-    answer: /Faster preview.*more dependence on one service/i,
+    answer: /Start in one browser workspace/i,
     homeAnswer:
       /A saved hosted project with versions and (?:a )?(?:GitHub connection|export)/i,
     route:
@@ -821,7 +912,7 @@ for (const lane of [
   });
 }
 
-test("completes 13 meaningful decisions and explicitly saves each of eight build-kit notes", async ({
+test("completes 14 meaningful decisions and explicitly saves each of eight lesson receipts", async ({
   page,
 }) => {
   await page.setViewportSize(MOBILE_VIEWPORT);
@@ -831,8 +922,8 @@ test("completes 13 meaningful decisions and explicitly saves each of eight build
 
   expect(
     interactionCount,
-    "the required route should retain thirteen consequential decisions and trials",
-  ).toBe(13);
+    "the required route should retain fourteen consequential decisions and trials",
+  ).toBe(14);
 
   const habitsDisclosure = page.locator("details.p4-habits-disclosure");
   await expect(habitsDisclosure).not.toHaveAttribute("open", "");
@@ -840,7 +931,7 @@ test("completes 13 meaningful decisions and explicitly saves each of eight build
     page.getByText(/Review the four reusable habits/i),
   ).toBeVisible();
   await expect(
-    page.getByText(/More setup.*clearer files and recoverable history/i),
+    page.getByText(/Start with visible files and saved history/i),
   ).toBeVisible();
   await expect(
     page.getByRole("button", {
@@ -849,7 +940,7 @@ test("completes 13 meaningful decisions and explicitly saves each of eight build
     }),
   ).toBeVisible();
   await expect(
-    page.getByRole("button", { name: "Shape my own V1 brief", exact: true }),
+    page.getByRole("button", { name: "Apply the method to my idea", exact: true }),
   ).toBeVisible();
   await page.getByText(/Review the four reusable habits/i).click();
   const habits = page.getByRole("list", { name: /Four durable habits/i });
@@ -926,6 +1017,12 @@ test("shows the real three-step AI plan before approval and practices evidence o
     askTask,
     /Inspect the project, return a small plan, and stop for approval/i,
   ).click();
+  await page
+    .getByRole("button", {
+      name: "See the bounded request and proposed plan",
+      exact: true,
+    })
+    .click();
 
   const plan = page.getByRole("region", {
     name: /AI(?:'s)? three-step plan/i,
@@ -943,9 +1040,12 @@ test("shows the real three-step AI plan before approval and practices evidence o
     })
     .click();
 
-  await expect(page.locator(".p5-checkpoint")).toContainText(
-    /work agreement|Approve a shown plan/i,
-  );
+  await expect(
+    page.getByRole("button", {
+      name: "Open the lesson receipt",
+      exact: true,
+    }),
+  ).toBeVisible();
   await saveFieldCard(page, checkpointActions.ask);
   const buildTask = page.getByRole("group", { name: questions.build });
   await expect(
@@ -1033,7 +1133,7 @@ test("turns the V1 brief workshop into a four-step, one-group-at-a-time transfer
   });
 
   const opener = page.getByRole("button", {
-    name: "Shape my own V1 brief",
+    name: "Apply the method to my idea",
     exact: true,
   });
   await opener.click();
@@ -1045,12 +1145,14 @@ test("turns the V1 brief workshop into a four-step, one-group-at-a-time transfer
     dialog.getByRole("heading", { name: /Person and useful result/i }),
   ).toBeFocused();
   await expect(dialog.getByRole("textbox")).toHaveCount(3);
-  await dialog.getByLabel(/Who is this for\?/i).fill("A community gardener");
   await dialog
-    .getByLabel(/What situation are they in\?/i)
+    .getByLabel(/Who exactly will use it\?/i)
+    .fill("A community gardener");
+  await dialog
+    .getByLabel(/In what moment will they use it\?/i)
     .fill("They need to find a seed swap this weekend.");
   await dialog
-    .getByLabel(/What useful result should they get\?/i)
+    .getByLabel(/What should become possible for them\?/i)
     .fill("See approved details and contact the host.");
   await dialog.getByRole("button", { name: /Next/i }).click();
 
@@ -1062,10 +1164,10 @@ test("turns the V1 brief workshop into a four-step, one-group-at-a-time transfer
   ).toBeFocused();
   await expect(dialog.getByRole("textbox")).toHaveCount(2);
   await dialog
-    .getByLabel(/What complete path should they finish\?/i)
+    .getByLabel(/What 3–5 steps will they finish\?/i)
     .fill("Open the page, check the details, email the host.");
   await dialog
-    .getByLabel(/What facts can you trust\?/i)
+    .getByLabel(/Which source can you verify, and which facts come from it\?/i)
     .fill("Organizer-approved event notes.");
   await dialog.getByRole("button", { name: /Next/i }).click();
 
@@ -1075,10 +1177,10 @@ test("turns the V1 brief workshop into a four-step, one-group-at-a-time transfer
   ).toBeFocused();
   await expect(dialog.getByRole("textbox")).toHaveCount(2);
   await dialog
-    .getByLabel(/What must the first version include\?/i)
+    .getByLabel(/What is essential to that path\?/i)
     .fill("Event facts and one working email.");
   await dialog
-    .getByLabel(/What is not now\?/i)
+    .getByLabel(/Which tempting features are deliberately later\?/i)
     .fill("Accounts, booking, and payments.");
   await dialog.getByRole("button", { name: /Next/i }).click();
 
@@ -1088,11 +1190,11 @@ test("turns the V1 brief workshop into a four-step, one-group-at-a-time transfer
   ).toBeFocused();
   await expect(dialog.getByRole("textbox")).toHaveCount(1);
   await dialog
-    .getByLabel(/What proves it is done\?/i)
+    .getByLabel(/What observable action proves the path works\?/i)
     .fill("The public contact path works at 390px.");
   await expect(
     dialog.getByRole("group", { name: /Selected tool route/i }),
-  ).toContainText(/More setup.*clearer files and recoverable history/i);
+  ).toContainText(/Start with visible files and saved history/i);
   await expectAxeClean(page, '[role="dialog"]');
 
   await dialog
@@ -1188,6 +1290,12 @@ test("persists the Check repair and requires the real retry before advancing", a
 
   const tryTask = page.getByRole("group", { name: questions.tryContact });
   await choice(tryTask, /Email the organizer/i).click();
+  await page
+    .getByRole("button", {
+      name: "Continue · write the defect",
+      exact: true,
+    })
+    .click();
   const repairTask = page.getByRole("group", { name: questions.repair });
   await choice(repairTask, /Repair only the inactive email link/i).click();
 
@@ -1221,8 +1329,10 @@ test("persists the Check repair and requires the real retry before advancing", a
   await expect(retryTask).toBeVisible();
   await choice(retryTask, /Email the organizer/i).click();
 
-  await expect(page.locator(".p5-checkpoint")).toContainText(
-    /repaired path|Evidence must include the human path/i,
+  await expect(
+    page.getByRole("group", { name: /The same visitor path now finishes/i }),
+  ).toContainText(
+    /Human-path evidence earned.*passing repeat is stronger/is,
   );
   await saveFieldCard(page, checkpointActions.check);
   await expectCurrentHeadingFocused(page, /Release what you checked/i);
@@ -1330,7 +1440,7 @@ test("has no automated accessibility violations throughout the core route", asyn
   await expectAxeClean(page);
 
   const count = await completeCoreJourney(page, { checkAxe: true });
-  expect(count).toBe(13);
+  expect(count).toBe(14);
   await expectAxeClean(page);
 });
 
@@ -1387,8 +1497,12 @@ test("never overflows at 320, 390, 768, or 1440 pixels across the full route", a
   page,
 }) => {
   test.setTimeout(300_000);
+  const requestedWidth = Number(process.env.PENTIMENTO_DENSITY_WIDTH);
+  const widths = [320, 390, 768, 1440].includes(requestedWidth)
+    ? [requestedWidth]
+    : [320, 390, 768, 1440];
 
-  for (const width of [320, 390, 768, 1440]) {
+  for (const width of widths) {
     await page.setViewportSize({
       width,
       height: width === 1440 ? 900 : 844,
@@ -1401,7 +1515,7 @@ test("never overflows at 320, 390, 768, or 1440 pixels across the full route", a
         await expectNoHorizontalOverflow(currentPage);
       },
     });
-    expect(count).toBe(13);
+    expect(count).toBe(14);
     await expectNoHorizontalOverflow(page);
   }
 });
@@ -1445,26 +1559,14 @@ test("supports the complete core route with keyboard input alone", async ({
     page,
     choice(idea, /Read the event details.*email a question/i),
   );
-  await keyboardActivate(
-    page,
-    page.getByRole("button", {
-      name: checkpointActions.idea,
-      exact: true,
-    }),
-  );
+  await keyboardSaveFieldCard(page, checkpointActions.idea);
 
   const tools = page.getByRole("group", { name: questions.tools });
   await keyboardActivate(
     page,
-    choice(tools, /More setup.*clearer files and recoverable history/i),
+    choice(tools, /Start with visible files and saved history/i),
   );
-  await keyboardActivate(
-    page,
-    page.getByRole("button", {
-      name: checkpointActions.tools,
-      exact: true,
-    }),
-  );
+  await keyboardSaveFieldCard(page, checkpointActions.tools);
 
   const home = page.getByRole("group", { name: questions.projectHome });
   await keyboardActivate(
@@ -1473,6 +1575,13 @@ test("supports the complete core route with keyboard input alone", async ({
       home,
       /Files in a project folder, with saved history \(Git\) and an online copy \(GitHub\)/i,
     ),
+  );
+  await keyboardActivate(
+    page,
+    page.getByRole("button", {
+      name: "Continue · decide whether runtime AI is needed",
+      exact: true,
+    }),
   );
   const privateBoundary = page.getByRole("group", {
     name: questions.privateBoundary,
@@ -1484,13 +1593,7 @@ test("supports the complete core route with keyboard input alone", async ({
       /No.*page uses approved facts and a normal email link/i,
     ),
   );
-  await keyboardActivate(
-    page,
-    page.getByRole("button", {
-      name: checkpointActions.projectHome,
-      exact: true,
-    }),
-  );
+  await keyboardSaveFieldCard(page, checkpointActions.projectHome);
 
   const ask = page.getByRole("group", { name: questions.ask });
   await keyboardActivate(
@@ -1500,6 +1603,13 @@ test("supports the complete core route with keyboard input alone", async ({
       /Inspect the project, return a small plan, and stop for approval/i,
     ),
   );
+  await keyboardActivate(
+    page,
+    page.getByRole("button", {
+      name: "See the bounded request and proposed plan",
+      exact: true,
+    }),
+  );
   const approval = page.getByRole("group", { name: questions.approve });
   await keyboardActivate(
     page,
@@ -1508,52 +1618,48 @@ test("supports the complete core route with keyboard input alone", async ({
       /Approve step one.*review its evidence before step two/i,
     ),
   );
-  await keyboardActivate(
-    page,
-    page.getByRole("button", {
-      name: checkpointActions.ask,
-      exact: true,
-    }),
-  );
+  await keyboardSaveFieldCard(page, checkpointActions.ask);
 
   const build = page.getByRole("group", { name: questions.build });
   await keyboardActivate(
     page,
     choice(
       build,
-      /Open the preview and try the visitor path/i,
+      /Hand this candidate to a visitor-path check/i,
     ),
   );
-  await keyboardActivate(
-    page,
-    page.getByRole("button", {
-      name: checkpointActions.build,
-      exact: true,
-    }),
-  );
+  await keyboardSaveFieldCard(page, checkpointActions.build);
 
   const tryContact = page.getByRole("group", { name: questions.tryContact });
   await keyboardActivate(
     page,
     choice(tryContact, /Email the organizer/i),
   );
+  await keyboardActivate(
+    page,
+    page.getByRole("button", {
+      name: "Continue · write the defect",
+      exact: true,
+    }),
+  );
   const repair = page.getByRole("group", { name: questions.repair });
   await keyboardActivate(
     page,
     choice(repair, /Repair only the inactive email link/i),
+  );
+  await keyboardActivate(
+    page,
+    page.getByRole("button", {
+      name: "Continue · repeat the same visitor path",
+      exact: true,
+    }),
   );
   const retry = page.getByRole("group", { name: questions.checkRetry });
   await keyboardActivate(
     page,
     choice(retry, /Email the organizer/i),
   );
-  await keyboardActivate(
-    page,
-    page.getByRole("button", {
-      name: checkpointActions.check,
-      exact: true,
-    }),
-  );
+  await keyboardSaveFieldCard(page, checkpointActions.check);
 
   const releaseVersion = page.getByRole("group", {
     name: questions.releaseVersion,
@@ -1565,23 +1671,28 @@ test("supports the complete core route with keyboard input alone", async ({
       /V4.*contact repaired.*repeated path passed/i,
     ),
   );
+  await keyboardActivate(
+    page,
+    page.getByRole("button", {
+      name: "Continue · inspect the public release",
+      exact: true,
+    }),
+  );
+  await keyboardActivate(
+    page,
+    page.getByRole("button", {
+      name: "Open the public version",
+      exact: true,
+    }),
+  );
   const releaseProof = page.getByRole("group", {
     name: questions.releaseProof,
   });
   await keyboardActivate(
     page,
-    choice(
-      releaseProof,
-      /Open fresh and repeat the contact path/i,
-    ),
+    choice(releaseProof, /Email the organizer/i),
   );
-  await keyboardActivate(
-    page,
-    page.getByRole("button", {
-      name: checkpointActions.release,
-      exact: true,
-    }),
-  );
+  await keyboardSaveFieldCard(page, checkpointActions.release);
 
   const improve = page.getByRole("group", { name: questions.improve });
   await keyboardActivate(
@@ -1591,14 +1702,25 @@ test("supports the complete core route with keyboard input alone", async ({
   await keyboardActivate(
     page,
     page.getByRole("button", {
-      name: checkpointActions.improve,
+      name: "Continue · trace the affected checks",
       exact: true,
     }),
   );
+  const affectedChecks = page.getByRole("group", {
+    name: questions.affectedChecks,
+  });
+  await keyboardActivate(
+    page,
+    choice(
+      affectedChecks,
+      /Compare the source.*read the changed access fact.*smoke-test the core path/i,
+    ),
+  );
+  await keyboardSaveFieldCard(page, checkpointActions.improve);
 
   await expectCurrentHeadingFocused(
     page,
-    /guide a project from idea to evidence/i,
+    /You now have a method, not merely a finished example/i,
   );
   await expectAxeClean(page);
 });
