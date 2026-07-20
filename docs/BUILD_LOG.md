@@ -614,3 +614,54 @@ received the previous version 6 lesson receipt while the other three routes
 passed. After propagation, the affected desktop journey passed twice in
 consecutive fresh browser contexts. The final acceptance evidence above uses
 the clean post-propagation results.
+
+## July 20 — Editorial prologue v8 production release
+
+Judge-facing review showed that the lesson still asked for attention before it
+had earned it. Pentimento v8 replaces the static welcome with a natural-scroll
+editorial prologue. One Willow Fix Day artifact stays present while four beats
+change its meaning: AI’s polished claim, an observed failed action, four hidden
+project responsibilities, and the Shape → Ground → Direct → Prove method. The
+closing threshold states the work, duration, safety boundary, and five
+take-home tools before handing the visible Build kit into the first evidence
+check.
+
+The implementation preserves ordinary scrolling and reverse scrolling. It
+uses a deterministic Intersection Observer only to synchronize the persistent
+artifact; all teaching text remains semantic and readable without motion.
+Desktop uses a 55/45 sticky composition. Tablet and mobile place the artifact
+above the current beat and keep headings clear of it. The scroll cue moves
+keyboard focus beneath the sticky header, the skip path focuses the evidence
+check, reduced-motion mode removes the spectral scan and View Transitions, and
+the final shared-object handoff avoids the browser’s default ghosted
+cross-fade.
+
+The exact source was pushed to GitHub and the configured Sites source branch,
+built as a 73-file Vinext artifact, saved as immutable Sites version 8, and
+deployed to the existing public Pentimento address on July 20, 2026 at 15:13
+UTC.
+
+| Check | Result |
+| --- | --- |
+| Deployed source | PASS · `fc0b4f5e85095236edf471cad1750e89235e6809` |
+| Sites version | PASS · version 8 · `appgprj_6a5cd40f4f5c81919c4fcd84e7ef2709~appgver_decac58e4d6481919b185f9147022827` |
+| Production deployment | PASS · `appgdep_6a5e3af13d9481918bbf071f5bb669ac` |
+| Native public URL | PASS · `https://pentimento.law-ender.chatgpt.site` returned HTTP `200` |
+| Typecheck | PASS · no diagnostics |
+| Unit and API tests | PASS · 96/96 |
+| Next.js and Sites-compatible Vinext builds | PASS · 514 client modules; 73-file deploy artifact |
+| Local browser suite | PASS · 30/30 desktop/mobile Chromium checks in 11.1 minutes |
+| Editorial-prologue coverage | PASS · all four beats, scroll/focus transfer, skip path, shared handoff, and first evidence check |
+| Local responsive matrix | PASS · prologue and full route at 320, 390, 768, and 1440px; zero horizontal overflow and no sticky-heading overlap |
+| Local accessibility and motion | PASS · route-wide Axe, keyboard-only journey, reduced motion, focus return, and text-equivalent states |
+| Generated Worker boundary | PASS · root/icon `200`; valid reflection `200` with `mode: "demo"` |
+| Hosted opening and core route | PASS · fresh desktop/mobile prologue and 14-decision journeys after edge propagation |
+| Hosted route-wide accessibility | PASS · desktop and mobile Axe |
+| Production endpoint boundary | PASS · root/icon `200`; valid reflection reported `mode: "demo"` |
+| Rollback target | PASS · Sites version 7 · `c87603c7ca77c3d086c7d5b09048a52b47720a95` |
+
+The first hosted check overlapped edge propagation: three browser contexts
+received the previous v7 opening while the other three v8 journeys, including
+both route-wide Axe runs, passed. Repeated asset probes then resolved
+exclusively to the v8 bundle. The affected fresh desktop/mobile opening and
+complete 14-decision journeys all passed in the clean post-propagation run.

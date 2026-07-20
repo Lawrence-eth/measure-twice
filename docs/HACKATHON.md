@@ -248,7 +248,7 @@ appear in the footage.
 | Criterion | Evidence to show |
 | --- | --- |
 | **Technological Implementation** | Typed and validated progress with exact substep restoration; two route-dependent curricula; 14 consequential decisions plus in-place lesson receipts; a persistent Visitor surface/Layers underneath canvas; a bounded server-only reflection endpoint with structured input/output and deterministic fallback; unit, API, responsive browser, accessibility, Worker, and hosted-runtime verification paths. The README documents how Codex shaped and accelerated the implementation. |
-| **Design** | A contemporary Conservation Lab and spectral inspection that prove the problem before explaining it; four chapters across eight stops; task-to-receipt transitions that keep cause and consequence in one reading position; a persistent Build kit; useful wrong-choice consequences; mobile/desktop layouts; native controls, managed focus, reduced-motion support, and a literal pentimento that preserves earlier decisions. |
+| **Design** | A natural-scroll editorial prologue that transforms one persistent artifact from polished claim to observed failure to visible underlayers to method; a shared-object handoff into the evidence check; a contemporary Conservation Lab; four chapters across eight stops; task-to-receipt transitions that keep cause and consequence in one reading position; a persistent Build kit; useful wrong-choice consequences; mobile/desktop layouts; managed focus, reduced-motion support, and a literal pentimento that preserves earlier decisions. |
 | **Potential Impact** | A specific audience—people with an idea and no AI-building mental model—and a specific risk: polished output without ownership, evidence, or recovery. Learners finish with reusable rules, route-specific next actions, templates, and their own local V1 brief. |
 | **Quality of the Idea** | A full idea-to-release education experience rather than a coding course, prompt library, tool ranking, or project generator. It separates build-time AI from runtime AI, makes evidence levels tangible, requires a fail → repair → retry loop, and uses earlier visible layers as the core teaching metaphor. |
 
@@ -266,11 +266,11 @@ appear in the footage.
   private repository with both testing@devpost.com and
   build-week-event@openai.com.
 - [x] Confirm the Devpost repository URL resolves for a signed-out judge.
-- [x] Freeze and record the exact final v7 commit and release/version metadata.
+- [x] Freeze and record the exact final v8 commit and release/version metadata.
 
 ### Public experience
 
-- [x] Deploy the final verified v7 artifact to
+- [x] Deploy the final verified v8 artifact to
   pentimento.law-ender.chatgpt.site.
 - [x] Run the hosted desktop/mobile acceptance checks against that exact artifact.
 - [x] Verify the worked inspection, four chapters, eight-stop route, 14
@@ -296,7 +296,7 @@ appear in the footage.
 
 ## Final hand-in values
 
-The release-controlled values below were verified against the exact public v7
+The release-controlled values below were verified against the exact public v8
 artifact. The remaining entrant-controlled values require action outside the
 repository.
 
@@ -304,10 +304,10 @@ repository.
 | --- | --- |
 | Public YouTube demo URL | **TBD — entrant uploads and verifies public visibility** |
 | Primary Codex /feedback Session ID | **TBD — entrant obtains it from the primary build thread** |
-| Exact final v7 deployed source | `c87603c7ca77c3d086c7d5b09048a52b47720a95` |
-| Final Sites deployment version | Version 7 · `appgprj_6a5cd40f4f5c81919c4fcd84e7ef2709~appgver_d37545258b2c819186fc8860d07843a7` · deployment `appgdep_6a5dcd8729ec81919d7671083d9651c1` |
-| Hosted v7 acceptance result and timestamp | PASS · desktop/mobile 14-decision routes and route-wide Axe · July 20, 2026 07:30 UTC |
-| Rollback version confirmed for final release | Sites version 6 · `e468794af3c214a30afb742ef3a572b852e79677` |
+| Exact final v8 deployed source | `fc0b4f5e85095236edf471cad1750e89235e6809` |
+| Final Sites deployment version | Version 8 · `appgprj_6a5cd40f4f5c81919c4fcd84e7ef2709~appgver_decac58e4d6481919b185f9147022827` · deployment `appgdep_6a5e3af13d9481918bbf071f5bb669ac` |
+| Hosted v8 acceptance result and timestamp | PASS · editorial prologue plus desktop/mobile 14-decision routes and route-wide Axe · July 20, 2026 15:16 UTC |
+| Rollback version confirmed for final release | Sites version 7 · `c87603c7ca77c3d086c7d5b09048a52b47720a95` |
 | Production reflection mode and evidence | Deterministic fallback · valid `/api/debrief` returned `mode: "demo"`, two unresolved questions, and three next moves |
 | Repository public-access or private-sharing confirmation | PASS · signed-out GitHub request returned HTTP `200` |
 | Devpost submission confirmation | **TBD — entrant submits and records it** |
