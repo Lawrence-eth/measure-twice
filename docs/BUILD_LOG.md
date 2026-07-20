@@ -666,7 +666,7 @@ both route-wide Axe runs, passed. Repeated asset probes then resolved
 exclusively to the v8 bundle. The affected fresh desktop/mobile opening and
 complete 14-decision journeys all passed in the clean post-propagation run.
 
-## July 20 — Six-folio v9 candidate
+## July 20 — Six-folio v9 production release
 
 Another complete beginner review found two remaining product problems. First,
 the v8 opening still required six to eight mobile viewports before the learner
@@ -676,7 +676,7 @@ continuous scroll, stacked transitions, tall mobile canvas, and dense header
 made the experience feel like a long page rather than a deliberately composed
 field lesson.
 
-The v9 candidate rebuilds the opening as six numbered folios in the root page
+The v9 release rebuilds the opening as six numbered folios in the root page
 scroll:
 
 1. What Pentimento is.
@@ -706,9 +706,10 @@ automatic scroll. **Save this lesson** produces
 each receipt creates another guide; five Build-kit guides remain available.
 
 Completion now says the learner practiced a method rather than claiming
-transfer or mastery. It leads with **Create my V1 brief**. The workshop is being
-audited for short-viewport focus, useful concise answers, visible validation,
-editing, and explicit reflection identity. Demo results are labelled
+transfer or mastery. It leads with **Create my V1 brief**. The workshop accepts
+useful concise answers, focuses the first incomplete field, keeps actions
+visible on short viewports, supports editing, and identifies the reflection
+source explicitly. Demo results are labelled
 **Authored example · deterministic, no live AI call**; only successful live
 results may say **GPT-5.6 reflection · live**.
 
@@ -716,18 +717,37 @@ The earlier full-root View Transition was removed from scene changes so the
 stable shell and destination entrance cannot create double, blank, or ghost
 frames. Motion is owned by one layer at a time.
 
-No v9 release result is recorded here until the exact candidate has completed
-the full local matrix, exact-source Sites deployment, edge propagation, and
-hosted acceptance. The latest verified rollback remains v8.
+The exact source was pushed to GitHub and the configured Sites source branch,
+built as a 73-file Vinext artifact, saved as immutable Sites version 9, and
+deployed to the existing public Pentimento address on July 20, 2026 at 17:10
+UTC. Fresh desktop and mobile browser contexts then completed the hosted
+opening, complete 14-decision route, and route-wide Axe checks. The desktop
+hosted matrix also completed the full V1 workshop.
 
-| Candidate gate | Status |
+| Check | Result |
 | --- | --- |
-| Six-folio pointer, keyboard, and scroll behavior | PENDING exact-candidate verification |
-| Opening evidence persistence into Check | PENDING exact-candidate verification |
-| Both 14-decision lesson lanes | PENDING exact-candidate verification |
-| 320, 390, 768, and 1440px composition | PENDING exact-candidate verification |
-| Short viewport, high zoom, and reduced motion | PENDING exact-candidate verification |
-| V1 workshop focus, validation, edit, and mode labels | PENDING exact-candidate verification |
-| Unit, API, typecheck, builds, dependency audit | PENDING exact-candidate verification |
-| Exact-source Sites version and deployment | PENDING |
-| Hosted journey, Axe, performance, and endpoint boundary | PENDING |
+| Deployed source | PASS · `c79b989c9df8253298d0eb807d2a5e516fca3bff` |
+| Sites version | PASS · version 9 · `appgprj_6a5cd40f4f5c81919c4fcd84e7ef2709~appgver_328f62416d6c81918db6ef5fb27595f7` |
+| Production deployment | PASS · `appgdep_6a5e5663bdc88191a21301e7bca6cf52` |
+| Native public URL | PASS · `https://pentimento.law-ender.chatgpt.site` returned HTTP `200` |
+| Typecheck | PASS · no diagnostics |
+| Unit and API tests | PASS · 97/97 |
+| Runtime dependency audit | PASS · zero vulnerabilities |
+| Sites-compatible Vinext build | PASS · 514 client modules; 73-file deploy artifact |
+| Local interaction matrix | PASS · 15 focused Chromium scenarios; both tool lanes, full route, persistence, repair/retry, restart, keyboard, reduced motion, Axe, workshop, and narrow layouts |
+| Local responsive matrix | PASS · 320, 390, 768, and 1440px; no horizontal overflow or blocked action |
+| Exact production artifact | PASS · all six JS/CSS assets `200`; hydrated desktop 6/6 and mobile 3/3 critical journeys |
+| Exact-artifact Lighthouse | PASS · mobile 91/100/100/100; desktop 100/100/100/100 for performance/accessibility/best practices/SEO |
+| Hosted desktop acceptance | PASS · six-folio evidence path, 14-decision route, V1 workshop, and route-wide Axe |
+| Hosted mobile acceptance | PASS · six-folio evidence path, 14-decision route, and route-wide Axe |
+| Hosted accessibility | PASS · zero automated Axe violations in desktop and mobile route sweeps |
+| Production endpoint boundary | PASS · root/icon/assets `200`; invalid reflection `400`; valid authored reflection `200` with `mode: "demo"` |
+| Hosted Lighthouse | PASS · mobile 91/100/81/100; desktop 100/100/81/100 |
+| Rollback target | PASS · Sites version 8 · `fc0b4f5e85095236edf471cad1750e89235e6809` |
+
+The hosted Best Practices score is 81 because the ChatGPT Sites delivery layer
+injects a Cloudflare challenge script that Lighthouse flags for three
+deprecated browser APIs and serves the document with `cache-control: no-store`.
+The same exact application artifact scores 100 locally for Best Practices,
+logs no console errors, and has no Inspector issues; the hosting-layer findings
+are not emitted by Pentimento source.

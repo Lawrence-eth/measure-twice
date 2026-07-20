@@ -1,8 +1,9 @@
 # Pentimento v9 experience contract
 
-This document is the implementation contract for the six-folio, page-by-page
-candidate. Earlier release results remain historical evidence in
-[BUILD_LOG.md](BUILD_LOG.md); they do not prove this candidate.
+This document is the implementation contract for the verified six-folio,
+page-by-page release. Earlier release results remain historical evidence in
+[BUILD_LOG.md](BUILD_LOG.md); the exact v9 evidence is recorded there
+separately.
 
 ## Product truth
 
@@ -292,7 +293,7 @@ text, and motion never disagree.
 
 ## Acceptance contract
 
-The v9 candidate is acceptable only when:
+The v9 release is acceptable only when:
 
 - unit, API, state, and type checks pass;
 - the complete desktop and mobile journeys pass;

@@ -1,6 +1,6 @@
 # Pentimento v9 quality standard
 
-This is the acceptance contract for the current OpenAI Build Week candidate.
+This is the acceptance contract for the current OpenAI Build Week release.
 Pentimento is ready only when the product follows the careful build discipline
 it teaches. A passing result from v1–v8 is not evidence for v9.
 

@@ -7,10 +7,10 @@ Submission deadline: **July 21, 2026 at 5:00 PM Pacific** (**July 22 at
 
 The Official Rules, Devpost form, and notices on
 [openai.devpost.com](https://openai.devpost.com) are the source of truth. This
-file contains submission-ready copy for the Pentimento v9 candidate.
-Release-controlled v9 values remain pending until the exact candidate is
-deployed and verified. The v8 values at the end are retained as rollback
-evidence, not as proof for v9.
+file contains submission-ready copy for the verified Pentimento v9 release.
+The v9 source, Sites version, deployment, and hosted acceptance values below
+are release evidence. The v8 values at the end are retained only as rollback
+evidence.
 
 ## Devpost summary
 
@@ -32,7 +32,7 @@ consequential decisions, and an in-place lesson receipt after each stop.
 
 **Target public experience:**
 [pentimento.law-ender.chatgpt.site](https://pentimento.law-ender.chatgpt.site)
-— native ChatGPT Sites address. Record v9 verification only after deployment.
+— verified native ChatGPT Sites address.
 
 **Repository:** [github.com/Lawrence-eth/measure-twice](https://github.com/Lawrence-eth/measure-twice)
 
@@ -261,20 +261,20 @@ configured server-only key; no credential may appear in the footage.
   private repository with both testing@devpost.com and
   build-week-event@openai.com.
 - [x] Confirm the Devpost repository URL resolves for a signed-out judge.
-- [ ] Freeze and record the exact final v9 commit and release/version metadata.
+- [x] Freeze and record the exact final v9 commit and release/version metadata.
 
 ### Public experience
 
-- [ ] Deploy the exact verified v9 artifact to
+- [x] Deploy the exact verified v9 artifact to
   pentimento.law-ender.chatgpt.site.
-- [ ] Run the hosted desktop/mobile acceptance checks against that exact artifact.
-- [ ] Verify all six folios, persisted opening evidence, four chapters,
+- [x] Run the hosted desktop/mobile acceptance checks against that exact artifact.
+- [x] Verify all six folios, persisted opening evidence, four chapters,
   eight-stop route, 14 decisions, in-place receipts, Build kit, project-layer
   views, V1 brief, authored/live labels, restart, keyboard path, focus,
   reduced-motion behavior, and narrow layouts.
-- [ ] Record the final Sites version/deployment, hosted test result, date, and
+- [x] Record the final Sites version/deployment, hosted test result, date, and
   rollback target in docs/BUILD_LOG.md.
-- [ ] Confirm whether the submitted deployment uses live GPT-5.6 or the
+- [x] Confirm whether the submitted deployment uses live GPT-5.6 or the
   authored deterministic example, and describe it accurately.
 
 ### Devpost
@@ -291,18 +291,17 @@ configured server-only key; no credential may appear in the footage.
 
 ## Final hand-in values
 
-Do not copy v8 evidence into a v9 submission claim. Fill the v9 fields only
-after exact-source deployment and hosted verification. The final three rows
-preserve the latest verified v8 rollback record.
+The v9 release fields below come from exact-source deployment and hosted
+verification. The final three rows preserve the verified v8 rollback record.
 
 | Field | Final value |
 | --- | --- |
 | Public YouTube demo URL | **TBD — entrant uploads and verifies public visibility** |
 | Primary Codex /feedback Session ID | **TBD — entrant obtains it from the primary build thread** |
-| Exact final v9 deployed source | **TBD — record after exact-source deployment** |
-| Final v9 Sites version and deployment | **TBD — record after deployment** |
-| Hosted v9 acceptance result and timestamp | **TBD — record after hosted matrix** |
-| Production reflection mode and evidence | **TBD — record the visible authored/live label and endpoint response** |
+| Exact final v9 deployed source | `c79b989c9df8253298d0eb807d2a5e516fca3bff` |
+| Final v9 Sites version and deployment | Version 9 · `appgprj_6a5cd40f4f5c81919c4fcd84e7ef2709~appgver_328f62416d6c81918db6ef5fb27595f7` · deployment `appgdep_6a5e5663bdc88191a21301e7bca6cf52` |
+| Hosted v9 acceptance result and timestamp | PASS · desktop/mobile six-folio and 14-decision routes; desktop V1 workshop; desktop/mobile route-wide Axe · July 20, 2026 17:18 UTC |
+| Production reflection mode and evidence | PASS · endpoint returned `mode: "demo"`; UI labels the result **Authored example · deterministic, no live AI call** |
 | Repository public-access or private-sharing confirmation | PASS · signed-out GitHub request returned HTTP `200` |
 | Devpost submission confirmation | **TBD — entrant submits and records it** |
 | Verified v8 rollback source | `fc0b4f5e85095236edf471cad1750e89235e6809` |
