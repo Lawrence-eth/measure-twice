@@ -563,3 +563,54 @@ The exact refinement was saved and published on July 20, 2026 at 05:20 UTC:
 | Short-desktop Build kit geometry | PASS · `0px` position and scroll shift before/open/close at 1440×720 |
 | Mobile route overview | PASS · `17px` chapter-to-footer gap and `0px` overlap at 390×844 |
 | Rollback target | PASS · Sites version 5 · `f0934095791555d3bc7c089a9136599a47595df4` |
+
+## July 20 — Deliberately authored v7 production release
+
+A second general-user review found that smoother controls alone did not create
+a smoother lesson. Pentimento v7 therefore rebuilt the reading rhythm around
+one repeatable sequence: make a decision, inspect its visible consequence,
+open a concise lesson receipt in the same place, and deliberately continue.
+The route no longer grows by appending a separate checkpoint below every task.
+Native view transitions preserve the learner's reading position while
+task-to-receipt, stage, canvas, dialog, and workshop changes share one motion
+grammar.
+
+The curriculum now contains 14 consequential interactions. A preview is
+explicitly a candidate rather than human evidence; Check requires the learner
+to observe the broken action, make one bounded repair, and repeat the exact
+path; Go live requires opening and using the public version; and Improve adds
+an affected-reading and smoke-check decision. The Tools stop begins with the
+three durable responsibilities—build, remember, publish—before asking for a
+route. The V1 workshop carries the learner's person, moment, result, path,
+facts, boundaries, and observable finish line forward with persistent examples
+and a live brief summary.
+
+The exact source was pushed to GitHub and the configured Sites source branch,
+built as a 73-file Vinext artifact, saved as immutable Sites version 7, and
+deployed to the existing public Pentimento address on July 20, 2026 at 07:26
+UTC.
+
+| Check | Result |
+| --- | --- |
+| Deployed source | PASS · `c87603c7ca77c3d086c7d5b09048a52b47720a95` |
+| Sites version | PASS · version 7 · `appgprj_6a5cd40f4f5c81919c4fcd84e7ef2709~appgver_d37545258b2c819186fc8860d07843a7` |
+| Production deployment | PASS · `appgdep_6a5dcd8729ec81919d7671083d9651c1` |
+| Native public URL | PASS · `https://pentimento.law-ender.chatgpt.site` returned HTTP `200` |
+| Typecheck | PASS · no diagnostics |
+| Unit and API tests | PASS · 96/96 |
+| Sites-compatible Vinext build | PASS · 514 client modules; 73-file deploy artifact |
+| Generated Worker boundary | PASS · root/icon `200`; invalid reflection `400` |
+| Local core-route acceptance | PASS · desktop and mobile 14-decision journeys |
+| Local route-wide accessibility | PASS · desktop and mobile Axe |
+| Local responsive matrix | PASS · 320, 390, 768, and 1440px; zero horizontal overflow |
+| Production endpoint boundary | PASS · root/icon `200`; invalid reflection `400` |
+| Hosted core-route acceptance | PASS · mobile route plus two consecutive fresh desktop routes after propagation |
+| Hosted route-wide accessibility | PASS · desktop and mobile Axe |
+| Production reflection mode | PASS · deterministic fallback |
+| Rollback target | PASS · Sites version 6 · `e468794af3c214a30afb742ef3a572b852e79677` |
+
+The first production matrix overlapped edge propagation: one desktop browser
+received the previous version 6 lesson receipt while the other three routes
+passed. After propagation, the affected desktop journey passed twice in
+consecutive fresh browser contexts. The final acceptance evidence above uses
+the clean post-propagation results.

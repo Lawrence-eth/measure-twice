@@ -259,14 +259,14 @@ appear in the footage.
   private repository with both testing@devpost.com and
   build-week-event@openai.com.
 - [x] Confirm the Devpost repository URL resolves for a signed-out judge.
-- [ ] Freeze and record the exact final v7 commit and release/version metadata.
+- [x] Freeze and record the exact final v7 commit and release/version metadata.
 
 ### Public experience
 
-- [ ] Deploy the final verified v7 artifact to
+- [x] Deploy the final verified v7 artifact to
   pentimento.law-ender.chatgpt.site.
-- [ ] Run the hosted desktop/mobile acceptance checks against that exact artifact.
-- [ ] Verify the worked inspection, four chapters, eight-stop route, 14
+- [x] Run the hosted desktop/mobile acceptance checks against that exact artifact.
+- [x] Verify the worked inspection, four chapters, eight-stop route, 14
   decisions, in-place lesson receipts, persistent Build kit, two
   project-layer views, local V1 brief, optional reflection boundary, restart,
   keyboard path, focus, reduced-motion behavior, and narrow layouts.
@@ -289,17 +289,17 @@ appear in the footage.
 
 ## Final hand-in values
 
-The release-controlled values below are completed after the exact public v7
-artifact is verified. The remaining entrant-controlled values require action
-outside the repository.
+The release-controlled values below were verified against the exact public v7
+artifact. The remaining entrant-controlled values require action outside the
+repository.
 
 | Field | Final value |
 | --- | --- |
 | Public YouTube demo URL | **TBD — entrant uploads and verifies public visibility** |
 | Primary Codex /feedback Session ID | **TBD — entrant obtains it from the primary build thread** |
-| Exact final v7 deployed source | **TBD — recorded after deployment** |
-| Final Sites deployment version | **TBD — recorded after deployment** |
-| Hosted v7 acceptance result and timestamp | **TBD — recorded after production verification** |
+| Exact final v7 deployed source | `c87603c7ca77c3d086c7d5b09048a52b47720a95` |
+| Final Sites deployment version | Version 7 · `appgprj_6a5cd40f4f5c81919c4fcd84e7ef2709~appgver_d37545258b2c819186fc8860d07843a7` · deployment `appgdep_6a5dcd8729ec81919d7671083d9651c1` |
+| Hosted v7 acceptance result and timestamp | PASS · desktop/mobile 14-decision routes and route-wide Axe · July 20, 2026 07:30 UTC |
 | Rollback version confirmed for final release | Sites version 6 · `e468794af3c214a30afb742ef3a572b852e79677` |
 | Production reflection mode and evidence | Deterministic fallback · valid `/api/debrief` returned `mode: "demo"`, two unresolved questions, and three next moves |
 | Repository public-access or private-sharing confirmation | PASS · signed-out GitHub request returned HTTP `200` |
