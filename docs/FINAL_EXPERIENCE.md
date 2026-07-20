@@ -1,12 +1,12 @@
-# Pentimento v7 experience contract
+# Pentimento v8 experience contract
 
-This is the implementation contract for the authored-rhythm experience.
+This is the implementation contract for the editorial-prologue experience.
 Earlier release evidence in [BUILD_LOG.md](BUILD_LOG.md) remains historical.
 
 ## Product in one sentence
 
-Pentimento is a 15-minute guided practice in which a complete beginner directs
-one fictional AI-built website from a convincing surface to a checked,
+Pentimento is a 15-minute interactive project in which a complete beginner
+directs one fictional AI-built website from a convincing surface to a checked,
 recoverable release.
 
 It is an educational simulation—not a coding course, prompt library, tool
@@ -29,33 +29,48 @@ surface, the project underlayers, and saved lesson receipts.
 
 ## Opening architecture
 
-The first screen answers five beginner questions before asking for action:
+The opening is one continuous, natural-scroll story. It does not begin with a
+dashboard, a wall of cards, or a choice the learner cannot yet understand.
+Each viewport carries one meaningful sentence and one visual change.
 
-- **What is this?** Guided practice for people who have never built with AI.
-- **Why does it matter?** A polished screen can hide an unfinished system.
-- **What will I do?** Direct one fictional website through eight stops and 14
-  decisions.
-- **What will I keep?** A brief, tool map, work agreement, evidence ladder,
-  release checklist, and reusable build kit.
+The hero answers the basic questions immediately:
+
+- **What is this?** A 15-minute interactive project for first-time AI builders.
+- **What will I do?** Direct one fictional site from idea to checked release.
+- **Why does it matter?** A polished preview cannot prove behavior, custody,
+  release identity, or recovery.
+- **What will I keep?** A first-version brief, tool map, AI work agreement,
+  evidence ladder, and release-and-recovery checklist.
 - **What will not happen?** No coding, API key, or real publishing.
 
-There is one dominant action, **Start the guided project**. The optional
-**Preview the four chapters** control is physically and visually separated.
+One persistent Willow Fix Day artifact then changes through four scroll beats:
 
-The next screen is a one-minute worked inspection:
+1. **The claim** — AI calls the polished page ready.
+2. **The observation** — the visitor’s important email action does nothing.
+3. **The underpainting** — Promise, Project home, Evidence, and Release separate
+   beneath the visible page.
+4. **The method** — Shape the promise, Ground the work, Direct the build, and
+   Prove the release become the route.
 
-1. Introduce Willow Fix Day and its single visitor goal.
-2. Show the AI claim **Ready to publish**.
-3. Ask the learner to **Email the organizer**.
-4. Let them observe **Nothing happened**.
-5. Explain appearance evidence versus behavior evidence.
-6. Offer **Reveal what the screen hid**.
-7. Reveal Promise, Project home, Evidence, and Release with the single
-   expressive spectral animation.
-8. Continue with **Start with layer 1 · define the promise**.
+The final threshold states that this is a project to direct, not a tutorial to
+watch. **Test the project yourself** is the dominant action; **Preview the four
+chapters** remains physically separated. **Skip to the evidence check** is a
+discreet keyboard-operable path for returning or time-limited learners.
 
-This worked example supplies the goal before the interaction, lets the learner
-observe the failure, and explains the principle only after the evidence exists.
+The handoff uses the visible Build kit as a shared object into the one-minute
+evidence check. The learner then:
+
+1. sees the AI claim **Ready to publish**;
+2. selects **Email the organizer**;
+3. observes **Nothing happened**;
+4. distinguishes the preview’s appearance from the tested behavior;
+5. selects **Reveal the missing layers**;
+6. sees Promise, Project home, Evidence, and Release through the earned
+   spectral reveal; and
+7. continues with **Continue to stop 1 · shape the promise**.
+
+This sequence explains the stakes, demonstrates the failure, lets the learner
+produce the evidence personally, and only then begins the curriculum.
 
 ## Route
 

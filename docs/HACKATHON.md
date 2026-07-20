@@ -7,7 +7,7 @@ Submission deadline: **July 21, 2026 at 5:00 PM Pacific** (**July 22 at
 
 The Official Rules, Devpost form, and notices on
 [openai.devpost.com](https://openai.devpost.com) are the source of truth. This
-file contains submission-ready copy for the Pentimento v7 release candidate.
+file contains submission-ready copy for the Pentimento v8 release candidate.
 Release-controlled values are filled after production verification; only
 entrant-controlled submission values otherwise remain TBD.
 
@@ -23,10 +23,11 @@ entrant-controlled submission values otherwise remain TBD.
 for AI coding tools, project files, version history, checking, hosting, or
 release.
 
-**Experience:** An authored 15-minute guided practice in a contemporary
-Conservation Lab, with a worked spectral inspection, four chapters, eight
-stops, 14 consequential decisions, and an in-place lesson receipt after each
-stop.
+**Experience:** An authored 15-minute interactive project in a contemporary
+Conservation Lab. A four-beat editorial scroll story reveals why a polished
+AI-built page is not yet trustworthy, then hands into a worked evidence check,
+four chapters, eight stops, 14 consequential decisions, and an in-place lesson
+receipt after each stop.
 
 **Target public experience:**
 [pentimento.law-ender.chatgpt.site](https://pentimento.law-ender.chatgpt.site)
@@ -36,18 +37,22 @@ stop.
 
 ## Final project description
 
-> Pentimento is a 15-minute guided practice for complete beginners who
+> Pentimento is a 15-minute interactive project for complete beginners who
 > want to build with AI but do not know what happens between a prompt and a
 > trustworthy release. Instead of teaching coding syntax, prompt tricks, or a
 > ranking of products, it teaches the durable human decisions beneath every
 > tool: define a supportable promise, keep custody of the work, control AI
 > changes, demand evidence, and preserve recovery.
 >
-> The opening first explains the lesson and its take-home artifacts. **Start
-> the guided project** opens a worked inspection: the learner selects **Email
-> the organizer**, observes **Nothing happened**, then uses **Reveal what the
-> screen hid**. A spectral scan exposes four hidden layers: promise, project
-> home, evidence, and release. The learner
+> The opening is a natural-scroll editorial story, not a dashboard of
+> unexplained choices. One Willow Fix Day preview changes through four beats:
+> AI’s ready claim, an observed failed action, the four hidden responsibilities
+> beneath the page, and the Shape → Ground → Direct → Prove method. The final
+> threshold names the exact practice and take-home artifacts. **Test the project
+> yourself** hands into the evidence check: the learner selects **Email the
+> organizer**, observes **Nothing happened**, then uses **Reveal the missing
+> layers**. A spectral scan exposes promise, project home, evidence, and
+> release. The learner
 > then guides the Willow Fix Day page through four chapters, eight stops, and 14
 > consequential decisions: shape one supportable first version, choose a tool
 > route, create a recoverable project home, direct AI with a bounded plan,
@@ -102,11 +107,12 @@ Verified public testing instructions:
 
 > Open https://pentimento.law-ender.chatgpt.site in a current desktop or mobile
 > browser. No account, API key, installation, or real deployment is required.
-> First select **Start the guided project**, then **Email the organizer**.
-> Observe **Nothing happened**, select **Reveal what the screen hid**, and
-> continue with **Start with layer 1 · define the promise**. **Preview the four
-> chapters** is the optional overview ending with **Start with the first
-> promise**. Follow either tool route through all eight stops. After each
+> Scroll through Claim, Observation, Underpainting, and Method, then select
+> **Test the project yourself**. Select **Email the organizer**, observe
+> **Nothing happened**, select **Reveal the missing layers**, and continue with
+> **Continue to stop 1 · shape the promise**. **Preview the four chapters** is
+> the optional overview ending with **Start with the first promise**. Follow
+> either tool route through all eight stops. After each
 > correct stop, open its lesson receipt, inspect the consequence and reusable
 > rule, then continue. The persistent **Build kit** remains available beside
 > the task. In
@@ -144,20 +150,21 @@ third-party trademarks.
 
 ### 0:00–0:18 — the beginner problem
 
-**Show:** The welcome, then select **Start the guided project**. On the worked
-inspection, select **Email the organizer**, observe the failure, and select
-**Reveal what the screen hid**.
+**Show:** Scroll through the Claim and Observation beats as the same polished
+page changes from AI-ready to observed-failed. Continue through Underpainting
+and Method, then select **Test the project yourself**.
 
 **Say:** “AI can make a page look finished before a beginner has defined its
 promise, kept custody of its files, tested its important path, or named the
 released version. Pentimento turns those hidden responsibilities into a
-15-minute guided practice.”
+15-minute interactive project.”
 
 ### 0:18–0:45 — scope and tool roles
 
-**Show:** Reveal Promise, Project home, Evidence, and Release; continue with
-**Start with layer 1 · define the promise**, choose the smallest supportable
-path in First version, then open its lesson receipt.
+**Show:** In the evidence check, select **Email the organizer**, observe
+**Nothing happened**, select **Reveal the missing layers**, and continue with
+**Continue to stop 1 · shape the promise**. Choose the smallest supportable
+path, then open its lesson receipt.
 
 **Say:** “The screen is the surface. Building means directing and checking
 the layers underneath. Four chapters turn 14 consequential decisions into

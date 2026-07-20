@@ -60,38 +60,79 @@ export type FinalChoice<Id extends string> = {
 };
 
 export const finalOpening = {
-  kicker: "Guided practice for people who have never built with AI",
+  kicker: "An interactive field lesson for first-time AI builders",
   promise: "AI can make it look finished.",
-  destination: "Learn to make it trustworthy.",
+  destination:
+    "Pentimento teaches you how an AI-made preview becomes a project you can test, trust, and release.",
   explanation:
-    "Pentimento is a 15-minute guided practice—not a coding course and not another AI builder. You will direct one fictional website from a rough idea to a checked release, learning what to decide, what to ask AI, where the work should live, and how to prove it works.",
+    "Direct one fictional site from rough idea to checked release. Define its first version, give the work a durable home, guide AI in bounded steps, test what it built, repair what fails, and prove the published result.",
   payoff:
-    "Leave with a reusable first-version brief, tool map, AI work agreement, evidence ladder, and release-and-recovery checklist for your own project.",
+    "Finish with five reusable tools: a first-version brief, tool map, AI work agreement, evidence ladder, and release-and-recovery checklist.",
   reassurance: "No coding · no API key · nothing real is published",
-  primaryAction: "Start the guided project",
+  primaryAction: "Test the project yourself",
   overviewAction: "Preview the four chapters",
 } as const;
+
+export const welcomePrologueBeats = [
+  {
+    id: "claim",
+    number: "01",
+    eyebrow: "The claim",
+    title: "AI says this page is ready.",
+    body:
+      "The event details are clear. The email button looks complete. But a polished screen cannot prove the project is ready to publish.",
+    margin: "AI report · “Ready to publish.”",
+  },
+  {
+    id: "observation",
+    number: "02",
+    eyebrow: "The observation",
+    title: "Appearance is not behavior.",
+    body:
+      "Click the visitor’s only important action and nothing happens. The preview showed how the page looked; the click revealed how it behaved.",
+    margin: "Observed · Email action — nothing happened",
+  },
+  {
+    id: "underpainting",
+    number: "03",
+    eyebrow: "The underpainting",
+    title: "The screen is only the top layer.",
+    body:
+      "A reliable project keeps more than its visible page. It keeps a clear promise, recoverable files, evidence that the important path works, and the exact version that was released.",
+    margin: "Trust is the connection between the layers—not the shine of the surface.",
+  },
+  {
+    id: "method",
+    number: "04",
+    eyebrow: "The method",
+    title: "Building with AI is not mainly a prompting skill.",
+    body:
+      "AI can accelerate the making. You still decide what the project promises, where its work survives, what counts as proof, and which version is ready to release.",
+    margin: "Learn the judgment between prompt and publish.",
+  },
+] as const;
 
 export const welcomeAuditLayers = [
   {
     id: "promise",
     label: "Promise",
-    issue: "No one defined the one visitor result this first version must finish.",
+    issue: "No one defined the one thing a visitor must be able to finish.",
   },
   {
     id: "custody",
     label: "Project home",
-    issue: "A chat response is not a recoverable home for files and version history.",
+    issue: "The files and version history need a durable home outside the chat.",
   },
   {
     id: "evidence",
     label: "Evidence",
-    issue: "The polished contact action was never tried by a person.",
+    issue: "No one tried the page’s most important action.",
   },
   {
     id: "release",
     label: "Release",
-    issue: "No exact checked version or recovery version was named.",
+    issue:
+      "No one recorded which tested version should go live—or which version to restore if it fails.",
   },
 ] as const;
 

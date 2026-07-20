@@ -1,12 +1,12 @@
-# Pentimento v7 quality standard
+# Pentimento v8 quality standard
 
 This is the acceptance contract for the current OpenAI Build Week candidate.
 Pentimento is ready only when the product follows the careful build discipline
-it teaches. A passing result from v1–v6 is not evidence for v7.
+it teaches. A passing result from v1–v7 is not evidence for v8.
 
 ## Product truth
 
-- Pentimento identifies itself as a 15-minute guided practice for
+- Pentimento identifies itself as a 15-minute interactive project for
   first-time AI builders.
 - Its thesis is clear: AI can make the surface quickly; a human must direct and
   verify the layers underneath.
@@ -17,14 +17,24 @@ it teaches. A passing result from v1–v6 is not evidence for v7.
   coding knowledge.
 - One completed journey is practice, not proof of mastery.
 
-## Opening comprehension and worked inspection
+## Editorial prologue and worked evidence check
 
 - A new learner can say what Pentimento is, why it matters, what they will make,
-  and what to do first without opening a route dialog.
+  and what to do first before encountering the curriculum controls.
 - The opening names the approximate duration, no-code/no-setup safety boundary,
   and take-home artifacts.
-- The dominant action is **Start the guided project**; it opens the worked
-  inspection instead of bypassing it.
+- The opening uses normal document scrolling; it never hijacks the wheel,
+  requires a scrub gesture, or prevents reverse scrolling.
+- Four semantic beats—Claim, Observation, Underpainting, and Method—remain
+  readable without animation and change one persistent project artifact.
+- Desktop uses a side-by-side sticky artifact. Tablet and mobile keep the
+  artifact above the current beat without covering its heading.
+- The scroll cue transfers keyboard focus to the story at a safe position
+  beneath the sticky header.
+- The dominant action is **Test the project yourself**; it opens the worked
+  evidence check instead of bypassing it.
+- **Skip to the evidence check** is keyboard-operable, resets scroll safely,
+  and focuses the evidence-check heading.
 - **Preview the four chapters** is physically and visually separated and opens
   the secondary overview with **Start with the first promise** as its final
   action.
@@ -32,11 +42,11 @@ it teaches. A passing result from v1–v6 is not evidence for v7.
   before asking for action.
 - The learner selects **Email the organizer** and visibly observes **Nothing
   happened** before the lesson explains why.
-- **Reveal what the screen hid** exposes four text-labelled layers: Promise,
+- **Reveal the missing layers** exposes four text-labelled layers: Promise,
   Project home, Evidence, and Release.
 - The spectral reveal states that the screen is the surface and building means
   directing and checking the layers beneath it.
-- **Start with layer 1 · define the promise** begins the route after the reveal.
+- **Continue to stop 1 · shape the promise** begins the route after the reveal.
 - The optional four-chapter overview explains the route without showing every
   future control.
 - No unexplained dashboard, confidence control, technical glossary, assessment

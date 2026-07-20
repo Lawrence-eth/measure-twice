@@ -306,23 +306,26 @@ async function openFresh(page: Page) {
   await expect(
     page.getByRole("heading", {
       level: 1,
-      name: /AI can make it look finished.*Learn to make it trustworthy/i,
+      name: /AI can make it look finished/i,
     }),
   ).toBeVisible();
   await expect(
-    page.getByText(/15-minute guided practice.*not a coding course.*not another AI builder/i),
+    page.getByText(/Direct one fictional site from rough idea to checked release/i),
   ).toBeVisible();
   await expect(
     page.getByText(
-      /direct one fictional website.*rough idea.*checked release.*what to decide.*what to ask AI.*where the work should live.*prove it works/i,
+      /In painting, evidence of an earlier version still visible beneath the finished surface/i,
     ),
   ).toBeVisible();
   await expect(
+    page.getByText(/how an AI-made preview becomes a project you can test, trust, and release/i),
+  ).toBeVisible();
+  await expect(
     page.getByText(
-      /reusable first-version brief, tool map, AI work agreement, evidence ladder, and release-and-recovery checklist/i,
+      /five reusable tools.*first-version brief.*tool map.*AI work agreement.*evidence ladder.*release-and-recovery checklist/is,
     ),
   ).toBeVisible();
-  await expect(page.getByText(/15-minute guided practice/i)).toBeVisible();
+  await expect(page.getByText(/15-minute interactive project/i)).toBeVisible();
   await expect(page.getByText(/No coding.*no API key.*nothing real is published/i)).toBeVisible();
 }
 
@@ -330,7 +333,7 @@ async function startWithIdea(page: Page) {
   await openFresh(page);
   await page
     .getByRole("button", {
-      name: "Start the guided project",
+      name: "Test the project yourself",
       exact: true,
     })
     .click();
@@ -338,11 +341,11 @@ async function startWithIdea(page: Page) {
     .getByRole("button", { name: "Email the organizer", exact: true })
     .click();
   await page
-    .getByRole("button", { name: "Reveal what the screen hid", exact: true })
+    .getByRole("button", { name: "Reveal the missing layers", exact: true })
     .click();
   await page
     .getByRole("button", {
-      name: /Start with layer 1.*define the promise/i,
+      name: /Continue to stop 1.*shape the promise/i,
     })
     .click();
   await expectCurrentHeadingFocused(page, /Choose one promise you can keep/i);
@@ -778,9 +781,47 @@ test("explains why the method matters, reveals the hidden project, and preserves
   await openFresh(page);
 
   await expect(page.locator(".p5-audit")).toHaveCount(0);
+  const story = page.locator(".p8-story");
+  const prologueSteps = story.locator(".p8-story__step");
+  await expect(prologueSteps).toHaveCount(4);
+  await keyboardActivate(
+    page,
+    page.getByRole("link", {
+      name: "Scroll to see why finished is not ready",
+      exact: true,
+    }),
+  );
+  await expect(story).toBeFocused();
+  await expect
+    .poll(async () =>
+      story.evaluate((element) => {
+        const top = element.getBoundingClientRect().top;
+        return top >= 62 && top <= 66;
+      }),
+    )
+    .toBe(true);
+  await expect(prologueSteps.nth(0)).toContainText(
+    /AI says this page is ready.*cannot prove the project is ready to publish/is,
+  );
+  await expect(prologueSteps.nth(1)).toContainText(
+    /Appearance is not behavior.*click revealed how it behaved/is,
+  );
+  await expect(prologueSteps.nth(2)).toContainText(
+    /screen is only the top layer.*Promise.*Project home.*Evidence.*Release/is,
+  );
+  await expect(prologueSteps.nth(3)).toContainText(
+    /not mainly a prompting skill.*Shape.*Ground.*Direct.*Prove/is,
+  );
+  await prologueSteps.nth(2).scrollIntoViewIfNeeded();
+  await expect(story).toHaveAttribute("data-active", "2");
+  await expect(page.locator(".p8-specimen")).toHaveAttribute(
+    "data-active",
+    "2",
+  );
+
   await page
     .getByRole("button", {
-      name: "Start the guided project",
+      name: "Test the project yourself",
       exact: true,
     })
     .click();
@@ -797,9 +838,11 @@ test("explains why the method matters, reveals the hidden project, and preserves
     .getByRole("button", { name: "Email the organizer", exact: true })
     .click();
   await expect(audit).toContainText(/Observed failure/i);
-  await expect(audit).toContainText(/preview proved appearance.*click tested behavior/is);
+  await expect(audit).toContainText(
+    /preview showed you the surface.*click revealed how it behaved/is,
+  );
   await audit
-    .getByRole("button", { name: "Reveal what the screen hid", exact: true })
+    .getByRole("button", { name: "Reveal the missing layers", exact: true })
     .click();
   await expect(audit.getByRole("listitem")).toHaveCount(4);
   await expect(audit).toContainText(
@@ -809,6 +852,24 @@ test("explains why the method matters, reveals the hidden project, and preserves
     /screen was only the surface.*control these layers/is,
   );
 
+  await page
+    .getByRole("button", { name: "Back to the introduction", exact: true })
+    .click();
+  await expect(
+    page.getByRole("heading", {
+      level: 1,
+      name: /AI can make it look finished/i,
+    }),
+  ).toBeFocused();
+  expect(await page.evaluate(() => window.scrollY)).toBeLessThanOrEqual(1);
+  await page
+    .getByRole("button", {
+      name: "Skip to the evidence check",
+      exact: true,
+    })
+    .click();
+  await expectCurrentHeadingFocused(page, /Your first job: test the project/i);
+  await expect(page.locator(".p5-audit")).toContainText(/AI says: ready/i);
   await page
     .getByRole("button", { name: "Back to the introduction", exact: true })
     .click();
@@ -1411,7 +1472,7 @@ test("traps restart focus, cancels predictably, and clears v4 progress only on c
   await expect(
     page.getByRole("heading", {
       level: 1,
-      name: /AI can make it look finished.*Learn to make it trustworthy/i,
+      name: /AI can make it look finished/i,
     }),
   ).toBeFocused();
   await expect
@@ -1439,6 +1500,24 @@ test("has no automated accessibility violations throughout the core route", asyn
   await openFresh(page);
   await expectAxeClean(page);
 
+  const story = page.locator(".p8-story");
+  const prologueSteps = story.locator(".p8-story__step");
+  for (let index = 0; index < 4; index += 1) {
+    await prologueSteps
+      .nth(index)
+      .evaluate((element) =>
+        element.scrollIntoView({ block: "center", behavior: "instant" }),
+      );
+    await expect(story).toHaveAttribute("data-active", String(index));
+    await expectAxeClean(page);
+  }
+  await page
+    .locator(".p8-threshold__actions")
+    .evaluate((element) =>
+      element.scrollIntoView({ block: "center", behavior: "instant" }),
+    );
+  await expectAxeClean(page);
+
   const count = await completeCoreJourney(page, { checkAxe: true });
   expect(count).toBe(14);
   await expectAxeClean(page);
@@ -1449,6 +1528,17 @@ test("uses adjacent text—not motion—to explain every layer under reduced mot
 }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.setViewportSize(MOBILE_VIEWPORT);
+  await openFresh(page);
+  const story = page.locator(".p8-story");
+  await story
+    .locator(".p8-story__step")
+    .nth(2)
+    .evaluate((element) =>
+      element.scrollIntoView({ block: "center", behavior: "instant" }),
+    );
+  await expect(story).toHaveAttribute("data-active", "2");
+  await expect(page.locator(".p8-specimen__scan")).toHaveCSS("display", "none");
+
   await startWithIdea(page);
   await chooseSmallestIdea(page);
 
@@ -1510,6 +1600,36 @@ test("never overflows at 320, 390, 768, or 1440 pixels across the full route", a
     await openFresh(page);
     await expectNoHorizontalOverflow(page);
 
+    const story = page.locator(".p8-story");
+    const prologueSteps = story.locator(".p8-story__step");
+    for (let index = 0; index < 4; index += 1) {
+      const step = prologueSteps.nth(index);
+      await step.evaluate((element) =>
+        element.scrollIntoView({ block: "center", behavior: "instant" }),
+      );
+      await expect(story).toHaveAttribute("data-active", String(index));
+      await expectNoHorizontalOverflow(page);
+
+      if (width <= 900) {
+        const [visualBox, headingBox] = await Promise.all([
+          page.locator(".p8-story__visual").boundingBox(),
+          step.getByRole("heading", { level: 2 }).boundingBox(),
+        ]);
+        expect(visualBox).not.toBeNull();
+        expect(headingBox).not.toBeNull();
+        expect(
+          headingBox!.y,
+          `story beat ${index + 1} heading should clear the sticky specimen at ${width}px`,
+        ).toBeGreaterThanOrEqual(visualBox!.y + visualBox!.height + 16);
+      }
+    }
+    await page
+      .locator(".p8-threshold__actions")
+      .evaluate((element) =>
+        element.scrollIntoView({ block: "center", behavior: "instant" }),
+      );
+    await expectNoHorizontalOverflow(page);
+
     const count = await completeCoreJourney(page, {
       afterState: async (currentPage) => {
         await expectNoHorizontalOverflow(currentPage);
@@ -1529,7 +1649,7 @@ test("supports the complete core route with keyboard input alone", async ({
   await keyboardActivate(
     page,
     page.getByRole("button", {
-      name: "Start the guided project",
+      name: "Test the project yourself",
       exact: true,
     }),
   );
@@ -1543,14 +1663,14 @@ test("supports the complete core route with keyboard input alone", async ({
   await keyboardActivate(
     page,
     page.getByRole("button", {
-      name: "Reveal what the screen hid",
+      name: "Reveal the missing layers",
       exact: true,
     }),
   );
   await keyboardActivate(
     page,
     page.getByRole("button", {
-      name: /Start with layer 1.*define the promise/i,
+      name: /Continue to stop 1.*shape the promise/i,
     }),
   );
 

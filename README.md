@@ -2,7 +2,7 @@
 
 > **AI can make it look finished. Learn to make it trustworthy.**
 
-Pentimento is a **15-minute guided practice** for complete beginners
+Pentimento is a **15-minute interactive project** for complete beginners
 who want to build with AI but do not yet know what happens between a prompt and
 a trustworthy release.
 
@@ -22,7 +22,7 @@ and improve from a trusted source.
 
 Built for the **Education** track of OpenAI Build Week 2026.
 
-- Verified public v7 experience:
+- Verified public v8 experience:
   [pentimento.law-ender.chatgpt.site](https://pentimento.law-ender.chatgpt.site)
 - Source: [github.com/Lawrence-eth/measure-twice](https://github.com/Lawrence-eth/measure-twice)
 - License: [MIT](LICENSE)
@@ -47,15 +47,29 @@ different. A chat is not automatically a project home. A repository is not a
 public website. A completed deployment is not proof that a visitor can finish
 the important path.
 
-## The v7 authored-rhythm experience
+## The v8 editorial-prologue experience
 
-### The worked inspection
+### Discover the need before entering the lesson
 
-The opening first explains what Pentimento is, why the lesson matters, what the
-learner will practice, and what they will keep. **Start the guided project**
-opens a one-minute worked inspection. The learner selects **Email the
-organizer**, observes that nothing happened, then selects **Reveal what the
-screen hid**. A spectral scan exposes four hidden layers:
+The opening is a natural-scroll editorial story, not a menu of unexplained
+options. It begins with the thesis, **AI can make it look finished**, then keeps
+one Willow Fix Day preview in view while four beats change its meaning:
+
+1. **The claim** — AI says the polished page is ready.
+2. **The observation** — its most important action does nothing.
+3. **The underpainting** — Promise, Project home, Evidence, and Release appear
+   beneath the visible page.
+4. **The method** — Shape, Ground, Direct, and Prove turn those hidden
+   responsibilities into a repeatable route.
+
+The final threshold explains exactly what the learner will do and keep.
+**Test the project yourself** carries the visible Build kit into the first
+evidence check. A returning or time-limited learner can use **Skip to the
+evidence check** without losing orientation.
+
+In the hands-on check, the learner selects **Email the organizer**, observes
+that nothing happened, then selects **Reveal the missing layers**. A spectral
+scan exposes four responsibilities:
 
 1. **Promise** — what one result this version must honestly finish.
 2. **Project home** — where its files and history survive.
@@ -184,25 +198,26 @@ The configured model comes from `OPENAI_MODEL`; the repository's Build Week
 default is `gpt-5.6`. The authored learning route itself is deterministic and
 does not depend on model availability.
 
-The verified public v7 configuration uses the deterministic fallback. The
+The verified public v8 configuration uses the deterministic fallback. The
 bounded GPT‑5.6 path is implemented and can be enabled with the server-only
 configuration below, but the current public result must be described as
 authored fallback output—not as a live model response.
 
 ## Judge walkthrough
 
-This walkthrough was verified against Sites version 7 at the public URL below.
+This walkthrough was verified against Sites version 8 at the public URL below.
 The experience requires no installation, account, API key, or real deployment
 action from a judge.
 
 1. Open
    [pentimento.law-ender.chatgpt.site](https://pentimento.law-ender.chatgpt.site)
    in a current desktop or mobile browser.
-2. Select **Start the guided project**, then **Email the organizer**.
-3. Observe **Nothing happened**, select **Reveal what the screen hid**, then
-   continue with **Start with layer 1 · define the promise**. **Preview the four
-   chapters** is the optional overview; it ends with **Start with the first
-   promise**.
+2. Scroll through the four-beat introduction: claim → observation →
+   underpainting → method. Select **Test the project yourself**.
+3. Select **Email the organizer**, observe **Nothing happened**, select
+   **Reveal the missing layers**, then continue with **Continue to stop 1 ·
+   shape the promise**. **Preview the four chapters** is the optional overview;
+   it ends with **Start with the first promise**.
 4. Follow either tool lane. The repository lane makes the folder → Git → GitHub
    → host path most explicit; the hosted lane demonstrates the export and
    ownership tradeoff.
@@ -365,7 +380,7 @@ Devpost submission form before the deadline.
 
 ## Project map
 
-- [`components/PentimentoFinal.tsx`](components/PentimentoFinal.tsx) — v7
+- [`components/PentimentoFinal.tsx`](components/PentimentoFinal.tsx) — v8
   authored-rhythm opening, four-chapter interface, project layers, Build kit,
   and V1 brief workshop
 - [`lib/final-journey.ts`](lib/final-journey.ts) — authored eight-stop
@@ -378,7 +393,7 @@ Devpost submission form before the deadline.
   fallback
 - [`tests/e2e/final-journey.spec.ts`](tests/e2e/final-journey.spec.ts) — desktop,
   mobile, keyboard, accessibility, persistence, and density coverage
-- [`docs/FINAL_EXPERIENCE.md`](docs/FINAL_EXPERIENCE.md) — beginner-first v7
+- [`docs/FINAL_EXPERIENCE.md`](docs/FINAL_EXPERIENCE.md) — beginner-first v8
   experience contract
 - [`docs/BUILD_LOG.md`](docs/BUILD_LOG.md) — dated collaboration and historical
   release record

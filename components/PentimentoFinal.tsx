@@ -45,6 +45,8 @@ import {
   updateRequest,
   vagueBuildRequest,
   welcomeAuditLayers,
+  welcomeOutcomes,
+  welcomePrologueBeats,
   type FinalChoice,
   type FinalLearningStage,
   type FinalStage,
@@ -122,7 +124,13 @@ function preferredScrollBehavior(): ScrollBehavior {
     : "smooth";
 }
 
-type TransitionKind = "choice" | "substep" | "scene" | "canvas" | "workshop";
+type TransitionKind =
+  | "choice"
+  | "substep"
+  | "scene"
+  | "canvas"
+  | "workshop"
+  | "prologue";
 
 type NativeViewTransition = {
   finished: Promise<void>;
@@ -2050,6 +2058,334 @@ function StageDepth({ progress }: { progress: FinalProgress }) {
   );
 }
 
+function PrologueSpecimen({ activeBeat }: { activeBeat: number }) {
+  return (
+    <div className="p8-specimen" data-active={activeBeat}>
+      <div className="p8-specimen__registration" aria-hidden="true">
+        <span>WF-01</span>
+        <i />
+        <span>Surface / evidence</span>
+      </div>
+
+      <div className="p8-specimen__stage">
+        <div className="p8-specimen__layers">
+          {welcomeAuditLayers.map((layer, index) => (
+            <div
+              className={cx(
+                "p8-specimen__layer",
+                `p8-specimen__layer--${layer.id}`,
+              )}
+              key={layer.id}
+            >
+              <span>0{index + 1}</span>
+              <b>{layer.label}</b>
+              <small>{layer.issue}</small>
+            </div>
+          ))}
+        </div>
+
+        <article className="p8-specimen__surface">
+          <div className="p8-specimen__surface-status">
+            <span>Willow Fix Day</span>
+            <b>{activeBeat >= 1 ? "Observed · failed" : "AI says · ready"}</b>
+          </div>
+          <div className="p8-specimen__surface-copy">
+            <span>Generated preview</span>
+            <h3>
+              Bring it broken.
+              <br />
+              Leave with a plan.
+            </h3>
+            <p>Saturday · West Hall · repairs depend on volunteer availability</p>
+            <div
+              className={cx(
+                "p8-specimen__contact",
+                activeBeat >= 1 && "is-failed",
+              )}
+            >
+              {activeBeat >= 1
+                ? "Email action · nothing happened"
+                : "Email the organizer"}
+            </div>
+          </div>
+        </article>
+
+        <div className="p8-specimen__failure">
+          <span>Observed evidence</span>
+          <b>One important path failed.</b>
+          <small>Appearance was a claim. The click produced evidence.</small>
+        </div>
+
+        <ol className="p8-specimen__route">
+          {finalChapters.map((chapter) => (
+            <li key={chapter.id}>
+              <span>0{chapter.number}</span>
+              <b>{chapter.id}</b>
+            </li>
+          ))}
+        </ol>
+
+        <div className="p8-specimen__scan" />
+      </div>
+
+      <div className="p8-specimen__meter">
+        <span>Introduction</span>
+        <div>
+          {welcomePrologueBeats.map((beat, index) => (
+            <i className={index <= activeBeat ? "is-active" : undefined} key={beat.id} />
+          ))}
+        </div>
+        <b>0{activeBeat + 1} / 04</b>
+      </div>
+    </div>
+  );
+}
+
+function ScrollPrologue({
+  headingRef,
+  onEnter,
+  onOverview,
+}: {
+  headingRef: RefObject<HTMLHeadingElement | null>;
+  onEnter: () => void;
+  onOverview: () => void;
+}) {
+  const [activeBeat, setActiveBeat] = useState(0);
+  const storyRef = useRef<HTMLElement>(null);
+  const stepRefs = useRef<Array<HTMLElement | null>>([]);
+
+  useEffect(() => {
+    const steps = stepRefs.current.filter(
+      (step): step is HTMLElement => step !== null,
+    );
+    if (!steps.length || !("IntersectionObserver" in window)) return;
+
+    const visible = new Map<Element, number>();
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            visible.set(entry.target, entry.intersectionRatio);
+          } else {
+            visible.delete(entry.target);
+          }
+        });
+
+        const viewportCenter = window.innerHeight * 0.52;
+        const nearest = [...visible.keys()]
+          .map((element) => {
+            const rect = element.getBoundingClientRect();
+            return {
+              element: element as HTMLElement,
+              distance: Math.abs(rect.top + rect.height / 2 - viewportCenter),
+            };
+          })
+          .sort((a, b) => a.distance - b.distance)[0]?.element;
+
+        if (nearest) {
+          setActiveBeat(Number(nearest.dataset.prologueStep ?? 0));
+        }
+      },
+      {
+        rootMargin: "-18% 0px -28% 0px",
+        threshold: [0, 0.2, 0.45, 0.7],
+      },
+    );
+
+    steps.forEach((step) => observer.observe(step));
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <div className="p8-prologue">
+      <section className="p8-prologue__hero" aria-labelledby="welcome-title">
+        <div className="p8-prologue__folio" aria-hidden="true">
+          <span>00</span>
+          <i />
+          <span>Surface</span>
+        </div>
+
+        <div className="p8-prologue__hero-copy">
+          <p className="p4-kicker">{finalOpening.kicker}</p>
+          <h1 id="welcome-title" ref={headingRef} tabIndex={-1}>
+            {finalOpening.promise}
+          </h1>
+          <p>{finalOpening.explanation}</p>
+        </div>
+
+        <aside className="p8-prologue__definition">
+          <span>Pentimento · /ˌpɛntɪˈmɛntoʊ/</span>
+          <p>
+            In painting, evidence of an earlier version still visible beneath
+            the finished surface.
+          </p>
+          <b>{finalOpening.destination}</b>
+        </aside>
+
+        <dl className="p8-prologue__facts">
+          <div>
+            <dt>Format</dt>
+            <dd>15-minute interactive project</dd>
+          </div>
+          <div>
+            <dt>Audience</dt>
+            <dd>No building experience needed</dd>
+          </div>
+          <div>
+            <dt>Outcome</dt>
+            <dd>A repeatable path from idea to release</dd>
+          </div>
+        </dl>
+
+        <a
+          className="p8-prologue__scroll"
+          href="#pentimento-story"
+          onClick={(event) => {
+            event.preventDefault();
+            storyRef.current?.scrollIntoView({
+              block: "start",
+              behavior: preferredScrollBehavior(),
+            });
+            window.requestAnimationFrame(() => {
+              storyRef.current?.focus({ preventScroll: true });
+            });
+          }}
+        >
+          <span>Scroll to see why finished is not ready</span>
+          <i aria-hidden="true" />
+        </a>
+      </section>
+
+      <section
+        className="p8-story"
+        data-active={activeBeat}
+        id="pentimento-story"
+        ref={storyRef}
+        tabIndex={-1}
+        aria-label="Why Pentimento exists"
+      >
+        <div className="p8-story__frame">
+          <div className="p8-story__steps">
+            {welcomePrologueBeats.map((beat, index) => (
+              <article
+                aria-current={activeBeat === index ? "step" : undefined}
+                className={cx(
+                  "p8-story__step",
+                  activeBeat === index && "is-active",
+                )}
+                data-prologue-step={index}
+                key={beat.id}
+                ref={(node) => {
+                  stepRefs.current[index] = node;
+                }}
+              >
+                <div className="p8-story__step-index">
+                  <span>{beat.number}</span>
+                  <i />
+                  <span>{beat.eyebrow}</span>
+                </div>
+                <h2>{beat.title}</h2>
+                <p>{beat.body}</p>
+
+                {beat.id === "underpainting" && (
+                  <dl className="p8-story__layers">
+                    {welcomeAuditLayers.map((layer) => (
+                      <div key={layer.id}>
+                        <dt>{layer.label}</dt>
+                        <dd>{layer.issue}</dd>
+                      </div>
+                    ))}
+                  </dl>
+                )}
+
+                {beat.id === "method" && (
+                  <ol className="p8-story__method">
+                    {finalChapters.map((chapter) => (
+                      <li key={chapter.id}>
+                        <b>{chapter.title}</b>
+                        <span>{chapter.summary}</span>
+                      </li>
+                    ))}
+                  </ol>
+                )}
+
+                <p className="p8-story__margin">{beat.margin}</p>
+              </article>
+            ))}
+          </div>
+
+          <aside
+            className="p8-story__visual"
+            aria-label="The same project changes as its hidden layers are revealed"
+          >
+            <div aria-hidden="true">
+              <PrologueSpecimen activeBeat={activeBeat} />
+            </div>
+            <p className="p4-visually-hidden">
+              The Willow Fix Day preview changes from an AI-ready claim to an
+              observed failed action, then reveals Promise, Project home,
+              Evidence, and Release beneath its surface.
+            </p>
+          </aside>
+        </div>
+      </section>
+
+      <section className="p8-threshold" aria-labelledby="prologue-threshold-title">
+        <div className="p8-threshold__folio" aria-hidden="true">
+          <span>05</span>
+          <i />
+          <span>Field lesson</span>
+        </div>
+
+        <div className="p8-threshold__heading">
+          <p className="p4-kicker">The field lesson</p>
+          <h2 id="prologue-threshold-title">
+            This is not a tutorial to watch.
+            <em>It is a project to direct.</em>
+          </h2>
+          <p>
+            Direct one fictional community repair site from rough idea to
+            checked release. Across 14 short decisions, test its most important
+            action, diagnose one failure, repair only what broke, and prove the
+            published version still works.
+          </p>
+        </div>
+
+        <ol className="p8-threshold__outcomes">
+          {welcomeOutcomes.map((outcome, index) => (
+            <li key={outcome.title}>
+              <span>0{index + 1}</span>
+              <div>
+                <b>{outcome.title}</b>
+                <p>{outcome.detail}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+
+        <aside className="p8-threshold__kit">
+          <span>You keep</span>
+          <p>{finalOpening.payoff}</p>
+        </aside>
+
+        <div className="p8-threshold__actions">
+          <button className="p4-primary" type="button" onClick={onEnter}>
+            {finalOpening.primaryAction}
+          </button>
+          <p>{finalOpening.reassurance}</p>
+        </div>
+
+        <div className="p8-threshold__overview">
+          <span>Want the whole map first?</span>
+          <button className="p4-text-button" type="button" onClick={onOverview}>
+            {finalOpening.overviewAction}
+          </button>
+        </div>
+      </section>
+    </div>
+  );
+}
+
 function Welcome({
   headingRef,
   onStart,
@@ -2067,18 +2403,19 @@ function Welcome({
   );
   const inspectionHeadingRef = useRef<HTMLHeadingElement>(null);
   const auditRevealRef = useRef<HTMLButtonElement>(null);
-  const auditStartRef = useRef<HTMLButtonElement>(null);
   const auditLayersHeadingRef = useRef<HTMLHeadingElement>(null);
 
   useEffect(() => {
-    if (screen === "inspection") {
-      window.scrollTo({ top: 0, behavior: "auto" });
-      const frame = window.requestAnimationFrame(() => {
+    window.scrollTo({ top: 0, behavior: "auto" });
+    const frame = window.requestAnimationFrame(() => {
+      if (screen === "inspection") {
         inspectionHeadingRef.current?.focus({ preventScroll: true });
-      });
-      return () => window.cancelAnimationFrame(frame);
-    }
-  }, [screen]);
+      } else {
+        headingRef.current?.focus({ preventScroll: true });
+      }
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [headingRef, screen]);
 
   useEffect(() => {
     if (auditStep === "failed") {
@@ -2103,75 +2440,53 @@ function Welcome({
     }
   }, [auditStep]);
 
+  function openInspection(kind: "scene" | "prologue" = "scene") {
+    runViewTransition(() => {
+      window.scrollTo({ top: 0, behavior: "auto" });
+      setAuditStep("surface");
+      setScreen("inspection");
+    }, kind);
+  }
+
+  function returnToPrologue() {
+    runViewTransition(() => {
+      window.scrollTo({ top: 0, behavior: "auto" });
+      setScreen("orientation");
+    }, "scene");
+  }
+
   return (
     <div className="p4-welcome p6-welcome">
-      <header className="p4-welcome__header">
+      <header className="p4-welcome__header p8-welcome-header">
         <Brand />
-        <span>Field lesson 01 · building with AI</span>
+        {screen === "orientation" ? (
+          <div className="p8-welcome-header__intro">
+            <span>Introduction · follow the project beneath its surface</span>
+            <button
+              className="p4-text-button"
+              type="button"
+              onClick={() => openInspection("scene")}
+            >
+              Skip to the evidence check
+            </button>
+          </div>
+        ) : (
+          <span>Guided project · first evidence check</span>
+        )}
       </header>
       <main id="main-content">
         {screen === "orientation" ? (
-          <section className="p6-orientation" aria-labelledby="welcome-title">
-            <div className="p6-orientation__index" aria-hidden="true">
-              <span>001</span>
-              <i />
-              <span>Orientation</span>
-            </div>
-            <div className="p6-orientation__grid">
-              <div className="p4-welcome__copy">
-                <p className="p4-kicker">{finalOpening.kicker}</p>
-                <h1 id="welcome-title" ref={headingRef} tabIndex={-1}>
-                  <span>{finalOpening.promise}</span>
-                  <em>{finalOpening.destination}</em>
-                </h1>
-                <p className="p4-welcome__lede">{finalOpening.explanation}</p>
-              </div>
-              <aside className="p6-orientation__brief" aria-label="What this lesson gives you">
-                <span>What changes after this lesson</span>
-                <p>{finalOpening.payoff}</p>
-                <dl>
-                  <div>
-                    <dt>Practice</dt>
-                    <dd>One fictional website</dd>
-                  </div>
-                  <div>
-                    <dt>Method</dt>
-                    <dd>Eight stops, 14 decisions</dd>
-                  </div>
-                  <div>
-                    <dt>Keep</dt>
-                    <dd>A reusable build kit</dd>
-                  </div>
-                </dl>
-              </aside>
-            </div>
-            <div className="p6-orientation__footer">
-              <div>
-                <button
-                  className="p4-primary"
-                  type="button"
-                  onClick={() =>
-                    runViewTransition(() => setScreen("inspection"), "scene")
-                  }
-                >
-                  {finalOpening.primaryAction}
-                </button>
-                <p>{finalOpening.reassurance}</p>
-              </div>
-              <div className="p6-orientation__preview">
-                <span>Prefer to look ahead?</span>
-                <button className="p4-text-button" type="button" onClick={onOverview}>
-                  {finalOpening.overviewAction}
-                </button>
-              </div>
-            </div>
-          </section>
+          <ScrollPrologue
+            headingRef={headingRef}
+            onEnter={() => openInspection("prologue")}
+            onOverview={onOverview}
+          />
         ) : (
           <section className="p6-inspection" aria-labelledby="inspection-title">
             <div className="p6-inspection__intro">
-              <p className="p4-kicker">Before the method · one-minute inspection</p>
+              <p className="p4-kicker">First evidence check · one minute</p>
               <h1 id="inspection-title" ref={inspectionHeadingRef} tabIndex={-1}>
-                Meet your practice project.
+                Your first job: test the project.
               </h1>
               <p>
                 Willow Fix Day is fictional. Its page has one job: show the event
@@ -2181,16 +2496,14 @@ function Welcome({
                 <span>AI report</span>
                 <b>“Ready to publish.”</b>
                 <p>
-                  Do not trust the report yet. Try the visitor’s only important
+                  Test the claim yourself: try the visitor’s only important
                   action.
                 </p>
               </aside>
               <button
                 className="p4-text-button p6-inspection__back"
                 type="button"
-                onClick={() =>
-                  runViewTransition(() => setScreen("orientation"), "scene")
-                }
+                onClick={returnToPrologue}
               >
                 Back to the introduction
               </button>
@@ -2252,8 +2565,9 @@ function Welcome({
                     <span>Observed failure</span>
                     <h3>Nothing happened.</h3>
                     <p>
-                      The preview proved appearance. Your click tested behavior.
-                      Now inspect what the polished screen kept out of view.
+                      The preview showed you the surface. Your click revealed
+                      how it behaved. Now uncover the decisions and evidence
+                      the screen could not show.
                     </p>
                     <button
                       ref={auditRevealRef}
@@ -2263,7 +2577,7 @@ function Welcome({
                         runViewTransition(() => setAuditStep("revealed"), "canvas")
                       }
                     >
-                      Reveal what the screen hid
+                      Reveal the missing layers
                     </button>
                   </div>
                 )}
@@ -2290,12 +2604,11 @@ function Welcome({
                       visible surface goes live.
                     </p>
                     <button
-                      ref={auditStartRef}
                       className="p4-primary"
                       type="button"
                       onClick={onStart}
                     >
-                      Start with layer 1 · define the promise
+                      Continue to stop 1 · shape the promise
                     </button>
                   </div>
                 )}
@@ -2303,7 +2616,7 @@ function Welcome({
 
               {auditStep === "surface" && (
                 <p className="p5-audit__instruction">
-                  The report proves a claim. Your click checks the behavior.
+                  The report makes a claim. Your click tests the behavior.
                 </p>
               )}
             </section>

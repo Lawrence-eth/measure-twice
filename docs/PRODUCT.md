@@ -2,7 +2,7 @@
 
 ## One sentence
 
-Pentimento is a 15-minute guided practice that teaches a complete
+Pentimento is a 15-minute interactive project that teaches a complete
 beginner how to direct and verify one AI-built project from a rough idea to a
 recoverable release.
 
@@ -75,26 +75,29 @@ The persistent canvas has two learner-controlled lenses:
 
 Literal explanation always precedes the artistic metaphor.
 
-## Opening: prove the need
+## Opening: discover the need
 
-The welcome identifies Pentimento as a guided practice for first-time AI
-builders, names its 15-minute commitment and reusable outcomes, and offers
-**Start the guided project** as its dominant action. **Preview the four
-chapters** is a physically separated secondary route overview.
+The welcome is a natural-scroll editorial prologue for first-time AI builders.
+It names the 15-minute commitment, the fictional project, the complete route,
+the reusable outcomes, and the no-code/no-key/no-publishing boundary before
+showing curriculum controls.
 
-The next screen is a one-minute worked inspection:
+One Willow Fix Day artifact remains present through four beats:
 
-1. a generated Willow Fix Day preview claims it is ready to publish;
-2. the learner selects **Email the organizer**;
-3. they observe **Nothing happened**;
-4. **Reveal what the screen hid** exposes Promise, Project home, Evidence, and
-   Release through the single expressive spectral scan; and
-5. **Start with layer 1 · define the promise** begins the route.
+1. AI claims the polished page is ready;
+2. the important email action is observed failing;
+3. Promise, Project home, Evidence, and Release separate beneath the surface;
+   and
+4. Shape, Ground, Direct, and Prove become the repeatable method.
 
-The opening also names the practice project, the eight-stop,
-13-decision method, the reusable Build kit, and the
-no-code/no-key/no-publishing boundary. It explains the destination without
-exposing every later control.
+The threshold says this is a project to direct, not a tutorial to watch.
+**Test the project yourself** opens the hands-on evidence check. The learner
+selects **Email the organizer**, observes **Nothing happened**, uses **Reveal
+the missing layers**, then selects **Continue to stop 1 · shape the promise**.
+**Preview the four chapters** remains a physically separated overview, while
+**Skip to the evidence check** gives returning learners a direct route.
+
+The prologue explains the destination without exposing every later control.
 
 ## Learning architecture
 
@@ -107,7 +110,7 @@ The route groups eight stops into four chapters:
 | **Direct the build** | Ask AI · Build | Bound changes and require named evidence |
 | **Prove the release** | Check · Go live · Improve | Repair, release, recover, and update from a trusted source |
 
-Across those stops, the learner makes 13 consequential decisions:
+Across those stops, the learner makes 14 consequential decisions:
 
 | Stop | Decisions | Saved build-kit note |
 | --- | ---: | --- |
@@ -118,8 +121,8 @@ Across those stops, the learner makes 13 consequential decisions:
 | Build | 1 | Evidenced saved version |
 | Check | 3 | Repaired and retried visitor path |
 | Go live | 2 | Checked release and recovery record |
-| Improve | 1 | Source-backed update |
-| **Total** | **13** | **Complete idea-to-release method** |
+| Improve | 2 | Source-backed update and affected-check boundary |
+| **Total** | **14** | **Complete idea-to-release method** |
 
 ## Interaction model
 
