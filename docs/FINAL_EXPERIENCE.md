@@ -1,142 +1,193 @@
-# Pentimento v8 experience contract
+# Pentimento v9 experience contract
 
-This is the implementation contract for the editorial-prologue experience.
-Earlier release evidence in [BUILD_LOG.md](BUILD_LOG.md) remains historical.
+This document is the implementation contract for the six-folio, page-by-page
+candidate. Earlier release results remain historical evidence in
+[BUILD_LOG.md](BUILD_LOG.md); they do not prove this candidate.
 
-## Product in one sentence
+## Product truth
 
-Pentimento is a 15-minute interactive project in which a complete beginner
+Pentimento is a 15-minute interactive field lesson in which a complete beginner
 directs one fictional AI-built website from a convincing surface to a checked,
 recoverable release.
 
-It is an educational simulation—not a coding course, prompt library, tool
-ranking, project generator, or development environment. It never builds or
-publishes a real learner project.
+It is an authored educational simulation—not a coding course, prompt library,
+tool ranking, project generator, repository, or development environment. It
+does not build or publish a learner’s real project.
 
-## Thesis
+> **AI can make it look finished. Learn to make it trustworthy.**
 
-> AI can make it look finished. Learn to make it trustworthy.
+The learner directs four responsibilities:
 
-AI can make the surface quickly. The learner still has to direct four layers:
+1. **Promise** — the one result this version must finish.
+2. **Project home** — the files and history the learner can recover.
+3. **Evidence** — what a person actually tried and observed.
+4. **Release** — the exact checked version that is live and the version that
+   can be restored.
 
-1. **Promise** — what one person must be able to finish.
-2. **Project home** — where files and recoverable history survive.
-3. **Evidence** — what was actually inspected and tried.
-4. **Release** — which exact version is public and recoverable.
+The visible project, underlayers, lesson receipts, and version thread make those
+responsibilities concrete.
 
-The visual system makes these layers literal through three objects: the visitor
-surface, the project underlayers, and saved lesson receipts.
+## Six-folio opening
 
-## Opening architecture
+The opening is six full-page compositions in the document’s root scroll. It is
+not a nested scroller, dashboard, feature menu, or preliminary carousel.
 
-The opening is one continuous, natural-scroll story. It does not begin with a
-dashboard, a wall of cards, or a choice the learner cannot yet understand.
-Each viewport carries one meaningful sentence and one visual change.
+| Folio | Name | Job |
+| --- | --- | --- |
+| **00** | What this is | Explain Pentimento, its audience, duration, boundary, and five takeaways |
+| **01** | The claim | Present a polished Willow Fix Day preview and the untested AI claim |
+| **02** | The test | Let the learner test the only important visitor action |
+| **03** | The layers | Reveal Promise, Project home, Evidence, and Release |
+| **04** | The method | Make Shape, Ground, Direct, and Prove interactive |
+| **05** | Your lesson | Hand the learner into the eight-stop field lesson |
 
-The hero answers the basic questions immediately:
+Folio 00 must answer before asking:
 
-- **What is this?** A 15-minute interactive project for first-time AI builders.
-- **What will I do?** Direct one fictional site from idea to checked release.
-- **Why does it matter?** A polished preview cannot prove behavior, custody,
+- **What is this?** An interactive field lesson for first-time AI builders.
+- **What will I do?** Direct a fictional site from rough idea to checked public
+  version without writing code.
+- **Why does it matter?** A polished surface cannot prove behavior, custody,
   release identity, or recovery.
-- **What will I keep?** A first-version brief, tool map, AI work agreement,
-  evidence ladder, and release-and-recovery checklist.
-- **What will not happen?** No coding, API key, or real publishing.
+- **What will I keep?** A V1 brief, tool map, AI work agreement, evidence
+  ladder, and release-and-recovery card.
+- **What is safe?** The project is fictional; no email is sent and nothing is
+  published.
 
-One persistent Willow Fix Day artifact then changes through four scroll beats:
+Folio 01 makes no spoiler. **Ready to publish** remains visibly labelled as an
+AI report with untested evidence.
 
-1. **The claim** — AI calls the polished page ready.
-2. **The observation** — the visitor’s important email action does nothing.
-3. **The underpainting** — Promise, Project home, Evidence, and Release separate
-   beneath the visible page.
-4. **The method** — Shape the promise, Ground the work, Direct the build, and
-   Prove the release become the route.
+Folio 02 is the real evidence event. The learner selects **Email the
+organizer**, receives the visible observation **Nothing happened**, and can
+distinguish how the preview looked from how it behaved. The failure is not
+announced before the click.
 
-The final threshold states that this is a project to direct, not a tutorial to
-watch. **Test the project yourself** is the dominant action; **Preview the four
-chapters** remains physically separated. **Skip to the evidence check** is a
-discreet keyboard-operable path for returning or time-limited learners.
+Folio 03 exposes the four underlayers only after evidence has been produced.
+Folio 04 lets the learner inspect each part of the method and its consequence,
+not merely read four slogans. Folio 05 says exactly what the eight-stop lesson
+will ask and offers **Begin with the first promise** as the primary action.
+**Preview the 8-stop route** is secondary.
 
-The handoff uses the visible Build kit as a shared object into the one-minute
-evidence check. The learner then:
+## Page-scroll contract
 
-1. sees the AI claim **Ready to publish**;
-2. selects **Email the organizer**;
-3. observes **Nothing happened**;
-4. distinguishes the preview’s appearance from the tested behavior;
-5. selects **Reveal the missing layers**;
-6. sees Promise, Project home, Evidence, and Release through the earned
-   spectral reveal; and
-7. continues with **Continue to stop 1 · shape the promise**.
+- The browser document owns vertical scrolling. No folio creates a second
+  wheel, touch, or keyboard scroll region.
+- Tall desktop with a fine pointer may use mandatory one-page settlement.
+- Touch layouts use proximity; short viewports, high zoom, and reduced-motion
+  layouts use normal scrolling.
+- A six-step rail exposes current position and direct navigation with
+  meaningful accessible names.
+- The active folio changes only after the next page’s prose crosses the reading
+  line; the rail must not announce content before it is visible.
+- Desktop may keep one specimen beside folios 01–04. Mobile and tablet place a
+  purpose-built specimen in the reading flow.
+- Sticky interface elements never cover headings, actions, failure text, or
+  focus.
+- Reverse scrolling and native keyboard scrolling always work.
+- Reduced motion preserves every state and removes non-essential transitions.
 
-This sequence explains the stakes, demonstrates the failure, lets the learner
-produce the evidence personally, and only then begins the curriculum.
+One component owns each transition. Full-scene changes do not stack a native
+root snapshot over destination entrance animation. Local state changes may use
+short transitions when they preserve a stable header and artifact.
+
+## Remembered evidence
+
+The opening and lesson form one causal journey. When folio 02 produces the
+failure, the app persists `introFailureObserved: true` in the existing versioned
+progress record.
+
+- If the learner observed the failure, Check starts with **You found this
+  failure earlier; now record it** and shows the observed state.
+- If the learner entered without observing it, Check still requires the initial
+  Email trial.
+- Both branches require an observed-versus-expected defect, a bounded repair,
+  and a retry.
+- Restart clears the remembered evidence with the rest of the learning record.
+
+This prevents the same failure from being staged in an opening, a separate
+inspection, and Check.
 
 ## Route
 
-The route contains four chapters, eight stops, and 14 consequential decisions.
+The authored route contains four chapters, eight stops, and 14 consequential
+decisions.
 
 | Chapter | Stops | Learner capability |
 | --- | --- | --- |
-| Shape the promise | First version | Define one supportable visitor path |
-| Ground the work | Tools · Project home | Assign tool roles and preserve the work |
-| Direct the build | Ask AI · Build | Bound AI changes and collect evidence |
-| Prove the release | Check · Go live · Improve | Repair, release, recover, and update |
+| **Shape the promise** | First version | Define one supportable visitor path |
+| **Ground the work** | Tools · Project home | Assign tool roles and preserve the work |
+| **Direct the build** | Ask AI · Build | Bound AI changes and collect evidence |
+| **Prove the release** | Check · Go live · Improve | Repair, release, recover, and update |
 
-Each scene uses the same five-beat grammar:
+### Stops
 
-1. **Where you are** — current stop, one-sentence context, and artifact.
-2. **See the reasoning** — a worked or partially worked project state.
-3. **Make one decision** — no more than three literal options.
-4. **Understand the consequence** — what changed, why it matters, and the rule
-   to keep.
-5. **Open the lesson** — transform the task in place into its reusable receipt,
-   then continue with a predictable route label.
+- **First version:** choose one complete, supportable path and a Not now
+  boundary.
+- **Tools:** compare one browser workspace with visible files plus saved
+  history; state the speed, ownership, setup, and recovery tradeoffs.
+- **Project home:** reject chat-only custody, choose a recoverable home, and
+  decide whether visitors actually need runtime AI.
+- **Ask AI:** ask for inspection and three small steps, preserve trusted facts
+  and boundaries, name a stopping point, and approve one shown step.
+- **Build:** distinguish AI report, changed files, automated checks, preview,
+  and a complete visitor-path test.
+- **Check:** use remembered or newly produced evidence, record the defect,
+  repair only the failed link, and retry it.
+- **Go live:** choose checked V4 over polished-but-untested V3, test the
+  simulated public path, and preserve recovery.
+- **Improve:** change the trusted source first, update only affected output and
+  checks, then save V5 without erasing V4.
 
-Guidance fades across the route. Early scenes show the reasoning; middle scenes
-ask the learner to complete a bounded plan and evidence chain; later scenes ask
-them to diagnose, repair, release, and update with less scaffolding.
+## Compact lesson shell
 
-### The eight stops
+The required reading order is:
 
-- **First version:** choose approved facts, item fit, and one email question;
-  keep booking, payments, accounts, live availability, and AI advice out of V1.
-- **Tools:** choose a faster hosted route or a more transferable repository
-  route while preserving the durable map: AI workspace builds, project home
-  remembers, host publishes.
-- **Project home:** reject chat-only custody, create the route-specific
-  recoverable home, and distinguish build-time AI from runtime AI.
-- **Ask AI:** ask for inspection and three small steps, preserve the boundary,
-  name a stopping point, and approve only one shown step.
-- **Build:** distinguish the AI claim, changed files, automated checks, preview,
-  and human-path evidence.
-- **Check:** try the important action, record observed versus expected
-  behavior, repair only the failed link, and repeat the exact path.
-- **Go live:** choose checked V4 over polished V3, repeat the path at the public
-  address, and preserve a recovery version.
-- **Improve:** update the trusted source first, then only the dependent page and
-  checks, saving V5 without erasing V4.
+```text
+chapter and stop → why it matters → one current decision →
+consequence → lesson receipt → next stop
+```
+
+- The header has one secondary navigation action: **Lesson map**.
+- The center header status is informational, not a duplicate button.
+- The mobile header is one compact row rather than two stacked control bars.
+- Desktop keeps the project artifact beside the decision.
+- On narrow screens **Project layer updated** is closed initially. The learner
+  can open it when reference is useful, without pushing the current task below
+  the first screen.
+- Completed layers remain available, but only the current task asks for
+  attention.
+
+Correct feedback stays on screen with the consequence and working rule. There
+is no delayed automatic scroll. The learner explicitly selects **Save this
+lesson**. The task becomes:
+
+```text
+Lesson receipt · practice saved · n / 8
+```
+
+The receipt states the transferable rule, when to use it, and the failure it
+prevents. A predictable action continues to the next stop. The wording never
+claims each receipt creates a new Build-kit guide.
+
+Wrong answers show a literal `×`, explain the cost or missing evidence, and
+remain revisable. Recommended choices show a literal `✓`; color and animation
+are supplementary.
 
 ## Persistent learning objects
 
 ### Project layers
 
-Desktop keeps a stable inspection plate beside the decision. Mobile places the
-same content in a natural disclosure without nested scrolling. The two views
-are:
+The project canvas exposes:
 
-- **Visitor surface** — what a visitor sees and whether the important path
-  works.
-- **Layers underneath** — brief, route, project home, work agreement, evidence,
-  versions, release, and recovery.
+- **Visitor surface** — the visible page and important action.
+- **Layers underneath** — brief, tool route, project home, work agreement,
+  evidence, version thread, release proof, and recovery.
 
-Every meaningful decision changes one of these views. Earlier layers remain
-visible.
+Every meaningful decision changes at least one project state. Earlier layers
+remain visible instead of being erased.
 
 ### Build kit
 
-**Build kit** remains available throughout the route and at completion. It
-contains five milestone guides:
+The Build kit is available during the lesson and at completion:
 
 1. Shape the first version.
 2. Choose a route and project home.
@@ -144,74 +195,117 @@ contains five milestone guides:
 4. Check and repair.
 5. Release and improve.
 
-Each guide says when to use it, what to do, what counts as proof, and provides a
-copyable template plus the Willow Fix Day worked example.
+Each guide includes when to use it, the exact action, what counts as proof, and
+a copyable template. The kit is not described as newly unlocked at completion.
 
-### V1 brief workshop
+### Evidence ladder
 
-Completion offers a four-step, local-first **V1 brief workshop**. It collects:
+```text
+AI claim → changed files → preview → human path → public path
+```
 
-- person, situation, and useful result;
-- complete path and trusted facts;
-- must-have and Not now boundary; and
-- observable finish line and starter route.
+The interface explains what each rung proves and does not prove.
 
-The complete brief exists locally before the separate optional GPT-5.6
-reflection. That reflection is read-only and bounded: one strength, two open
-questions, one feature to postpone, one route tradeoff, and three next moves.
-It cannot grade, progress the lesson, access files, build, publish, or mutate
-anything.
+### Version thread
 
-## Visual and motion system
-
-Pentimento uses a cool conservation-lab direction:
-
-- Instrument Sans for instruction and controls;
-- serif only for artifact titles and distilled rules;
-- carbon, lab silver, cobalt, viridian, and oxide with semantic roles;
-- flat ruled controls with 0–2px radii;
-- gradients limited to the registration grid and earned spectral scan—never
-  glossy component styling;
-- no hover lift, bounce, or decorative card shadows;
-- cobalt for navigation/focus, viridian for verified evidence, and oxide only
-  for observed failure.
-
-Motion follows one grammar:
-
-- 140ms control response;
-- 180–220ms ordinary state change;
-- 220ms filed-note transition;
-- 520–680ms only for the earned spectral reveal.
-
-Motion connects cause to consequence and never carries meaning alone.
-Reduced-motion mode makes every state effectively immediate and removes the
-spectral scan.
+Release preserves the causal thread from V1 scope through V5 improvement. V3
+remains visibly polished but untested; V4 is repaired and checked; V5 updates
+the trusted source without erasing the recovery layer.
 
 ## Completion
 
-Completion first states the capability gained and keeps the next action near
-the result:
+Completion says the learner **practiced** the method and now has a method to
+reuse. It does not claim durable transfer or mastery from one journey.
 
-- shape a first version one person can finish;
-- give AI bounded steps and a stopping point;
-- demand evidence beyond the AI report; and
-- release an exact, recoverable version.
+The primary action is **Create my V1 brief**. **Open my build kit** is secondary.
+The page also shows:
 
-The primary action is **Shape my own V1 brief**. The secondary action is
-**Open my build kit**. Route-specific first actions, four durable habits, and
-the final saved project layer remain available below.
+- a four-part method recap;
+- route-specific actions to start today;
+- four reusable habits; and
+- the final project layer.
 
-## Verification contract
+## V1 brief workshop
 
-The release is acceptable only when:
+The workshop is optional and learner-initiated. Four short passes collect:
 
-- 96 unit/API/state tests pass;
-- the complete desktop and mobile browser matrix passes;
-- the 14 decisions and eight explicit saves complete by keyboard and pointer;
-- Axe reports no serious or critical violations through the core route;
-- 320, 390, 768, and 1440px routes have no task-blocking horizontal overflow;
-- reduced motion, refresh restoration, restart confirmation, and focus return
-  pass;
-- the production URL serves the exact saved source version; and
-- the README, submission copy, screenshots, and release evidence match that
-  exact version.
+1. person, situation, and useful result;
+2. complete path and trusted facts;
+3. must-have and Not now boundaries; and
+4. observable finish line and starter route.
+
+Plain-language examples remain available. Validation focuses the first
+incomplete field and explains what is missing; it does not silently disable the
+only forward action. Step and result headings stay visible at 320×568 and at
+high zoom. Workshop changes do not combine native document snapshots with a
+second destination animation.
+
+The complete, copyable V1 brief exists locally before any optional request. The
+result offers **Edit my answers** and preserves the local artifact if reflection
+fails.
+
+## Authored/live reflection boundary
+
+The interface must expose its reflection mode before the learner requests it
+and label the returned result:
+
+- **Authored example · deterministic, no live AI call**
+- **GPT-5.6 reflection · live**
+
+Demo mode is not called “AI-generated,” “GPT-powered,” or a live response. If a
+live request fails or is rate-limited, the response changes to the authored
+label.
+
+Both modes return the same bounded teaching shape:
+
+- one clear strength;
+- exactly two unresolved questions;
+- one feature to postpone and why;
+- one route tradeoff; and
+- exactly three next moves.
+
+The reflection cannot grade, claim mastery, decide lesson progress, access files
+or repositories, execute or publish a project, request credentials, or take an
+external action. The authored route, local brief, and Build kit are complete
+without model access.
+
+Live mode keeps credentials server-side, validates shape and size, uses
+structured output with `store: false`, bounds output, derives a
+privacy-preserving safety identifier, and rate-limits requests.
+
+## Visual system
+
+Pentimento uses a restrained conservation-lab language:
+
+- Instrument Sans for instruction and controls;
+- serif for artifact titles and distilled rules only;
+- carbon, lab silver, cobalt, viridian, and oxide with consistent meaning;
+- ruled plates, registration marks, and the underpainting metaphor;
+- 44px minimum primary interactive targets;
+- flat controls without hover lift, perpetual glow, confetti, or decorative
+  card shadows; and
+- oxide only for observed failure, viridian for checked states, cobalt for
+  focus and direction.
+
+Motion connects cause to consequence. Stable objects stay stable. Focus, color,
+text, and motion never disagree.
+
+## Acceptance contract
+
+The v9 candidate is acceptable only when:
+
+- unit, API, state, and type checks pass;
+- the complete desktop and mobile journeys pass;
+- all six folios work by pointer and keyboard;
+- opening evidence persists into Check and restart clears it;
+- both route lanes complete all 14 decisions and eight explicit lesson saves;
+- authored demo and live reflection modes are truthfully labelled;
+- Axe reports no serious or critical violations through the route and workshop;
+- 320, 390, 768, and 1440px layouts have no task-blocking overlap or horizontal
+  overflow;
+- short viewports, 200% zoom, reduced motion, refresh restoration, dialog focus,
+  and focus return pass;
+- performance and dependency audits are recorded for the exact candidate;
+- the production URL serves the exact saved Sites source version; and
+- README, product brief, quality standard, hackathon copy, screenshots, video,
+  repository state, and hosted behavior agree.

@@ -12,6 +12,10 @@ const MAX_LIVE_REQUESTS_PER_CLIENT = 2;
 const MAX_RATE_BUCKETS = 2_000;
 const buckets = new Map<string, { count: number; resetsAt: number }>();
 
+function isDemoMode(): boolean {
+  return process.env.DEMO_MODE !== "false" || !process.env.OPENAI_API_KEY;
+}
+
 function json(body: unknown, status = 200) {
   return NextResponse.json(body, {
     status,
@@ -19,6 +23,10 @@ function json(body: unknown, status = 200) {
       "Cache-Control": "no-store",
     },
   });
+}
+
+export async function GET() {
+  return json({ mode: isDemoMode() ? "demo" : "live" });
 }
 
 function identifierFor(sessionId: string): string {
@@ -91,7 +99,7 @@ export async function POST(request: Request) {
     firstVersionBrief: parsed.data.firstVersionBrief,
     toolLane: parsed.data.toolLane,
   };
-  const demoMode = process.env.DEMO_MODE !== "false" || !process.env.OPENAI_API_KEY;
+  const demoMode = isDemoMode();
 
   if (demoMode || !takeLiveSlot(request)) {
     return json({

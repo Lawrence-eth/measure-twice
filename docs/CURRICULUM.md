@@ -1,9 +1,9 @@
 # Pentimento curriculum and content standard
 
-This document is the long-form content bank behind the current v5 experience.
+This document is the long-form content bank behind the current v9 experience.
 The exact screen order, interaction count, and progressive-disclosure contract
 live in [FINAL_EXPERIENCE.md](FINAL_EXPERIENCE.md). Templates and examples below
-may appear as contextual field notes or in the five-card Playbook; they are not
+may appear as contextual field notes or in the five-guide Build kit; they are not
 all required actions in the 15-minute route.
 
 The current delivery groups the same lifecycle into four chapters:
@@ -15,10 +15,16 @@ The current delivery groups the same lifecycle into four chapters:
 | **Direct the build** | Ask AI · Build |
 | **Prove the release** | Check · Go live · Improve |
 
-The learner makes 13 consequential decisions. After each stop, successful
-feedback remains visible while the learner inspects and saves one **Playbook
-note**. Eight stop-level notes accumulate into the existing five-card take-home
-Playbook; they do not create eight additional cards.
+The learner makes 14 consequential decisions. After each stop, successful
+feedback remains visible until the learner selects **Save this lesson** and
+opens one **Lesson receipt**. Eight stop-level receipts connect to the existing
+five-guide take-home Build kit; they do not create eight additional guides.
+
+The six-folio opening is part of the curriculum, not a marketing prelude. It
+orients the learner, distinguishes an AI claim from evidence, lets the learner
+produce the first failure observation, reveals the four project layers, makes
+the four-part method explorable, and then begins the lesson. If that failure was
+observed, Check reuses it as prior evidence instead of staging it again.
 
 ## Audience promise
 
@@ -579,10 +585,10 @@ If the update introduces identity, money, private data, live operations, or runt
 
 A small content request quietly becoming a redesign, new platform, or unreviewed system.
 
-## Persistent Field Guide and five-card Playbook
+## Persistent five-guide Build kit
 
-The **Field guide** is available beside the current task and opens the existing
-five-card Playbook:
+The **Build kit** is available beside the current task and opens five milestone
+guides:
 
 1. Shape the first version.
 2. Choose a route and project home.
@@ -600,7 +606,8 @@ contains:
 - **Observable result:** what the action should produce.
 - **Prevention:** the mistake, risk, or wasted work it helps avoid.
 
-The complete Playbook adds a plain-language glossary and seven-day starting route:
+The complete Build kit adds a plain-language glossary and seven-day starting
+route:
 
 ```text
 Day 1 · one person, result, and small project
@@ -612,9 +619,11 @@ Day 6 · phone, keyboard, repair, and reruns
 Day 7 · hosted preview, approved release, live check, and recovery
 ```
 
-## GPT‑5.6 Teaching Mirror
+## Authored/live teaching reflection
 
-The Teaching Mirror appears only after the authored journey. It is optional and initiated explicitly by the learner.
+The reflection appears only after the authored journey and after a complete,
+copyable local V1 brief exists. It is optional and initiated explicitly by the
+learner.
 
 ### Learner input
 
@@ -633,7 +642,7 @@ The interface explains that this submitted text will leave the browser and tells
 
 ### Boundary
 
-GPT‑5.6 cannot:
+Neither the authored example nor GPT‑5.6 can:
 
 - grade, score, give a level, or claim mastery;
 - decide correctness or route progression;
@@ -645,7 +654,14 @@ GPT‑5.6 cannot:
 - create an account, publish, or take an external action; or
 - convert an inference into a fact.
 
-The result is an AI-assisted reflection, not curriculum truth. Structured validation, bounded input, server-side credentials, `store: false`, and an authored fallback keep the core outcome deterministic.
+The interface exposes which mode is active and labels the result:
+
+- **Authored example · deterministic, no live AI call**; or
+- **GPT-5.6 reflection · live**.
+
+An authored example is not described as an AI-assisted or live model response.
+Structured validation, bounded input, server-side credentials, `store: false`,
+and a clearly labelled authored fallback keep the core outcome deterministic.
 
 ## Learning design
 
@@ -653,15 +669,18 @@ The interaction grammar is:
 
 ```text
 why it matters → take one consequential action → observe the consequence →
-inspect the Playbook note → explicitly save the layer
+Save this lesson → inspect the Lesson receipt → continue
 ```
 
 Scaffolding changes across the route:
 
-- the welcome identifies the field guide, learner, time, and take-home artifacts;
-- the learner tests one polished generated action before receiving the lesson;
-- raking light reveals Promise, Project home, Evidence, and Release beneath the
+- folio 00 identifies the learner, time, activity, and take-home artifacts;
+- folio 01 presents an untested claim without spoiling the defect;
+- folio 02 lets the learner test the polished action and observe the failure;
+- folio 03 reveals Promise, Project home, Evidence, and Release beneath the
   visitor surface;
+- folio 04 lets the learner explore Shape, Ground, Direct, and Prove;
+- folio 05 states the lesson and begins with the first promise;
 - Idea narrows one tempting wishlist to a complete first-version path;
 - Tools compares two tradeoffs rather than presenting a winner;
 - Project home establishes recoverable custody and the runtime-AI boundary;
@@ -670,7 +689,7 @@ Scaffolding changes across the route:
 - Check moves from observed failure to bounded repair to required retry;
 - Go live distinguishes an exact checked version from deployment status;
 - Improve updates a trusted source before its visible surface; and
-- eight saved Playbook notes accumulate into five reusable milestone cards.
+- eight Lesson receipts connect to five reusable milestone guides.
 
 Future controls are not rendered as a wall of choices. Completed steps remain
 revisitable. A correct decision does not auto-advance: its causal consequence,

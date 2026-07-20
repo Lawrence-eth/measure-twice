@@ -2,6 +2,7 @@ import {
   finalLearningStages,
   finalStages,
   playbookIndex,
+  type AffectedCheckChoice,
   type AiFirstChoice,
   type BuildEvidenceChoice,
   type CheckAttemptChoice,
@@ -45,6 +46,7 @@ export type FinalProgress = {
   started: boolean;
   stage: FinalStage;
   completedStages: FinalLearningStage[];
+  introFailureObserved: boolean;
 
   ideaChoice: IdeaChoice | null;
   toolChoice: ToolChoice | null;
@@ -59,6 +61,7 @@ export type FinalProgress = {
   releaseVersionChoice: ReleaseVersionChoice | null;
   releaseProofChoice: ReleaseProofChoice | null;
   improveChoice: ImproveChoice | null;
+  affectedCheckChoice: AffectedCheckChoice | null;
 
   toolDecoderOpen: boolean;
   playbookOpen: boolean;
@@ -88,6 +91,7 @@ export const initialFinalProgress: FinalProgress = {
   started: false,
   stage: "welcome",
   completedStages: [],
+  introFailureObserved: false,
 
   ideaChoice: null,
   toolChoice: null,
@@ -102,6 +106,7 @@ export const initialFinalProgress: FinalProgress = {
   releaseVersionChoice: null,
   releaseProofChoice: null,
   improveChoice: null,
+  affectedCheckChoice: null,
 
   toolDecoderOpen: false,
   playbookOpen: false,
@@ -127,6 +132,7 @@ type ParsedChoices = Pick<
   | "releaseVersionChoice"
   | "releaseProofChoice"
   | "improveChoice"
+  | "affectedCheckChoice"
 >;
 
 const stageSet = new Set<string>(finalStages);
@@ -166,6 +172,11 @@ const improveChoiceSet = new Set<string>([
   "page-only",
   "source-then-page",
   "redesign-everything",
+]);
+const affectedCheckChoiceSet = new Set<string>([
+  "affected-plus-smoke",
+  "surface-only",
+  "retest-redesign",
 ]);
 const playbookCardSet = new Set<string>(playbookIndex.map((card) => card.id));
 
@@ -242,6 +253,10 @@ function parseChoices(value: Record<string, unknown>): ParsedChoices {
     improveChoice: exactChoice<ImproveChoice>(
       value.improveChoice,
       improveChoiceSet,
+    ),
+    affectedCheckChoice: exactChoice<AffectedCheckChoice>(
+      value.affectedCheckChoice,
+      affectedCheckChoiceSet,
     ),
   };
 }
@@ -388,6 +403,9 @@ function clearUnreachableChoices(
     improveChoice: stageHasBeenReached(completedStages, "improve")
       ? choices.improveChoice
       : null,
+    affectedCheckChoice: stageHasBeenReached(completedStages, "improve")
+      ? choices.affectedCheckChoice
+      : null,
   };
 }
 
@@ -463,6 +481,7 @@ export function parseFinalProgress(value: unknown): FinalProgress | null {
     started,
     stage,
     completedStages,
+    introFailureObserved: value.introFailureObserved === true,
     ...choices,
     toolDecoderOpen: toolsReached && value.toolDecoderOpen === true,
     playbookOpen: completionAvailable && value.playbookOpen === true,

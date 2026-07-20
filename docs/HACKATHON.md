@@ -7,9 +7,10 @@ Submission deadline: **July 21, 2026 at 5:00 PM Pacific** (**July 22 at
 
 The Official Rules, Devpost form, and notices on
 [openai.devpost.com](https://openai.devpost.com) are the source of truth. This
-file contains submission-ready copy for the Pentimento v8 release candidate.
-Release-controlled values are filled after production verification; only
-entrant-controlled submission values otherwise remain TBD.
+file contains submission-ready copy for the Pentimento v9 candidate.
+Release-controlled v9 values remain pending until the exact candidate is
+deployed and verified. The v8 values at the end are retained as rollback
+evidence, not as proof for v9.
 
 ## Devpost summary
 
@@ -23,15 +24,15 @@ entrant-controlled submission values otherwise remain TBD.
 for AI coding tools, project files, version history, checking, hosting, or
 release.
 
-**Experience:** An authored 15-minute interactive project in a contemporary
-Conservation Lab. A four-beat editorial scroll story reveals why a polished
-AI-built page is not yet trustworthy, then hands into a worked evidence check,
-four chapters, eight stops, 14 consequential decisions, and an in-place lesson
-receipt after each stop.
+**Experience:** An authored 15-minute interactive field lesson in a
+contemporary Conservation Lab. Six full-page folios move from orientation to an
+untested AI claim, a learner-produced failure, the hidden project layers, the
+four-part method, and a clear handoff into four chapters, eight stops, 14
+consequential decisions, and an in-place lesson receipt after each stop.
 
 **Target public experience:**
 [pentimento.law-ender.chatgpt.site](https://pentimento.law-ender.chatgpt.site)
-— verified native ChatGPT Sites release.
+— native ChatGPT Sites address. Record v9 verification only after deployment.
 
 **Repository:** [github.com/Lawrence-eth/measure-twice](https://github.com/Lawrence-eth/measure-twice)
 
@@ -44,32 +45,39 @@ receipt after each stop.
 > tool: define a supportable promise, keep custody of the work, control AI
 > changes, demand evidence, and preserve recovery.
 >
-> The opening is a natural-scroll editorial story, not a dashboard of
-> unexplained choices. One Willow Fix Day preview changes through four beats:
-> AI’s ready claim, an observed failed action, the four hidden responsibilities
-> beneath the page, and the Shape → Ground → Direct → Prove method. The final
-> threshold names the exact practice and take-home artifacts. **Test the project
-> yourself** hands into the evidence check: the learner selects **Email the
-> organizer**, observes **Nothing happened**, then uses **Reveal the missing
-> layers**. A spectral scan exposes promise, project home, evidence, and
-> release. The learner
-> then guides the Willow Fix Day page through four chapters, eight stops, and 14
+> The opening is six composed pages, not a dashboard of unexplained choices.
+> Folio 00 explains what Pentimento is, why it matters, and what the learner
+> keeps. Folio 01 presents AI’s untested **Ready to publish** claim without
+> spoiling the defect. On folio 02 the learner selects **Email the organizer**
+> and personally observes **Nothing happened**. Folios 03 and 04 reveal
+> Promise, Project home, Evidence, and Release, then make Shape → Ground →
+> Direct → Prove interactive. Folio 05 explains the complete field lesson and
+> begins with the first promise.
+>
+> The opening evidence persists into the lesson. Check later says **You found
+> this failure earlier; now record it**, so the same failure is not restaged as
+> a separate inspection. The learner then guides the Willow Fix Day page
+> through four chapters, eight stops, and 14
 > consequential decisions: shape one supportable first version, choose a tool
 > route, create a recoverable project home, direct AI with a bounded plan,
 > recognize a preview as a candidate, discover and repair a failed visitor
 > path, release one checked version, and improve it from a trusted source.
-> Each task becomes a concise lesson receipt in the same place, so the learner
+> Each task becomes a concise lesson receipt in the same place after **Save
+> this lesson**, so the learner
 > sees the decision, its visible consequence, and the reusable rule before
 > continuing. The eight receipts connect to the existing five-guide Build kit.
 >
 > A persistent canvas switches between **Visitor surface** and **Layers
 > underneath**, so scope, files, prompts, evidence, defects, versions, and
-> recovery never disappear behind polish. A five-guide **Build kit** is
-> available throughout. The core lesson is authored, deterministic, and
-> key-free.
+> recovery never disappear behind polish. The compact lesson header exposes one
+> **Lesson map** action, while small screens keep the project layer in a closed
+> disclosure until it is useful. A five-guide **Build kit** is available
+> throughout. The core lesson is authored, deterministic, and key-free.
 > Completion offers a four-step **V1 brief workshop**. The workshop
 > creates a complete, copyable V1 brief locally before offering a separate,
-> explicitly optional GPT-5.6 reflection. That bounded reflection returns one
+> optional reflection. Demo mode is explicitly labelled **Authored example ·
+> deterministic, no live AI call**. Only a successful model request is labelled
+> **GPT-5.6 reflection · live**. Either bounded result contains one
 > strength, two unresolved questions, one feature to postpone, one route
 > tradeoff, and three next moves. It cannot grade the learner, control lesson
 > progress, access files or accounts, build a project, publish, or perform any
@@ -103,27 +111,28 @@ The required route is deliberately small:
 
 ## Public judge testing instructions
 
-Verified public testing instructions:
+Candidate public testing instructions; mark them verified only after the v9
+hosted acceptance run:
 
 > Open https://pentimento.law-ender.chatgpt.site in a current desktop or mobile
 > browser. No account, API key, installation, or real deployment is required.
-> Scroll through Claim, Observation, Underpainting, and Method, then select
-> **Test the project yourself**. Select **Email the organizer**, observe
-> **Nothing happened**, select **Reveal the missing layers**, and continue with
-> **Continue to stop 1 · shape the promise**. **Preview the four chapters** is
-> the optional overview ending with **Start with the first promise**. Follow
-> either tool route through all eight stops. After each
-> correct stop, open its lesson receipt, inspect the consequence and reusable
-> rule, then continue. The persistent **Build kit** remains available beside
-> the task. In
-> **Check**, try the contact action, choose the bounded repair, and try the
-> repaired action again—the retry is required. In **Go live**, choose checked
+> Move through pages 00–05: What this is, The claim, The test, The layers, The
+> method, and Your lesson. On The test, select **Email the organizer** and
+> observe **Nothing happened**. Explore the four-part method, then select
+> **Begin with the first promise**. **Preview the 8-stop route** is the optional
+> Lesson map. Follow either tool route through all eight stops. After each
+> correct stop, select **Save this lesson**, inspect the in-place receipt and
+> reusable rule, then continue. The persistent **Build kit** remains available
+> beside the task. In **Check**, record the failure remembered from the opening,
+> choose the bounded repair, and try the repaired action—the retry is required.
+> In **Go live**, choose checked
 > V4 instead of the polished but untested V3, then repeat the path at the
 > simulated public address. At completion, open any guide in the **Build kit**,
 > then select
-> **Shape my own V1 brief**. The four-step V1 brief workshop creates a complete,
+> **Create my V1 brief**. The four-step workshop creates a complete,
 > copyable brief on the device before any optional reflection request. The core
-> route remains usable when live model access is unavailable.
+> route remains usable when live model access is unavailable. If reflection is
+> shown, read the visible authored/live mode label aloud.
 >
 > All Willow Fix Day people, addresses, versions, URLs, email actions, releases,
 > and repository actions are fictional or simulated. Pentimento does not send
@@ -148,89 +157,75 @@ Target **2:45–2:55**. Use original narration and interface footage. Do not sho
 credentials, personal information, private tabs, copyrighted music, or
 third-party trademarks.
 
-### 0:00–0:18 — the beginner problem
+### 0:00–0:30 — orientation, claim, and evidence
 
-**Show:** Scroll through the Claim and Observation beats as the same polished
-page changes from AI-ready to observed-failed. Continue through Underpainting
-and Method, then select **Test the project yourself**.
+**Show:** Folio 00 answering what the lesson is. Move to the polished claim on
+01. On 02 select **Email the organizer** and hold on **Nothing happened**.
 
-**Say:** “AI can make a page look finished before a beginner has defined its
-promise, kept custody of its files, tested its important path, or named the
-released version. Pentimento turns those hidden responsibilities into a
-15-minute interactive project.”
+**Say:** “AI can make a project look finished before a first-time builder knows
+what to check. Pentimento is a 15-minute field lesson about the judgment between
+prompt and publish. The learner—not a narration—produces the first evidence:
+this polished page’s important action does nothing.”
 
-### 0:18–0:45 — scope and tool roles
+### 0:30–1:00 — hidden layers, method, and first scope
 
-**Show:** In the evidence check, select **Email the organizer**, observe
-**Nothing happened**, select **Reveal the missing layers**, and continue with
-**Continue to stop 1 · shape the promise**. Choose the smallest supportable
-path, then open its lesson receipt.
+**Show:** Folio 03’s four layers, the interactive Shape/Ground/Direct/Prove
+method, then **Begin with the first promise**. Choose the supportable V1 and
+select **Save this lesson**.
 
-**Say:** “The screen is the surface. Building means directing and checking
-the layers underneath. Four chapters turn 14 consequential decisions into
-eight reusable lesson receipts. First, the learner narrows the promise. Then
-tools get
-clear jobs: AI helps build, the project home remembers, and the host
-publishes.”
+**Say:** “The surface hides four responsibilities: promise, project home,
+evidence, and release. The reusable method is Shape, Ground, Direct, and Prove.
+The first lesson turns an impressive wishlist into one person, one complete
+path, and a clear Not now boundary.”
 
-### 0:45–1:10 — direct AI and collect evidence
+### 1:00–1:35 — tool roles, bounded AI, and evidence
 
-**Show:** Switch the persistent canvas between **Visitor surface** and
-**Layers underneath**, open the Build kit, then approve the Ask AI work
-agreement and inspect its checkpoint.
+**Show:** The two tool routes and their tradeoffs, compact project layer, Ask AI
+work agreement, and evidence ladder. Briefly open **Lesson map** or the Build
+kit.
 
-**Say:** “A useful request gives AI trusted facts, a Not now boundary, a finish
-line, and permission for one shown step. Correct choices do not disappear:
-the learner inspects what changed, when to reuse the rule, and what failure it
-prevents before moving forward. An AI completion message is only the first
-evidence level.”
+**Say:** “Pentimento does not rank brands. It teaches responsibilities: an AI
+workspace helps build, the project home remembers, and a host publishes. A
+useful AI request names trusted facts, a boundary, evidence, and a stopping
+point. An AI report, changed files, preview, human path, and public path are five
+different levels of proof.”
 
-### 1:10–1:38 — fail, repair, retry
+### 1:35–2:05 — remembered failure, repair, release, recovery
 
-**Show:** Activate the broken contact action, apply the bounded repair, and
-activate it again.
+**Show:** Check opening with **You found this failure earlier; now record it**.
+Record the defect, apply the bounded repair, retry, select checked V4, test the
+simulated public path, and reveal the recovery version.
 
-**Say:** “Pentimento does not announce the defect. The learner observes the
-failure, preserves working decisions, asks for the smallest repair, and repeats
-the same path. The fictional email target is simulated; no email is opened or
-sent.”
+**Say:** “The opening evidence is remembered; the learner does not perform the
+same failure three times. They record observed versus expected behavior,
+preserve working decisions, make the smallest repair, and retry. A finished
+deployment is weaker than a working public path, so the release names the exact
+checked version and the version to restore.”
 
-### 1:38–1:58 — release and improve
+### 2:05–2:30 — transfer without overclaiming
 
-**Show:** Select checked V4, perform the simulated public-path check, then
-update the approved source before the page.
+**Show:** Completion, Start today, Build kit, and **Create my V1 brief**. Create
+or show the local brief, then select **Edit my answers** if visible.
 
-**Say:** “A finished deployment is weaker evidence than a working public path.
-The release card keeps the exact version and recovery version visible. A later
-fact change starts at its trusted source and creates a new layer without
-erasing the checked one.”
+**Say:** “One simulation does not prove mastery. It gives the learner a method
+to reuse, five practical guides, route-specific first actions, and a local V1
+brief they can save beside a real project.”
 
-### 1:58–2:20 — transfer the method
+### 2:30–2:52 — Codex and the GPT-5.6 boundary
 
-**Show:** Completion, the route-specific Start today card, and the same
-five-guide Build kit that was available during the route.
+**Show:** A fast repository/code/test montage, then the reflection mode label.
+Show a result only if its on-screen label is legible.
 
-**Say:** “The Build kit is not a completion reward. It stays beside the
-current task and gives the learner five milestone cards, proof standards, and
-copyable templates to use with their own AI workspace.”
+**Say:** “Codex was the primary implementation collaborator across curriculum,
+typed state, the responsive six-page experience, accessibility, testing, and
+release preparation. I retained the audience, pedagogy, product, and design
+decisions. GPT-5.6 has one optional role after the local brief exists: a
+bounded reflection. This recording shows [say exactly the visible label:
+‘authored example, no live AI call’ or ‘live GPT-5.6 reflection’]. It never
+grades, controls progression, accesses files, publishes, or takes an external
+action.”
 
-### 2:20–2:48 — Codex and GPT-5.6
-
-**Show:** Open **Shape my own V1 brief**, create the local brief in the V1 brief
-workshop, then show the optional reflection boundary and a real GPT-5.6 result
-only if live mode is actually enabled.
-
-**Say:** “Codex was our primary implementation collaborator. It helped turn the
-beginner problem into a typed eight-stop curriculum, implement the responsive
-React experience and bounded API, and build the state, accessibility, browser,
-and deployment tests. I retained the audience, educational method, product,
-and design decisions. GPT-5.6 has one deliberate teaching role after the local
-artifact already exists: an optional structured reflection with one strength,
-two open questions, one feature to postpone, one route tradeoff, and three next
-moves. It never grades, generates the project, controls progression, accesses
-accounts, publishes, or takes an external action.”
-
-### 2:48–2:55 — close
+### 2:52–2:55 — close
 
 **Show:** The completed canvas switching from the visitor surface to its saved
 underlayers.
@@ -238,17 +233,17 @@ underlayers.
 **Say:** “Pentimento teaches first-time builders to look beneath AI polish and
 direct a release they can explain, test, and recover.”
 
-If production is using the authored fallback, label it as the fallback in the
-video; do not describe authored output as a live GPT-5.6 response. A live
-recording may use a locally configured server-only key, but no credential may
-appear in the footage.
+The words in brackets are a recording choice, not narration to read verbatim.
+Use the exact UI mode. An authored example is a valid deterministic demo, but
+must never be described as live GPT-5.6. A live recording may use a locally
+configured server-only key; no credential may appear in the footage.
 
 ## Judging-criteria mapping
 
 | Criterion | Evidence to show |
 | --- | --- |
-| **Technological Implementation** | Typed and validated progress with exact substep restoration; two route-dependent curricula; 14 consequential decisions plus in-place lesson receipts; a persistent Visitor surface/Layers underneath canvas; a bounded server-only reflection endpoint with structured input/output and deterministic fallback; unit, API, responsive browser, accessibility, Worker, and hosted-runtime verification paths. The README documents how Codex shaped and accelerated the implementation. |
-| **Design** | A natural-scroll editorial prologue that transforms one persistent artifact from polished claim to observed failure to visible underlayers to method; a shared-object handoff into the evidence check; a contemporary Conservation Lab; four chapters across eight stops; task-to-receipt transitions that keep cause and consequence in one reading position; a persistent Build kit; useful wrong-choice consequences; mobile/desktop layouts; managed focus, reduced-motion support, and a literal pentimento that preserves earlier decisions. |
+| **Technological Implementation** | Typed and validated progress with exact restoration and persisted opening evidence; adaptive root-scroll folios; two route-dependent curricula; 14 consequential decisions plus in-place lesson receipts; a responsive Visitor surface/Layers underneath canvas; an explicit authored/live reflection endpoint with structured input/output and safe fallback; unit, API, responsive browser, accessibility, performance, Worker, and hosted-runtime verification paths. |
+| **Design** | Six deliberately composed pages move from orientation to untested claim, learner-produced evidence, underlayers, interactive method, and lesson handoff. A compact stable shell keeps one decision visible; task-to-receipt transitions preserve cause and consequence; touch/short/reduced-motion layouts adapt scroll behavior; the Pentimento underpainting remains functional rather than decorative. |
 | **Potential Impact** | A specific audience—people with an idea and no AI-building mental model—and a specific risk: polished output without ownership, evidence, or recovery. Learners finish with reusable rules, route-specific next actions, templates, and their own local V1 brief. |
 | **Quality of the Idea** | A full idea-to-release education experience rather than a coding course, prompt library, tool ranking, or project generator. It separates build-time AI from runtime AI, makes evidence levels tangible, requires a fail → repair → retry loop, and uses earlier visible layers as the core teaching metaphor. |
 
@@ -258,29 +253,29 @@ appear in the footage.
 
 - [x] Repository URL is included.
 - [x] MIT license is included.
-- [x] README explains the audience, education problem, worked spectral
-  inspection, four chapters, eight stops, 14 decisions plus in-place lesson
-  receipts, persistent Build kit, V1 brief workshop boundary, local setup,
-  verification commands, deployment path, privacy, and Codex collaboration.
+- [x] README explains the audience, education problem, six-folio opening,
+  remembered evidence, compact lesson shell, four chapters, eight stops, 14
+  decisions, lesson receipts, Build kit, V1 workshop, authored/live boundary,
+  local setup, verification, privacy, and Codex collaboration.
 - [x] Confirm the final repository is public with relevant licensing, or share a
   private repository with both testing@devpost.com and
   build-week-event@openai.com.
 - [x] Confirm the Devpost repository URL resolves for a signed-out judge.
-- [x] Freeze and record the exact final v8 commit and release/version metadata.
+- [ ] Freeze and record the exact final v9 commit and release/version metadata.
 
 ### Public experience
 
-- [x] Deploy the final verified v8 artifact to
+- [ ] Deploy the exact verified v9 artifact to
   pentimento.law-ender.chatgpt.site.
-- [x] Run the hosted desktop/mobile acceptance checks against that exact artifact.
-- [x] Verify the worked inspection, four chapters, eight-stop route, 14
-  decisions, in-place lesson receipts, persistent Build kit, two
-  project-layer views, local V1 brief, optional reflection boundary, restart,
-  keyboard path, focus, reduced-motion behavior, and narrow layouts.
-- [x] Record the final Sites version/deployment, hosted test result, date, and
+- [ ] Run the hosted desktop/mobile acceptance checks against that exact artifact.
+- [ ] Verify all six folios, persisted opening evidence, four chapters,
+  eight-stop route, 14 decisions, in-place receipts, Build kit, project-layer
+  views, V1 brief, authored/live labels, restart, keyboard path, focus,
+  reduced-motion behavior, and narrow layouts.
+- [ ] Record the final Sites version/deployment, hosted test result, date, and
   rollback target in docs/BUILD_LOG.md.
-- [x] Confirm whether the submitted deployment uses live GPT-5.6 or the
-  deterministic fallback, and describe it accurately.
+- [ ] Confirm whether the submitted deployment uses live GPT-5.6 or the
+  authored deterministic example, and describe it accurately.
 
 ### Devpost
 
@@ -296,21 +291,23 @@ appear in the footage.
 
 ## Final hand-in values
 
-The release-controlled values below were verified against the exact public v8
-artifact. The remaining entrant-controlled values require action outside the
-repository.
+Do not copy v8 evidence into a v9 submission claim. Fill the v9 fields only
+after exact-source deployment and hosted verification. The final three rows
+preserve the latest verified v8 rollback record.
 
 | Field | Final value |
 | --- | --- |
 | Public YouTube demo URL | **TBD — entrant uploads and verifies public visibility** |
 | Primary Codex /feedback Session ID | **TBD — entrant obtains it from the primary build thread** |
-| Exact final v8 deployed source | `fc0b4f5e85095236edf471cad1750e89235e6809` |
-| Final Sites deployment version | Version 8 · `appgprj_6a5cd40f4f5c81919c4fcd84e7ef2709~appgver_decac58e4d6481919b185f9147022827` · deployment `appgdep_6a5e3af13d9481918bbf071f5bb669ac` |
-| Hosted v8 acceptance result and timestamp | PASS · editorial prologue plus desktop/mobile 14-decision routes and route-wide Axe · July 20, 2026 15:16 UTC |
-| Rollback version confirmed for final release | Sites version 7 · `c87603c7ca77c3d086c7d5b09048a52b47720a95` |
-| Production reflection mode and evidence | Deterministic fallback · valid `/api/debrief` returned `mode: "demo"`, two unresolved questions, and three next moves |
+| Exact final v9 deployed source | **TBD — record after exact-source deployment** |
+| Final v9 Sites version and deployment | **TBD — record after deployment** |
+| Hosted v9 acceptance result and timestamp | **TBD — record after hosted matrix** |
+| Production reflection mode and evidence | **TBD — record the visible authored/live label and endpoint response** |
 | Repository public-access or private-sharing confirmation | PASS · signed-out GitHub request returned HTTP `200` |
 | Devpost submission confirmation | **TBD — entrant submits and records it** |
+| Verified v8 rollback source | `fc0b4f5e85095236edf471cad1750e89235e6809` |
+| Verified v8 Sites version | Version 8 · `appgprj_6a5cd40f4f5c81919c4fcd84e7ef2709~appgver_decac58e4d6481919b185f9147022827` · deployment `appgdep_6a5e3af13d9481918bbf071f5bb669ac` |
+| Verified v8 hosted result | PASS · desktop/mobile 14-decision routes and route-wide Axe · July 20, 2026 15:16 UTC |
 
 The primary build thread's /feedback Session ID and the public YouTube URL are
 entrant-controlled requirements. They cannot be inferred from source code,

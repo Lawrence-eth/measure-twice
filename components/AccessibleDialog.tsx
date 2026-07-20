@@ -32,6 +32,7 @@ export type AccessibleDialogProps = {
   titleClassName?: string;
   descriptionClassName?: string;
   contentClassName?: string;
+  contentRef?: RefObject<HTMLDivElement | null>;
   ariaBusy?: boolean;
   testId?: string;
 };
@@ -171,6 +172,7 @@ export function AccessibleDialog({
   titleClassName,
   descriptionClassName,
   contentClassName,
+  contentRef,
   ariaBusy,
   testId,
 }: AccessibleDialogProps) {
@@ -328,7 +330,7 @@ export function AccessibleDialog({
         {description !== undefined && (
           <div id={descriptionId} className={descriptionClassName}>{description}</div>
         )}
-        <div className={contentClassName}>{children}</div>
+        <div ref={contentRef} className={contentClassName}>{children}</div>
       </div>
     </div>,
     document.body,

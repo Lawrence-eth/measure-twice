@@ -23,7 +23,7 @@ const questions = {
   idea: /What should a visitor be able to do from start to finish\?/i,
   tools: /Which tradeoff matters more for your first project\?/i,
   projectHome: /Where should the work survive after this chat closes\?/i,
-  privateBoundary: /Does this finished page need an AI API key\?/i,
+  privateBoundary: /Will visitors need AI inside the finished page\?/i,
   ask: /What should AI do first\?/i,
   approve: /How much should AI do before you review again\?/i,
   build: /The preview is open\. What must happen before this candidate can be trusted\?/i,
@@ -247,7 +247,12 @@ async function observeState(
   ).toHaveCount(0);
   await expect(
     page.getByRole("main").locator("details.p4-canvas-mobile"),
-  ).toHaveAttribute("open", "");
+  ).not.toHaveAttribute("open", "");
+  await expect(
+    page
+      .getByRole("main")
+      .locator("details.p4-canvas-mobile > summary"),
+  ).toContainText(/Project layer updated/i);
 
   if (options.checkViewport) {
     await expectTaskInFirstViewport(page, task, primaryAction);
@@ -273,7 +278,7 @@ async function saveFieldCard(
   action: (typeof checkpointActions)[keyof typeof checkpointActions],
 ) {
   const reveal = page.getByRole("button", {
-    name: "Open the lesson receipt",
+    name: "Save this lesson",
     exact: true,
   });
   await expect(reveal).toBeVisible();
@@ -281,7 +286,9 @@ async function saveFieldCard(
 
   const checkpoint = page.locator(".p5-checkpoint");
   await expect(checkpoint).toBeVisible();
-  await expect(checkpoint).toContainText(/Lesson learned.*added to your build kit/i);
+  await expect(checkpoint).toContainText(
+    /Lesson receipt.*practice saved.*\d+ \/ 8/i,
+  );
   await expect(checkpoint.getByRole("heading", { level: 2 })).toBeFocused();
   await checkpoint.getByRole("button", { name: action, exact: true }).click();
 }
@@ -310,42 +317,62 @@ async function openFresh(page: Page) {
     }),
   ).toBeVisible();
   await expect(
-    page.getByText(/Direct one fictional site from rough idea to checked release/i),
-  ).toBeVisible();
-  await expect(
     page.getByText(
-      /In painting, evidence of an earlier version still visible beneath the finished surface/i,
+      /teaches you how to turn an AI-made preview into a project you can test, trust, and release/i,
     ),
   ).toBeVisible();
   await expect(
-    page.getByText(/how an AI-made preview becomes a project you can test, trust, and release/i),
+    page.getByText(/An earlier version still visible beneath a finished painting/i),
   ).toBeVisible();
-  await expect(
-    page.getByText(
-      /five reusable tools.*first-version brief.*tool map.*AI work agreement.*evidence ladder.*release-and-recovery checklist/is,
-    ),
-  ).toBeVisible();
-  await expect(page.getByText(/15-minute interactive project/i)).toBeVisible();
-  await expect(page.getByText(/No coding.*no API key.*nothing real is published/i)).toBeVisible();
+  await expect(page.getByText(/About 15 minutes/i)).toBeVisible();
+  await expect(page.getByText(/None required/i)).toBeVisible();
+  await expect(page.locator(".p9-folio-nav")).toHaveCount(1);
+  await expect(page.locator(".p9-folio")).toHaveCount(6);
 }
 
-async function startWithIdea(page: Page) {
+async function goToIntroPage(
+  page: Page,
+  actionName: string | RegExp,
+  pageIndex: number,
+) {
+  await page.getByRole("button", { name: actionName }).click();
+  await expect(page.locator(".p9-welcome")).toHaveAttribute(
+    "data-intro-folio",
+    String(pageIndex),
+  );
+  await expect(
+    page.locator(".p9-folio-nav button").nth(pageIndex),
+  ).toHaveAttribute("aria-current", "step");
+}
+
+async function startWithIdea(
+  page: Page,
+  counter?: InteractionCounter,
+) {
   await openFresh(page);
-  await page
-    .getByRole("button", {
-      name: "Test the project yourself",
+  await goToIntroPage(page, /Meet the finished-looking project/i, 1);
+  await goToIntroPage(page, /What did the preview prove\?/i, 2);
+
+  const evidencePage = page.locator("#p9-evidence");
+  await activate(
+    evidencePage.getByRole("button", {
+      name: "Email the organizer",
       exact: true,
-    })
-    .click();
+    }),
+    counter,
+  );
+  await expect(evidencePage).toContainText(
+    /Observed evidence.*Nothing happened.*important path failed/is,
+  );
+
+  await goToIntroPage(page, /Look beneath the surface/i, 3);
+  await goToIntroPage(page, /Learn the directing method/i, 4);
+  await goToIntroPage(page, /Now direct the project/i, 5);
   await page
-    .getByRole("button", { name: "Email the organizer", exact: true })
-    .click();
-  await page
-    .getByRole("button", { name: "Reveal the missing layers", exact: true })
-    .click();
-  await page
+    .locator("#p9-lesson")
     .getByRole("button", {
-      name: /Continue to stop 1.*shape the promise/i,
+      name: "Begin with the first promise",
+      exact: true,
     })
     .click();
   await expectCurrentHeadingFocused(page, /Choose one promise you can keep/i);
@@ -389,7 +416,7 @@ async function chooseRepositoryLane(
   const task = page.getByRole("group", { name: questions.tools });
   const answer = choice(
     task,
-    /Start with visible files and saved history/i,
+    /Visible files \+ saved history/i,
   );
   await observeState(page, "tools", task, answer, options);
   await activate(answer, counter);
@@ -424,7 +451,7 @@ async function completeRepositoryHome(
   await activate(survivalAnswer, counter);
   await page
     .getByRole("button", {
-      name: "Continue · decide whether runtime AI is needed",
+      name: "Continue · decide what visitors actually need",
       exact: true,
     })
     .click();
@@ -434,7 +461,7 @@ async function completeRepositoryHome(
   });
   const privateAnswer = choice(
     privateTask,
-    /No.*page uses approved facts and a normal email link/i,
+    /No.*AI helps build it.*visitors only need facts and email/i,
   );
   await observeState(
     page,
@@ -526,7 +553,7 @@ async function completeBuild(
   const task = page.getByRole("group", { name: questions.build });
   const answer = choice(
     task,
-    /Hand this candidate to a visitor-path check/i,
+    /Try the complete visitor path yourself/i,
   );
   await observeState(page, "build", task, answer, options);
   await expect(page.getByText(/Cycle \d+ of 3/i)).toHaveCount(0);
@@ -558,14 +585,23 @@ async function completeCheck(
   counter?: InteractionCounter,
   options: JourneyOptions = {},
 ) {
-  await expect(
-    page.getByText(/inactive email|broken contact|contact does nothing/i),
-  ).toHaveCount(0);
-
-  const tryTask = page.getByRole("group", { name: questions.tryContact });
-  const tryContact = choice(tryTask, /Email the organizer/i);
-  await observeState(page, "check", tryTask, tryContact, options);
-  await activate(tryContact, counter);
+  const rememberedTask = page.getByRole("group", {
+    name: /You found this failure earlier\. Now record it\./i,
+  });
+  const recordFailure = rememberedTask.getByRole("button", {
+    name: "Continue · write the defect",
+    exact: true,
+  });
+  await observeState(
+    page,
+    "check-remembered-evidence",
+    rememberedTask,
+    recordFailure,
+    options,
+  );
+  await expect(rememberedTask).toContainText(
+    /Evidence carried from the introduction.*important path failed.*Nothing happened/is,
+  );
   await page
     .getByRole("button", {
       name: "Continue · write the defect",
@@ -703,7 +739,7 @@ async function completeImprove(
   });
   const affectedAnswer = choice(
     affectedTask,
-    /Compare the source.*read the changed access fact.*smoke-test the core path/i,
+    /Compare the source.*read the changed access fact.*quickly repeat the core path/i,
   );
   await observeState(
     page,
@@ -721,7 +757,7 @@ async function completeImprove(
   await saveFieldCard(page, checkpointActions.improve);
   await expectCurrentHeadingFocused(
     page,
-    /You now have a method, not merely a finished example/i,
+    /You now have a method to reuse.*The next project makes it yours/i,
   );
 }
 
@@ -730,7 +766,7 @@ async function completeCoreJourney(
   options: JourneyOptions = {},
 ) {
   const counter = { value: 0 };
-  await startWithIdea(page);
+  await startWithIdea(page, counter);
   await chooseSmallestIdea(page, counter, options);
   await chooseRepositoryLane(page, counter, options);
   await completeRepositoryHome(page, counter, options);
@@ -764,7 +800,7 @@ async function keyboardSaveFieldCard(
   await keyboardActivate(
     page,
     page.getByRole("button", {
-      name: "Open the lesson receipt",
+      name: "Save this lesson",
       exact: true,
     }),
   );
@@ -774,110 +810,82 @@ async function keyboardSaveFieldCard(
   );
 }
 
-test("explains why the method matters, reveals the hidden project, and preserves the first consequence", async ({
+test("presents six deliberate pages, turns a claim into evidence, and carries that evidence into the lesson", async ({
   page,
 }) => {
   await page.setViewportSize(MOBILE_VIEWPORT);
   await openFresh(page);
 
-  await expect(page.locator(".p5-audit")).toHaveCount(0);
-  const story = page.locator(".p8-story");
-  const prologueSteps = story.locator(".p8-story__step");
-  await expect(prologueSteps).toHaveCount(4);
-  await keyboardActivate(
-    page,
-    page.getByRole("link", {
-      name: "Scroll to see why finished is not ready",
-      exact: true,
-    }),
-  );
-  await expect(story).toBeFocused();
+  const folios = page.locator(".p9-folio");
+  const nav = page.locator(".p9-folio-nav");
   await expect
-    .poll(async () =>
-      story.evaluate((element) => {
-        const top = element.getBoundingClientRect().top;
-        return top >= 62 && top <= 66;
-      }),
+    .poll(() =>
+      page.evaluate(
+        () => getComputedStyle(document.documentElement).scrollSnapType,
+      ),
     )
-    .toBe(true);
-  await expect(prologueSteps.nth(0)).toContainText(
-    /AI says this page is ready.*cannot prove the project is ready to publish/is,
+    .toMatch(/^y(?: proximity)?$/i);
+  await expect(folios).toHaveCount(6);
+  await expect(nav.getByRole("button", { includeHidden: true })).toHaveCount(6);
+  await expect(nav).toContainText(
+    /What this is.*The claim.*The test.*The layers.*The method.*Your lesson/is,
   );
-  await expect(prologueSteps.nth(1)).toContainText(
-    /Appearance is not behavior.*click revealed how it behaved/is,
+  await expect(
+    page.getByRole("link", { name: /Skip introduction/i }),
+  ).toHaveAttribute("href", "#p9-lesson");
+
+  await goToIntroPage(page, /Meet the finished-looking project/i, 1);
+  const claim = page.locator("#p9-claim");
+  await expect(claim).toContainText(
+    /AI says this page is ready.*Evidence.*untested.*checking begins/is,
   );
-  await expect(prologueSteps.nth(2)).toContainText(
-    /screen is only the top layer.*Promise.*Project home.*Evidence.*Release/is,
-  );
-  await expect(prologueSteps.nth(3)).toContainText(
-    /not mainly a prompting skill.*Shape.*Ground.*Direct.*Prove/is,
-  );
-  await prologueSteps.nth(2).scrollIntoViewIfNeeded();
-  await expect(story).toHaveAttribute("data-active", "2");
-  await expect(page.locator(".p8-specimen")).toHaveAttribute(
-    "data-active",
-    "2",
+  await expect(claim).not.toContainText(/Nothing happened|Observed failure/i);
+
+  await goToIntroPage(page, /What did the preview prove\?/i, 2);
+  const evidence = page.locator("#p9-evidence");
+  const email = evidence.getByRole("button", {
+    name: "Email the organizer",
+    exact: true,
+  });
+  await expect(email).toBeVisible();
+  const emailBox = await email.boundingBox();
+  expect(emailBox, "the introduction test must render a usable action").not.toBeNull();
+  expect(
+    emailBox!.height,
+    "the introduction test action needs a practical touch target",
+  ).toBeGreaterThanOrEqual(44);
+  await email.click();
+  await expect(evidence).toContainText(
+    /Observed evidence.*Nothing happened.*project behaves.*important path failed/is,
   );
 
-  await page
-    .getByRole("button", {
-      name: "Test the project yourself",
-      exact: true,
-    })
-    .click();
-  const audit = page.locator(".p5-audit");
-  await expect(audit).toBeVisible();
-  await expect(
-    audit.getByRole("button", {
-      name: "Email the organizer",
-      exact: true,
-    }),
-  ).toBeVisible();
-  await expect(audit).toContainText(/AI says: ready/i);
-  await audit
-    .getByRole("button", { name: "Email the organizer", exact: true })
-    .click();
-  await expect(audit).toContainText(/Observed failure/i);
-  await expect(audit).toContainText(
-    /preview showed you the surface.*click revealed how it behaved/is,
-  );
-  await audit
-    .getByRole("button", { name: "Reveal the missing layers", exact: true })
-    .click();
-  await expect(audit.getByRole("listitem")).toHaveCount(4);
-  await expect(audit).toContainText(
+  await goToIntroPage(page, /Look beneath the surface/i, 3);
+  const layers = page.locator("#p9-layers");
+  await expect(layers.locator(".p9-layer-ledger > li")).toHaveCount(4);
+  await expect(layers).toContainText(
     /Promise.*Project home.*Evidence.*Release/is,
   );
-  await expect(audit).toContainText(
-    /screen was only the surface.*control these layers/is,
-  );
 
-  await page
-    .getByRole("button", { name: "Back to the introduction", exact: true })
+  await goToIntroPage(page, /Learn the directing method/i, 4);
+  const method = page.locator("#p9-method");
+  const methodChoices = method.getByRole("group", {
+    name: /Explore the four-part method/i,
+  });
+  await expect(methodChoices.getByRole("button")).toHaveCount(4);
+  await methodChoices.getByRole("button", { name: /Prove/i }).click();
+  await expect(method).toContainText(/You decide.*release/is);
+
+  await goToIntroPage(page, /Now direct the project/i, 5);
+  const lesson = page.locator("#p9-lesson");
+  await expect(lesson).toContainText(
+    /14.*decisions.*08.*project stops.*05.*reusable tools/is,
+  );
+  await lesson
+    .getByRole("button", { name: /Preview the 8-stop route/i })
     .click();
-  await expect(
-    page.getByRole("heading", {
-      level: 1,
-      name: /AI can make it look finished/i,
-    }),
-  ).toBeFocused();
-  expect(await page.evaluate(() => window.scrollY)).toBeLessThanOrEqual(1);
-  await page
-    .getByRole("button", {
-      name: "Skip to the evidence check",
-      exact: true,
-    })
-    .click();
-  await expectCurrentHeadingFocused(page, /Your first job: test the project/i);
-  await expect(page.locator(".p5-audit")).toContainText(/AI says: ready/i);
-  await page
-    .getByRole("button", { name: "Back to the introduction", exact: true })
-    .click();
-  await page
-    .getByRole("button", { name: "Preview the four chapters", exact: true })
-    .click();
+
   const overview = page.getByRole("dialog", {
-    name: "The whole journey, one decision at a time",
+    name: /The whole lesson, one decision at a time/i,
   });
   await expect(overview).toContainText(
     /Four chapters.*supportable, recoverable, checked release.*Nothing here edits files or publishes a real site/is,
@@ -886,12 +894,9 @@ test("explains why the method matters, reveals the hidden project, and preserves
   await expect(overview).toContainText(/Ground the work/i);
   await expect(overview).toContainText(/Direct the build/i);
   await expect(overview).toContainText(/Prove the release/i);
-  const overviewStart = overview.getByRole("button", {
-    name: "Start with the first promise",
-  });
-  await overviewStart.scrollIntoViewIfNeeded();
-  await expect(overviewStart).toBeInViewport();
-  await overviewStart.click();
+  await overview
+    .getByRole("button", { name: /Start with the first promise/i })
+    .click();
   await expectCurrentHeadingFocused(page, /Choose one promise you can keep/i);
 
   const task = page.getByRole("group", { name: questions.idea });
@@ -904,31 +909,18 @@ test("explains why the method matters, reveals the hidden project, and preserves
     choice(task, /Read the event details.*email a question/i),
   );
   await expect(
-    page.getByText(/AI workspace helps build.*project home remembers/i),
-  ).toHaveCount(0);
+    page.locator("details.p4-canvas-mobile"),
+  ).not.toHaveAttribute("open", "");
 
   await choice(task, /Donate online/i).click();
-  await expect(task).toBeVisible();
   await expect(projectCanvas(page)).toContainText(
     /payments.*identity|identity.*payments|payment provider.*receipts/is,
   );
-  await expect(projectCanvas(page)).not.toContainText(
-    /Nearby visitor.*approved facts.*email a question/is,
-  );
 
-  await choice(
-    task,
-    /Read the event details.*email a question/i,
-  ).click();
+  await choice(task, /Read the event details.*email a question/i).click();
   await expect(projectCanvas(page)).toContainText(
     /Nearby visitor.*approved facts.*email a question/is,
   );
-  await expect(
-    page.getByRole("button", {
-      name: "Open the lesson receipt",
-      exact: true,
-    }),
-  ).toBeVisible();
   await saveFieldCard(page, checkpointActions.idea);
   await expectCurrentHeadingFocused(page, /Give each tool one job/i);
 });
@@ -936,7 +928,7 @@ test("explains why the method matters, reveals the hidden project, and preserves
 for (const lane of [
   {
     name: "repository",
-    answer: /Start with visible files and saved history/i,
+    answer: /Visible files \+ saved history/i,
     homeAnswer:
       /Files in a project folder, with saved history \(Git\) and an online copy \(GitHub\)/i,
     route:
@@ -945,7 +937,7 @@ for (const lane of [
   },
   {
     name: "hosted",
-    answer: /Start in one browser workspace/i,
+    answer: /One browser workspace/i,
     homeAnswer:
       /A saved hosted project with versions and (?:a )?(?:GitHub connection|export)/i,
     route:
@@ -992,7 +984,7 @@ test("completes 14 meaningful decisions and explicitly saves each of eight lesso
     page.getByText(/Review the four reusable habits/i),
   ).toBeVisible();
   await expect(
-    page.getByText(/Start with visible files and saved history/i),
+    page.getByText(/Visible files \+ saved history/i),
   ).toBeVisible();
   await expect(
     page.getByRole("button", {
@@ -1001,7 +993,7 @@ test("completes 14 meaningful decisions and explicitly saves each of eight lesso
     }),
   ).toBeVisible();
   await expect(
-    page.getByRole("button", { name: "Apply the method to my idea", exact: true }),
+    page.getByRole("button", { name: "Create my V1 brief", exact: true }),
   ).toBeVisible();
   await page.getByText(/Review the four reusable habits/i).click();
   const habits = page.getByRole("list", { name: /Four durable habits/i });
@@ -1103,7 +1095,7 @@ test("shows the real three-step AI plan before approval and practices evidence o
 
   await expect(
     page.getByRole("button", {
-      name: "Open the lesson receipt",
+      name: "Save this lesson",
       exact: true,
     }),
   ).toBeVisible();
@@ -1188,13 +1180,16 @@ test("turns the V1 brief workshop into a four-step, one-group-at-a-time transfer
   await completeCoreJourney(page);
   const debriefRequests: string[] = [];
   page.on("request", (request) => {
-    if (new URL(request.url()).pathname === "/api/debrief") {
+    if (
+      request.method() === "POST" &&
+      new URL(request.url()).pathname === "/api/debrief"
+    ) {
       debriefRequests.push(request.url());
     }
   });
 
   const opener = page.getByRole("button", {
-    name: "Apply the method to my idea",
+    name: "Create my V1 brief",
     exact: true,
   });
   await opener.click();
@@ -1206,6 +1201,13 @@ test("turns the V1 brief workshop into a four-step, one-group-at-a-time transfer
     dialog.getByRole("heading", { name: /Person and useful result/i }),
   ).toBeFocused();
   await expect(dialog.getByRole("textbox")).toHaveCount(3);
+  await dialog.getByRole("button", { name: /Next/i }).click();
+  const firstField = dialog.getByLabel(/Who exactly will use it\?/i);
+  await expect(dialog.getByRole("alert")).toContainText(
+    /Add a specific answer here to continue/i,
+  );
+  await expect(firstField).toHaveAttribute("aria-invalid", "true");
+  await expect(firstField).toBeFocused();
   await dialog
     .getByLabel(/Who exactly will use it\?/i)
     .fill("A community gardener");
@@ -1255,7 +1257,7 @@ test("turns the V1 brief workshop into a four-step, one-group-at-a-time transfer
     .fill("The public contact path works at 390px.");
   await expect(
     dialog.getByRole("group", { name: /Selected tool route/i }),
-  ).toContainText(/Start with visible files and saved history/i);
+  ).toContainText(/Files \+ saved history/i);
   await expectAxeClean(page, '[role="dialog"]');
 
   await dialog
@@ -1270,13 +1272,30 @@ test("turns the V1 brief workshop into a four-step, one-group-at-a-time transfer
   );
   await expect(
     dialog.getByRole("button", {
-      name: /Optional.*get a teaching reflection/i,
+      name: /Optional.*(?:authored example|GPT-5\.6).*reflect/i,
     }),
+  ).toBeVisible();
+  await expect(
+    dialog.getByRole("button", { name: /Edit my answers/i }),
   ).toBeVisible();
   expect(
     debriefRequests,
     "creating the local V1 brief must not call the optional reflection API",
   ).toEqual([]);
+
+  const reflectionAction = dialog.getByRole("button", {
+    name: /Optional.*(?:authored example|GPT-5\.6).*reflect/i,
+  });
+  const expectsAuthoredExample = /authored example/i.test(
+    (await reflectionAction.textContent()) ?? "",
+  );
+  await reflectionAction.click();
+  await expect.poll(() => debriefRequests.length).toBe(1);
+  await expect(dialog.locator(".p9-reflection-mode")).toContainText(
+    expectsAuthoredExample
+      ? /Authored example.*no live AI call/i
+      : /GPT-5\.6 reflection.*live/i,
+  );
 });
 
 test("restores the exact v4 route decisions and current approval substep", async ({
@@ -1349,8 +1368,6 @@ test("persists the Check repair and requires the real retry before advancing", a
   await completeAsk(page);
   await completeBuild(page);
 
-  const tryTask = page.getByRole("group", { name: questions.tryContact });
-  await choice(tryTask, /Email the organizer/i).click();
   await page
     .getByRole("button", {
       name: "Continue · write the defect",
@@ -1378,6 +1395,7 @@ test("persists the Check repair and requires the real retry before advancing", a
         "ask-ai",
         "build",
       ],
+      introFailureObserved: true,
       checkAttemptChoice: "try-contact",
       repairChoice: "bounded-repair",
       checkRetryChoice: null,
@@ -1427,12 +1445,12 @@ test("traps restart focus, cancels predictably, and clears v4 progress only on c
     exact: true,
   });
   const routeDialog = page.getByRole("dialog", {
-    name: /Your eight-stop route/i,
+    name: /Your eight-stop lesson map/i,
   });
   let opener = headerOpener;
 
   if (usesMobileRestart) {
-    await page.locator(".p4-header__center").click();
+    await page.getByRole("button", { name: "Lesson map", exact: true }).click();
     await expect(routeDialog).toBeVisible();
     opener = routeDialog.getByRole("button", {
       name: "Start over",
@@ -1461,7 +1479,7 @@ test("traps restart focus, cancels predictably, and clears v4 progress only on c
   if (usesMobileRestart) {
     await expect(routeDialog).toBeVisible();
     await expect(
-      routeDialog.getByRole("button", { name: /Close route/i }),
+      routeDialog.getByRole("button", { name: /Close lesson map/i }),
     ).toBeFocused();
   } else {
     await expect(opener).toBeFocused();
@@ -1500,22 +1518,21 @@ test("has no automated accessibility violations throughout the core route", asyn
   await openFresh(page);
   await expectAxeClean(page);
 
-  const story = page.locator(".p8-story");
-  const prologueSteps = story.locator(".p8-story__step");
-  for (let index = 0; index < 4; index += 1) {
-    await prologueSteps
-      .nth(index)
-      .evaluate((element) =>
-        element.scrollIntoView({ block: "center", behavior: "instant" }),
-      );
-    await expect(story).toHaveAttribute("data-active", String(index));
-    await expectAxeClean(page);
-  }
+  await goToIntroPage(page, /Meet the finished-looking project/i, 1);
+  await expectAxeClean(page);
+  await goToIntroPage(page, /What did the preview prove\?/i, 2);
+  await expectAxeClean(page);
   await page
-    .locator(".p8-threshold__actions")
-    .evaluate((element) =>
-      element.scrollIntoView({ block: "center", behavior: "instant" }),
-    );
+    .locator("#p9-evidence")
+    .getByRole("button", { name: "Email the organizer", exact: true })
+    .click();
+  await expect(page.locator("#p9-evidence")).toContainText(/Nothing happened/i);
+  await expectAxeClean(page);
+  await goToIntroPage(page, /Look beneath the surface/i, 3);
+  await expectAxeClean(page);
+  await goToIntroPage(page, /Learn the directing method/i, 4);
+  await expectAxeClean(page);
+  await goToIntroPage(page, /Now direct the project/i, 5);
   await expectAxeClean(page);
 
   const count = await completeCoreJourney(page, { checkAxe: true });
@@ -1529,15 +1546,30 @@ test("uses adjacent text—not motion—to explain every layer under reduced mot
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.setViewportSize(MOBILE_VIEWPORT);
   await openFresh(page);
-  const story = page.locator(".p8-story");
-  await story
-    .locator(".p8-story__step")
-    .nth(2)
-    .evaluate((element) =>
-      element.scrollIntoView({ block: "center", behavior: "instant" }),
-    );
-  await expect(story).toHaveAttribute("data-active", "2");
-  await expect(page.locator(".p8-specimen__scan")).toHaveCSS("display", "none");
+  expect(
+    await page.evaluate(
+      () => getComputedStyle(document.documentElement).scrollSnapType,
+    ),
+  ).toBe("none");
+  await goToIntroPage(page, /Meet the finished-looking project/i, 1);
+  await goToIntroPage(page, /What did the preview prove\?/i, 2);
+  await page
+    .locator("#p9-evidence")
+    .getByRole("button", { name: "Email the organizer", exact: true })
+    .click();
+  await goToIntroPage(page, /Look beneath the surface/i, 3);
+  await expect(page.locator(".p9-welcome")).toHaveAttribute(
+    "data-intro-folio",
+    "3",
+  );
+  await expect(page.locator(".p9-layer-ledger > li")).toHaveCount(4);
+  await expect(page.locator("#p9-layers")).toContainText(
+    /Promise.*Project home.*Evidence.*Release/is,
+  );
+  await expect(page.locator(".p8-specimen__scan").first()).toHaveCSS(
+    "display",
+    "none",
+  );
 
   await startWithIdea(page);
   await chooseSmallestIdea(page);
@@ -1583,7 +1615,7 @@ test("uses adjacent text—not motion—to explain every layer under reduced mot
   );
 });
 
-test("never overflows at 320, 390, 768, or 1440 pixels across the full route", async ({
+test("never overflows at 320, 390, 768, or 1440 pixels across the paginated intro and representative full routes", async ({
   page,
 }) => {
   test.setTimeout(300_000);
@@ -1599,43 +1631,64 @@ test("never overflows at 320, 390, 768, or 1440 pixels across the full route", a
     });
     await openFresh(page);
     await expectNoHorizontalOverflow(page);
+    expect(
+      await page.evaluate(
+        () => getComputedStyle(document.documentElement).scrollSnapType,
+      ),
+    ).toMatch(
+      width === 1440 ? /y mandatory/i : /^y(?: proximity)?$/i,
+    );
 
-    const story = page.locator(".p8-story");
-    const prologueSteps = story.locator(".p8-story__step");
-    for (let index = 0; index < 4; index += 1) {
-      const step = prologueSteps.nth(index);
-      await step.evaluate((element) =>
-        element.scrollIntoView({ block: "center", behavior: "instant" }),
-      );
-      await expect(story).toHaveAttribute("data-active", String(index));
+    for (const [action, index] of [
+      [/Meet the finished-looking project/i, 1],
+      [/What did the preview prove\?/i, 2],
+    ] as const) {
+      await goToIntroPage(page, action, index);
       await expectNoHorizontalOverflow(page);
-
-      if (width <= 900) {
-        const [visualBox, headingBox] = await Promise.all([
-          page.locator(".p8-story__visual").boundingBox(),
-          step.getByRole("heading", { level: 2 }).boundingBox(),
-        ]);
-        expect(visualBox).not.toBeNull();
-        expect(headingBox).not.toBeNull();
-        expect(
-          headingBox!.y,
-          `story beat ${index + 1} heading should clear the sticky specimen at ${width}px`,
-        ).toBeGreaterThanOrEqual(visualBox!.y + visualBox!.height + 16);
-      }
     }
+
     await page
-      .locator(".p8-threshold__actions")
-      .evaluate((element) =>
-        element.scrollIntoView({ block: "center", behavior: "instant" }),
-      );
+      .locator("#p9-evidence")
+      .getByRole("button", { name: "Email the organizer", exact: true })
+      .click();
+    for (const [action, index] of [
+      [/Look beneath the surface/i, 3],
+      [/Learn the directing method/i, 4],
+      [/Now direct the project/i, 5],
+    ] as const) {
+      await goToIntroPage(page, action, index);
+      await expectNoHorizontalOverflow(page);
+    }
     await expectNoHorizontalOverflow(page);
 
-    const count = await completeCoreJourney(page, {
-      afterState: async (currentPage) => {
-        await expectNoHorizontalOverflow(currentPage);
-      },
-    });
-    expect(count).toBe(14);
+    if (width <= 768) {
+      const count = await completeCoreJourney(page, {
+        afterState: async (currentPage) => {
+          await expectNoHorizontalOverflow(currentPage);
+        },
+      });
+      expect(count).toBe(14);
+    } else {
+      const begin = page.locator("#p9-lesson").getByRole("button", {
+        name: "Begin with the first promise",
+        exact: true,
+      });
+      await expect(begin).toBeVisible();
+      await expect
+        .poll(() =>
+          begin.evaluate((element) => {
+            const rect = element.getBoundingClientRect();
+            const target = document.elementFromPoint(
+              rect.left + rect.width / 2,
+              rect.top + rect.height / 2,
+            );
+            return Boolean(target && (target === element || element.contains(target)));
+          }),
+        )
+        .toBe(true);
+      await begin.click();
+      await expectCurrentHeadingFocused(page, /Choose one promise you can keep/i);
+    }
     await expectNoHorizontalOverflow(page);
   }
 });
@@ -1643,34 +1696,58 @@ test("never overflows at 320, 390, 768, or 1440 pixels across the full route", a
 test("supports the complete core route with keyboard input alone", async ({
   page,
 }) => {
+  test.setTimeout(300_000);
   await page.setViewportSize(MOBILE_VIEWPORT);
   await openFresh(page);
 
   await keyboardActivate(
     page,
     page.getByRole("button", {
-      name: "Test the project yourself",
-      exact: true,
+      name: /Meet the finished-looking project/i,
+    }),
+  );
+  await keyboardActivate(
+    page,
+    page.getByRole("button", { name: /What did the preview prove\?/i }),
+  );
+  const evidenceHeading = page.locator("#p9-evidence").getByRole("heading", {
+    level: 2,
+    name: /Try the page’s only important action/i,
+  });
+  const evidenceAction = page.locator("#p9-evidence").getByRole("button", {
+    name: "Email the organizer",
+    exact: true,
+  });
+  await expect(evidenceHeading).toBeFocused();
+  await page.keyboard.press("Tab");
+  await expect(evidenceAction).toBeFocused();
+  await page.keyboard.press("Enter");
+  await expect(page.locator("#p9-evidence")).toContainText(
+    /Observed evidence.*Nothing happened/is,
+  );
+  await keyboardActivate(
+    page,
+    page.getByRole("button", {
+      name: /Look beneath the surface/i,
     }),
   );
   await keyboardActivate(
     page,
     page.getByRole("button", {
-      name: "Email the organizer",
-      exact: true,
+      name: /Learn the directing method/i,
     }),
   );
   await keyboardActivate(
     page,
     page.getByRole("button", {
-      name: "Reveal the missing layers",
-      exact: true,
+      name: /Now direct the project/i,
     }),
   );
   await keyboardActivate(
     page,
-    page.getByRole("button", {
-      name: /Continue to stop 1.*shape the promise/i,
+    page.locator("#p9-lesson").getByRole("button", {
+      name: "Begin with the first promise",
+      exact: true,
     }),
   );
 
@@ -1684,7 +1761,7 @@ test("supports the complete core route with keyboard input alone", async ({
   const tools = page.getByRole("group", { name: questions.tools });
   await keyboardActivate(
     page,
-    choice(tools, /Start with visible files and saved history/i),
+    choice(tools, /Visible files \+ saved history/i),
   );
   await keyboardSaveFieldCard(page, checkpointActions.tools);
 
@@ -1699,7 +1776,7 @@ test("supports the complete core route with keyboard input alone", async ({
   await keyboardActivate(
     page,
     page.getByRole("button", {
-      name: "Continue · decide whether runtime AI is needed",
+      name: "Continue · decide what visitors actually need",
       exact: true,
     }),
   );
@@ -1710,7 +1787,7 @@ test("supports the complete core route with keyboard input alone", async ({
     page,
     choice(
       privateBoundary,
-      /No.*page uses approved facts and a normal email link/i,
+      /No.*AI helps build it.*visitors only need facts and email/i,
     ),
   );
   await keyboardSaveFieldCard(page, checkpointActions.projectHome);
@@ -1745,16 +1822,11 @@ test("supports the complete core route with keyboard input alone", async ({
     page,
     choice(
       build,
-      /Hand this candidate to a visitor-path check/i,
+      /Try the complete visitor path yourself/i,
     ),
   );
   await keyboardSaveFieldCard(page, checkpointActions.build);
 
-  const tryContact = page.getByRole("group", { name: questions.tryContact });
-  await keyboardActivate(
-    page,
-    choice(tryContact, /Email the organizer/i),
-  );
   await keyboardActivate(
     page,
     page.getByRole("button", {
@@ -1833,14 +1905,14 @@ test("supports the complete core route with keyboard input alone", async ({
     page,
     choice(
       affectedChecks,
-      /Compare the source.*read the changed access fact.*smoke-test the core path/i,
+      /Compare the source.*read the changed access fact.*quickly repeat the core path/i,
     ),
   );
   await keyboardSaveFieldCard(page, checkpointActions.improve);
 
   await expectCurrentHeadingFocused(
     page,
-    /You now have a method, not merely a finished example/i,
+    /You now have a method to reuse.*The next project makes it yours/i,
   );
   await expectAxeClean(page);
 });

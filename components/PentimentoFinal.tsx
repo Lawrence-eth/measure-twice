@@ -84,6 +84,47 @@ type MirrorResult = {
   nextMoves: string[];
 };
 
+type ReflectionMode = "demo" | "live";
+
+const introFolios = [
+  {
+    id: "orientation",
+    number: "00",
+    shortLabel: "What this is",
+    label: "What Pentimento teaches",
+  },
+  {
+    id: "claim",
+    number: "01",
+    shortLabel: "The claim",
+    label: "Inspect the AI-ready claim",
+  },
+  {
+    id: "evidence",
+    number: "02",
+    shortLabel: "The test",
+    label: "Test the important action",
+  },
+  {
+    id: "layers",
+    number: "03",
+    shortLabel: "The layers",
+    label: "Reveal the hidden project layers",
+  },
+  {
+    id: "method",
+    number: "04",
+    shortLabel: "The method",
+    label: "Learn the four-part method",
+  },
+  {
+    id: "lesson",
+    number: "05",
+    shortLabel: "Your lesson",
+    label: "Begin the interactive field lesson",
+  },
+] as const;
+
 const stageById = Object.fromEntries(
   finalJourney.map((stage) => [stage.id, stage]),
 ) as Record<FinalLearningStage, (typeof finalJourney)[number]>;
@@ -145,6 +186,17 @@ function runViewTransition(
   update: () => void,
   kind: TransitionKind = "choice",
 ) {
+  /*
+   * Scene destinations already own their entrance motion. Capturing the whole
+   * root here would animate the sticky shell a second time and can briefly
+   * expose both screens. Keep native snapshots for local task/canvas changes;
+   * let full scene changes render once.
+   */
+  if (kind === "scene" || kind === "workshop") {
+    update();
+    return;
+  }
+
   const viewDocument = document as ViewTransitionDocument;
   const reducedMotion = preferredScrollBehavior() === "auto";
 
@@ -237,7 +289,9 @@ function ChoiceButtons({
             </span>
             <span className="p6-choice__marker" aria-hidden="true">
               <span className="p6-choice__marker-idle">→</span>
-              <span className="p6-choice__marker-selected">✓</span>
+              <span className="p6-choice__marker-selected">
+                {choice.recommended ? "✓" : "×"}
+              </span>
             </span>
           </button>
         );
@@ -261,21 +315,9 @@ function ChoiceFeedback({
   continueLabel?: string;
   onContinue?: () => void;
 }) {
-  const shellRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!choice || (choice.recommended && !onContinue)) return;
-    const behavior = preferredScrollBehavior();
-    const timer = window.setTimeout(() => {
-      bringIntoViewIfNeeded(shellRef.current);
-    }, behavior === "auto" ? 0 : choice.recommended ? 440 : 340);
-    return () => window.clearTimeout(timer);
-  }, [choice]);
-
   return (
     <div
       className={cx("p6-feedback-shell", choice && "is-visible")}
-      ref={shellRef}
       role="status"
       aria-live="polite"
       aria-atomic="true"
@@ -291,25 +333,14 @@ function ChoiceFeedback({
           >
             <b>{choice.recommended ? successLabel : riskLabel}</b>
             <p>{choice.consequence}</p>
-            <dl className="p7-feedback__details">
-              <div>
-                <dt>Project change</dt>
-                <dd>{choice.canvasChange}</dd>
-              </div>
-              {!choice.recommended && lessonRule && (
-                <div>
-                  <dt>Working rule</dt>
-                  <dd>{lessonRule}</dd>
-                </div>
-              )}
-            </dl>
-            <p className="p7-feedback__guidance">
-              {choice.recommended
-                ? onContinue
-                  ? "The consequence is now visible. Continue when you are ready."
-                  : "Decision complete. Open the lesson receipt below when you are ready."
-                : "Keep this consequence in view, then choose another route to continue."}
+            <p className="p7-feedback__canvas-update">
+              <b>Canvas updated:</b> {choice.canvasChange}
             </p>
+            {!choice.recommended && lessonRule && (
+              <p className="p7-feedback__working-rule">
+                <b>Working rule:</b> {lessonRule}
+              </p>
+            )}
             {choice.recommended && onContinue && continueLabel && (
               <button
                 className="p4-secondary p7-feedback__continue"
@@ -771,9 +802,9 @@ function LastSavedRule({ progress }: { progress: FinalProgress }) {
   return (
     <aside
       className="p5-saved-receipt"
-      aria-label={`${previous.navLabel} lesson added to the build kit`}
+      aria-label={`${previous.navLabel} lesson completed`}
     >
-      <span>Previous lesson saved · {previous.navLabel}</span>
+      <span>Previous lesson · {previous.navLabel}</span>
       <p>{previous.reusableRule}</p>
       <small>{previous.savedLabel}</small>
     </aside>
@@ -1043,9 +1074,9 @@ function ResponsiveProjectCanvas({ progress }: { progress: FinalProgress }) {
       <div className="p4-canvas-desktop">
         <CanvasLens progress={progress} />
       </div>
-      <details className="p4-canvas-mobile" open>
+      <details className="p4-canvas-mobile">
         <summary>
-          <span>Project layers</span>
+          <span>Project layer updated</span>
           <b>{canvasDisclosureLabel(progress.stage)}</b>
         </summary>
         <CanvasLens progress={progress} />
@@ -1107,19 +1138,8 @@ function LessonHandoff({
   onContinue: () => void;
   tone?: "progress" | "observed";
 }) {
-  const handoffRef = useRef<HTMLElement>(null);
-
-  useEffect(() => {
-    const behavior = preferredScrollBehavior();
-    const timer = window.setTimeout(() => {
-      bringIntoViewIfNeeded(handoffRef.current);
-    }, behavior === "auto" ? 0 : 440);
-    return () => window.clearTimeout(timer);
-  }, []);
-
   return (
     <section
-      ref={handoffRef}
       className={cx("p7-handoff", tone === "observed" && "is-observed")}
       aria-label={eyebrow}
     >
@@ -1159,7 +1179,7 @@ function IdeaTask({
         successLabel="A small, complete path"
         riskLabel="Useful later; unsupported in this first version"
         lessonRule={stageById.idea.reusableRule}
-        continueLabel={!receiptReady ? "Open the lesson receipt" : undefined}
+        continueLabel={!receiptReady ? "Save this lesson" : undefined}
         onContinue={!receiptReady ? onRevealReceipt : undefined}
       />
     </TaskShell>
@@ -1196,7 +1216,7 @@ function ToolsTask({
         choice={selected}
         successLabel="A deliberate starter route"
         lessonRule={stageById.tools.reusableRule}
-        continueLabel={!receiptReady ? "Open the lesson receipt" : undefined}
+        continueLabel={!receiptReady ? "Save this lesson" : undefined}
         onContinue={!receiptReady ? onRevealReceipt : undefined}
       />
     </TaskShell>
@@ -1219,9 +1239,9 @@ function ProjectHomeTask({
     return (
       <TaskShell
         id="runtime-ai"
-        eyebrow="Project home chosen · one more decision"
-        question="Does this finished page need an AI API key?"
-        hint="The visitor only reads approved facts and opens a normal email link."
+        eyebrow="Project home chosen · decide what runs for visitors"
+        question="Will visitors need AI inside the finished page?"
+        hint="AI helped build it. Now decide whether the visitor experience itself needs live AI."
       >
         <ChoiceButtons
           choices={privateChoices}
@@ -1239,7 +1259,7 @@ function ProjectHomeTask({
           successLabel="Build-time AI is not runtime AI"
           riskLabel="An unnecessary system was added"
           lessonRule={stageById["project-home"].reusableRule}
-          continueLabel={!receiptReady ? "Open the lesson receipt" : undefined}
+          continueLabel={!receiptReady ? "Save this lesson" : undefined}
           onContinue={!receiptReady ? onRevealReceipt : undefined}
         />
       </TaskShell>
@@ -1281,7 +1301,7 @@ function ProjectHomeTask({
         successLabel="The work has a home"
         riskLabel="The work would disappear with the chat"
         lessonRule={stageById["project-home"].reusableRule}
-        continueLabel={holdingProjectHome ? "Continue · decide whether runtime AI is needed" : undefined}
+        continueLabel={holdingProjectHome ? "Continue · decide what visitors actually need" : undefined}
         onContinue={
           holdingProjectHome
             ? () => onContinueHandoff("runtime-ai")
@@ -1351,7 +1371,7 @@ function AskTask({
           successLabel="One shown step approved"
           riskLabel="Too much work before the next review"
           lessonRule={stageById["ask-ai"].reusableRule}
-          continueLabel={!receiptReady ? "Open the lesson receipt" : undefined}
+          continueLabel={!receiptReady ? "Save this lesson" : undefined}
           onContinue={!receiptReady ? onRevealReceipt : undefined}
         />
       </TaskShell>
@@ -1424,7 +1444,7 @@ function BuildTask({
         successLabel="Correct next action · evidence still pending"
         riskLabel="Evidence is still missing"
         lessonRule="A preview is a candidate—not proof that the visitor path works."
-        continueLabel={!receiptReady ? "Open the lesson receipt" : undefined}
+        continueLabel={!receiptReady ? "Save this lesson" : undefined}
         onContinue={!receiptReady ? onRevealReceipt : undefined}
       />
     </TaskShell>
@@ -1445,7 +1465,7 @@ function ContactPractice({
     <div className="p4-browser p4-browser--practice">
       <div className="p4-browser__bar">
         {context === "public"
-          ? "willow-fix.example · public V4"
+          ? "willow-fix.example · public V4 · build WF-V4-CHECKED"
           : "simulated preview · no email is sent"}
       </div>
       <div className="p4-browser__page">
@@ -1469,7 +1489,9 @@ function ContactPractice({
           {state === "failed"
             ? "Email the organizer · no response"
             : state === "reached"
-              ? "Public path reached ✓"
+              ? context === "public"
+                ? "Public path reached ✓"
+                : "Preview path repeated ✓"
               : "Email the organizer"}
         </button>
       </div>
@@ -1499,7 +1521,7 @@ function CheckTask({
             eyebrow="Observation → repair → proof"
             title="A passing repeat is stronger than a confident report."
             body="The evidence belongs to the checked version because you performed the path after the repair."
-            action="Open the lesson receipt"
+            action="Save this lesson"
             onContinue={onRevealReceipt}
           />
         )}
@@ -1522,6 +1544,29 @@ function CheckTask({
           body="Now describe the observed result, the expected result, and what the repair must preserve."
           action="Continue · write the defect"
           onContinue={() => onContinueHandoff("repair")}
+          tone="observed"
+        />
+      </TaskShell>
+    );
+  }
+
+  if (progress.introFailureObserved && !progress.checkAttemptChoice) {
+    return (
+      <TaskShell
+        id="remembered-contact-result"
+        eyebrow="Evidence carried from the introduction"
+        question="You found this failure earlier. Now record it."
+        hint="The important action produced no result. Preserve that observation before asking AI to repair anything."
+      >
+        <ContactPractice state="failed" />
+        <LessonHandoff
+          eyebrow="Observed · important path failed"
+          title="Nothing happened when you used the email action."
+          body="Turn the observation into a defect: name what happened, what should have happened, and what the repair must preserve."
+          action="Continue · write the defect"
+          onContinue={() =>
+            choose("check", { checkAttemptChoice: "try-contact" })
+          }
           tone="observed"
         />
       </TaskShell>
@@ -1664,7 +1709,7 @@ function GoLiveTask({
             eyebrow="Release verified"
             title="The dashboard and the visitor path now tell the same story."
             body="Hosting finished, V4 was served, and the important public action still worked."
-            action="Open the lesson receipt"
+            action="Save this lesson"
             onContinue={onRevealReceipt}
           />
         )}
@@ -1710,7 +1755,11 @@ function GoLiveTask({
           <div>
             <span>Host dashboard</span>
             <b>Deployment completed</b>
-            <small>Proves the host finished—not that the visitor path works.</small>
+            <code>Build WF-V4-CHECKED · source V4</code>
+            <small>
+              The receipt ties the public build to checked V4. It still does
+              not prove the visitor path works.
+            </small>
           </div>
           <button
             className="p4-primary"
@@ -1740,6 +1789,12 @@ function GoLiveTask({
         question="Which version should go live?"
         hint="Compare what was actually checked. Visual polish and visitor behavior are different evidence."
     >
+      <ol className="p9-version-thread" aria-label="How the project versions changed">
+        <li><span>V1</span><b>Structure</b></li>
+        <li><span>V2</span><b>Email worked</b></li>
+        <li><span>V3</span><b>Phone polish broke it</b></li>
+        <li><span>V4</span><b>Repaired + retested</b></li>
+      </ol>
       <ChoiceButtons
         choices={releaseVersionChoices}
         selected={progress.releaseVersionChoice}
@@ -1778,13 +1833,12 @@ function ImproveTask({
   onContinueHandoff,
   onRevealReceipt,
 }: StageTaskProps) {
-  const [affectedCheckChoice, setAffectedCheckChoice] = useState<string | null>(null);
   const holdingSourceChange = pendingHandoff === "affected-checks";
   const selected = improveChoices.find((choice) => choice.id === progress.improveChoice);
 
   if (progress.improveChoice === "source-then-page" && !holdingSourceChange) {
     const affectedSelected = affectedCheckChoices.find(
-      (choice) => choice.id === affectedCheckChoice,
+      (choice) => choice.id === progress.affectedCheckChoice,
     );
     return (
       <TaskShell
@@ -1795,9 +1849,12 @@ function ImproveTask({
       >
         <ChoiceButtons
           choices={affectedCheckChoices}
-          selected={affectedCheckChoice}
+          selected={progress.affectedCheckChoice}
           onChoose={(id) =>
-            runViewTransition(() => setAffectedCheckChoice(id), "choice")
+            choose("improve", {
+              affectedCheckChoice:
+                id as FinalProgress["affectedCheckChoice"],
+            })
           }
         />
         <ChoiceFeedback
@@ -1807,7 +1864,7 @@ function ImproveTask({
           lessonRule={stageById.improve.reusableRule}
           continueLabel={
             affectedSelected?.recommended && !receiptReady
-              ? "Open the lesson receipt"
+              ? "Save this lesson"
               : undefined
           }
           onContinue={
@@ -1833,7 +1890,10 @@ function ImproveTask({
         onChoose={(id) =>
           choose(
             "improve",
-            { improveChoice: id as FinalProgress["improveChoice"] },
+            {
+              improveChoice: id as FinalProgress["improveChoice"],
+              affectedCheckChoice: null,
+            },
             false,
             id === "source-then-page" ? "affected-checks" : undefined,
           )
@@ -1906,7 +1966,9 @@ function StageCheckpoint({
   const reason = savedDecisionReason(stage, progress);
   return (
     <section className="p5-checkpoint" aria-labelledby={`${stage}-checkpoint-title`}>
-      <span>Lesson learned · added to your build kit</span>
+      <span>
+        Lesson receipt · practice saved · {progress.completedStages.length + 1} / 8
+      </span>
       <h2 id={`${stage}-checkpoint-title`} tabIndex={-1}>
         {stop.reusableRule}
       </h2>
@@ -2058,7 +2120,17 @@ function StageDepth({ progress }: { progress: FinalProgress }) {
   );
 }
 
-function PrologueSpecimen({ activeBeat }: { activeBeat: number }) {
+function PrologueSpecimen({
+  activeBeat,
+  activeMethod = 0,
+  interactive = false,
+  onTest,
+}: {
+  activeBeat: number;
+  activeMethod?: number;
+  interactive?: boolean;
+  onTest?: () => void;
+}) {
   return (
     <div className="p8-specimen" data-active={activeBeat}>
       <div className="p8-specimen__registration" aria-hidden="true">
@@ -2068,7 +2140,10 @@ function PrologueSpecimen({ activeBeat }: { activeBeat: number }) {
       </div>
 
       <div className="p8-specimen__stage">
-        <div className="p8-specimen__layers">
+        <div
+          className="p8-specimen__layers"
+          aria-hidden={activeBeat < 2 ? "true" : undefined}
+        >
           {welcomeAuditLayers.map((layer, index) => (
             <div
               className={cx(
@@ -2097,38 +2172,61 @@ function PrologueSpecimen({ activeBeat }: { activeBeat: number }) {
               Leave with a plan.
             </h3>
             <p>Saturday · West Hall · repairs depend on volunteer availability</p>
-            <div
-              className={cx(
-                "p8-specimen__contact",
-                activeBeat >= 1 && "is-failed",
-              )}
-            >
-              {activeBeat >= 1
-                ? "Email action · nothing happened"
-                : "Email the organizer"}
-            </div>
+            {interactive ? (
+              <button
+                className={cx(
+                  "p8-specimen__contact",
+                  "p9-specimen-action",
+                  activeBeat >= 1 && "is-failed",
+                )}
+                type="button"
+                onClick={onTest}
+                disabled={activeBeat >= 1}
+              >
+                {activeBeat >= 1
+                  ? "Email action · nothing happened"
+                  : "Email the organizer"}
+              </button>
+            ) : (
+              <div
+                className={cx(
+                  "p8-specimen__contact",
+                  activeBeat >= 1 && "is-failed",
+                )}
+              >
+                {activeBeat >= 1
+                  ? "Email action · nothing happened"
+                  : "Email the organizer"}
+              </div>
+            )}
           </div>
         </article>
 
-        <div className="p8-specimen__failure">
+        <div
+          className="p8-specimen__failure"
+          aria-hidden={activeBeat < 1 ? "true" : undefined}
+        >
           <span>Observed evidence</span>
           <b>One important path failed.</b>
           <small>Appearance was a claim. The click produced evidence.</small>
         </div>
 
-        <ol className="p8-specimen__route">
-          {finalChapters.map((chapter) => (
-            <li key={chapter.id}>
+        <ol
+          className="p8-specimen__route"
+          aria-hidden={activeBeat < 3 ? "true" : undefined}
+        >
+          {finalChapters.map((chapter, index) => (
+            <li className={index === activeMethod ? "is-active" : undefined} key={chapter.id}>
               <span>0{chapter.number}</span>
               <b>{chapter.id}</b>
             </li>
           ))}
         </ol>
 
-        <div className="p8-specimen__scan" />
+        <div className="p8-specimen__scan" aria-hidden="true" />
       </div>
 
-      <div className="p8-specimen__meter">
+      <div className="p8-specimen__meter" aria-hidden="true">
         <span>Introduction</span>
         <div>
           {welcomePrologueBeats.map((beat, index) => (
@@ -2382,6 +2480,747 @@ function ScrollPrologue({
           </button>
         </div>
       </section>
+    </div>
+  );
+}
+
+function PaginatedPrologue({
+  headingRef,
+  onEnter,
+  onOverview,
+  onFolioChange,
+  onEvidence,
+}: {
+  headingRef: RefObject<HTMLHeadingElement | null>;
+  onEnter: () => void;
+  onOverview: () => void;
+  onFolioChange: (folio: number) => void;
+  onEvidence: () => void;
+}) {
+  const [activeFolio, setActiveFolio] = useState(0);
+  const [auditStep, setAuditStep] = useState<"surface" | "failed">("surface");
+  const [activeMethod, setActiveMethod] = useState(0);
+  const scrollerRef = useRef<HTMLDivElement>(null);
+  const folioRefs = useRef<Array<HTMLElement | null>>([]);
+  const focusFrameRef = useRef<number | null>(null);
+  const programmaticFolioRef = useRef<number | null>(null);
+  const scrollSettleTimerRef = useRef<number | null>(null);
+
+  const specimenBeat =
+    activeFolio === 3
+      ? 2
+      : activeFolio === 4
+        ? 3
+        : activeFolio === 2 && auditStep === "failed"
+          ? 1
+          : 0;
+
+  useEffect(() => {
+    onFolioChange(activeFolio);
+  }, [activeFolio, onFolioChange]);
+
+  useEffect(() => {
+    if (!scrollerRef.current) return;
+
+    let frame = 0;
+    const syncActiveFolio = () => {
+      frame = 0;
+      if (programmaticFolioRef.current !== null) {
+        setActiveFolio(programmaticFolioRef.current);
+        return;
+      }
+      const headerHeight = window.innerWidth <= 560 ? 64 : 72;
+      const activationLine =
+        headerHeight + (window.innerHeight - headerHeight) * 0.42;
+      const next = folioRefs.current.reduce((current, folio, index) => {
+        if (!folio) return current;
+        return folio.getBoundingClientRect().top <= activationLine
+          ? index
+          : current;
+      }, 0);
+      setActiveFolio((current) => (current === next ? current : next));
+    };
+
+    const scheduleSync = () => {
+      if (frame) return;
+      frame = window.requestAnimationFrame(syncActiveFolio);
+      if (programmaticFolioRef.current !== null) {
+        if (scrollSettleTimerRef.current !== null) {
+          window.clearTimeout(scrollSettleTimerRef.current);
+        }
+        scrollSettleTimerRef.current = window.setTimeout(() => {
+          programmaticFolioRef.current = null;
+          scrollSettleTimerRef.current = null;
+          syncActiveFolio();
+        }, 140);
+      }
+    };
+
+    window.addEventListener("scroll", scheduleSync, { passive: true });
+    window.addEventListener("resize", scheduleSync);
+    syncActiveFolio();
+
+    return () => {
+      window.removeEventListener("scroll", scheduleSync);
+      window.removeEventListener("resize", scheduleSync);
+      if (frame) window.cancelAnimationFrame(frame);
+      if (scrollSettleTimerRef.current !== null) {
+        window.clearTimeout(scrollSettleTimerRef.current);
+      }
+    };
+  }, []);
+
+  useEffect(
+    () => () => {
+      if (focusFrameRef.current !== null) {
+        window.cancelAnimationFrame(focusFrameRef.current);
+      }
+    },
+    [],
+  );
+
+  function scrollToFolio(index: number, focusHeading = true) {
+    const folio = folioRefs.current[index];
+    if (!folio) return;
+
+    programmaticFolioRef.current = index;
+    setActiveFolio(index);
+    folio.scrollIntoView({
+      block: "start",
+      behavior: preferredScrollBehavior(),
+    });
+
+    if (!focusHeading) return;
+    if (focusFrameRef.current !== null) {
+      window.cancelAnimationFrame(focusFrameRef.current);
+    }
+    focusFrameRef.current = window.requestAnimationFrame(() => {
+      folio
+        .querySelector<HTMLElement>("h1, h2")
+        ?.focus({ preventScroll: true });
+      focusFrameRef.current = null;
+    });
+  }
+
+  function testClaim() {
+    if (auditStep === "failed") return;
+    runViewTransition(() => {
+      setAuditStep("failed");
+      onEvidence();
+    }, "canvas");
+  }
+
+  return (
+    <div
+      className="p9-prologue"
+      data-audit={auditStep}
+      data-folio={activeFolio}
+    >
+      {activeFolio > 0 && (
+        <h1 className="p4-visually-hidden">
+          Pentimento — learn to build trustworthy projects with AI
+        </h1>
+      )}
+      <nav className="p9-folio-nav" aria-label="Introduction pages">
+        <ol>
+          {introFolios.map((folio, index) => (
+            <li key={folio.id}>
+              <button
+                aria-current={activeFolio === index ? "step" : undefined}
+                aria-label={`Go to page ${index + 1} of ${introFolios.length}: ${folio.label}`}
+                type="button"
+                onClick={() => scrollToFolio(index)}
+              >
+                <span>{folio.number}</span>
+                <i aria-hidden="true" />
+                <b>{folio.shortLabel}</b>
+              </button>
+            </li>
+          ))}
+        </ol>
+      </nav>
+
+      <aside
+        className="p9-persistent-specimen"
+        data-visible={
+          activeFolio >= 1 && activeFolio <= 4 && activeFolio !== 2
+            ? "true"
+            : "false"
+        }
+        aria-hidden="true"
+      >
+        <PrologueSpecimen
+          activeBeat={specimenBeat}
+          activeMethod={activeMethod}
+        />
+      </aside>
+
+      <div
+        className="p9-folios"
+        ref={scrollerRef}
+        aria-label="Pentimento introduction. Scroll one page at a time."
+      >
+        <section
+          className={cx(
+            "p9-folio",
+            "p9-folio--orientation",
+            activeFolio === 0 && "is-active",
+          )}
+          id="p9-orientation"
+          aria-labelledby="welcome-title"
+          inert={activeFolio === 0 ? undefined : true}
+          ref={(node) => {
+            folioRefs.current[0] = node;
+          }}
+        >
+          <div className="p9-folio__inner p9-orientation">
+            <div className="p9-folio__index" aria-hidden="true">
+              <span>00</span>
+              <i />
+              <span>Orientation</span>
+            </div>
+
+            <div className="p9-orientation__copy">
+              <p className="p4-kicker">{finalOpening.kicker}</p>
+              <h1 id="welcome-title" ref={headingRef} tabIndex={-1}>
+                {finalOpening.promise}
+              </h1>
+              <p className="p9-orientation__answer">
+                {finalOpening.destination}
+              </p>
+              <p className="p9-orientation__explanation">
+                {finalOpening.explanation}
+              </p>
+            </div>
+
+            <aside className="p9-orientation__definition">
+              <span>Pentimento · /ˌpɛntɪˈmɛntoʊ/</span>
+              <p>
+                An earlier version still visible beneath a finished painting.
+              </p>
+              <b>
+                The name is a reminder: every finished surface carries the
+                decisions beneath it.
+              </b>
+            </aside>
+
+            <dl className="p9-orientation__facts">
+              <div>
+                <dt>Time</dt>
+                <dd>About 15 minutes</dd>
+              </div>
+              <div>
+                <dt>Experience</dt>
+                <dd>None required</dd>
+              </div>
+              <div>
+                <dt>You keep</dt>
+                <dd>Five reusable build tools</dd>
+              </div>
+            </dl>
+
+            <button
+              className="p9-next"
+              type="button"
+              onClick={() => scrollToFolio(1)}
+            >
+              <span>
+                Meet the finished-looking project
+                <small>One idea per page</small>
+              </span>
+              <i aria-hidden="true">01</i>
+            </button>
+          </div>
+        </section>
+
+        <section
+          className={cx(
+            "p9-folio",
+            "p9-folio--dark",
+            "p9-folio--claim",
+            activeFolio === 1 && "is-active",
+          )}
+          id="p9-claim"
+          aria-labelledby="p9-claim-title"
+          inert={activeFolio === 1 ? undefined : true}
+          ref={(node) => {
+            folioRefs.current[1] = node;
+          }}
+        >
+          <div className="p9-folio__inner p9-split-folio">
+            <div className="p9-folio__copy">
+              <div className="p9-folio__index" aria-hidden="true">
+                <span>01</span>
+                <i />
+                <span>The claim</span>
+              </div>
+              <p className="p4-kicker">AI build report · “Ready to publish”</p>
+              <h2 id="p9-claim-title" tabIndex={-1}>
+                AI says this page is ready.
+              </h2>
+              <p>
+                The event facts are in place. The email button looks complete.
+                The preview is polished.
+              </p>
+              <div className="p9-inline-specimen" aria-hidden="true">
+                <PrologueSpecimen activeBeat={0} />
+              </div>
+              <aside className="p9-claim-note">
+                <span>AI report</span>
+                <b>Ready to publish</b>
+                <p>Evidence · untested</p>
+              </aside>
+              <p className="p9-margin-note">
+                A claim is where checking begins—not where it ends.
+              </p>
+              <button
+                className="p9-next p9-next--dark"
+                type="button"
+                onClick={() => scrollToFolio(2)}
+              >
+                <span>
+                  What did the preview prove?
+                  <small>Test the important path</small>
+                </span>
+                <i aria-hidden="true">02</i>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <section
+          className={cx(
+            "p9-folio",
+            "p9-folio--dark",
+            "p9-folio--evidence",
+            activeFolio === 2 && "is-active",
+          )}
+          id="p9-evidence"
+          aria-labelledby="p9-evidence-title"
+          inert={activeFolio === 2 ? undefined : true}
+          ref={(node) => {
+            folioRefs.current[2] = node;
+          }}
+        >
+          <div className="p9-folio__inner p9-split-folio">
+            <div className="p9-folio__copy">
+              <div className="p9-folio__index" aria-hidden="true">
+                <span>02</span>
+                <i />
+                <span>The test</span>
+              </div>
+              <p className="p4-kicker">Your first evidence check</p>
+              <h2 id="p9-evidence-title" tabIndex={-1}>
+                Try the page’s only important action.
+              </h2>
+              <p>
+                A visitor should be able to read the details and email the
+                organizer. Select the button in the project specimen.
+              </p>
+
+              <div className="p9-inline-specimen p9-inline-specimen--interactive">
+                <PrologueSpecimen
+                  activeBeat={auditStep === "failed" ? 1 : 0}
+                  interactive
+                  onTest={testClaim}
+                />
+              </div>
+
+              {auditStep === "surface" ? (
+                <aside className="p9-test-instruction">
+                  <span>Your task</span>
+                  <b>Email the organizer</b>
+                  <p>The visible control is part of the test—not the answer.</p>
+                </aside>
+              ) : (
+                <div
+                  className="p9-observation"
+                  role="status"
+                  aria-live="polite"
+                >
+                  <span>Observed evidence</span>
+                  <b>Nothing happened.</b>
+                  <p>
+                    Now you know something the preview could not show: how the
+                    project behaves.
+                  </p>
+                  <small>Observed · important path failed</small>
+                </div>
+              )}
+
+              {auditStep === "failed" && (
+                <button
+                  className="p9-next p9-next--dark"
+                  type="button"
+                  onClick={() => scrollToFolio(3)}
+                >
+                  <span>
+                    Look beneath the surface
+                    <small>Reveal the project layers</small>
+                  </span>
+                  <i aria-hidden="true">03</i>
+                </button>
+              )}
+            </div>
+          </div>
+        </section>
+
+        <section
+          className={cx(
+            "p9-folio",
+            "p9-folio--dark",
+            "p9-folio--layers",
+            activeFolio === 3 && "is-active",
+          )}
+          id="p9-layers"
+          aria-labelledby="p9-layers-title"
+          inert={activeFolio === 3 ? undefined : true}
+          ref={(node) => {
+            folioRefs.current[3] = node;
+          }}
+        >
+          <div className="p9-folio__inner p9-split-folio">
+            <div className="p9-folio__copy">
+              <div className="p9-folio__index" aria-hidden="true">
+                <span>03</span>
+                <i />
+                <span>The underpainting</span>
+              </div>
+              <p className="p4-kicker">The project beneath the page</p>
+              <h2 id="p9-layers-title" tabIndex={-1}>
+                The screen was only the top layer.
+              </h2>
+              <p>
+                A trustworthy project connects four layers.
+              </p>
+
+              <div className="p9-inline-specimen" aria-hidden="true">
+                <PrologueSpecimen activeBeat={2} />
+              </div>
+
+              <ol className="p9-layer-ledger">
+                {welcomeAuditLayers.map((layer, index) => (
+                  <li key={layer.id}>
+                    <span>0{index + 1}</span>
+                    <div>
+                      <b>{layer.label}</b>
+                      <p>{layer.issue}</p>
+                    </div>
+                  </li>
+                ))}
+              </ol>
+
+              <p className="p9-margin-note">
+                Polish can hide these layers. It cannot replace them.
+              </p>
+
+              <button
+                className="p9-next p9-next--dark"
+                type="button"
+                onClick={() => scrollToFolio(4)}
+              >
+                  <span>
+                    Learn the directing method
+                    <small>Practice the judgment beneath the surface</small>
+                </span>
+                <i aria-hidden="true">04</i>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <section
+          className={cx(
+            "p9-folio",
+            "p9-folio--method",
+            activeFolio === 4 && "is-active",
+          )}
+          id="p9-method"
+          aria-labelledby="p9-method-title"
+          inert={activeFolio === 4 ? undefined : true}
+          ref={(node) => {
+            folioRefs.current[4] = node;
+          }}
+        >
+          <div className="p9-folio__inner p9-split-folio">
+            <div className="p9-folio__copy">
+              <div className="p9-folio__index" aria-hidden="true">
+                <span>04</span>
+                <i />
+                <span>The method</span>
+              </div>
+              <p className="p4-kicker">Your role around the AI</p>
+              <h2 id="p9-method-title" tabIndex={-1}>
+                The skill is not prompting. It is judgment.
+              </h2>
+              <p>
+                AI can accelerate the making. You still direct the promise,
+                project home, evidence, and release.
+              </p>
+
+              <div className="p9-inline-specimen" aria-hidden="true">
+                <PrologueSpecimen
+                  activeBeat={3}
+                  activeMethod={activeMethod}
+                />
+              </div>
+
+              <div className="p9-method-explorer">
+                <div
+                  className="p9-method-explorer__tabs"
+                  role="group"
+                  aria-label="Explore the four-part method"
+                >
+                  {finalChapters.map((chapter, index) => (
+                    <button
+                      aria-pressed={activeMethod === index}
+                      aria-controls="p9-method-detail"
+                      key={chapter.id}
+                      type="button"
+                      onClick={() => setActiveMethod(index)}
+                      onFocus={() => setActiveMethod(index)}
+                      onMouseEnter={() => setActiveMethod(index)}
+                    >
+                      <span>0{chapter.number}</span>
+                      <b>{chapter.id}</b>
+                    </button>
+                  ))}
+                </div>
+                <article
+                  className="p9-method-explorer__detail"
+                  id="p9-method-detail"
+                  role="region"
+                  aria-live="polite"
+                  aria-atomic="true"
+                  aria-labelledby="p9-method-detail-title"
+                >
+                  <span>You decide</span>
+                  <h3 id="p9-method-detail-title">
+                    {finalChapters[activeMethod].title}
+                  </h3>
+                  <p>{welcomeOutcomes[activeMethod].detail}</p>
+                </article>
+              </div>
+              <p className="p9-margin-note">
+                The judgment between prompt and publish.
+              </p>
+
+              <button
+                className="p9-next"
+                type="button"
+                onClick={() => scrollToFolio(5)}
+              >
+                <span>
+                  Now direct the project
+                  <small>Move from explanation to practice</small>
+                </span>
+                <i aria-hidden="true">05</i>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <section
+          className={cx(
+            "p9-folio",
+            "p9-folio--lesson",
+            activeFolio === 5 && "is-active",
+          )}
+          id="p9-lesson"
+          aria-labelledby="p9-lesson-title"
+          inert={activeFolio === 5 ? undefined : true}
+          ref={(node) => {
+            folioRefs.current[5] = node;
+          }}
+        >
+          <div className="p9-folio__inner p9-lesson">
+            <div className="p9-folio__index" aria-hidden="true">
+              <span>05</span>
+              <i />
+              <span>The field lesson</span>
+            </div>
+
+            <div className="p9-lesson__heading">
+              <p className="p4-kicker">Learn by directing, not watching</p>
+              <h2 id="p9-lesson-title" tabIndex={-1}>
+                Now direct the project.
+              </h2>
+              <p>
+                Take Willow Fix Day from a rough idea to a checked release. One
+                decision at a time, you will scope it, choose its project home,
+                guide AI, repair{" "}
+                {auditStep === "failed"
+                  ? "the failure you found"
+                  : "an observed failure"}
+                , and verify what goes live.
+              </p>
+            </div>
+
+            <dl className="p9-lesson__facts">
+              <div>
+                <dt>14</dt>
+                <dd>decisions you make</dd>
+              </div>
+              <div>
+                <dt>08</dt>
+                <dd>project stops</dd>
+              </div>
+              <div>
+                <dt>05</dt>
+                <dd>reusable tools you keep</dd>
+              </div>
+            </dl>
+
+            <aside className="p9-lesson__kit">
+              <span>Your build kit</span>
+              <p>{finalOpening.payoff}</p>
+            </aside>
+
+            <div className="p9-lesson__actions">
+              <button className="p4-primary" type="button" onClick={onEnter}>
+                {finalOpening.primaryAction}
+              </button>
+              <p>{finalOpening.reassurance}</p>
+            </div>
+
+            <div className="p9-lesson__overview">
+              <span>Prefer to inspect the complete route first?</span>
+              <button
+                className="p4-text-button"
+                type="button"
+                onClick={onOverview}
+              >
+                {finalOpening.overviewAction}
+              </button>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  );
+}
+
+function PaginatedWelcome({
+  headingRef,
+  onStart,
+  onOverview,
+  onEvidenceObserved,
+}: {
+  headingRef: RefObject<HTMLHeadingElement | null>;
+  onStart: (introFailureObserved: boolean) => void;
+  onOverview: () => void;
+  onEvidenceObserved: () => void;
+}) {
+  const [activeFolio, setActiveFolio] = useState(0);
+  const [failureObserved, setFailureObserved] = useState(false);
+
+  useEffect(() => {
+    const root = document.documentElement;
+    root.classList.add("p9-intro-active");
+    return () => root.classList.remove("p9-intro-active");
+  }, []);
+
+  return (
+    <div
+      className="p4-welcome p6-welcome p9-welcome"
+      data-intro-folio={activeFolio}
+    >
+      <header className="p4-welcome__header p9-welcome-header">
+        <Brand />
+        <div className="p9-welcome-header__progress">
+          <span aria-hidden="true">
+            {String(activeFolio + 1).padStart(2, "0")} / 06
+          </span>
+          <b>{introFolios[activeFolio].shortLabel}</b>
+        </div>
+        <a className="p9-welcome-header__skip" href="#p9-lesson">
+          Skip introduction
+        </a>
+      </header>
+      <main id="main-content" className="p9-main">
+        <PaginatedPrologue
+          headingRef={headingRef}
+          onEnter={() => onStart(failureObserved)}
+          onOverview={onOverview}
+          onFolioChange={setActiveFolio}
+          onEvidence={() => {
+            setFailureObserved(true);
+            onEvidenceObserved();
+          }}
+        />
+      </main>
+    </div>
+  );
+}
+
+function PreparingStudio() {
+  return (
+    <div className="p4-welcome p6-welcome p9-welcome p9-preparing">
+      <header className="p4-welcome__header p9-welcome-header">
+        <Brand />
+        <div className="p9-welcome-header__progress" aria-hidden="true">
+          <span>01 / 06</span>
+          <b>What this is</b>
+        </div>
+        <span className="p9-welcome-header__skip">Interactive field lesson</span>
+      </header>
+      <main className="p9-main" id="main-content">
+        <section
+          className="p9-folio p9-folio--orientation is-active"
+          aria-labelledby="preparing-title"
+        >
+          <div className="p9-folio__inner p9-orientation">
+            <div className="p9-folio__index" aria-hidden="true">
+              <span>00</span>
+              <i />
+              <span>Orientation</span>
+            </div>
+            <div className="p9-orientation__copy">
+              <p className="p4-kicker">{finalOpening.kicker}</p>
+              <h1 id="preparing-title">{finalOpening.promise}</h1>
+              <p className="p9-orientation__answer">
+                {finalOpening.destination}
+              </p>
+              <p className="p9-orientation__explanation">
+                {finalOpening.explanation}
+              </p>
+            </div>
+            <aside className="p9-orientation__definition">
+              <span>Pentimento · /ˌpɛntɪˈmɛntəʊ/</span>
+              <p>An earlier version still visible beneath a finished painting.</p>
+              <b>
+                The name is a reminder: every finished surface carries the
+                decisions beneath it.
+              </b>
+            </aside>
+            <dl className="p9-orientation__facts">
+              <div>
+                <dt>Time</dt>
+                <dd>About 15 minutes</dd>
+              </div>
+              <div>
+                <dt>Experience</dt>
+                <dd>None required</dd>
+              </div>
+              <div>
+                <dt>You keep</dt>
+                <dd>Five reusable build tools</dd>
+              </div>
+            </dl>
+            <div className="p9-next p9-preparing__status" role="status">
+              <span>
+                Preparing the field lesson
+                <small>One useful decision per page</small>
+              </span>
+              <i aria-hidden="true">···</i>
+            </div>
+            <noscript className="p9-preparing__noscript">
+              This interactive lesson needs JavaScript. Enable it and reload;
+              no account is required.
+            </noscript>
+          </div>
+        </section>
+      </main>
     </div>
   );
 }
@@ -2700,21 +3539,21 @@ function JourneyHeader({
   return (
     <>
       <header className="p4-header">
-        <Brand onClick={onRoute} />
-        <button className="p4-header__center" type="button" onClick={onRoute}>
+        <Brand />
+        <div className="p4-header__center" aria-label="Current lesson position">
           <span className="p7-header-state" key={progress.stage}>
             <span>
               {progress.stage === "completion"
-                ? "Route complete"
+                ? "Lesson complete"
                 : `${String(currentNumber).padStart(2, "0")} / 08`}
             </span>
             <b>{stageLabel(progress.stage)}</b>
             <small>{chapter.title}</small>
           </span>
-        </button>
+        </div>
         <div className="p4-header__actions">
           <button type="button" onClick={onPlaybook}>Build kit</button>
-          <button type="button" onClick={onRoute}>Route</button>
+          <button type="button" onClick={onRoute}>Lesson map</button>
           <button ref={restartRef} type="button" onClick={onRestart}>Start over</button>
         </div>
       </header>
@@ -2759,18 +3598,19 @@ function Completion({
       <div className="p4-complete__hero">
         <p className="p4-kicker">Eight layers · one complete path</p>
         <h1 ref={headingRef} tabIndex={-1}>
-          You now have a method,{" "}
-          <em>not merely a finished example.</em>
+          You now have a method to reuse.{" "}
+          <em>The next project makes it yours.</em>
         </h1>
         <p>
-          You can turn an idea into a bounded brief, direct AI one visible step
-          at a time, prove the important path, and release a version you can recover.
+          You practiced turning an idea into a bounded brief, directing AI one
+          visible step at a time, proving the important path, and releasing a
+          version you can recover.
         </p>
         <LastSavedRule progress={progress} />
       </div>
       <div className="p4-complete__actions">
         <button className="p4-primary" type="button" onClick={onMirror}>
-          Apply the method to my idea
+          Create my V1 brief
         </button>
         <button className="p4-text-button p7-completion-kit" type="button" onClick={onPlaybook}>
           Open my build kit
@@ -2778,8 +3618,8 @@ function Completion({
       </div>
       <section className="p6-capabilities" aria-labelledby="capabilities-title">
         <div>
-          <span>Transfer check</span>
-          <h2 id="capabilities-title">What you can now direct</h2>
+          <span>Method recap</span>
+          <h2 id="capabilities-title">What this project taught you to direct</h2>
         </div>
         <ol>
           <li><span>01</span><b>Shape a first version one person can finish</b></li>
@@ -2834,7 +3674,7 @@ function RouteDialog({
   return (
     <AccessibleDialog
       open={open}
-      title={progress.started ? "Your eight-stop route" : "The whole journey, one decision at a time"}
+      title={progress.started ? "Your eight-stop lesson map" : "The whole lesson, one decision at a time"}
       description={
         progress.started
           ? "Only the current stop asks for attention. Completed stops remain available for review."
@@ -2848,7 +3688,7 @@ function RouteDialog({
       descriptionClassName="p4-dialog__description"
       contentClassName="p4-dialog__content"
     >
-      <button className="p4-dialog__close" type="button" onClick={onClose} aria-label="Close route">×</button>
+      <button className="p4-dialog__close" type="button" onClick={onClose} aria-label="Close lesson map">×</button>
       {!progress.started ? (
         <>
           <div className="p4-overview-phases">
@@ -2880,7 +3720,7 @@ function RouteDialog({
       ) : (
         <>
           <div className="p6-route-status" aria-live="polite">
-            <span>Build-kit notes saved</span>
+            <span>Lessons completed</span>
             <b>{progress.completedStages.length} / {finalJourney.length}</b>
           </div>
           <ol className="p4-route-sheet">
@@ -3000,7 +3840,7 @@ function playbookDetailFor(
         actions: [
           "Release the exact checked version and keep the last known working version pinned.",
           "Open the public address fresh and repeat the core path.",
-          "For updates, change the approved source, run affected checks, then one core-path smoke check.",
+          "For updates, change the approved source, run affected checks, then quickly repeat one core path.",
         ],
         proof: "The release card names exact version, public check, known limit, and restore action.",
         template:
@@ -3186,6 +4026,10 @@ const mirrorSteps: ReadonlyArray<{
   { title: "Finish line and starter route", fields: ["doneWhen"] },
 ];
 
+const mirrorFieldKeys: ReadonlyArray<
+  Exclude<TeachingMirrorFieldKey, "toolRoute">
+> = mirrorSteps.flatMap((mirrorStep) => mirrorStep.fields);
+
 const mirrorPlaceholders: Record<Exclude<TeachingMirrorFieldKey, "toolRoute">, string> = {
   person: "Write one specific kind of person",
   situation: "Name the moment or decision",
@@ -3231,18 +4075,30 @@ function MirrorDialog({
   onProgress: (patch: Partial<FinalProgress>) => void;
 }) {
   const [result, setResult] = useState<MirrorResult | null>(null);
+  const [reflectionMode, setReflectionMode] =
+    useState<ReflectionMode>("demo");
+  const [resultMode, setResultMode] = useState<ReflectionMode | null>(null);
   const [status, setStatus] = useState<"idle" | "loading" | "error">("idle");
   const [briefReady, setBriefReady] = useState(false);
   const [copyStatus, setCopyStatus] = useState("");
   const [stepDirection, setStepDirection] = useState<"forward" | "back">("forward");
+  const [validationField, setValidationField] =
+    useState<Exclude<TeachingMirrorFieldKey, "toolRoute"> | null>(null);
+  const [validationMessage, setValidationMessage] = useState("");
   const stepHeadingRef = useRef<HTMLHeadingElement>(null);
   const briefHeadingRef = useRef<HTMLHeadingElement>(null);
+  const dialogContentRef = useRef<HTMLDivElement>(null);
+  const fieldRefs = useRef<
+    Partial<
+      Record<
+        Exclude<TeachingMirrorFieldKey, "toolRoute">,
+        HTMLInputElement | HTMLTextAreaElement
+      >
+    >
+  >({});
   const step = progress.mirrorStep;
   const stepData = mirrorSteps[step - 1];
   const route = progress.mirrorDraft.toolRoute || progress.toolChoice || "repository";
-  const fieldsReady = stepData.fields.every(
-    (field) => progress.mirrorDraft[field].trim().length >= 8,
-  );
   const briefCopy = [
     `PERSON: ${progress.mirrorDraft.person.trim()}`,
     `SITUATION: ${progress.mirrorDraft.situation.trim()}`,
@@ -3258,30 +4114,121 @@ function MirrorDialog({
   useEffect(() => {
     if (!open) {
       setResult(null);
+      setResultMode(null);
       setStatus("idle");
       setBriefReady(false);
       setCopyStatus("");
+      setValidationField(null);
+      setValidationMessage("");
+      return;
     }
+
+    const controller = new AbortController();
+    setReflectionMode("demo");
+    fetch("/api/debrief", {
+      method: "GET",
+      cache: "no-store",
+      signal: controller.signal,
+    })
+      .then(async (response) => {
+        const payload = (await response.json()) as { mode?: ReflectionMode };
+        if (response.ok && (payload.mode === "demo" || payload.mode === "live")) {
+          setReflectionMode(payload.mode);
+        }
+      })
+      .catch(() => {
+        // Demo is the conservative label when mode discovery is unavailable.
+      });
+
+    return () => controller.abort();
   }, [open]);
 
   useEffect(() => {
     if (!open) return;
     const frame = window.requestAnimationFrame(() => {
       const target = briefReady ? briefHeadingRef.current : stepHeadingRef.current;
+      if (dialogContentRef.current) dialogContentRef.current.scrollTop = 0;
       target?.focus({ preventScroll: true });
-      bringIntoViewIfNeeded(target ?? null);
     });
     return () => window.cancelAnimationFrame(frame);
   }, [briefReady, open, step]);
+
+  useEffect(() => {
+    if (!open || !validationField) return;
+    const frame = window.requestAnimationFrame(() => {
+      const target = fieldRefs.current[validationField];
+      target?.focus({ preventScroll: true });
+      target?.scrollIntoView({
+        behavior: preferredScrollBehavior(),
+        block: "center",
+      });
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [open, step, validationField]);
 
   function updateDraft(field: keyof FinalMirrorDraft, value: string) {
     onProgress({
       mirrorDraft: { ...progress.mirrorDraft, [field]: value },
     });
+    setValidationField(null);
+    setValidationMessage("");
+  }
+
+  function firstIncomplete(
+    fields: ReadonlyArray<Exclude<TeachingMirrorFieldKey, "toolRoute">>,
+  ) {
+    return fields.find(
+      (field) => progress.mirrorDraft[field].trim().length < 2,
+    );
+  }
+
+  function showIncomplete(
+    field: Exclude<TeachingMirrorFieldKey, "toolRoute">,
+  ) {
+    setValidationField(field);
+    setValidationMessage("Add a specific answer here to continue.");
+  }
+
+  function advanceWorkshop() {
+    const incomplete = firstIncomplete(stepData.fields);
+    if (incomplete) {
+      showIncomplete(incomplete);
+      return;
+    }
+
+    setStepDirection("forward");
+    setValidationMessage("");
+    runViewTransition(() => {
+      onProgress({
+        mirrorStep: (step + 1) as 1 | 2 | 3 | 4,
+      });
+    }, "workshop");
+  }
+
+  function createBrief() {
+    const incomplete = firstIncomplete(mirrorFieldKeys);
+    if (incomplete) {
+      const incompleteStep =
+        mirrorSteps.findIndex((mirrorStep) =>
+          mirrorStep.fields.includes(incomplete),
+        ) + 1;
+      setStepDirection(incompleteStep < step ? "back" : "forward");
+      if (incompleteStep !== step) {
+        onProgress({ mirrorStep: incompleteStep as 1 | 2 | 3 | 4 });
+      }
+      showIncomplete(incomplete);
+      return;
+    }
+
+    setValidationMessage("");
+    runViewTransition(() => setBriefReady(true), "workshop");
   }
 
   async function requestMirror() {
-    if (!fieldsReady) return;
+    if (firstIncomplete(mirrorFieldKeys)) {
+      setStatus("error");
+      return;
+    }
     setStatus("loading");
     const draft = progress.mirrorDraft;
     try {
@@ -3303,9 +4250,17 @@ function MirrorDialog({
           },
         }),
       });
-      const payload = await response.json() as { result?: MirrorResult };
+      const payload = await response.json() as {
+        mode?: ReflectionMode;
+        result?: MirrorResult;
+      };
       if (!response.ok || !payload.result) throw new Error("No reflection returned");
       setResult(payload.result);
+      setResultMode(
+        payload.mode === "live" || payload.mode === "demo"
+          ? payload.mode
+          : "demo",
+      );
       setStatus("idle");
     } catch {
       setStatus("error");
@@ -3331,10 +4286,16 @@ function MirrorDialog({
       initialFocusRef={stepHeadingRef}
       ariaBusy={status === "loading"}
       backdropClassName="p4-dialog-backdrop"
-      dialogClassName="p4-dialog"
+      dialogClassName={cx(
+        "p4-dialog",
+        "p9-mirror-dialog",
+        !briefReady && "is-wizard",
+        (step > 1 || briefReady) && "is-condensed",
+      )}
       titleClassName="p4-dialog__title"
       descriptionClassName="p4-dialog__description"
       contentClassName="p4-dialog__content"
+      contentRef={dialogContentRef}
     >
       <button className="p4-dialog__close" type="button" onClick={onClose} aria-label="Close V1 brief workshop">×</button>
       {briefReady ? (
@@ -3354,14 +4315,38 @@ function MirrorDialog({
                 disabled={status === "loading"}
                 onClick={requestMirror}
               >
-                {status === "loading" ? "Reflecting…" : "Optional · get a teaching reflection"}
+                {status === "loading"
+                  ? reflectionMode === "live"
+                    ? "Asking GPT-5.6…"
+                    : "Opening the example…"
+                  : reflectionMode === "live"
+                    ? "Optional · ask GPT-5.6 to reflect"
+                    : "Optional · see an authored example reflection"}
               </button>
             )}
+            <button
+              className="p4-tertiary"
+              type="button"
+              onClick={() => {
+                setResult(null);
+                setResultMode(null);
+                setStatus("idle");
+                setCopyStatus("");
+                setBriefReady(false);
+              }}
+            >
+              Edit my answers
+            </button>
           </div>
           <p role="status" aria-live="polite">{copyStatus}</p>
           {status === "error" && <p className="p4-feedback is-risk" role="alert">The optional reflection could not load. Your complete brief is still available above.</p>}
           {result && (
             <div className="p4-mirror-result">
+              <p className={cx("p9-reflection-mode", resultMode === "live" && "is-live")}>
+                {resultMode === "live"
+                  ? "GPT-5.6 reflection · live"
+                  : "Authored example · deterministic, no live AI call"}
+              </p>
               <article><span>Clear strength</span><p>{result.clearStrength}</p></article>
               <article><span>Questions still open</span><ul>{result.unresolvedAssumptions.map((item) => <li key={item}>{item}</li>)}</ul></article>
               <article><span>Keep out of V1</span><p><b>{result.featureToPostpone.feature}</b> — {result.featureToPostpone.reason}</p></article>
@@ -3420,15 +4405,37 @@ function MirrorDialog({
                   {mirrorLabels[field]}
                   {step === 1 ? (
                     <input
+                      ref={(element) => {
+                        fieldRefs.current[field] = element ?? undefined;
+                      }}
                       type="text"
                       value={progress.mirrorDraft[field]}
                       placeholder={mirrorPlaceholders[field]}
+                      aria-invalid={
+                        validationField === field ? "true" : undefined
+                      }
+                      aria-describedby={
+                        validationField === field
+                          ? "p9-workshop-validation"
+                          : undefined
+                      }
                       onChange={(event) => updateDraft(field, event.target.value)}
                     />
                   ) : (
                     <textarea
+                      ref={(element) => {
+                        fieldRefs.current[field] = element ?? undefined;
+                      }}
                       value={progress.mirrorDraft[field]}
                       placeholder={mirrorPlaceholders[field]}
+                      aria-invalid={
+                        validationField === field ? "true" : undefined
+                      }
+                      aria-describedby={
+                        validationField === field
+                          ? "p9-workshop-validation"
+                          : undefined
+                      }
                       onChange={(event) => updateDraft(field, event.target.value)}
                       rows={4}
                     />
@@ -3440,6 +4447,16 @@ function MirrorDialog({
                 </label>
               ))}
             </div>
+            <p
+              className={cx(
+                "p9-workshop-validation",
+                validationMessage && "is-visible",
+              )}
+              id="p9-workshop-validation"
+              role={validationMessage ? "alert" : undefined}
+            >
+              {validationMessage}
+            </p>
             {step === 4 && (
               <fieldset className="p6-wizard-route">
                 <legend>Choose a starter route</legend>
@@ -3452,7 +4469,16 @@ function MirrorDialog({
                       key={choice.id}
                       onClick={() => updateDraft("toolRoute", choice.id)}
                     >
-                      <b>{choice.label}</b>
+                      <b>
+                        {choice.id === "hosted"
+                          ? "Browser workspace"
+                          : "Files + saved history"}
+                      </b>
+                      <small>
+                        {choice.id === "hosted"
+                          ? "Fastest first preview; verify version history, export, ownership, limits, and cost."
+                          : "More setup and a separate publishing step; clearer file ownership and recovery."}
+                      </small>
                     </button>
                   ))}
                 </div>
@@ -3479,15 +4505,7 @@ function MirrorDialog({
               <button
                 className="p4-primary"
                 type="button"
-                disabled={!fieldsReady}
-                onClick={() =>
-                  runViewTransition(() => {
-                    setStepDirection("forward");
-                    onProgress({
-                      mirrorStep: (step + 1) as 1 | 2 | 3 | 4,
-                    });
-                  }, "workshop")
-                }
+                onClick={advanceWorkshop}
               >
                 Next
               </button>
@@ -3495,10 +4513,7 @@ function MirrorDialog({
               <button
                 className="p4-primary"
                 type="button"
-                disabled={!fieldsReady}
-                onClick={() =>
-                  runViewTransition(() => setBriefReady(true), "workshop")
-                }
+                onClick={createBrief}
               >
                 Create my V1 brief
               </button>
@@ -3562,6 +4577,7 @@ export function PentimentoFinal() {
   const [receiptReady, setReceiptReady] = useState(false);
   const [taskRevision, setTaskRevision] = useState(0);
   const [checkpointRevision, setCheckpointRevision] = useState(0);
+  const [introFailureObserved, setIntroFailureObserved] = useState(false);
   const [announcement, setAnnouncement] = useState("");
   const appRootRef = useRef<HTMLDivElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
@@ -3697,11 +4713,14 @@ export function PentimentoFinal() {
     setProgress((current) => ({ ...current, ...patch }));
   }
 
-  function begin() {
+  function begin(introFailureObserved = false) {
     runViewTransition(() => {
       setPendingHandoff(null);
       setReceiptReady(false);
-      setProgress((current) => startFinalJourney(current));
+      setProgress((current) => ({
+        ...startFinalJourney(current),
+        introFailureObserved,
+      }));
       setResumePending(false);
       setAnnouncement("Idea opened. Choose one useful finish for the first visitor.");
     }, "scene");
@@ -3718,6 +4737,7 @@ export function PentimentoFinal() {
     setMirrorOpen(false);
     setPendingHandoff(null);
     setReceiptReady(false);
+    setIntroFailureObserved(false);
     setAnnouncement("Progress removed. The journey is ready to begin again.");
   }
 
@@ -3745,7 +4765,7 @@ export function PentimentoFinal() {
 
   let content: React.ReactNode;
   if (!hydrated) {
-    content = <div className="p4-loading">Preparing the studio…</div>;
+    content = <PreparingStudio />;
   } else if (resumePending) {
     content = (
       <ResumeWelcome
@@ -3760,10 +4780,11 @@ export function PentimentoFinal() {
     );
   } else if (!progress.started || progress.stage === "welcome") {
     content = (
-      <Welcome
+      <PaginatedWelcome
         headingRef={headingRef}
         onStart={begin}
         onOverview={() => setRouteOpen(true)}
+        onEvidenceObserved={() => setIntroFailureObserved(true)}
       />
     );
   } else {
@@ -3879,7 +4900,7 @@ export function PentimentoFinal() {
           setRestartFromRoute(true);
           setRestartOpen(true);
         }}
-        onStart={begin}
+        onStart={() => begin(introFailureObserved)}
       />
       <PlaybookDialog
         open={playbookOpen}

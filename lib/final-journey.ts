@@ -63,14 +63,14 @@ export const finalOpening = {
   kicker: "An interactive field lesson for first-time AI builders",
   promise: "AI can make it look finished.",
   destination:
-    "Pentimento teaches you how an AI-made preview becomes a project you can test, trust, and release.",
+    "Pentimento teaches you how to turn an AI-made preview into a project you can test, trust, and release.",
   explanation:
-    "Direct one fictional site from rough idea to checked release. Define its first version, give the work a durable home, guide AI in bounded steps, test what it built, repair what fails, and prove the published result.",
+    "Direct one fictional site from idea to a checked public version—without writing code.",
   payoff:
-    "Finish with five reusable tools: a first-version brief, tool map, AI work agreement, evidence ladder, and release-and-recovery checklist.",
-  reassurance: "No coding · no API key · nothing real is published",
-  primaryAction: "Test the project yourself",
-  overviewAction: "Preview the four chapters",
+    "Finish with five reusable tools: a V1 brief, tool map, AI work agreement, evidence ladder, and release-and-recovery card.",
+  reassurance: "Fictional project · no email sent · nothing published",
+  primaryAction: "Begin with the first promise",
+  overviewAction: "Preview the 8-stop route",
 } as const;
 
 export const welcomePrologueBeats = [
@@ -116,23 +116,22 @@ export const welcomeAuditLayers = [
   {
     id: "promise",
     label: "Promise",
-    issue: "No one defined the one thing a visitor must be able to finish.",
+    issue: "The one result this version must finish.",
   },
   {
     id: "custody",
     label: "Project home",
-    issue: "The files and version history need a durable home outside the chat.",
+    issue: "The files and history you can recover.",
   },
   {
     id: "evidence",
     label: "Evidence",
-    issue: "No one tried the page’s most important action.",
+    issue: "What a person actually tried and observed.",
   },
   {
     id: "release",
     label: "Release",
-    issue:
-      "No one recorded which tested version should go live—or which version to restore if it fails.",
+    issue: "The exact checked version that is live—and the version you can restore.",
   },
 ] as const;
 
@@ -216,7 +215,7 @@ export const ideaChoices = [
 export const toolChoices = [
   {
     id: "hosted",
-    label: "Start in one browser workspace",
+    label: "One browser workspace—fastest preview; verify versions and export",
     consequence:
       "This is the fastest route to a first preview, but more of the project depends on one service. Check version history, export, ownership, limits, and cost.",
     canvasChange: "Connects a hosted workspace to saved versions and a host.",
@@ -224,7 +223,7 @@ export const toolChoices = [
   },
   {
     id: "repository",
-    label: "Start with visible files and saved history",
+    label: "Visible files + saved history—more setup; clearer ownership and recovery",
     consequence:
       "This route makes files and recoverable history clearer, but adds local setup and a separate publishing step.",
     canvasChange: "Connects a repository-aware workspace to Git, GitHub, and a host.",
@@ -262,7 +261,7 @@ export const secretChoices = [
   },
   {
     id: "private-env",
-    label: "No—the page uses approved facts and a normal email link",
+    label: "No—AI helps build it; visitors only need facts and email",
     consequence:
       "AI helps build the project, but visitors do not need an AI response. This version needs no AI API key.",
     canvasChange: "Keeps runtime AI outside the first version.",
@@ -327,7 +326,7 @@ export const buildEvidenceChoices = [
   },
   {
     id: "full-evidence",
-    label: "Hand this candidate to a visitor-path check",
+    label: "Try the complete visitor path yourself",
     consequence:
       "Correct next action. The preview proves appearance; human-path evidence is still pending.",
     canvasChange: "Marks the preview as a candidate awaiting a visitor-path check.",
@@ -444,7 +443,7 @@ export const improveChoices = [
 export const affectedCheckChoices = [
   {
     id: "affected-plus-smoke",
-    label: "Compare the source, read the changed access fact, then smoke-test the core path",
+    label: "Compare the source, read the changed access fact, then quickly repeat the core path",
     consequence:
       "The checks follow the dependency: source first, affected reading second, one core-path check for accidental breakage.",
     canvasChange: "Adds three targeted checks to the V5 update record.",
@@ -933,7 +932,7 @@ export const updateArtifact = {
   affectedChecks: [
     "Compare the new wording with docs/brief.md.",
     "Confirm venue and access details are easy to find together.",
-    "Run the affected checks, then repeat one core visitor-path smoke check at 390px and by keyboard.",
+    "Run the affected checks, then quickly repeat one core visitor path at 390px and by keyboard.",
   ],
   savedVersion: "V5 · Step-free entrance",
 } as const;

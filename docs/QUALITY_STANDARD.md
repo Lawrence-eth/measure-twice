@@ -1,8 +1,8 @@
-# Pentimento v8 quality standard
+# Pentimento v9 quality standard
 
 This is the acceptance contract for the current OpenAI Build Week candidate.
 Pentimento is ready only when the product follows the careful build discipline
-it teaches. A passing result from v1–v7 is not evidence for v8.
+it teaches. A passing result from v1–v8 is not evidence for v9.
 
 ## Product truth
 
@@ -17,38 +17,36 @@ it teaches. A passing result from v1–v7 is not evidence for v8.
   coding knowledge.
 - One completed journey is practice, not proof of mastery.
 
-## Editorial prologue and worked evidence check
+## Six-folio opening and evidence continuity
 
 - A new learner can say what Pentimento is, why it matters, what they will make,
   and what to do first before encountering the curriculum controls.
 - The opening names the approximate duration, no-code/no-setup safety boundary,
   and take-home artifacts.
-- The opening uses normal document scrolling; it never hijacks the wheel,
-  requires a scrub gesture, or prevents reverse scrolling.
-- Four semantic beats—Claim, Observation, Underpainting, and Method—remain
-  readable without animation and change one persistent project artifact.
-- Desktop uses a side-by-side sticky artifact. Tablet and mobile keep the
-  artifact above the current beat without covering its heading.
-- The scroll cue transfers keyboard focus to the story at a safe position
-  beneath the sticky header.
-- The dominant action is **Test the project yourself**; it opens the worked
-  evidence check instead of bypassing it.
-- **Skip to the evidence check** is keyboard-operable, resets scroll safely,
-  and focuses the evidence-check heading.
-- **Preview the four chapters** is physically and visually separated and opens
-  the secondary overview with **Start with the first promise** as its final
-  action.
-- The worked inspection introduces Willow Fix Day and its one visitor goal
-  before asking for action.
-- The learner selects **Email the organizer** and visibly observes **Nothing
-  happened** before the lesson explains why.
-- **Reveal the missing layers** exposes four text-labelled layers: Promise,
-  Project home, Evidence, and Release.
-- The spectral reveal states that the screen is the surface and building means
-  directing and checking the layers beneath it.
-- **Continue to stop 1 · shape the promise** begins the route after the reveal.
-- The optional four-chapter overview explains the route without showing every
-  future control.
+- The opening contains exactly six semantic pages: What this is, The claim,
+  The test, The layers, The method, and Your lesson.
+- The document root owns scrolling; no nested panel traps the wheel, touch,
+  keyboard, reverse scroll, or focus.
+- Mandatory page settlement applies only to tall fine-pointer layouts. Touch
+  uses proximity. Short, zoomed, and reduced-motion layouts use normal scroll.
+- The six-step rail has meaningful names and changes current state only after
+  the next page’s prose crosses the reading line.
+- Desktop uses a persistent side specimen for the middle pages. Tablet and
+  mobile use a purpose-built inline specimen that never covers headings.
+- The claim page does not disclose the failure.
+- The learner selects **Email the organizer** on The test and visibly observes
+  **Nothing happened** before the lesson explains why.
+- The layers page exposes four text-labelled layers: Promise, Project home,
+  Evidence, and Release.
+- The method page makes Shape, Ground, Direct, and Prove operable by pointer and
+  keyboard and exposes a corresponding consequence.
+- The final page explains the complete lesson, shows the five reusable outputs,
+  and makes **Begin with the first promise** dominant.
+- **Preview the 8-stop route** is visually secondary and opens the Lesson map.
+- Observing the opening failure persists `introFailureObserved`.
+- Check consumes remembered evidence with **You found this failure earlier; now
+  record it**. It does not require the same failure to be staged again.
+- Entering without opening evidence still leaves a complete Check path.
 - No unexplained dashboard, confidence control, technical glossary, assessment
   framing, or wall of options appears on arrival.
 
@@ -89,8 +87,8 @@ it teaches. A passing result from v1–v7 is not evidence for v8.
   can inspect it.
 - The in-place lesson receipt states the reusable rule, when to use it, and the
   failure it prevents.
-- The learner explicitly opens that receipt, then continues with a predictable
-  next-stop label.
+- The learner selects **Save this lesson**; the task becomes **Lesson receipt ·
+  practice saved · n / 8**, then continues with a predictable next-stop label.
 - Eight stop-level notes accumulate into the existing five-guide take-home
   Build kit; the product never implies that eight new guides were created.
 - Wrong choices explain a concrete cost, missing proof, or additional system
@@ -142,13 +140,34 @@ Additional gates:
   versions, release proof, and recovery.
 - Each successful stop changes the canvas.
 - Earlier layers remain visible rather than being erased by the latest state.
-- The canvas remains open and reachable on narrow screens.
+- The narrow-screen canvas is reachable through a closed **Project layer
+  updated** disclosure, so the current task appears before reference content.
 - Every layer and state has a meaningful text equivalent.
+
+## Compact lesson shell
+
+- The header has one secondary navigation action: **Lesson map**.
+- The center route status is informational rather than an additional button.
+- The mobile header remains one compact row and does not consume a second
+  control line.
+- The current stop’s explanation, task, and first useful action appear before
+  previous receipts and optional depth on short screens.
+- Correct consequences do not trigger delayed auto-scroll.
+- Successful and unsuccessful choices carry literal `✓` and `×` state in
+  addition to color.
+- All primary controls and folio navigation targets meet the 44px touch target
+  requirement or provide equivalent target spacing.
 
 ## V1 brief workshop integrity
 
 - The V1 brief workshop is optional and learner-initiated at completion.
 - A complete local V1 brief exists before any optional network request.
+- The workshop accepts concise, meaningful beginner answers; validation names
+  and focuses the first incomplete field instead of silently disabling the only
+  forward action.
+- Every step and the result heading begins within the dialog reading viewport
+  at 320×568, high zoom, and after Back/Next.
+- The finished brief can be edited without closing and losing the draft.
 - Before sending, the interface says that submitted brief text will leave the
   browser and warns against secrets or personal information.
 - The request excludes route history and repository access.
@@ -161,7 +180,11 @@ Additional gates:
 - Live credentials remain server-side; live requests use structured output,
   `store: false`, bounded output, and a privacy-preserving safety identifier.
 - Missing credentials, refusal, invalid output, limits, timeout, or provider
-  failure preserve the outcome through authored fallback.
+  failure preserve the outcome through the labelled authored example.
+- The interface identifies the mode before and after reflection.
+- Demo results say **Authored example · deterministic, no live AI call**.
+- Only a successful live result says **GPT-5.6 reflection · live**.
+- Submission copy and video never describe a demo result as live GPT output.
 - The authored route and Build kit remain complete without model access.
 
 ## Accessibility and responsiveness
@@ -186,7 +209,8 @@ Additional gates:
 
 - Progress uses the dedicated versioned key `pentimento-studio-v4`.
 - The exact stop, decision state, selected route, check/repair state, release
-  state, improvement, saved lesson receipts, and completion survive refresh.
+  state, improvement, saved lesson receipts, opening failure evidence, and
+  completion survive refresh.
 - Invalid or partial storage falls back to a usable state.
 - Storage failure does not prevent the authored journey.
 - Returning learners receive contextual resume information.
@@ -218,12 +242,13 @@ Additional gates:
 
 - Unit tests cover progress creation, validation, restoration, progression,
   checkpoint behavior, and safe fallback.
-- API tests cover V1 brief reflection validation, deterministic fallback,
-  structured response, limits, and live failure fallback.
-- Browser tests cover the worked inspection, four chapters, all eight stops,
+- API tests cover V1 brief reflection validation, the labelled authored
+  example, structured response, limits, mode reporting, and live failure
+  fallback.
+- Browser tests cover all six opening folios, four chapters, all eight stops,
   14 decisions,
-  lesson receipts, Build kit availability, both project-layer
-  views,
+  persisted opening evidence, lesson receipts, Build kit availability, both
+  project-layer views,
   fail/repair/retry, complete desktop/mobile paths, restoration, dialogs,
   keyboard operation, focus, accessibility scans, and narrow layouts.
 - Typecheck, unit tests, production builds, generated-artifact checks, hosted

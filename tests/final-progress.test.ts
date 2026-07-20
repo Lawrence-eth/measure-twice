@@ -146,6 +146,7 @@ describe("final Pentimento progress", () => {
       releaseVersionChoice: "v4-checked",
       releaseProofChoice: "public-path",
       improveChoice: "source-then-page",
+      affectedCheckChoice: "affected-plus-smoke",
     });
 
     expect(restored).toMatchObject({
@@ -156,6 +157,7 @@ describe("final Pentimento progress", () => {
       aiFirstChoice: null,
       buildEvidenceChoice: null,
       checkRetryChoice: null,
+      affectedCheckChoice: null,
       finished: false,
     });
   });
@@ -189,6 +191,7 @@ describe("final Pentimento progress", () => {
       releaseVersionChoice: "v4-checked",
       releaseProofChoice: "public-path",
       improveChoice: "source-then-page",
+      affectedCheckChoice: "affected-plus-smoke",
       mirrorOpen: true,
       mirrorStep: 99,
       mirrorDraft: { person: longText, toolRoute: "hosted" },
@@ -196,6 +199,7 @@ describe("final Pentimento progress", () => {
 
     expect(restored?.mirrorStep).toBe(4);
     expect(restored?.checkRetryChoice).toBe("retry-contact");
+    expect(restored?.affectedCheckChoice).toBe("affected-plus-smoke");
     expect(restored?.mirrorDraft.person).toHaveLength(1_200);
     expect(restored?.mirrorDraft.toolRoute).toBe("hosted");
   });

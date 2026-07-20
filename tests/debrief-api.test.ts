@@ -10,7 +10,7 @@ vi.mock("openai", () => ({
   },
 }));
 
-import { POST } from "@/app/api/debrief/route";
+import { GET, POST } from "@/app/api/debrief/route";
 
 const endpoint = "http://localhost/api/debrief";
 const sessionId = "123e4567-e89b-42d3-a456-426614174000";
@@ -72,6 +72,17 @@ describe("Teaching Mirror API", () => {
     delete process.env.OPENAI_API_KEY;
     delete process.env.OPENAI_MODEL;
     parseResponse.mockReset();
+  });
+
+  it("reports whether the optional reflection is authored or live", async () => {
+    const demoResponse = await GET();
+    expect(await demoResponse.json()).toEqual({ mode: "demo" });
+    expect(demoResponse.headers.get("cache-control")).toBe("no-store");
+
+    process.env.DEMO_MODE = "false";
+    process.env.OPENAI_API_KEY = "test-key";
+    const liveResponse = await GET();
+    expect(await liveResponse.json()).toEqual({ mode: "live" });
   });
 
   it("returns the complete authored reflection without grading", async () => {

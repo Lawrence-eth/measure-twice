@@ -665,3 +665,69 @@ received the previous v7 opening while the other three v8 journeys, including
 both route-wide Axe runs, passed. Repeated asset probes then resolved
 exclusively to the v8 bundle. The affected fresh desktop/mobile opening and
 complete 14-decision journeys all passed in the clean post-propagation run.
+
+## July 20 — Six-folio v9 candidate
+
+Another complete beginner review found two remaining product problems. First,
+the v8 opening still required six to eight mobile viewports before the learner
+reached the lesson, disclosed the email failure in prose, and then staged the
+same failure again in a separate inspection and later Check. Second, its
+continuous scroll, stacked transitions, tall mobile canvas, and dense header
+made the experience feel like a long page rather than a deliberately composed
+field lesson.
+
+The v9 candidate rebuilds the opening as six numbered folios in the root page
+scroll:
+
+1. What Pentimento is.
+2. The untested AI claim.
+3. The learner’s actual Email test.
+4. The four hidden project layers.
+5. The interactive Shape/Ground/Direct/Prove method.
+6. The handoff into the eight-stop lesson.
+
+The claim no longer spoils the failure. The Email action on folio 02 is the one
+opening evidence event. When observed, it persists as
+`introFailureObserved`; Check later begins by asking the learner to record the
+failure they already found. Entering without that evidence still preserves a
+complete Check path.
+
+The browser document owns scrolling. Mandatory page settlement is restricted to
+tall fine-pointer layouts, touch uses proximity, and short or reduced-motion
+layouts use normal scrolling. Desktop preserves one specimen beside the middle
+folios; mobile uses compact inline specimens. The folio rail changes only after
+new prose enters the reading line.
+
+The lesson shell now has one secondary **Lesson map** action, a compact mobile
+header, a closed narrow-screen **Project layer updated** disclosure, and shorter
+previous-receipt framing. Correct consequences stay in place with no delayed
+automatic scroll. **Save this lesson** produces
+**Lesson receipt · practice saved · n / 8**. The wording no longer implies that
+each receipt creates another guide; five Build-kit guides remain available.
+
+Completion now says the learner practiced a method rather than claiming
+transfer or mastery. It leads with **Create my V1 brief**. The workshop is being
+audited for short-viewport focus, useful concise answers, visible validation,
+editing, and explicit reflection identity. Demo results are labelled
+**Authored example · deterministic, no live AI call**; only successful live
+results may say **GPT-5.6 reflection · live**.
+
+The earlier full-root View Transition was removed from scene changes so the
+stable shell and destination entrance cannot create double, blank, or ghost
+frames. Motion is owned by one layer at a time.
+
+No v9 release result is recorded here until the exact candidate has completed
+the full local matrix, exact-source Sites deployment, edge propagation, and
+hosted acceptance. The latest verified rollback remains v8.
+
+| Candidate gate | Status |
+| --- | --- |
+| Six-folio pointer, keyboard, and scroll behavior | PENDING exact-candidate verification |
+| Opening evidence persistence into Check | PENDING exact-candidate verification |
+| Both 14-decision lesson lanes | PENDING exact-candidate verification |
+| 320, 390, 768, and 1440px composition | PENDING exact-candidate verification |
+| Short viewport, high zoom, and reduced motion | PENDING exact-candidate verification |
+| V1 workshop focus, validation, edit, and mode labels | PENDING exact-candidate verification |
+| Unit, API, typecheck, builds, dependency audit | PENDING exact-candidate verification |
+| Exact-source Sites version and deployment | PENDING |
+| Hosted journey, Axe, performance, and endpoint boundary | PENDING |

@@ -75,29 +75,34 @@ The persistent canvas has two learner-controlled lenses:
 
 Literal explanation always precedes the artistic metaphor.
 
-## Opening: discover the need
+## Opening: six pages, one causal story
 
-The welcome is a natural-scroll editorial prologue for first-time AI builders.
-It names the 15-minute commitment, the fictional project, the complete route,
-the reusable outcomes, and the no-code/no-key/no-publishing boundary before
-showing curriculum controls.
+The opening is six composed folios in the document scroll. It is not a nested
+story panel, dashboard, card wall, or menu of controls the learner does not yet
+understand.
 
-One Willow Fix Day artifact remains present through four beats:
+1. **00 · What this is** names the 15-minute commitment, no-experience boundary,
+   fictional project, exact activity, and five reusable outcomes.
+2. **01 · The claim** presents the polished Willow Fix Day page and AI’s
+   untested **Ready to publish** report without revealing the defect.
+3. **02 · The test** lets the learner select **Email the organizer** and
+   personally observe **Nothing happened**.
+4. **03 · The layers** reveals Promise, Project home, Evidence, and Release
+   beneath the surface.
+5. **04 · The method** makes Shape, Ground, Direct, and Prove explorable.
+6. **05 · Your lesson** states what the learner will direct and provides
+   **Begin with the first promise** plus the secondary **Preview the 8-stop
+   route**.
 
-1. AI claims the polished page is ready;
-2. the important email action is observed failing;
-3. Promise, Project home, Evidence, and Release separate beneath the surface;
-   and
-4. Shape, Ground, Direct, and Prove become the repeatable method.
+The evidence check belongs to folio 02; there is no duplicate inspection screen.
+If the learner observes the failure, the app remembers it. Check later begins
+with **You found this failure earlier; now record it**. A learner who enters
+without testing still performs the evidence check at that stop.
 
-The threshold says this is a project to direct, not a tutorial to watch.
-**Test the project yourself** opens the hands-on evidence check. The learner
-selects **Email the organizer**, observes **Nothing happened**, uses **Reveal
-the missing layers**, then selects **Continue to stop 1 · shape the promise**.
-**Preview the four chapters** remains a physically separated overview, while
-**Skip to the evidence check** gives returning learners a direct route.
-
-The prologue explains the destination without exposing every later control.
+The browser page owns scrolling. Tall fine-pointer layouts can settle to full
+folios; touch uses proximity, and short, zoomed, or reduced-motion layouts use
+normal scrolling. The six-step rail, headings, and actions remain keyboard
+operable, and the active page is not announced before its prose is visible.
 
 ## Learning architecture
 
@@ -140,9 +145,9 @@ A correct answer does not auto-advance. It remains visible with:
 - when to use it; and
 - which failure it prevents.
 
-The learner then files one build-kit note through a meaningfully named
-checkpoint. These eight checkpoints are reflection boundaries, distinct from
-the 13 curriculum decisions. The eight stop-level notes accumulate into the
+The learner then selects **Save this lesson**. The task changes in place to
+**Lesson receipt · practice saved · n / 8**, a reflection boundary distinct
+from the 14 curriculum decisions. The eight stop-level receipts connect to the
 existing five-guide Build kit; they are not eight new guides.
 
 Wrong choices explain a specific cost, missing proof, or additional system and
@@ -173,6 +178,18 @@ The persistent **Build kit** opens five copyable milestone guides:
 The Build kit is available beside the current task and remains under the same
 name at completion; it is not locked behind success.
 
+## Compact lesson shell
+
+Only the current decision asks for attention. The header has one secondary
+action, **Lesson map**; the center status is informational rather than another
+route button. On narrow screens the canvas is a closed **Project layer
+updated** disclosure, so reference content never buries the task. The same
+Visitor surface and Layers underneath remain available when opened.
+
+Correct consequences stay visible with no delayed auto-scroll. Wrong choices
+name a concrete cost or missing proof and remain revisable. Explicit `✓` and
+`×` markers reinforce state without relying on color.
+
 ## End-of-journey outcomes
 
 After the authored route, the learner can:
@@ -190,17 +207,27 @@ After the authored route, the learner can:
 
 One completed journey is practice, not proof of lasting mastery.
 
-## Transfer and GPT‑5.6 boundary
+## V1 brief and reflection boundary
 
-Completion provides route-specific first actions, the five-guide Build kit,
-four durable habits, and the optional V1 brief workshop.
+Completion says the learner practiced a reusable method; it does not claim
+mastery. It provides route-specific first actions, the five-guide Build kit,
+four durable habits, and the optional **Create my V1 brief** workshop.
 
-The V1 brief workshop first creates a complete, copyable brief locally. A
-learner may then explicitly request a bounded GPT‑5.6 reflection containing one
-strength, exactly two unresolved questions, one feature to postpone, one route
-tradeoff, and exactly three next moves.
+The four-step workshop first creates a complete, editable, copyable brief
+locally. A learner may then explicitly request a bounded reflection containing
+one strength, exactly two unresolved questions, one feature to postpone, one
+route tradeoff, and exactly three next moves.
 
-The model cannot grade, decide correctness, change lesson progress, generate or
+The interface distinguishes:
+
+- **Authored example · deterministic, no live AI call**; and
+- **GPT-5.6 reflection · live**.
+
+The public demo can use the authored example and must never describe it as a
+live GPT-5.6 response. A failed or limited live request falls back to the
+clearly labelled authored result.
+
+Neither mode can grade, decide correctness, change lesson progress, generate or
 execute a project, access files, request credentials, publish, or take an
 external action. The deterministic authored route and local brief remain
 complete without a key or model response.
@@ -227,7 +254,7 @@ decorative card shadows, and complexity that competes with instruction.
 
 A first-time learner should be able to:
 
-- explain after the worked inspection why a polished screen is not a finished
+- explain after the opening test why a polished screen is not a finished
   project;
 - name the promise, custody, evidence, and release layers;
 - describe the build → remember → publish role map;
