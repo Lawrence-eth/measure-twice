@@ -64,9 +64,7 @@ function choice(container: Locator, name: string | RegExp) {
 }
 
 function projectCanvas(page: Page) {
-  return page
-    .locator(".p4-canvas-mobile")
-    .getByRole("region", { name: /Project canvas/i, includeHidden: true });
+  return page.locator(".p4-canvas-mobile .p4-canvas");
 }
 
 async function expectAxeClean(page: Page, include?: string) {
@@ -271,7 +269,7 @@ async function saveFieldCard(
 ) {
   const checkpoint = page.locator(".p5-checkpoint");
   await expect(checkpoint).toBeVisible();
-  await expect(checkpoint).toContainText(/Playbook note ready/i);
+  await expect(checkpoint).toContainText(/Build-kit note ready/i);
   await expect(checkpoint.getByRole("heading", { level: 2 })).toBeFocused();
   await checkpoint.getByRole("button", { name: action, exact: true }).click();
 }
@@ -300,11 +298,11 @@ async function openFresh(page: Page) {
     }),
   ).toBeVisible();
   await expect(
-    page.getByText(/interactive lesson.*not another AI builder/i),
+    page.getByText(/15-minute guided practice.*not a coding course.*not another AI builder/i),
   ).toBeVisible();
   await expect(
     page.getByText(
-      /what to build first.*where the work lives.*how to ask.*what proof to trust.*which version to publish.*how to recover/i,
+      /direct one fictional website.*rough idea.*checked release.*what to decide.*what to ask AI.*where the work should live.*prove it works/i,
     ),
   ).toBeVisible();
   await expect(
@@ -312,16 +310,27 @@ async function openFresh(page: Page) {
       /reusable first-version brief, tool map, AI work agreement, evidence ladder, and release-and-recovery checklist/i,
     ),
   ).toBeVisible();
-  await expect(page.getByText(/About 15 minutes/i)).toBeVisible();
-  await expect(page.getByText(/No coding.*no setup.*nothing real publishes/i)).toBeVisible();
+  await expect(page.getByText(/15-minute guided practice/i)).toBeVisible();
+  await expect(page.getByText(/No coding.*no API key.*nothing real is published/i)).toBeVisible();
 }
 
 async function startWithIdea(page: Page) {
   await openFresh(page);
   await page
     .getByRole("button", {
-      name: "Start with the first promise",
+      name: "Start the guided project",
       exact: true,
+    })
+    .click();
+  await page
+    .getByRole("button", { name: "Email the organizer", exact: true })
+    .click();
+  await page
+    .getByRole("button", { name: "Reveal what the screen hid", exact: true })
+    .click();
+  await page
+    .getByRole("button", {
+      name: /Start with layer 1.*define the promise/i,
     })
     .click();
   await expectCurrentHeadingFocused(page, /Choose one promise you can keep/i);
@@ -677,38 +686,43 @@ test("explains why the method matters, reveals the hidden project, and preserves
   await page.setViewportSize(MOBILE_VIEWPORT);
   await openFresh(page);
 
-  const audit = page.locator(".p5-audit");
+  await expect(page.locator(".p5-audit")).toHaveCount(0);
   await page
     .getByRole("button", {
-      name: "Test the finished-looking project",
+      name: "Start the guided project",
       exact: true,
     })
     .click();
+  const audit = page.locator(".p5-audit");
+  await expect(audit).toBeVisible();
   await expect(
     audit.getByRole("button", {
-      name: "Test the only important action",
+      name: "Email the organizer",
       exact: true,
     }),
-  ).toBeFocused();
-  await expect(audit).toContainText(/Ready to publish/i);
+  ).toBeVisible();
+  await expect(audit).toContainText(/AI says: ready/i);
   await audit
-    .getByRole("button", { name: "Test the only important action", exact: true })
+    .getByRole("button", { name: "Email the organizer", exact: true })
     .click();
   await expect(audit).toContainText(/Observed failure/i);
-  await expect(audit).toContainText(/main path had never been tried/i);
+  await expect(audit).toContainText(/preview proved appearance.*click tested behavior/is);
   await audit
-    .getByRole("button", { name: "Reveal the project underneath", exact: true })
+    .getByRole("button", { name: "Reveal what the screen hid", exact: true })
     .click();
   await expect(audit.getByRole("listitem")).toHaveCount(4);
   await expect(audit).toContainText(
     /Promise.*Project home.*Evidence.*Release/is,
   );
   await expect(audit).toContainText(
-    /The screen is the surface.*everything underneath it/is,
+    /screen was only the surface.*control these layers/is,
   );
 
   await page
-    .getByRole("button", { name: "See exactly what you will learn", exact: true })
+    .getByRole("button", { name: "Back to the introduction", exact: true })
+    .click();
+  await page
+    .getByRole("button", { name: "Preview the four chapters", exact: true })
     .click();
   const overview = page.getByRole("dialog", {
     name: "The whole journey, one decision at a time",
@@ -807,7 +821,7 @@ for (const lane of [
   });
 }
 
-test("completes 13 meaningful decisions and explicitly saves each of eight Playbook notes", async ({
+test("completes 13 meaningful decisions and explicitly saves each of eight build-kit notes", async ({
   page,
 }) => {
   await page.setViewportSize(MOBILE_VIEWPORT);
@@ -830,7 +844,7 @@ test("completes 13 meaningful decisions and explicitly saves each of eight Playb
   ).toBeVisible();
   await expect(
     page.getByRole("button", {
-      name: "Open my 5-card Playbook",
+      name: "Open my build kit",
       exact: true,
     }),
   ).toBeVisible();
@@ -844,7 +858,7 @@ test("completes 13 meaningful decisions and explicitly saves each of eight Playb
 
   const main = page.getByRole("main");
   await expect(main.getByRole("textbox")).toHaveCount(0);
-  await expect(main.getByRole("heading", { name: /Teaching Mirror/i })).toHaveCount(
+  await expect(main.getByRole("heading", { name: /V1 brief workshop/i })).toHaveCount(
     0,
   );
   await expect(main.locator('[aria-label*="Playbook card"]')).toHaveCount(0);
@@ -865,7 +879,7 @@ test("completes 13 meaningful decisions and explicitly saves each of eight Playb
   ).toBeLessThanOrEqual(240);
 });
 
-test("keeps the Field guide available during the journey and returns focus to its opener", async ({
+test("keeps the build kit available during the journey and returns focus to its opener", async ({
   page,
 }) => {
   await page.setViewportSize({ width: 1024, height: 800 });
@@ -873,19 +887,19 @@ test("keeps the Field guide available during the journey and returns focus to it
   await chooseSmallestIdea(page);
 
   const opener = page.getByRole("button", {
-    name: "Field guide",
+    name: "Build kit",
     exact: true,
   });
   await expect(opener).toBeVisible();
   await opener.click();
 
   const dialog = page.getByRole("dialog", {
-    name: /Build-with-AI Playbook/i,
+    name: /Your build kit/i,
   });
   await expect(dialog).toBeVisible();
-  await expect(dialog).toContainText(/Five milestone cards/i);
+  await expect(dialog).toContainText(/Five reusable milestone guides/i);
   await expect(
-    dialog.locator('ol[aria-label="Playbook index"] button'),
+    dialog.locator('ol[aria-label="Build kit index"] button'),
   ).toHaveCount(5);
   await expectAxeClean(page, '[role="dialog"]');
 
@@ -941,7 +955,7 @@ test("shows the real three-step AI plan before approval and practices evidence o
   await expect(page.getByText(/phase \d+ of 5/i)).toHaveCount(0);
 });
 
-test("keeps completion concise and opens one Playbook card at a time", async ({
+test("keeps completion concise and opens one build-kit card at a time", async ({
   page,
 }) => {
   await completeCoreJourney(page);
@@ -950,18 +964,18 @@ test("keeps completion concise and opens one Playbook card at a time", async ({
   );
 
   const opener = page.getByRole("button", {
-    name: "Open my 5-card Playbook",
+    name: "Open my build kit",
     exact: true,
   });
   await opener.click();
 
   const dialog = page.getByRole("dialog", {
-    name: /Build-with-AI Playbook/i,
+    name: /Your build kit/i,
   });
   await expect(dialog).toBeVisible();
   await expect(dialog).toHaveAttribute("aria-modal", "true");
 
-  const index = dialog.locator('ol[aria-label="Playbook index"]');
+  const index = dialog.locator('ol[aria-label="Build kit index"]');
   const cards = index.locator("button");
   await expect(cards).toHaveCount(5);
   await expect(index.locator('button[aria-expanded="true"]')).toHaveCount(0);
@@ -1007,7 +1021,7 @@ test("keeps completion concise and opens one Playbook card at a time", async ({
   await expect(opener).toBeFocused();
 });
 
-test("turns the Teaching Mirror into a four-step, one-group-at-a-time transfer flow", async ({
+test("turns the V1 brief workshop into a four-step, one-group-at-a-time transfer flow", async ({
   page,
 }) => {
   await completeCoreJourney(page);
@@ -1024,7 +1038,7 @@ test("turns the Teaching Mirror into a four-step, one-group-at-a-time transfer f
   });
   await opener.click();
 
-  const dialog = page.getByRole("dialog", { name: /Teaching Mirror/i });
+  const dialog = page.getByRole("dialog", { name: /V1 brief workshop/i });
   await expect(dialog).toBeVisible();
   await expect(dialog.getByText(/Step 1 of 4/i)).toBeVisible();
   await expect(
@@ -1401,8 +1415,28 @@ test("supports the complete core route with keyboard input alone", async ({
   await keyboardActivate(
     page,
     page.getByRole("button", {
-      name: "Start with the first promise",
+      name: "Start the guided project",
       exact: true,
+    }),
+  );
+  await keyboardActivate(
+    page,
+    page.getByRole("button", {
+      name: "Email the organizer",
+      exact: true,
+    }),
+  );
+  await keyboardActivate(
+    page,
+    page.getByRole("button", {
+      name: "Reveal what the screen hid",
+      exact: true,
+    }),
+  );
+  await keyboardActivate(
+    page,
+    page.getByRole("button", {
+      name: /Start with layer 1.*define the promise/i,
     }),
   );
 

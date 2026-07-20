@@ -2,16 +2,15 @@
 
 > **AI can make it look finished. Learn to make it trustworthy.**
 
-Pentimento is a **15-minute interactive field guide** for complete beginners
+Pentimento is a **15-minute guided practice** for complete beginners
 who want to build with AI but do not yet know what happens between a prompt and
 a trustworthy release.
 
 The learner guides one fictional **Willow Fix Day** event page through eight
 focused stops in four chapters. The route contains **13 consequential
 decisions**. After each stop, the learner must inspect what changed and
-explicitly save its reusable **Playbook note** before continuing. Eight
-stop-level notes accumulate into the existing five-card take-home Playbook.
-This pause turns a
+explicitly file its reusable **build-kit note** before continuing. Eight
+stop-level notes connect to a five-guide take-home **Build kit**. This pause turns a
 correct answer into a transferable method instead of a disappearing quiz
 result.
 
@@ -23,7 +22,8 @@ and improve from a trusted source.
 
 Built for the **Education** track of OpenAI Build Week 2026.
 
-- Live experience: [pentimento.law-ender.chatgpt.site](https://pentimento.law-ender.chatgpt.site)
+- Target public experience (final v6 verification pending):
+  [pentimento.law-ender.chatgpt.site](https://pentimento.law-ender.chatgpt.site)
 - Source: [github.com/Lawrence-eth/measure-twice](https://github.com/Lawrence-eth/measure-twice)
 - License: [MIT](LICENSE)
 
@@ -47,13 +47,15 @@ different. A chat is not automatically a project home. A repository is not a
 public website. A completed deployment is not proof that a visitor can finish
 the important path.
 
-## The v5 learning experience
+## The v6 Conservation Lab experience
 
-### The Reveal
+### The worked inspection
 
-The opening does not begin with a menu or a lecture. It presents a convincing
-AI-made page and asks the learner to test its only important action. The action
-fails. A raking-light reveal then exposes four hidden layers:
+The opening first explains what Pentimento is, why the lesson matters, what the
+learner will practice, and what they will keep. **Start the guided project**
+opens a one-minute worked inspection. The learner selects **Email the
+organizer**, observes that nothing happened, then selects **Reveal what the
+screen hid**. A spectral scan exposes four hidden layers:
 
 1. **Promise** — what one result this version must honestly finish.
 2. **Project home** — where its files and history survive.
@@ -61,8 +63,8 @@ fails. A raking-light reveal then exposes four hidden layers:
 4. **Release** — which checked version is public and recoverable.
 
 This interaction establishes the thesis before the curriculum begins:
-**the screen is the surface; building means directing and checking everything
-underneath it.**
+**the screen is the surface; building means directing and checking the layers
+beneath it.**
 
 ### Four chapters, eight stops
 
@@ -77,7 +79,7 @@ underneath it.**
 Only the current task asks for attention. Every stop names why the decision
 matters and what the learner will leave with. Correct decisions stay on screen
 with their causal consequence, reusable rule, use moment, and prevented
-failure. The learner then saves the Playbook note explicitly. Completed layers
+failure. The learner then files the build-kit note explicitly. Completed layers
 remain visible as a compact trail.
 
 ## What makes the interaction educational
@@ -86,7 +88,7 @@ remain visible as a compact trail.
 
 The 13 required choices and trials change the project, its evidence, or its
 release state. A correct choice no longer skips straight to the next stop. The
-learner first inspects the consequence and completed Playbook note, then uses an
+learner first inspects the consequence and completed build-kit note, then uses an
 explicit checkpoint such as **Keep this V1 boundary**, **Approve this work
 agreement**, or **Record this checked release**. Wrong choices remain useful:
 they reveal the extra systems or missing proof that choice would introduce.
@@ -95,7 +97,7 @@ they reveal the extra systems or missing proof that choice would introduce.
 
 A *pentimento* is an earlier layer visible beneath a finished work. The
 interface uses that idea literally. The canvas can switch between **Visitor
-surface** and **Project underneath**. The event page is the surface; its brief,
+surface** and **Layers underneath**. The event page is the surface; its brief,
 tool route, files, AI request, checks, versions, release proof, and recovery
 remain visible underneath it as the learner works. The canvas stays available
 on small screens instead of hiding the central metaphor.
@@ -134,9 +136,9 @@ latency, privacy exposure, unsafe input, and another failure mode merely because
 AI was useful during development. Runtime AI belongs in a product only when the
 visitor's useful result actually requires it.
 
-## Persistent Field Guide
+## Persistent Build kit
 
-The **Field guide** is reachable beside every current task. It groups the full
+The **Build kit** is reachable beside every current task. It groups the full
 method into five copyable milestone cards instead of placing a handbook in the
 required path:
 
@@ -149,12 +151,11 @@ required path:
 Each card answers four practical questions: when to use it, what to do, what
 counts as proof, and what template to copy. Route-specific guidance changes for
 the hosted and repository lanes. Only one card opens at a time. At completion,
-the same reference is labelled the learner's **5-card Playbook**; it is not
-locked until completion.
+the same **Build kit** remains available; it is not locked until completion.
 
-## Teaching Mirror: transfer the method to a real idea
+## V1 brief workshop: transfer the method to a real idea
 
-After the simulation, the learner can open the four-step **Teaching Mirror**.
+After the simulation, the learner can open the four-step **V1 brief workshop**.
 It first creates a reusable V1 brief locally from:
 
 - person and situation;
@@ -180,24 +181,28 @@ The configured model comes from `OPENAI_MODEL`; the repository's Build Week
 default is `gpt-5.6`. The authored learning route itself is deterministic and
 does not depend on model availability.
 
-The current public Site has no server-side OpenAI key, so its optional
-reflection is explicitly served in deterministic fallback mode. The bounded
-GPT‑5.6 path is implemented and tested and can be enabled with the server-only
-configuration below; fallback output is not presented as a live model result.
+The intended public configuration uses deterministic fallback unless the final
+release record proves that live server-side model access is enabled. The
+bounded GPT‑5.6 path is implemented and can be enabled with the server-only
+configuration below; final v6 production mode and hosted behavior remain
+pending verification. Fallback output must never be presented as a live model
+result.
 
 ## Judge walkthrough
 
-No installation, account, API key, or real deployment is required to evaluate
-the submitted experience.
+Use this walkthrough only against the exact hosted v6 candidate after its
+verification is recorded. Until then, use the local setup below. The intended
+public experience requires no installation, account, API key, or real
+deployment action from a judge.
 
 1. Open
    [pentimento.law-ender.chatgpt.site](https://pentimento.law-ender.chatgpt.site)
    in a current desktop or mobile browser.
-2. Try **Test the only important action**, then select **Reveal the project
-   underneath** to see why the lesson matters.
-3. Select **Learn the method that catches this** after the Reveal, or **Start
-   with the first promise** below the chapter overview. **See exactly what you
-   will learn** opens the compact four-chapter route.
+2. Select **Start the guided project**, then **Email the organizer**.
+3. Observe **Nothing happened**, select **Reveal what the screen hid**, then
+   continue with **Start with layer 1 · define the promise**. **Preview the four
+   chapters** is the optional overview; it ends with **Start with the first
+   promise**.
 4. Follow either tool lane. The repository lane makes the folder → Git → GitHub
    → host path most explicit; the hosted lane demonstrates the export and
    ownership tradeoff.
@@ -205,16 +210,16 @@ the submitted experience.
    the repaired action again. The retry is required.
 6. In **Go live**, distinguish the checked V4 from the polished but untested V3,
    then repeat the path at the simulated public address.
-7. At completion, open one of the five Playbook cards and select **Shape my own
-   V1 brief**. The brief works in deterministic demo mode; the GPT reflection is
-   explicitly optional.
+7. At completion, open one of the five **Build kit** guides and select **Shape
+   my own V1 brief**. The V1 brief workshop works in deterministic demo mode;
+   the GPT reflection is explicitly optional.
 
 All Willow Fix Day people, addresses, versions, URLs, releases, and external
 actions inside the lesson are fictional or simulated. The lesson never changes
 a real repository, sends email, creates an account, or publishes a site.
 
 Progress is saved in the current browser. **Start over** opens a confirmation
-dialog before removing the current route, project layers, and Teaching Mirror
+dialog before removing the current route, project layers, and V1 brief workshop
 draft from that device.
 
 ## Run locally
@@ -226,8 +231,9 @@ npm install
 npm run dev
 ```
 
-Open <http://localhost:3000>. The core route and deterministic Teaching Mirror
-fallback work without an account, network model call, or API key.
+Open <http://localhost:3000>. The core route, local V1 brief workshop, and
+deterministic reflection fallback work without an account, network model call,
+or API key.
 
 To make demo behavior explicit:
 
@@ -242,7 +248,8 @@ OPENAI_MODEL=gpt-5.6
 
 ### Optional live reflection
 
-To exercise the live Teaching Mirror, keep the credential server-side and set:
+To exercise the live V1 brief workshop reflection, keep the credential
+server-side and set:
 
 ```dotenv
 OPENAI_API_KEY=your-server-side-key
@@ -265,7 +272,7 @@ npm run build
 ```
 
 - `npm test` covers the progress model, saved-state validation, and bounded
-  Teaching Mirror API behavior.
+  V1 brief reflection API behavior.
 - `npm run test:e2e` exercises both tool lanes, the 13-decision route,
   fail/repair/retry persistence, keyboard-only operation, dialog focus,
   accessibility scans, and 320–1440px layouts.
@@ -316,13 +323,14 @@ Codex was the primary implementation collaborator. It accelerated:
 - turning the broad “teach people to build with AI” idea into a bounded
   Education-track curriculum for complete beginners;
 - writing and revising the Willow Fix Day case, wrong-choice consequences,
-  stop-level Playbook notes and five-card take-home Playbook;
-- replacing an overwhelming interface with the Reveal opening, four-chapter
-  route, persistent guide, and explicit consequence checkpoints;
+  stop-level build-kit notes and five-guide Build kit;
+- replacing an overwhelming interface with the Conservation Lab opening,
+  four-chapter route, persistent Build kit, and explicit consequence
+  checkpoints;
 - finding and correcting the auto-advance behavior that hid successful
   feedback before learners could study it;
-- modeling strict progress, exact substep restoration, and the bounded Teaching
-  Mirror boundary;
+- modeling strict progress, exact substep restoration, and the bounded V1 brief
+  workshop boundary;
 - implementing the surface/underlayers canvas, responsive dialogs, persistence,
   API route, and Cloudflare build path; and
 - adversarial content review, accessibility review, density measurement,
@@ -357,11 +365,11 @@ Devpost submission form before the deadline.
 
 ## Project map
 
-- [`components/PentimentoFinal.tsx`](components/PentimentoFinal.tsx) — v5
-  Reveal, four-chapter interface, project canvas, Field Guide, and Teaching
-  Mirror
+- [`components/PentimentoFinal.tsx`](components/PentimentoFinal.tsx) — v6
+  Conservation Lab opening, four-chapter interface, project layers, Build kit,
+  and V1 brief workshop
 - [`lib/final-journey.ts`](lib/final-journey.ts) — authored eight-stop
-  curriculum, choices, artifacts, and five-card index
+  curriculum, choices, artifacts, and five-guide Build kit index
 - [`lib/final-progress.ts`](lib/final-progress.ts) — validated versioned state,
   persistence, reachability, and progression
 - [`app/api/debrief/route.ts`](app/api/debrief/route.ts) — bounded demo/live
@@ -370,8 +378,8 @@ Devpost submission form before the deadline.
   fallback
 - [`tests/e2e/final-journey.spec.ts`](tests/e2e/final-journey.spec.ts) — desktop,
   mobile, keyboard, accessibility, persistence, and density coverage
-- [`docs/FINAL_EXPERIENCE.md`](docs/FINAL_EXPERIENCE.md) — beginner-first v5
-  experience contract
+- [`docs/FINAL_EXPERIENCE.md`](docs/FINAL_EXPERIENCE.md) — beginner-first v6
+  Conservation Lab experience contract
 - [`docs/BUILD_LOG.md`](docs/BUILD_LOG.md) — dated collaboration and historical
   release record
 

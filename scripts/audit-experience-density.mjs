@@ -5,7 +5,7 @@ import path from "node:path";
 // Example:
 // AUDIT_BASE_URL=http://127.0.0.1:3000 AUDIT_SUMMARY_ONLY=1 \
 //   AUDIT_TARGET=mobile \
-//   AUDIT_SCREENSHOT_DIR=/tmp/pentimento-v5-audit \
+//   AUDIT_SCREENSHOT_DIR=/tmp/pentimento-v6-audit \
 //   node scripts/audit-experience-density.mjs
 // Set AUDIT_FAIL_ON_THRESHOLDS=1 when the four interaction-density gates should
 // make this command exit non-zero.
@@ -134,8 +134,8 @@ const scenarios = [
     name: "welcome",
     group: "core",
     progress: progressAt("welcome"),
-    taskSelector: ".p4-welcome__copy",
-    actionSelector: ".p4-welcome__copy .p4-primary",
+    taskSelector: ".p6-orientation",
+    actionSelector: ".p6-orientation__footer .p4-primary",
   },
   {
     name: "welcome-route-overview",
@@ -344,7 +344,7 @@ async function applyScenarioAction(page, action) {
   if (action === "open-route") {
     await page
       .getByRole("button", {
-        name: "See exactly what you will learn",
+        name: "Preview the four chapters",
         exact: true,
       })
       .click();
@@ -358,8 +358,8 @@ async function applyScenarioAction(page, action) {
     return;
   }
   if (action === "open-playbook" || action === "open-playbook-card") {
-    await page.getByRole("button", { name: "Open my 5-card Playbook" }).click();
-    await page.getByRole("dialog", { name: "Build-with-AI Playbook" }).waitFor();
+    await page.getByRole("button", { name: "Open my build kit" }).click();
+    await page.getByRole("dialog", { name: "Your build kit" }).waitFor();
     if (action === "open-playbook-card") {
       await page.locator(".p4-guide__index button").first().click();
     }
@@ -367,7 +367,7 @@ async function applyScenarioAction(page, action) {
   }
   if (action === "open-mirror") {
     await page.getByRole("button", { name: "Shape my own V1 brief" }).click();
-    await page.getByRole("dialog", { name: "Teaching Mirror" }).waitFor();
+    await page.getByRole("dialog", { name: "V1 brief workshop" }).waitFor();
     return;
   }
 

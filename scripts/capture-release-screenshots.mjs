@@ -112,7 +112,7 @@ async function captureOpening(browser, suffix, viewport) {
   await page
     .getByRole("heading", {
       level: 1,
-      name: /Learn how to build a project with AI.*rough idea to checked release/i,
+      name: /AI can make it look finished.*Learn to make it trustworthy/i,
     })
     .waitFor();
   await settle(page);
@@ -122,7 +122,7 @@ async function captureOpening(browser, suffix, viewport) {
   });
 
   await page
-    .getByRole("button", { name: "See the 8-stop journey" })
+    .getByRole("button", { name: "Preview the four chapters" })
     .click();
   await page
     .getByRole("dialog", { name: "The whole journey, one decision at a time" })
@@ -179,8 +179,8 @@ async function captureCompletion(browser, suffix, viewport) {
     await page.getByRole("button", { name: "Create my V1 brief" }).click();
     await page.getByRole("heading", { name: "V1 brief ready" }).waitFor();
     await settle(page);
-    await page.getByRole("dialog", { name: "Teaching Mirror" }).screenshot({
-      path: path.join(outputDirectory, "teaching-mirror.png"),
+    await page.getByRole("dialog", { name: "V1 brief workshop" }).screenshot({
+      path: path.join(outputDirectory, "v1-brief-workshop.png"),
     });
   }
 
@@ -203,4 +203,4 @@ try {
   await browser.close();
 }
 
-console.log(`Captured Pentimento v4 release screenshots from ${baseUrl}`);
+console.log(`Captured Pentimento v6 release screenshots from ${baseUrl}`);

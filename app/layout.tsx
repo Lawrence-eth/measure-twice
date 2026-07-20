@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
 
+import "@fontsource-variable/instrument-sans/standard.css";
 import "./final.css";
+import "./atelier.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://pentimento.law-ender.chatgpt.site"),
@@ -32,7 +34,7 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   colorScheme: "light",
-  themeColor: "#f3efe6",
+  themeColor: "#e8e9e6",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

@@ -1,15 +1,15 @@
-# Pentimento v5 quality standard
+# Pentimento v6 quality standard
 
 This is the acceptance contract for the current OpenAI Build Week candidate.
 Pentimento is ready only when the product follows the careful build discipline
-it teaches. A passing result from v1–v4 is not evidence for v5.
+it teaches. A passing result from v1–v5 is not evidence for v6.
 
 ## Product truth
 
-- Pentimento identifies itself as a 15-minute interactive field guide for
+- Pentimento identifies itself as a 15-minute guided practice for
   first-time AI builders.
 - Its thesis is clear: AI can make the surface quickly; a human must direct and
-  verify the project underneath.
+  verify the layers underneath.
 - It is described as an authored educational simulation, not a coding course,
   prompt library, product ranking, project generator, repository, or deployment
   service.
@@ -17,25 +17,28 @@ it teaches. A passing result from v1–v4 is not evidence for v5.
   coding knowledge.
 - One completed journey is practice, not proof of mastery.
 
-## Opening comprehension and Reveal
+## Opening comprehension and worked inspection
 
 - A new learner can say what Pentimento is, why it matters, what they will make,
   and what to do first without opening a route dialog.
 - The opening names the approximate duration, no-code/no-setup safety boundary,
   and take-home artifacts.
-- The primary action is **Test the finished-looking project** and moves focus to
-  the interactive preview; it does not bypass the Reveal.
-- After the Reveal, **Learn the method that catches this** starts the route.
-- **See exactly what you will learn** opens a secondary chapter overview with
-  **Start with the first promise** as its final action.
-- The learner can test the polished preview's important action.
-- The test visibly fails before the learner is told the lesson.
-- **Reveal the project underneath** exposes four text-labelled layers:
-  Promise, Project home, Evidence, and Release.
-- The Reveal states that the screen is the surface and building means directing
-  and checking everything underneath it.
-- Four capability previews and four chapters explain the value without showing
-  every future control.
+- The dominant action is **Start the guided project**; it opens the worked
+  inspection instead of bypassing it.
+- **Preview the four chapters** is physically and visually separated and opens
+  the secondary overview with **Start with the first promise** as its final
+  action.
+- The worked inspection introduces Willow Fix Day and its one visitor goal
+  before asking for action.
+- The learner selects **Email the organizer** and visibly observes **Nothing
+  happened** before the lesson explains why.
+- **Reveal what the screen hid** exposes four text-labelled layers: Promise,
+  Project home, Evidence, and Release.
+- The spectral reveal states that the screen is the surface and building means
+  directing and checking the layers beneath it.
+- **Start with layer 1 · define the promise** begins the route after the reveal.
+- The optional four-chapter overview explains the route without showing every
+  future control.
 - No unexplained dashboard, confidence control, technical glossary, assessment
   framing, or wall of options appears on arrival.
 
@@ -74,12 +77,12 @@ it teaches. A passing result from v1–v4 is not evidence for v5.
   state.
 - Correct feedback remains visible; it never auto-advances before the learner
   can inspect it.
-- The stop-level Playbook note states the reusable rule, when to use it, and the
+- The stop-level build-kit note states the reusable rule, when to use it, and the
   failure it prevents.
 - The learner explicitly saves that note with a meaningfully named checkpoint
   before the next stop.
-- Eight stop-level notes accumulate into the existing five-card take-home
-  Playbook; the product never implies that eight new cards were created.
+- Eight stop-level notes accumulate into the existing five-guide take-home
+  Build kit; the product never implies that eight new guides were created.
 - Wrong choices explain a concrete cost, missing proof, or additional system
   and remain recoverable.
 - There are no scores, streaks, badges, mastery labels, trick distractors, or
@@ -108,20 +111,21 @@ Additional gates:
   claims.
 - Optional depth never becomes required to guess a core answer.
 
-## Persistent Field Guide
+## Persistent Build kit
 
-- **Field guide** is reachable beside the current task.
+- **Build kit** is reachable beside the current task.
 - It opens five cards: Shape the first version; Choose a route and project home;
   Ask, inspect, and save; Check and repair; Release and improve.
 - Each card includes when to use it, what to do, what counts as proof, and a
   copyable template.
-- The guide is not locked until completion.
-- Completion may call the same reference the learner's **5-card Playbook**.
+- The Build kit is not locked until completion.
+- Completion uses the same **Build kit** label and does not present it as a
+  newly unlocked reward.
 - Copy success is announced to assistive technology.
 
-## Surface and underlayers canvas
+## Project layers
 
-- The persistent canvas provides **Visitor surface** and **Project underneath**
+- The persistent canvas provides **Visitor surface** and **Layers underneath**
   controls.
 - The surface shows the visitor-facing state and important action.
 - The underlayers show the brief, tool route, files, work agreement, evidence,
@@ -131,9 +135,9 @@ Additional gates:
 - The canvas remains open and reachable on narrow screens.
 - Every layer and state has a meaningful text equivalent.
 
-## Teaching Mirror integrity
+## V1 brief workshop integrity
 
-- The Teaching Mirror is optional and learner-initiated at completion.
+- The V1 brief workshop is optional and learner-initiated at completion.
 - A complete local V1 brief exists before any optional network request.
 - Before sending, the interface says that submitted brief text will leave the
   browser and warns against secrets or personal information.
@@ -148,14 +152,14 @@ Additional gates:
   `store: false`, bounded output, and a privacy-preserving safety identifier.
 - Missing credentials, refusal, invalid output, limits, timeout, or provider
   failure preserve the outcome through authored fallback.
-- The authored route and Playbook remain complete without model access.
+- The authored route and Build kit remain complete without model access.
 
 ## Accessibility and responsiveness
 
 - Semantic landmarks, headings, lists, forms, buttons, links, definition lists,
   code blocks, and dialogs match their meaning.
 - Every control has an accessible name, visible focus, and keyboard operation.
-- Feedback and Playbook-note checkpoints receive useful focus without hiding
+- Feedback and build-kit-note checkpoints receive useful focus without hiding
   content before it can be read.
 - Dialogs contain focus, support safe dismissal, and restore focus.
 - Status updates and copy results are announced without stealing focus.
@@ -172,22 +176,29 @@ Additional gates:
 
 - Progress uses the dedicated versioned key `pentimento-studio-v4`.
 - The exact stop, decision state, selected route, check/repair state, release
-  state, improvement, saved Playbook notes, and completion survive refresh.
+  state, improvement, saved build-kit notes, and completion survive refresh.
 - Invalid or partial storage falls back to a usable state.
 - Storage failure does not prevent the authored journey.
 - Returning learners receive contextual resume information.
 - Restart removes only the current local learning record after confirmation.
 - Learner content remains local unless the learner explicitly invokes the
-  Teaching Mirror.
+  V1 brief workshop.
 - The application has no authentication, analytics database, GitHub OAuth,
   arbitrary code execution, or real external mutation.
 
 ## Visual identity
 
-- The visual language is editorial and conservation-inspired rather than a
-  generic learning dashboard or chatbot.
-- Warm paper, dark ink, ultramarine, mauve, viridian, crimson, raking light,
-  underlayers, registration marks, and marginal notes form one coherent system.
+- The visual language is a cool, contemporary conservation lab rather than a
+  generic learning dashboard, chatbot, or nostalgic paper scrapbook.
+- Lab silver, clean surface white, carbon, graphite, mineral cobalt, viridian,
+  oxide, ruled plates, registration marks, and one spectral scan form one
+  coherent system.
+- Instrument Sans carries instruction and controls; serif is reserved for
+  artifact titles and distilled rules.
+- Gradients are limited to the registration grid and the earned spectral scan;
+  no component uses a glossy decorative gradient.
+- Controls use flat rules, 0–2px radii, restrained press feedback, and no hover
+  lift, glow, or decorative card shadow.
 - Literal labels accompany color, position, and motion cues.
 - The artistic metaphor supports comprehension rather than replacing it.
 - Orange, perpetual glow, paint splatter, confetti, badges, and decorative
@@ -197,10 +208,12 @@ Additional gates:
 
 - Unit tests cover progress creation, validation, restoration, progression,
   checkpoint behavior, and safe fallback.
-- API tests cover Teaching Mirror validation, deterministic fallback,
+- API tests cover V1 brief reflection validation, deterministic fallback,
   structured response, limits, and live failure fallback.
-- Browser tests cover the Reveal, four chapters, all eight stops, 13 decisions,
-  Playbook-note checkpoints, Field Guide availability, both canvas lenses,
+- Browser tests cover the worked inspection, four chapters, all eight stops,
+  13 decisions,
+  build-kit-note checkpoints, Build kit availability, both project-layer
+  views,
   fail/repair/retry, complete desktop/mobile paths, restoration, dialogs,
   keyboard operation, focus, accessibility scans, and narrow layouts.
 - Typecheck, unit tests, production builds, generated-artifact checks, hosted

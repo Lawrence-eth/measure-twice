@@ -56,16 +56,16 @@ export type FinalChoice<Id extends string> = {
 };
 
 export const finalOpening = {
-  kicker: "A 15-minute field guide for first-time AI builders",
+  kicker: "Guided practice for people who have never built with AI",
   promise: "AI can make it look finished.",
   destination: "Learn to make it trustworthy.",
   explanation:
-    "Pentimento is an interactive lesson—not another AI builder. Direct one simulated project and practice the decisions AI cannot own: what to build first, where the work lives, how to ask, what proof to trust, which version to publish, and how to recover.",
+    "Pentimento is a 15-minute guided practice—not a coding course and not another AI builder. You will direct one fictional website from a rough idea to a checked release, learning what to decide, what to ask AI, where the work should live, and how to prove it works.",
   payoff:
     "Leave with a reusable first-version brief, tool map, AI work agreement, evidence ladder, and release-and-recovery checklist for your own project.",
-  reassurance: "No coding · no setup · nothing real publishes",
-  primaryAction: "Test the finished-looking project",
-  overviewAction: "See exactly what you will learn",
+  reassurance: "No coding · no API key · nothing real is published",
+  primaryAction: "Start the guided project",
+  overviewAction: "Preview the four chapters",
 } as const;
 
 export const welcomeAuditLayers = [

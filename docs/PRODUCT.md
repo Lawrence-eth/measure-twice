@@ -2,7 +2,7 @@
 
 ## One sentence
 
-Pentimento is a 15-minute interactive field guide that teaches a complete
+Pentimento is a 15-minute guided practice that teaches a complete
 beginner how to direct and verify one AI-built project from a rough idea to a
 recoverable release.
 
@@ -70,31 +70,31 @@ The persistent canvas has two learner-controlled lenses:
 
 - **Visitor surface** — what a visitor sees and whether the important path
   works.
-- **Project underneath** — the promise, tool route, files, work agreement,
+- **Layers underneath** — the promise, tool route, files, work agreement,
   evidence, versions, release, and recovery.
 
 Literal explanation always precedes the artistic metaphor.
 
 ## Opening: prove the need
 
-The welcome identifies Pentimento as an interactive field guide for first-time
-AI builders, names its 15-minute commitment and reusable outcomes, and offers
-**Test the finished-looking project** as its dominant action. That action moves
-focus into the Reveal rather than bypassing it.
+The welcome identifies Pentimento as a guided practice for first-time AI
+builders, names its 15-minute commitment and reusable outcomes, and offers
+**Start the guided project** as its dominant action. **Preview the four
+chapters** is a physically separated secondary route overview.
 
-Alongside that explanation, **The Reveal** creates the central learning tension:
+The next screen is a one-minute worked inspection:
 
 1. a generated Willow Fix Day preview claims it is ready to publish;
-2. the learner tests its only important action;
-3. the action fails;
-4. raking light exposes four hidden layers—Promise, Project home, Evidence,
-   and Release; and
-5. the learner sees why building cannot end at the visible screen.
+2. the learner selects **Email the organizer**;
+3. they observe **Nothing happened**;
+4. **Reveal what the screen hid** exposes Promise, Project home, Evidence, and
+   Release through the single expressive spectral scan; and
+5. **Start with layer 1 · define the promise** begins the route.
 
-The remaining opening content lets the learner explore four capabilities:
-shape a first version they can finish, choose tools by responsibility, control
-AI work, and prove and release. It explicitly says the experience is neither a
-coding course nor a project generator.
+The opening also names the practice project, the eight-stop,
+13-decision method, the reusable Build kit, and the
+no-code/no-key/no-publishing boundary. It explains the destination without
+exposing every later control.
 
 ## Learning architecture
 
@@ -109,7 +109,7 @@ The route groups eight stops into four chapters:
 
 Across those stops, the learner makes 13 consequential decisions:
 
-| Stop | Decisions | Saved Playbook note |
+| Stop | Decisions | Saved build-kit note |
 | --- | ---: | --- |
 | First version | 1 | V1 boundary |
 | Tools | 1 | Tool route |
@@ -127,7 +127,7 @@ Every stop follows:
 
 ```text
 why it matters → consequential choice or trial → visible consequence →
-inspect reusable Playbook note → explicitly save the layer
+inspect reusable build-kit note → explicitly save the layer
 ```
 
 A correct answer does not auto-advance. It remains visible with:
@@ -137,10 +137,10 @@ A correct answer does not auto-advance. It remains visible with:
 - when to use it; and
 - which failure it prevents.
 
-The learner then saves one Playbook note through a meaningfully named
+The learner then files one build-kit note through a meaningfully named
 checkpoint. These eight checkpoints are reflection boundaries, distinct from
 the 13 curriculum decisions. The eight stop-level notes accumulate into the
-existing five-card take-home Playbook; they are not eight final cards.
+existing five-guide Build kit; they are not eight new guides.
 
 Wrong choices explain a specific cost, missing proof, or additional system and
 remain revisable. There are no scores, streaks, badges, mastery claims, trick
@@ -159,7 +159,7 @@ Optional field notes organize comprehensive content into four useful questions:
 3. **Proof** of what observable result?
 4. **Avoid** which costly failure or wasted work?
 
-The persistent **Field guide** opens five copyable milestone cards:
+The persistent **Build kit** opens five copyable milestone guides:
 
 1. Shape the first version.
 2. Choose a route and project home.
@@ -167,8 +167,8 @@ The persistent **Field guide** opens five copyable milestone cards:
 4. Check and repair.
 5. Release and improve.
 
-The guide is available beside the current task. Completion calls the same
-reference the learner's **5-card Playbook**; it is not locked behind success.
+The Build kit is available beside the current task and remains under the same
+name at completion; it is not locked behind success.
 
 ## End-of-journey outcomes
 
@@ -189,10 +189,10 @@ One completed journey is practice, not proof of lasting mastery.
 
 ## Transfer and GPT‑5.6 boundary
 
-Completion provides route-specific first actions, the five-card Playbook, four
-durable habits, and the optional Teaching Mirror.
+Completion provides route-specific first actions, the five-guide Build kit,
+four durable habits, and the optional V1 brief workshop.
 
-The Teaching Mirror first creates a complete, copyable V1 brief locally. A
+The V1 brief workshop first creates a complete, copyable brief locally. A
 learner may then explicitly request a bounded GPT‑5.6 reflection containing one
 strength, exactly two unresolved questions, one feature to postpone, one route
 tradeoff, and exactly three next moves.
@@ -204,32 +204,34 @@ complete without a key or model response.
 
 ## Visual direction
 
-Pentimento uses a restrained editorial conservation-studio language:
+Pentimento uses a cool, restrained Conservation Lab language:
 
-- warm paper and dark ink;
-- ultramarine for current work;
-- mauve for provisional AI material;
-- viridian for checked states;
-- crimson for observed failure;
-- raking light, registration marks, underlayers, and marginal notes; and
-- serif display type with precise sans-serif instruction.
+- lab silver and clean surface white;
+- carbon and graphite for structure and instruction;
+- mineral cobalt for navigation, focus, and active inspection;
+- viridian for checked states and oxide for observed failure;
+- ruled plates, registration marks, underlayers, and one spectral scan; and
+- Instrument Sans for instruction and controls, with serif reserved for
+  artifact titles and distilled rules.
 
 Interaction and motion serve comprehension. Reduced motion preserves all
-meaning. The product avoids generic dashboard chrome, chat-first presentation,
-perpetual glow, confetti, badges, and decorative complexity that competes with
-instruction.
+meaning. Gradients are limited to the registration grid and earned spectral
+scan. The product avoids generic dashboard chrome, chat-first presentation,
+glossy component gradients, hover lift, perpetual glow, confetti, badges,
+decorative card shadows, and complexity that competes with instruction.
 
 ## Success signals
 
 A first-time learner should be able to:
 
-- explain after the Reveal why a polished screen is not a finished project;
+- explain after the worked inspection why a polished screen is not a finished
+  project;
 - name the promise, custody, evidence, and release layers;
 - describe the build → remember → publish role map;
 - explain why an AI completion message is not human-path evidence;
 - reproduce the fail → bounded repair → retry method;
 - identify the checked release and recovery layer; and
-- use one Playbook note or Field Guide template on another project.
+- use one build-kit note or Build kit template on another project.
 
 A judge should see the complete causal arc in under three minutes. A learner
 should complete the core route in about 15 minutes and explore deeper field

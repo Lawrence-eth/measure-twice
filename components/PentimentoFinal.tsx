@@ -43,7 +43,6 @@ import {
   updateRequest,
   vagueBuildRequest,
   welcomeAuditLayers,
-  welcomeOutcomes,
   type FinalChoice,
   type FinalLearningStage,
   type FinalStage,
@@ -140,7 +139,7 @@ function ChoiceButtons({
 }) {
   return (
     <div className={cx("p4-options", choices.length === 3 && "p4-options--three")}>
-      {choices.map((choice) => {
+      {choices.map((choice, index) => {
         const isSelected = selected === choice.id;
         return (
           <button
@@ -154,8 +153,16 @@ function ChoiceButtons({
             aria-pressed={isSelected}
             onClick={() => onChoose(choice.id)}
           >
-            <b>{choice.label}</b>
-            {showHints && <small>{choice.canvasChange}</small>}
+            <span className="p6-choice__index" aria-hidden="true">
+              {String(index + 1).padStart(2, "0")}
+            </span>
+            <span className="p6-choice__copy">
+              <b>{choice.label}</b>
+              {showHints && <small>{choice.canvasChange}</small>}
+            </span>
+            <span className="p6-choice__marker" aria-hidden="true">
+              {isSelected ? "✓" : "→"}
+            </span>
           </button>
         );
       })}
@@ -195,9 +202,9 @@ function CanvasFrame({
   children: React.ReactNode;
 }) {
   return (
-    <aside className="p4-canvas" role="region" aria-label="Project canvas">
+    <aside className="p4-canvas" role="region" aria-label="Project layers">
       <div className="p4-canvas__label">
-        <span>Willow Fix Day · project canvas</span>
+        <span>Willow Fix Day · project layers</span>
         <b>{layer}</b>
       </div>
       {children}
@@ -329,7 +336,13 @@ function HomeVisual({ progress }: { progress: FinalProgress }) {
         ))}
       </div>
       {created && (
-        <div className="p4-secret">
+        <div
+          className={cx(
+            "p4-secret",
+            progress.secretChoice === "private-env" && "is-safe",
+            progress.secretChoice === "project-files" && "is-risk",
+          )}
+        >
           <code>Finished visitor path</code>
           <b>
             {progress.secretChoice === "private-env"
@@ -604,8 +617,8 @@ function LastSavedRule({ progress }: { progress: FinalProgress }) {
     : finalJourney[finalLearningStages.indexOf(progress.stage) - 1];
   if (!previous || !progress.completedStages.includes(previous.id)) return null;
   return (
-    <aside className="p5-saved-receipt" aria-label={`${previous.navLabel} field card saved`}>
-      <span>{previous.navLabel} field card saved</span>
+    <aside className="p5-saved-receipt" aria-label={`${previous.navLabel} build-kit note saved`}>
+      <span>{previous.navLabel} build-kit note saved</span>
       <p>{previous.reusableRule}</p>
       <small>{previous.savedLabel}</small>
     </aside>
@@ -810,7 +823,7 @@ function ProjectSurfaceVisual({ progress }: { progress: FinalProgress }) {
 function CanvasLens({ progress }: { progress: FinalProgress }) {
   const [view, setView] = useState<"surface" | "underlayers">("underlayers");
   return (
-    <section className="p5-canvas-lens" aria-label="Surface and project underlayers">
+    <section className="p5-canvas-lens" aria-label="Visitor surface and project layers">
       <div
         className="p5-canvas-lens__controls"
         data-view={view}
@@ -829,7 +842,7 @@ function CanvasLens({ progress }: { progress: FinalProgress }) {
           aria-pressed={view === "underlayers"}
           onClick={() => setView("underlayers")}
         >
-          Project underneath
+          Layers underneath
         </button>
       </div>
       <div className="p5-canvas-lens__view" key={view}>
@@ -853,7 +866,7 @@ function ResponsiveProjectCanvas({ progress }: { progress: FinalProgress }) {
       </div>
       <details className="p4-canvas-mobile" open>
         <summary>
-          <span>Project canvas</span>
+          <span>Project layers</span>
           <b>{canvasDisclosureLabel(progress.stage)}</b>
         </summary>
         <CanvasLens progress={progress} />
@@ -1206,7 +1219,11 @@ function CheckTask({ progress, choose }: StageTaskProps) {
       question="What should you do after the contact action fails?"
       hint="Repair the cause you observed while preserving everything that already works."
     >
-      <section className="p4-artifact" role="region" aria-label="Defect report">
+      <section
+        className="p4-artifact p6-defect-report"
+        role="region"
+        aria-label="Defect report"
+      >
         <span>Defect report</span>
         <div className="p4-defect-brief">
           <p><b>Observed</b><span>Nothing happened.</span></p>
@@ -1258,6 +1275,7 @@ function GoLiveTask({ progress, choose }: StageTaskProps) {
             <small>Proves the host finished—not that the visitor path works.</small>
           </div>
           <button
+            className="p4-primary"
             type="button"
             onClick={() => choose("go-live", { releaseProofChoice: "public-path" }, true)}
           >
@@ -1373,7 +1391,7 @@ function StageCheckpoint({
   const reason = savedDecisionReason(stage, progress);
   return (
     <section className="p5-checkpoint" aria-labelledby={`${stage}-checkpoint-title`}>
-      <span>Playbook note ready · {stop.artifact}</span>
+      <span>Build-kit note ready · {stop.artifact}</span>
       <h2 id={`${stage}-checkpoint-title`} tabIndex={-1}>
         {stop.reusableRule}
       </h2>
@@ -1499,7 +1517,7 @@ function StageDepth({ progress }: { progress: FinalProgress }) {
 
   return (
     <details className="p4-depth">
-      <summary>Field note · use {stop.navLabel.toLowerCase()} on your own project</summary>
+      <summary>Use this on my project · {stop.navLabel}</summary>
       <div className="p4-depth__content p5-field-note">
         <div className="p5-field-note__grid">
           <article>
@@ -1534,222 +1552,241 @@ function Welcome({
   onStart: () => void;
   onOverview: () => void;
 }) {
+  const [screen, setScreen] = useState<"orientation" | "inspection">(
+    "orientation",
+  );
   const [auditStep, setAuditStep] = useState<"surface" | "failed" | "revealed">(
     "surface",
   );
-  const [activeOutcome, setActiveOutcome] = useState(0);
+  const inspectionHeadingRef = useRef<HTMLHeadingElement>(null);
   const auditRevealRef = useRef<HTMLButtonElement>(null);
   const auditStartRef = useRef<HTMLButtonElement>(null);
-  const outcome = welcomeOutcomes[activeOutcome];
+  const auditLayersHeadingRef = useRef<HTMLHeadingElement>(null);
+
+  useEffect(() => {
+    if (screen === "inspection") {
+      window.scrollTo({ top: 0, behavior: "auto" });
+      const frame = window.requestAnimationFrame(() => {
+        inspectionHeadingRef.current?.focus({ preventScroll: true });
+      });
+      return () => window.cancelAnimationFrame(frame);
+    }
+  }, [screen]);
 
   useEffect(() => {
     if (auditStep === "failed") {
-      auditRevealRef.current?.focus({ preventScroll: true });
+      const frame = window.requestAnimationFrame(() => {
+        auditRevealRef.current
+          ?.closest(".p5-audit__reveal")
+          ?.scrollIntoView({ block: "center", behavior: "auto" });
+        auditRevealRef.current?.focus({ preventScroll: true });
+      });
+      return () => window.cancelAnimationFrame(frame);
     }
     if (auditStep === "revealed") {
-      auditStartRef.current?.focus({ preventScroll: true });
+      const frame = window.requestAnimationFrame(() => {
+        auditLayersHeadingRef.current
+          ?.closest(".p5-audit__underlayers")
+          ?.scrollIntoView({ block: "start", behavior: "auto" });
+        auditLayersHeadingRef.current?.focus({ preventScroll: true });
+      });
+      return () => window.cancelAnimationFrame(frame);
     }
   }, [auditStep]);
 
-  function focusAudit() {
-    const target = document.getElementById("welcome-audit-action");
-    const prefersReducedMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    ).matches;
-    target?.scrollIntoView({
-      block: "center",
-      behavior: prefersReducedMotion ? "auto" : "smooth",
-    });
-    window.requestAnimationFrame(() => target?.focus());
-  }
-
   return (
-    <div className="p4-welcome p5-welcome">
+    <div className="p4-welcome p6-welcome">
       <header className="p4-welcome__header">
         <Brand />
-        <span>Interactive field guide · build projects with AI</span>
+        <span>Field lesson 01 · building with AI</span>
       </header>
       <main id="main-content">
-        <section className="p4-welcome__main p5-welcome__hero">
-          <div className="p4-welcome__copy">
-            <p className="p4-kicker">{finalOpening.kicker}</p>
-            <h1 ref={headingRef} tabIndex={-1}>
-              {finalOpening.promise}{" "}
-              <em>{finalOpening.destination}</em>
-            </h1>
-            <p className="p4-welcome__lede">
-              {finalOpening.explanation}
-            </p>
-            <p className="p5-welcome__payoff">{finalOpening.payoff}</p>
-            <div className="p5-welcome__actions">
-              <button className="p4-primary" type="button" onClick={focusAudit}>
-                {finalOpening.primaryAction}
-              </button>
-              <button className="p4-text-button" type="button" onClick={onOverview}>
-                {finalOpening.overviewAction}
-              </button>
+        {screen === "orientation" ? (
+          <section className="p6-orientation" aria-labelledby="welcome-title">
+            <div className="p6-orientation__index" aria-hidden="true">
+              <span>001</span>
+              <i />
+              <span>Orientation</span>
             </div>
-            <ul className="p4-welcome__facts">
-              <li>About 15 minutes</li>
-              <li>Reusable method, not one tool</li>
-              <li>Eight decisions become five Playbook cards</li>
-            </ul>
-          </div>
-
-          <section
-            className={cx("p5-audit", `is-${auditStep}`)}
-            aria-labelledby="welcome-audit-title"
-          >
-            <div className="p5-audit__status">
-              <span>AI status</span>
-              <b>{auditStep === "surface" ? "Ready to publish" : "Claim unproven"}</b>
-            </div>
-            <div className="p5-audit__surface">
-              <span>Willow Fix Day · generated preview</span>
-              <h2 id="welcome-audit-title">Bring it broken.<br />Leave with a plan.</h2>
-              <p>Saturday · West Hall · repairs depend on volunteer availability</p>
-              <button
-                id="welcome-audit-action"
-                type="button"
-                className={cx(
-                  "p4-primary",
-                  "p5-audit__action",
-                  auditStep !== "surface" && "is-failed",
-                )}
-                onClick={() => setAuditStep("failed")}
-                disabled={auditStep !== "surface"}
-              >
-                {auditStep === "surface"
-                  ? "Test the only important action"
-                  : "Email action · nothing happened"}
-              </button>
-            </div>
-
-            {auditStep === "surface" && (
-              <p className="p5-audit__instruction">
-                It looks finished. Try the one action a visitor actually needs.
-              </p>
-            )}
-
-            {auditStep === "failed" && (
-              <div className="p5-audit__reveal" role="status">
-                <span>Observed failure</span>
-                <p>
-                  The page looked complete, but its main path had never been tried.
-                  What else can a polished screen hide?
-                </p>
-                <button
-                  ref={auditRevealRef}
-                  className="p4-secondary"
-                  type="button"
-                  onClick={() => setAuditStep("revealed")}
-                >
-                  Reveal the project underneath
-                </button>
+            <div className="p6-orientation__grid">
+              <div className="p4-welcome__copy">
+                <p className="p4-kicker">{finalOpening.kicker}</p>
+                <h1 id="welcome-title" ref={headingRef} tabIndex={-1}>
+                  <span>{finalOpening.promise}</span>
+                  <em>{finalOpening.destination}</em>
+                </h1>
+                <p className="p4-welcome__lede">{finalOpening.explanation}</p>
               </div>
-            )}
-
-            {auditStep === "revealed" && (
-              <div className="p5-audit__underlayers" role="status">
-                <span>Raking-light inspection · four hidden layers</span>
-                <ol>
-                  {welcomeAuditLayers.map((layer) => (
-                    <li key={layer.id}>
-                      <b>{layer.label}</b>
-                      <p>{layer.issue}</p>
-                    </li>
-                  ))}
-                </ol>
-                <p className="p5-audit__thesis">
-                  <b>The screen is the surface.</b> Building means directing and
-                  checking everything underneath it.
-                </p>
+              <aside className="p6-orientation__brief" aria-label="What this lesson gives you">
+                <span>What changes after this lesson</span>
+                <p>{finalOpening.payoff}</p>
+                <dl>
+                  <div>
+                    <dt>Practice</dt>
+                    <dd>One fictional website</dd>
+                  </div>
+                  <div>
+                    <dt>Method</dt>
+                    <dd>Eight stops, 13 decisions</dd>
+                  </div>
+                  <div>
+                    <dt>Keep</dt>
+                    <dd>A reusable build kit</dd>
+                  </div>
+                </dl>
+              </aside>
+            </div>
+            <div className="p6-orientation__footer">
+              <div>
                 <button
-                  ref={auditStartRef}
                   className="p4-primary"
                   type="button"
-                  onClick={onStart}
+                  onClick={() => setScreen("inspection")}
                 >
-                  Learn the method that catches this
+                  {finalOpening.primaryAction}
+                </button>
+                <p>{finalOpening.reassurance}</p>
+              </div>
+              <div className="p6-orientation__preview">
+                <span>Prefer to look ahead?</span>
+                <button className="p4-text-button" type="button" onClick={onOverview}>
+                  {finalOpening.overviewAction}
                 </button>
               </div>
-            )}
-          </section>
-        </section>
-
-        <section className="p5-welcome-section p5-why">
-          <div className="p5-section-heading">
-            <p className="p4-kicker">Why this matters now</p>
-            <h2>The hard part moved beneath the screen.</h2>
-            <p>
-              AI removed the blank page. It did not remove responsibility.
-              Beginners still need to decide what is supportable, keep custody of
-              the work, control changes, demand evidence, and recover a release.
-            </p>
-          </div>
-          <div className="p5-outcome-explorer">
-            <div className="p5-outcome-explorer__nav" role="group" aria-label="What you will learn">
-              {welcomeOutcomes.map((item, index) => (
-                <button
-                  key={item.title}
-                  type="button"
-                  aria-pressed={activeOutcome === index}
-                  onClick={() => setActiveOutcome(index)}
-                >
-                  <span aria-hidden="true">0{index + 1}</span>
-                  {item.title}
-                </button>
-              ))}
             </div>
-            <article
-              className="p5-outcome-explorer__detail"
-              aria-live="polite"
-              key={outcome.title}
-            >
-              <span>Capability {String(activeOutcome + 1).padStart(2, "0")}</span>
-              <h3>{outcome.title}</h3>
-              <p>{outcome.detail}</p>
-              <small>
-                You practice it on one safe project, then keep the reusable rule
-                for your own.
-              </small>
-            </article>
-          </div>
-          <aside className="p5-not-builder">
-            <b>This is not a coding course or project generator.</b>
-            <p>
-              It teaches the operating method underneath ChatGPT, Codex, hosted AI
-              builders, repository agents, and whatever tools arrive next.
-            </p>
-          </aside>
-        </section>
+          </section>
+        ) : (
+          <section className="p6-inspection" aria-labelledby="inspection-title">
+            <div className="p6-inspection__intro">
+              <p className="p4-kicker">Before the method · one-minute inspection</p>
+              <h1 id="inspection-title" ref={inspectionHeadingRef} tabIndex={-1}>
+                Meet your practice project.
+              </h1>
+              <p>
+                Willow Fix Day is fictional. Its page has one job: show the event
+                details and let a visitor email the organizer.
+              </p>
+              <aside>
+                <span>AI report</span>
+                <b>“Ready to publish.”</b>
+                <p>
+                  Do not trust the report yet. Try the visitor’s only important
+                  action.
+                </p>
+              </aside>
+              <button
+                className="p4-text-button p6-inspection__back"
+                type="button"
+                onClick={() => setScreen("orientation")}
+              >
+                Back to the introduction
+              </button>
+            </div>
 
-        <section className="p5-welcome-section p5-chapters">
-          <div className="p5-section-heading">
-            <p className="p4-kicker">One project · four chapters · eight stops</p>
-            <h2>Learn the whole loop without seeing the whole course at once.</h2>
-          </div>
-          <ol>
-            {finalChapters.map((chapter) => (
-              <li key={chapter.id}>
-                <span>Chapter {chapter.number}</span>
-                <h3>{chapter.title}</h3>
-                <p>{chapter.summary}</p>
-                <small>
-                  {chapter.stages
-                    .map((stage) => stageById[stage].navLabel)
-                    .join(" · ")}
-                </small>
-              </li>
-            ))}
-          </ol>
-          <div className="p5-chapters__action">
-            <button className="p4-primary" type="button" onClick={onStart}>
-              Start with the first promise
-            </button>
-            <span>{finalOpening.reassurance}</span>
-          </div>
-        </section>
+            <section
+              className={cx("p5-audit", `is-${auditStep}`)}
+              aria-labelledby="welcome-audit-title"
+            >
+              <div className="p5-audit__status">
+                <span>
+                  {auditStep === "surface"
+                    ? "Your task · test the email path"
+                    : "Willow Fix Day · generated preview"}
+                </span>
+                <b>
+                  {auditStep === "surface"
+                    ? "AI says: ready"
+                    : auditStep === "failed"
+                      ? "Observed: failed"
+                      : "Underlayers visible"}
+                </b>
+              </div>
+              <div className="p5-audit__surface">
+                <span>Visitor surface · one important path</span>
+                <h2 id="welcome-audit-title">
+                  Bring it broken.
+                  <br />
+                  Leave with a plan.
+                </h2>
+                <p>
+                  Saturday · West Hall · repairs depend on volunteer availability
+                </p>
+                <button
+                  id="welcome-audit-action"
+                  type="button"
+                  className={cx(
+                    "p4-primary",
+                    "p5-audit__action",
+                    auditStep !== "surface" && "is-failed",
+                  )}
+                  onClick={() => setAuditStep("failed")}
+                  disabled={auditStep !== "surface"}
+                >
+                  {auditStep === "surface"
+                    ? "Email the organizer"
+                    : "Email action · nothing happened"}
+                </button>
+              </div>
+
+              {auditStep === "surface" && (
+                <p className="p5-audit__instruction">
+                  The report proves a claim. Your click checks the behavior.
+                </p>
+              )}
+
+              {auditStep === "failed" && (
+                <div className="p5-audit__reveal" role="status">
+                  <span>Observed failure</span>
+                  <h3>Nothing happened.</h3>
+                  <p>
+                    The preview proved appearance. Your click tested behavior.
+                    Now inspect what the polished screen kept out of view.
+                  </p>
+                  <button
+                    ref={auditRevealRef}
+                    className="p4-secondary"
+                    type="button"
+                    onClick={() => setAuditStep("revealed")}
+                  >
+                    Reveal what the screen hid
+                  </button>
+                </div>
+              )}
+
+              {auditStep === "revealed" && (
+                <div className="p5-audit__underlayers" role="status">
+                  <span>Spectral inspection · four hidden layers</span>
+                  <h3 ref={auditLayersHeadingRef} tabIndex={-1}>
+                    The screen was only the surface.
+                  </h3>
+                  <ol>
+                    {welcomeAuditLayers.map((layer, index) => (
+                      <li key={layer.id}>
+                        <span aria-hidden="true">0{index + 1}</span>
+                        <div>
+                          <b>{layer.label}</b>
+                          <p>{layer.issue}</p>
+                        </div>
+                      </li>
+                    ))}
+                  </ol>
+                  <p className="p5-audit__thesis">
+                    Pentimento teaches you to control these layers before the
+                    visible surface goes live.
+                  </p>
+                  <button
+                    ref={auditStartRef}
+                    className="p4-primary"
+                    type="button"
+                    onClick={onStart}
+                  >
+                    Start with layer 1 · define the promise
+                  </button>
+                </div>
+              )}
+            </section>
+          </section>
+        )}
       </main>
     </div>
   );
@@ -1833,12 +1870,13 @@ function JourneyHeader({
           <span>
             {progress.stage === "completion"
               ? "Route complete"
-              : `Chapter ${chapter.number} of 4 · Stop ${currentNumber} of 8`}
+              : `${String(currentNumber).padStart(2, "0")} / 08`}
           </span>
-          <b>{chapter.title} · {stageLabel(progress.stage)}</b>
+          <b>{stageLabel(progress.stage)}</b>
+          <small>{chapter.title}</small>
         </button>
         <div className="p4-header__actions">
-          <button type="button" onClick={onPlaybook}>Field guide</button>
+          <button type="button" onClick={onPlaybook}>Build kit</button>
           <button type="button" onClick={onRoute}>Route</button>
           <button ref={restartRef} type="button" onClick={onRestart}>Start over</button>
         </div>
@@ -1893,9 +1931,21 @@ function Completion({
           Shape my own V1 brief
         </button>
         <button className="p4-secondary" type="button" onClick={onPlaybook}>
-          Open my 5-card Playbook
+          Open my build kit
         </button>
       </div>
+      <section className="p6-capabilities" aria-labelledby="capabilities-title">
+        <div>
+          <span>Transfer check</span>
+          <h2 id="capabilities-title">What you can now direct</h2>
+        </div>
+        <ol>
+          <li><span>01</span><b>Shape a first version one person can finish</b></li>
+          <li><span>02</span><b>Give AI bounded steps and a stopping point</b></li>
+          <li><span>03</span><b>Demand evidence beyond the AI report</b></li>
+          <li><span>04</span><b>Release an exact, recoverable version</b></li>
+        </ol>
+      </section>
       <section className="p4-start-today" aria-labelledby="start-today-title">
         <div>
           <span>Your route</span>
@@ -1987,12 +2037,17 @@ function RouteDialog({
         </>
       ) : (
         <>
+          <div className="p6-route-status" aria-live="polite">
+            <span>Build-kit notes saved</span>
+            <b>{progress.completedStages.length} / {finalJourney.length}</b>
+          </div>
           <ol className="p4-route-sheet">
             {finalJourney.map((stop) => {
+              const completed = progress.completedStages.includes(stop.id);
               const reached =
-                progress.completedStages.includes(stop.id) || progress.stage === stop.id;
+                completed || progress.stage === stop.id;
               return (
-                <li key={stop.id}>
+                <li className={cx(completed && "is-complete")} key={stop.id}>
                   <button
                     type="button"
                     disabled={!reached}
@@ -2173,8 +2228,8 @@ function PlaybookDialog({
   return (
     <AccessibleDialog
       open={open}
-      title="Build-with-AI Playbook"
-      description="Five milestone cards. Open only the one you need beside your AI workspace."
+      title="Your build kit"
+      description="Five reusable milestone guides. Open the one that matches the decision in front of you."
       onDismiss={onClose}
       appRootRef={appRootRef}
       backdropClassName="p4-dialog-backdrop"
@@ -2183,9 +2238,9 @@ function PlaybookDialog({
       descriptionClassName="p4-dialog__description"
       contentClassName="p4-dialog__content"
     >
-      <button className="p4-dialog__close" type="button" onClick={onClose} aria-label="Close Playbook">×</button>
+      <button className="p4-dialog__close" type="button" onClick={onClose} aria-label="Close build kit">×</button>
       <div className={cx("p4-guide", active && "has-active")}>
-        <ol className="p4-guide__index" aria-label="Playbook index">
+        <ol className="p4-guide__index" aria-label="Build kit index">
           {playbookIndex.map((card) => (
             <li key={card.id}>
               <button
@@ -2262,14 +2317,14 @@ const mirrorSteps: ReadonlyArray<{
 ];
 
 const mirrorPlaceholders: Record<Exclude<TeachingMirrorFieldKey, "toolRoute">, string> = {
-  person: "Example: a first-time event visitor",
-  situation: "Example: deciding whether to attend from a phone",
-  usefulResult: "Example: confirm the details and email one question",
-  completePath: "Example: open → compare details → email the organizer",
-  trustedFacts: "Example: organizer-approved event note",
-  mustHave: "Example: date, place, item list, working contact path",
-  notNow: "Example: accounts, booking, payments",
-  doneWhen: "Example: another person completes the path at 390px",
+  person: "e.g. a first-time visitor",
+  situation: "e.g. checking details by phone",
+  usefulResult: "e.g. confirm details, then email",
+  completePath: "e.g. open → compare → email",
+  trustedFacts: "e.g. organizer-approved note",
+  mustHave: "e.g. date, place, list, contact",
+  notNow: "e.g. accounts, booking, payments",
+  doneWhen: "e.g. another person completes it at 390px",
 };
 
 function listFromText(value: string): string[] {
@@ -2384,8 +2439,8 @@ function MirrorDialog({
   return (
     <AccessibleDialog
       open={open}
-      title="Teaching Mirror"
-      description="Shape a reusable V1 brief on this device. Only if you request the optional reflection will Pentimento send the brief, selected route, and a random session ID; it cannot access your files, accounts, or tools."
+      title="V1 brief workshop"
+      description="Shape a reusable first-version brief on this device. Your text stays here until you request the optional teaching reflection; that sends the brief to the server. Never include secrets or personal information."
       onDismiss={onClose}
       appRootRef={appRootRef}
       ariaBusy={status === "loading"}
@@ -2395,7 +2450,7 @@ function MirrorDialog({
       descriptionClassName="p4-dialog__description"
       contentClassName="p4-dialog__content"
     >
-      <button className="p4-dialog__close" type="button" onClick={onClose} aria-label="Close Teaching Mirror">×</button>
+      <button className="p4-dialog__close" type="button" onClick={onClose} aria-label="Close V1 brief workshop">×</button>
       {briefReady ? (
         <div className="p4-brief-result">
           <div className="p4-brief-result__heading">
@@ -2405,10 +2460,10 @@ function MirrorDialog({
           </div>
           <pre><code>{briefCopy}</code></pre>
           <div className="p4-brief-result__actions">
-            <button className="p4-secondary" type="button" onClick={copyBrief}>Copy my V1 brief</button>
+            <button className="p4-primary" type="button" onClick={copyBrief}>Copy my V1 brief</button>
             {!result && (
               <button
-                className="p4-primary"
+                className="p4-secondary"
                 type="button"
                 disabled={status === "loading"}
                 onClick={requestMirror}
@@ -2434,12 +2489,20 @@ function MirrorDialog({
           <div
             className="p4-wizard-progress"
             role="progressbar"
-            aria-label="Teaching Mirror progress"
+            aria-label="V1 brief workshop progress"
             aria-valuemin={1}
             aria-valuemax={4}
             aria-valuenow={step}
           >
-            {[1, 2, 3, 4].map((item) => <i className={cx(item <= step && "is-active")} key={item} />)}
+            {[1, 2, 3, 4].map((item) => (
+              <span
+                className={cx(item <= step && "is-active")}
+                aria-hidden="true"
+                key={item}
+              >
+                0{item}
+              </span>
+            ))}
           </div>
           <section className="p4-wizard__step">
             <span>Step {step} of 4</span>
@@ -2536,7 +2599,7 @@ function RestartDialog({
       open={open}
       role="alertdialog"
       title="Start the journey again?"
-      description="This removes the saved route, project layers, and Teaching Mirror draft from this device."
+      description="This removes the saved route, project layers, and V1 brief draft from this device."
       onDismiss={onClose}
       appRootRef={appRootRef}
       returnFocusRef={returnFocusRef}
