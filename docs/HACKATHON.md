@@ -7,10 +7,10 @@ Submission deadline: **July 21, 2026 at 5:00 PM Pacific** (**July 22 at
 
 The Official Rules, Devpost form, and notices on
 [openai.devpost.com](https://openai.devpost.com) are the source of truth. This
-file contains submission-ready copy for the verified Pentimento v9 release.
-The v9 source, Sites version, deployment, and hosted acceptance values below
-are release evidence. The v8 values at the end are retained only as rollback
-evidence.
+file contains submission-ready copy for the verified Pentimento v10.3 release.
+The v10.3 source, Sites version, custom-domain Worker, and hosted acceptance
+values below are release evidence. The immediately previous responsive release
+is retained as the rollback target.
 
 ## Devpost summary
 
@@ -31,8 +31,9 @@ four-part method, and a clear handoff into four chapters, eight stops, 14
 consequential decisions, and an in-place lesson receipt after each stop.
 
 **Target public experience:**
-[pentimento.law-ender.chatgpt.site](https://pentimento.law-ender.chatgpt.site)
-— verified native ChatGPT Sites address.
+[pentimento.aethe.me](https://pentimento.aethe.me) — verified branded public
+address. The same immutable release is also published through ChatGPT Sites at
+[measure-twice.eason9504315.chatgpt.site](https://measure-twice.eason9504315.chatgpt.site).
 
 **Repository:** [github.com/Lawrence-eth/measure-twice](https://github.com/Lawrence-eth/measure-twice)
 
@@ -111,10 +112,9 @@ The required route is deliberately small:
 
 ## Public judge testing instructions
 
-Candidate public testing instructions; mark them verified only after the v9
-hosted acceptance run:
+Verified public testing instructions for the v10.3 hosted release:
 
-> Open https://pentimento.law-ender.chatgpt.site in a current desktop or mobile
+> Open https://pentimento.aethe.me in a current desktop or mobile
 > browser. No account, API key, installation, or real deployment is required.
 > Move through pages 00–05: What this is, The claim, The test, The layers, The
 > method, and Your lesson. On The test, select **Email the organizer** and
@@ -261,12 +261,12 @@ configured server-only key; no credential may appear in the footage.
   private repository with both testing@devpost.com and
   build-week-event@openai.com.
 - [x] Confirm the Devpost repository URL resolves for a signed-out judge.
-- [x] Freeze and record the exact final v9 commit and release/version metadata.
+- [x] Freeze and record the exact final v10.3 commit and release/version metadata.
 
 ### Public experience
 
-- [x] Deploy the exact verified v9 artifact to
-  pentimento.law-ender.chatgpt.site.
+- [x] Deploy the exact verified v10.3 artifact to ChatGPT Sites and
+  pentimento.aethe.me.
 - [x] Run the hosted desktop/mobile acceptance checks against that exact artifact.
 - [x] Verify all six folios, persisted opening evidence, four chapters,
   eight-stop route, 14 decisions, in-place receipts, Build kit, project-layer
@@ -291,22 +291,24 @@ configured server-only key; no credential may appear in the footage.
 
 ## Final hand-in values
 
-The v9 release fields below come from exact-source deployment and hosted
-verification. The final three rows preserve the verified v8 rollback record.
+The v10.3 release fields below come from exact-source deployment and hosted
+verification. The rollback rows preserve the immediately previous responsive
+release.
 
 | Field | Final value |
 | --- | --- |
 | Public YouTube demo URL | **TBD — entrant uploads and verifies public visibility** |
 | Primary Codex /feedback Session ID | **TBD — entrant obtains it from the primary build thread** |
-| Exact final v9 deployed source | `c79b989c9df8253298d0eb807d2a5e516fca3bff` |
-| Final v9 Sites version and deployment | Version 9 · `appgprj_6a5cd40f4f5c81919c4fcd84e7ef2709~appgver_328f62416d6c81918db6ef5fb27595f7` · deployment `appgdep_6a5e5663bdc88191a21301e7bca6cf52` |
-| Hosted v9 acceptance result and timestamp | PASS · desktop/mobile six-folio and 14-decision routes; desktop V1 workshop; desktop/mobile route-wide Axe · July 20, 2026 17:18 UTC |
+| Exact final v10.3 deployed source | `430bd85234f2975fa1642cd9dc4f0a80a05f26c9` |
+| Final v10.3 Sites version and deployment | Version 7 · `appgprj_6a5b7bb5c4d881918b82a25beee7b6ff~appgver_f6701b8732288191b8521a38f0f18902` · deployment `appgdep_6a5f1108f43081918545f50350dce587` |
+| Final custom-domain Worker release | Deployment `b49b53b8-4efb-4a69-a9a1-534f108eb247` · version `65644dee-accc-4826-9318-62eab9abb6dd` · 100% traffic |
+| Hosted v10.3 acceptance result and timestamp | PASS · 34/34 desktop/mobile browser checks; all six folios; 14-decision routes; V1 workshop; route-wide Axe; keyboard, reduced motion, persistence, restart, and 320/390/768/1440px reflow · July 21, 2026 06:40 UTC |
 | Production reflection mode and evidence | PASS · endpoint returned `mode: "demo"`; UI labels the result **Authored example · deterministic, no live AI call** |
 | Repository public-access or private-sharing confirmation | PASS · signed-out GitHub request returned HTTP `200` |
 | Devpost submission confirmation | **TBD — entrant submits and records it** |
-| Verified v8 rollback source | `fc0b4f5e85095236edf471cad1750e89235e6809` |
-| Verified v8 Sites version | Version 8 · `appgprj_6a5cd40f4f5c81919c4fcd84e7ef2709~appgver_decac58e4d6481919b185f9147022827` · deployment `appgdep_6a5e3af13d9481918bbf071f5bb669ac` |
-| Verified v8 hosted result | PASS · desktop/mobile 14-decision routes and route-wide Axe · July 20, 2026 15:16 UTC |
+| Verified rollback source | `1a76a2c4b1bf483509b73fcfc16221dde7119b85` |
+| Verified rollback Sites version | Version 6 · `appgprj_6a5b7bb5c4d881918b82a25beee7b6ff~appgver_f2c7cf9a823881919bbf22e687fa0726` |
+| Verified rollback Worker version | `25c70ee1-7859-4bf7-bfa2-b3fa7a6b61ce` |
 
 The primary build thread's /feedback Session ID and the public YouTube URL are
 entrant-controlled requirements. They cannot be inferred from source code,

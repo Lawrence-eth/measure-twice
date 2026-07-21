@@ -751,3 +751,44 @@ deprecated browser APIs and serves the document with `cache-control: no-store`.
 The same exact application artifact scores 100 locally for Best Practices,
 logs no console errors, and has no Inspector issues; the hosting-layer findings
 are not emitted by Pentimento source.
+
+## July 21 — Responsive folio v10.3 production release
+
+A full release audit found that the six-folio concept was correct but its
+smallest presentation still needed exacting finish work. Pentimento v10.3
+keeps every opening folio page-sized down to 320×640, gives the browser one
+clear snap destination per page, and preserves the complete teaching layer
+when Evidence, Release, or Prove is expanded. The failed Email state now keeps
+its evidence styling on hover, and the folio rail changes color without a
+transient reduced-motion contrast frame.
+
+The final source was pushed to GitHub and the configured ChatGPT Sites source
+branch, built once as a 73-file Vinext artifact, saved as immutable Sites
+version 7, and published through both ChatGPT Sites and the existing
+`pentimento.aethe.me` Cloudflare Worker route. The branded domain serves the
+same verified CSS and JavaScript bytes as the accepted build.
+
+| Check | Result |
+| --- | --- |
+| Deployed source | PASS · `430bd85234f2975fa1642cd9dc4f0a80a05f26c9` |
+| ChatGPT Sites version | PASS · version 7 · `appgprj_6a5b7bb5c4d881918b82a25beee7b6ff~appgver_f6701b8732288191b8521a38f0f18902` |
+| ChatGPT Sites deployment | PASS · `appgdep_6a5f1108f43081918545f50350dce587` |
+| Native Sites URL | PASS · `https://measure-twice.eason9504315.chatgpt.site` |
+| Branded public URL | PASS · `https://pentimento.aethe.me` |
+| Cloudflare Worker deployment | PASS · `b49b53b8-4efb-4a69-a9a1-534f108eb247` |
+| Cloudflare Worker version | PASS · `65644dee-accc-4826-9318-62eab9abb6dd` at 100% traffic |
+| Typecheck | PASS · no diagnostics |
+| Unit and API tests | PASS · 97/97 |
+| Sites-compatible Vinext build | PASS · 514 client modules; 73-file artifact |
+| Generated-artifact acceptance | PASS · 10/10 focused journey, short-phone, Axe, keyboard, and reduced-motion checks |
+| Hosted browser matrix | PASS · 34/34 desktop/mobile checks in 10.2 minutes |
+| Live visual acceptance | PASS · 320×640, 390×667, and 1440×650; 0px snap error; no clipping, collision, or horizontal overflow |
+| Live accessibility acceptance | PASS · zero Axe violations in tested states; visible keyboard focus; controls at least 44px; reduced-motion transitions disabled |
+| Exact production assets | PASS · all six referenced JS/CSS files byte-match the generated artifact |
+| Production endpoint boundary | PASS · root and API mode `200`; invalid reflection `400`; valid authored reflection `200`; unrelated root POST `403` |
+| Production reflection mode | PASS · deterministic `demo` response; no runtime API key required |
+| Rollback target | PASS · Worker `25c70ee1-7859-4bf7-bfa2-b3fa7a6b61ce`; Sites version 6 · `1a76a2c4b1bf483509b73fcfc16221dde7119b85` |
+
+Final hosted acceptance completed July 21, 2026 at 06:40 UTC. The earlier
+responsive Worker remains an explicit one-version rollback; DNS, routes, and
+security rules were unchanged.
