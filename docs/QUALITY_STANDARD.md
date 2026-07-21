@@ -219,8 +219,8 @@ Additional gates:
 - Storage failure does not prevent the authored journey.
 - Returning learners receive contextual resume information.
 - Restart removes only the current local learning record after confirmation.
-- Learner content remains local unless the learner explicitly invokes the
-  V1 brief workshop.
+- Learner content remains local unless the learner explicitly requests the
+  optional Teaching Mirror reflection after completing the V1 brief workshop.
 - The application has no authentication, analytics database, GitHub OAuth,
   arbitrary code execution, or real external mutation.
 

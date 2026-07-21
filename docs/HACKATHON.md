@@ -8,8 +8,7 @@ Submission deadline: **July 21, 2026 at 5:00 PM Pacific** (**July 22 at
 The Official Rules, Devpost form, and notices on
 [openai.devpost.com](https://openai.devpost.com) are the source of truth. This
 file contains submission-ready copy and the latest fully verified custom-domain
-release evidence. The branded deployment and native ChatGPT Sites deployment
-have separate public URLs and must be verified independently.
+release evidence. The sole submitted testing URL is the branded deployment.
 
 ## Devpost summary
 
@@ -32,10 +31,7 @@ consequential decisions, and an in-place lesson receipt after each stop.
 
 **Target public experience:**
 [pentimento.aethe.me](https://pentimento.aethe.me) — verified branded public
-address. The native ChatGPT Sites presentation is
-[pentimento.law-ender.chatgpt.site](https://pentimento.law-ender.chatgpt.site).
-Both currently resolve publicly; release identity must be recorded separately
-for each deployment rather than inferred from the matching title.
+address and sole Devpost testing URL.
 
 **Repository:** [github.com/Lawrence-eth/measure-twice](https://github.com/Lawrence-eth/measure-twice)
 
@@ -106,10 +102,10 @@ The lesson’s truth, answers, consequences, progression, and release gates are
 authored and deterministic. This makes the complete judge path work without an
 account, an API key, or network-dependent model output.
 
-Codex was the primary build collaborator for curriculum architecture, React and
-TypeScript implementation, responsive interaction, accessibility, automated
-testing, visual QA, and release preparation. The entrant retained the audience,
-pedagogy, scope, product, and design decisions.
+Codex with GPT-5.6 was the primary build collaborator for curriculum
+architecture, React and TypeScript implementation, responsive interaction,
+accessibility, automated testing, visual QA, and release preparation. The
+entrant retained the audience, pedagogy, scope, product, and design decisions.
 
 GPT-5.6 has one bounded optional product role after the learner has already
 created a complete local V1 brief. When the server is configured for live mode,
@@ -167,7 +163,7 @@ Eight-stop deterministic lesson ──► validated local progress
 | State | Versioned progress, ordered reachability, persisted opening evidence, safe parsing, resume, and restart | `lib/final-progress.ts` |
 | Optional reflection | Validated request boundary, deterministic fallback, rate limiting, hashed safety identifier, server-only credential, Responses API, and Zod structured output | `app/api/debrief/route.ts`, `lib/debrief-contracts.ts`, `lib/debrief.ts` |
 | Verification | Unit/API contracts plus full responsive, keyboard, focus, persistence, reduced-motion, and Axe browser journeys | `tests/*.test.ts`, `tests/e2e/final-journey.spec.ts` |
-| Delivery | Next.js source, Vinext-generated Worker artifact, ChatGPT Sites binding, and Cloudflare custom-domain runtime | `next.config.ts`, `wrangler.jsonc`, `.openai/hosting.json`, `scripts/` |
+| Delivery | Next.js source, Vinext-generated Worker artifact, and Cloudflare custom-domain runtime | `next.config.ts`, `wrangler.jsonc`, `scripts/` |
 
 The application has no database and no account system. Core lesson state and
 the unfinished brief remain in the current browser. The optional model endpoint
@@ -296,9 +292,9 @@ release card.”
 **Show:** Keep the final landing page visible and still; end on the title or
 four-chapter route rather than switching to unrelated footage.
 
-**Say:** “Codex was my primary collaborator across curriculum, typed state,
-responsive interaction, accessibility, testing, and release preparation. The
-optional Teaching Mirror is built for a bounded GPT-5.6 reflection after the
+**Say:** “Codex with GPT-5.6 was my primary collaborator across curriculum,
+typed state, responsive interaction, accessibility, testing, and release
+preparation. GPT-5.6 also powers the optional bounded Teaching Mirror after the
 local brief exists. This public demo uses the authored no-live-call mode, so
 judges need no key. Pentimento teaches people to look beneath AI polish.”
 
@@ -338,17 +334,15 @@ ID provide the separate implementation record required by the hackathon.
 ### Public experience
 
 - [x] Deploy and verify the exact v10.3 artifact at pentimento.aethe.me.
-- [x] Confirm pentimento.law-ender.chatgpt.site resolves publicly.
-- [ ] Publish the final reviewed landing artifact to every URL included in the
-  submission, then record each deployment identity separately.
-- [ ] Run the hosted desktop/mobile acceptance checks against the exact final
-  artifact at every submitted testing URL.
+- [ ] Publish the final reviewed landing artifact to pentimento.aethe.me.
+- [ ] Run the hosted desktop/mobile acceptance checks against that exact final
+  artifact.
 - [x] Verify all six folios, persisted opening evidence, four chapters,
   eight-stop route, 14 decisions, in-place receipts, Build kit, project-layer
   views, V1 brief, authored/live labels, restart, keyboard path, focus,
   reduced-motion behavior, and narrow layouts.
-- [ ] Record the final native Sites identity, custom-domain Worker identity,
-  hosted test result, date, and rollback target in docs/BUILD_LOG.md.
+- [ ] Record the final custom-domain Worker identity, hosted test result, date,
+  and rollback target in docs/BUILD_LOG.md.
 - [x] Confirm whether the submitted deployment uses live GPT-5.6 or the
   authored deterministic example, and describe it accurately.
 
@@ -385,15 +379,13 @@ ID provide the separate implementation record required by the hackathon.
 ## Verified release and final hand-in values
 
 The custom-domain v10.3 fields below come from exact-source deployment and
-hosted verification. The native ChatGPT Sites address was checked separately;
-its release identifier is not inferred from the earlier hosting project.
+hosted verification. Replace them only with evidence earned by the final
+candidate.
 
 | Field | Final value |
 | --- | --- |
 | Public YouTube demo URL | **TBD — entrant uploads and verifies public visibility** |
 | Primary Codex /feedback Session ID | **TBD — entrant obtains it from the primary build thread** |
-| Native ChatGPT Sites public URL | `https://pentimento.law-ender.chatgpt.site` · HTTP `200` verified July 21, 2026 14:50 UTC |
-| Native ChatGPT Sites release identifier | **TBD — record from the `law-ender` Sites project after the final publish** |
 | Last verified custom-domain source | `430bd85234f2975fa1642cd9dc4f0a80a05f26c9` |
 | Last verified custom-domain Worker release | Deployment `b49b53b8-4efb-4a69-a9a1-534f108eb247` · version `65644dee-accc-4826-9318-62eab9abb6dd` · 100% traffic |
 | Hosted v10.3 acceptance result and timestamp | PASS · 34/34 desktop/mobile browser checks; all six folios; 14-decision routes; V1 workshop; route-wide Axe; keyboard, reduced motion, persistence, restart, and 320/390/768/1440px reflow · July 21, 2026 06:40 UTC |

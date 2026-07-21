@@ -9,7 +9,7 @@
   },
   "scripts": {
     "dev": "next dev",
-    "build": "vinext build && node scripts/copy-hosting-metadata.mjs",
+    "build": "vinext build",
     "build:next": "next build",
     "start": "wrangler dev --config dist/server/wrangler.json",
     "start:next": "next start",

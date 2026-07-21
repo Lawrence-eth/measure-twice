@@ -315,6 +315,6 @@ A release is acceptable only when:
 - short viewports, 200% zoom, reduced motion, refresh restoration, dialog focus,
   and focus return pass;
 - performance and dependency audits are recorded for the exact candidate;
-- the production URL serves the exact saved Sites source version; and
+- the production URL serves the exact verified build artifact; and
 - README, product brief, quality standard, hackathon copy, screenshots, video,
   repository state, and hosted behavior agree.

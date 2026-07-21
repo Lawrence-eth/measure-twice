@@ -21,11 +21,10 @@ Built for the **Education** track of OpenAI Build Week 2026.
 
 - Public demo:
   [pentimento.aethe.me](https://pentimento.aethe.me)
-- Native ChatGPT Sites address:
-  [pentimento.law-ender.chatgpt.site](https://pentimento.law-ender.chatgpt.site)
 - Source:
   [github.com/Lawrence-eth/measure-twice](https://github.com/Lawrence-eth/measure-twice)
-- License: [MIT](LICENSE)
+- License: [MIT](LICENSE); bundled font notice:
+  [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)
 
 For submission copy, the landing-only video plan, judge instructions, and the
 remaining entrant-controlled fields, start with
@@ -324,8 +323,7 @@ npm audit --omit=dev
 - Browser tests cover the six-folio opening, both tool lanes, 14 decisions,
   remembered failure, repair/retry, lesson receipts, workshop, keyboard
   operation, accessibility, reduced motion, and 320–1440px layouts.
-- `npm run build` creates the ChatGPT Sites/Cloudflare-compatible `dist`
-  artifact and copies its hosting metadata.
+- `npm run build` creates the deployable Cloudflare Worker `dist` artifact.
 
 Run the generated Worker locally after `npm run build`:
 
@@ -339,18 +337,16 @@ Run the browser suite against a hosted candidate:
 PLAYWRIGHT_BASE_URL=https://pentimento.aethe.me npm run test:e2e
 ```
 
-## Deploy with ChatGPT Sites
+## Deployment
 
-Pentimento is connected to its existing Sites project through
-`.openai/hosting.json`. Before publishing, verify the exact candidate, push the
-reviewed Git state, push that exact source state to Sites, save a version with
-its exact commit SHA, and deploy only the saved version. Every Sites deployment
-URL is production. Re-run the hosted journey after propagation; a passing local
-server does not prove the public release.
+The submitted production experience is `https://pentimento.aethe.me`, served by
+the generated Cloudflare Worker configuration. Build once, deploy that exact
+`dist` artifact, and re-run the hosted journey after propagation; a passing
+local server does not prove the public release.
 
 ## How Codex and GPT-5.6 contributed
 
-Codex was the primary implementation collaborator. It accelerated:
+Codex with GPT-5.6 was the primary implementation collaborator. It accelerated:
 
 - turning “teach people to build with AI” into one deep, beginner-first
   Education-track lesson;
@@ -372,7 +368,8 @@ than rank brands, make failure and recovery visible, use the Pentimento
 underpainting metaphor, and demand an elegant page-by-page experience.
 
 The authored curriculum—not a model—decides what is correct and how progression
-works. GPT-5.6 has one optional, explicitly labelled role after the learner’s
+works. Separately from its role powering the Codex build collaboration,
+GPT-5.6 has one optional, explicitly labelled product role after the learner’s
 local V1 brief already exists.
 
 The primary Codex project thread’s `/feedback` Session ID must be entered in the
