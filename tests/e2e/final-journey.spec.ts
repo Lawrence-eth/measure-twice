@@ -446,7 +446,7 @@ async function openFresh(page: Page) {
   ).toBeVisible();
   await expect(
     page.getByText(
-      /Learn the decisions that turn an AI-made preview into a project you can test, publish, and recover/i,
+      /Learn what to decide between an AI preview and a tested, recoverable release/i,
     ),
   ).toBeVisible();
   await expect(
@@ -455,7 +455,7 @@ async function openFresh(page: Page) {
   const orientationFacts = page.locator("#p9-orientation .p9-orientation__facts");
   await expect(orientationFacts.getByText(/About 15 minutes/i)).toBeVisible();
   await expect(orientationFacts.getByText(/None required/i)).toBeVisible();
-  await expect(page.locator(".p9-folio-nav")).toHaveCount(1);
+  await expect(page.locator(".p9-folio-nav")).toHaveCount(0);
   await expect(page.locator(".p9-folio")).toHaveCount(6);
 }
 
@@ -464,9 +464,6 @@ async function expectIntroPageActive(page: Page, pageIndex: number) {
     "data-intro-folio",
     String(pageIndex),
   );
-  await expect(
-    page.locator(".p9-folio-nav button").nth(pageIndex),
-  ).toHaveAttribute("aria-current", "step");
   await expect(page.locator(".p9-welcome-header__progress > span")).toHaveText(
     `${String(pageIndex + 1).padStart(2, "0")} / 06`,
   );
@@ -742,8 +739,12 @@ async function completeCheck(
     recordFailure,
     options,
   );
+  await expect(rememberedTask).toHaveAttribute(
+    "data-task-context",
+    "Evidence carried from the introduction",
+  );
   await expect(rememberedTask).toContainText(
-    /Evidence carried from the introduction.*important path failed.*Nothing happened/is,
+    /important path failed.*Nothing happened/is,
   );
   await page
     .getByRole("button", {
@@ -947,10 +948,14 @@ async function keyboardSaveFieldCard(
       exact: true,
     }),
   );
-  await keyboardActivate(
-    page,
-    page.getByRole("button", { name: action, exact: true }),
-  );
+  const continueButton = page.getByRole("button", {
+    name: action,
+    exact: true,
+  });
+  await tabTo(page, continueButton);
+  await page.waitForTimeout(320);
+  await expect(continueButton).toBeFocused();
+  await page.keyboard.press("Enter");
 }
 
 test("presents six deliberate pages, turns a claim into evidence, and carries that evidence into the lesson", async ({
@@ -960,7 +965,6 @@ test("presents six deliberate pages, turns a claim into evidence, and carries th
   await openFresh(page);
 
   const folios = page.locator(".p9-folio");
-  const nav = page.locator(".p9-folio-nav");
   await expect
     .poll(() =>
       page.evaluate(
@@ -969,23 +973,7 @@ test("presents six deliberate pages, turns a claim into evidence, and carries th
     )
     .toMatch(/^y (?:proximity|mandatory)$/i);
   await expect(folios).toHaveCount(6);
-  await expect(nav.getByRole("button", { includeHidden: true })).toHaveCount(6);
-  await expect(nav).toContainText(
-    /What this is.*The claim.*The test.*The layers.*The method.*Your lesson/is,
-  );
-  for (const [index, label] of [
-    "What Pentimento teaches",
-    "Inspect the AI-ready claim",
-    "Test the important action",
-    "Reveal the hidden project layers",
-    "Learn the four-part method",
-    "Begin the interactive field lesson",
-  ].entries()) {
-    await expect(nav.locator("button").nth(index)).toHaveAttribute(
-      "aria-label",
-      `Go to page ${index + 1} of 6: ${label}`,
-    );
-  }
+  await expect(page.locator(".p9-folio-nav")).toHaveCount(0);
   await expect(page.locator(".p9-welcome-header__progress > span")).toHaveText(
     "01 / 06",
   );
@@ -997,7 +985,7 @@ test("presents six deliberate pages, turns a claim into evidence, and carries th
   await goToIntroPage(page, /Meet the finished-looking project/i, 1);
   const claim = page.locator("#p9-claim");
   await expect(claim).toContainText(
-    /Ready to publish.*What does a polished preview prove.*looks.*important action works/is,
+    /The claim.*What does a polished preview prove.*looks.*important action works.*AI says.*ready/is,
   );
   await expect(claim.locator('.p10-project-proof[data-state="claim"]')).toHaveCount(1);
   await expect(claim.locator(".p10-evidence-receipt")).not.toBeVisible();
@@ -1034,7 +1022,7 @@ test("presents six deliberate pages, turns a claim into evidence, and carries th
   });
   await page.mouse.move(0, 0);
   await expect(evidence.getByRole("status")).toContainText(
-    /Observed failure.*No email opened because the button has no address.*click is evidence.*important path is broken/is,
+    /Observed failure.*No email opened.*button has no address.*click is evidence.*important path is broken/is,
   );
 
   await goToIntroPage(page, /Reveal what the page cannot show/i, 3);
@@ -1049,7 +1037,7 @@ test("presents six deliberate pages, turns a claim into evidence, and carries th
     "true",
   );
   await expect(layers.locator("#p10-layer-detail")).toContainText(
-    /What did a person actually try and observe.*short evidence record.*important path/is,
+    /What did a person actually try and observe.*Evidence record.*important path/is,
   );
   await expect(layers).toContainText(
     /Promise.*Project home.*Evidence.*Release/is,
@@ -1082,7 +1070,7 @@ test("presents six deliberate pages, turns a claim into evidence, and carries th
   await goToIntroPage(page, /Start the guided build/i, 5);
   const lesson = page.locator("#p9-lesson");
   await expect(lesson).toContainText(
-    /04.*chapters.*08.*stops.*15.*minutes.*five reusable tools/is,
+    /04.*chapters.*08.*stops.*five reusable tools/is,
   );
   await lesson
     .getByRole("button", { name: /View all 8 stops/i })
@@ -1135,11 +1123,7 @@ test("moves one folio per desktop gesture and lands skip navigation on its headi
   await page.setViewportSize({ width: 1440, height: 650 });
   await openFresh(page);
   await expect(page.locator(".p4-skip")).toHaveCount(0);
-  expect(
-    await page
-      .locator(".p9-folio-nav")
-      .evaluate((element) => getComputedStyle(element).transitionDuration),
-  ).toBe("0s");
+  await expect(page.locator(".p9-folio-nav")).toHaveCount(0);
 
   await page.mouse.wheel(0, 700);
   await expect
@@ -1693,11 +1677,14 @@ test("persists the Check repair and requires the real retry before advancing", a
   await expect(retryTask).toBeVisible();
   await choice(retryTask, /Email the organizer/i).click();
 
-  await expect(
-    page.getByRole("group", { name: /The same visitor path now finishes/i }),
-  ).toContainText(
-    /Human-path evidence earned.*passing repeat is stronger/is,
+  const completedCheck = page.getByRole("group", {
+    name: /The same visitor path now finishes/i,
+  });
+  await expect(completedCheck).toHaveAttribute(
+    "data-task-context",
+    "Human-path evidence earned",
   );
+  await expect(completedCheck).toContainText(/passing repeat is stronger/is);
   await saveFieldCard(page, checkpointActions.check);
   await expectCurrentHeadingFocused(page, /Release what you checked/i);
   await expect
@@ -2099,7 +2086,7 @@ test("supports the complete core route with keyboard input alone", async ({
   await expect(evidenceLayer).toHaveAttribute("aria-selected", "true");
   await expect(layerGroup.locator('[aria-selected="true"]')).toHaveCount(1);
   await expect(page.locator("#p10-layer-detail")).toContainText(
-    /What did a person actually try and observe.*short evidence record.*important path/is,
+    /What did a person actually try and observe.*Evidence record.*important path/is,
   );
 
   await keyboardActivate(

@@ -60,14 +60,14 @@ export type FinalChoice<Id extends string> = {
 };
 
 export const finalOpening = {
-  kicker: "A 15-minute interactive lesson for first-time AI builders",
+  kicker: "For first-time AI builders",
   promise: "AI can make it look finished.",
   destination:
-    "Learn the decisions that turn an AI-made preview into a project you can test, publish, and recover.",
+    "Learn what to decide between an AI preview and a tested, recoverable release.",
   explanation:
-    "Direct one fictional site from idea to release. No coding required.",
+    "Guide one fictional site from idea to release.",
   payoff:
-    "Finish with five reusable tools: a V1 brief, tool map, AI work agreement, evidence ladder, and release-and-recovery card.",
+    "Five reusable tools: V1 brief · tool map · AI work agreement · evidence ladder · release card.",
   reassurance: "Fictional project · no email sent · nothing published",
   primaryAction: "Start: shape the promise",
   overviewAction: "View all 8 stops",
@@ -138,19 +138,19 @@ export const welcomeAuditLayers = [
 export const welcomeOutcomes = [
   {
     title: "Shape a first version you can finish",
-    detail: "Turn a feature wishlist into one person, one complete path, and a clear Not now boundary.",
+    detail: "One person. One complete path. A clear Not now.",
   },
   {
     title: "Choose tools by responsibility",
-    detail: "Know where AI builds, where the work survives, and which host serves the chosen version.",
+    detail: "Know where AI builds, files survive, and one version goes live.",
   },
   {
     title: "Control AI work",
-    detail: "Use a copyable work agreement that names context, boundaries, evidence, and a stopping point.",
+    detail: "Name the change, boundary, evidence, and stopping point.",
   },
   {
     title: "Prove and release",
-    detail: "Separate confident claims from evidence, repair an observed failure, publish an exact version, and keep recovery.",
+    detail: "Repair observed failure, check the live version, and keep recovery.",
   },
 ] as const;
 

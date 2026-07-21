@@ -87,86 +87,48 @@ type MirrorResult = {
 
 type ReflectionMode = "demo" | "live";
 
-const introFolios = [
-  {
-    id: "orientation",
-    number: "01",
-    shortLabel: "What this is",
-    label: "What Pentimento teaches",
-  },
-  {
-    id: "claim",
-    number: "02",
-    shortLabel: "The claim",
-    label: "Inspect the AI-ready claim",
-  },
-  {
-    id: "evidence",
-    number: "03",
-    shortLabel: "The test",
-    label: "Test the important action",
-  },
-  {
-    id: "layers",
-    number: "04",
-    shortLabel: "The layers",
-    label: "Reveal the hidden project layers",
-  },
-  {
-    id: "method",
-    number: "05",
-    shortLabel: "The method",
-    label: "Learn the four-part method",
-  },
-  {
-    id: "lesson",
-    number: "06",
-    shortLabel: "Your lesson",
-    label: "Begin the interactive field lesson",
-  },
+const introFolioLabels = [
+  "What this is",
+  "The claim",
+  "The test",
+  "The layers",
+  "The method",
+  "Your lesson",
 ] as const;
 
 const openingLayerDetails = [
   {
     prompt: "What single result must this version complete?",
-    summary: "What must the first version finish?",
-    artifact: "A first-version brief with a clear Not now boundary",
+    artifact: "V1 brief + a clear Not now",
   },
   {
     prompt: "Where do the files and their history survive?",
-    summary: "Where will files and history live?",
-    artifact: "A recoverable project home with version history",
+    artifact: "Project home + version history",
   },
   {
     prompt: "What did a person actually try and observe?",
-    summary: "What did a person verify?",
-    artifact: "A short evidence record tied to the important path",
+    artifact: "Evidence record for the important path",
   },
   {
     prompt: "Which checked version is live—and which can you restore?",
-    summary: "Which checked version is live?",
-    artifact: "A release-and-recovery record for one exact version",
+    artifact: "Release + recovery record for one exact version",
   },
 ] as const;
 
 const openingMethodDetails = [
   {
-    summary: "Define the first version",
     artifact: "V1 brief",
     proof: "One person can finish one complete path.",
   },
   {
-    summary: "Keep the work recoverable",
     artifact: "Tool map + project home",
     proof: "You can find the files, history, and host again.",
   },
   {
-    summary: "Bound the change",
     artifact: "AI work agreement",
     proof: "The requested change, boundary, and stopping point are visible.",
   },
   {
-    summary: "Check the exact version",
     artifact: "Evidence + release card",
     proof: "The important path works on the exact version that is live.",
   },
@@ -380,9 +342,6 @@ function ChoiceFeedback({
           >
             <b>{choice.recommended ? successLabel : riskLabel}</b>
             <p>{choice.consequence}</p>
-            <p className="p7-feedback__canvas-update">
-              <b>Canvas updated:</b> {choice.canvasChange}
-            </p>
             {!choice.recommended && lessonRule && (
               <p className="p7-feedback__working-rule">
                 <b>Working rule:</b> {lessonRule}
@@ -805,39 +764,12 @@ function SavedArtifact({ progress }: { progress: FinalProgress }) {
 }
 
 function FoundationSummary({ progress }: { progress: FinalProgress }) {
+  if (!progress.completedStages.length) return null;
   return (
     <div className="p4-layer-tabs" aria-label="Earlier saved layers">
-      {progress.completedStages.map((stage) => (
-        <span key={stage}>
-          {String(finalLearningStages.indexOf(stage) + 1).padStart(2, "0")} · {stageById[stage].navLabel} saved
-        </span>
-      ))}
+      <span>Saved lessons · {progress.completedStages.length}</span>
     </div>
   );
-}
-
-function savedDecisionReason(
-  stage: FinalLearningStage,
-  progress: FinalProgress,
-): string | null {
-  switch (stage) {
-    case "idea":
-      return ideaChoices.find((choice) => choice.id === progress.ideaChoice)?.consequence ?? null;
-    case "tools":
-      return toolChoices.find((choice) => choice.id === progress.toolChoice)?.consequence ?? null;
-    case "project-home":
-      return secretChoices.find((choice) => choice.id === progress.secretChoice)?.consequence ?? null;
-    case "ask-ai":
-      return planApprovalChoices.find((choice) => choice.id === progress.planApprovalChoice)?.consequence ?? null;
-    case "build":
-      return buildEvidenceChoices.find((choice) => choice.id === progress.buildEvidenceChoice)?.consequence ?? null;
-    case "check":
-      return checkRetryChoices.find((choice) => choice.id === progress.checkRetryChoice)?.consequence ?? null;
-    case "go-live":
-      return releaseProofChoices.find((choice) => choice.id === progress.releaseProofChoice)?.consequence ?? null;
-    case "improve":
-      return improveChoices.find((choice) => choice.id === progress.improveChoice)?.consequence ?? null;
-  }
 }
 
 function LastSavedRule({ progress }: { progress: FinalProgress }) {
@@ -851,9 +783,7 @@ function LastSavedRule({ progress }: { progress: FinalProgress }) {
       className="p5-saved-receipt"
       aria-label={`${previous.navLabel} lesson completed`}
     >
-      <span>Previous lesson · {previous.navLabel}</span>
-      <p>{previous.reusableRule}</p>
-      <small>{previous.savedLabel}</small>
+      <span>Last saved · {previous.navLabel}: {previous.savedLabel}</span>
     </aside>
   );
 }
@@ -1070,7 +1000,7 @@ function ProjectSurfaceVisual({ progress }: { progress: FinalProgress }) {
         </div>
       )}
       <p className="p5-surface__caption">
-        The surface shows what a visitor sees. The underlayers show why it can be trusted.
+        Surface shows the promise. Layers show the proof.
       </p>
     </div>
   );
@@ -1161,8 +1091,12 @@ function TaskShell({
 }) {
   const headingId = `${id}-question`;
   return (
-    <section className="p4-task" role="group" aria-labelledby={headingId}>
-      <p className="p4-task__eyebrow">{eyebrow}</p>
+    <section
+      className="p4-task"
+      data-task-context={eyebrow}
+      role="group"
+      aria-labelledby={headingId}
+    >
       <h2 id={headingId} tabIndex={-1}>{question}</h2>
       {hint && <p className="p4-task__hint">{hint}</p>}
       {children}
@@ -2010,7 +1944,6 @@ function StageCheckpoint({
   onContinue: () => void;
 }) {
   const stop = stageById[stage];
-  const reason = savedDecisionReason(stage, progress);
   return (
     <section className="p5-checkpoint" aria-labelledby={`${stage}-checkpoint-title`}>
       <span>
@@ -2019,17 +1952,7 @@ function StageCheckpoint({
       <h2 id={`${stage}-checkpoint-title`} tabIndex={-1}>
         {stop.reusableRule}
       </h2>
-      {reason && <p>{reason}</p>}
-      <dl>
-        <div>
-          <dt>Use this when</dt>
-          <dd>{stop.fieldUse}</dd>
-        </div>
-        <div>
-          <dt>Prevents</dt>
-          <dd>{stop.failurePrevented}</dd>
-        </div>
-      </dl>
+      <p>{stop.fieldUse}</p>
       <button className="p4-primary" type="button" onClick={onContinue}>
         {checkpointActions[stage]}
       </button>
@@ -2369,9 +2292,9 @@ function OpeningProjectArtifact({
           aria-atomic={failed ? "true" : undefined}
           role={failed ? "status" : undefined}
         >
-          <span>Observed failure · exact version · 12:04</span>
-          <b>No email opened because the button has no address.</b>
-          <p>That click is evidence: the page looks complete, but its important path is broken.</p>
+          <span>Observed failure</span>
+          <b>No email opened—the button has no address.</b>
+          <p>The click is evidence: the important path is broken.</p>
         </div>
       </div>
     </OpeningArtifactFrame>
@@ -2417,7 +2340,7 @@ function OpeningLayerArtifact({
   return (
     <OpeningArtifactFrame
       label="Explore the four working layers beneath an AI-built page"
-      marker="Underpainting · four layers"
+      marker="Choose a layer"
     >
       <div className="p10-layer-workbench">
         <div
@@ -2451,7 +2374,6 @@ function OpeningLayerArtifact({
             >
               <span>0{index + 1}</span>
               <b>{item.label}</b>
-              <small>{openingLayerDetails[index].summary}</small>
             </button>
           ))}
         </div>
@@ -2463,7 +2385,6 @@ function OpeningLayerArtifact({
           role="tabpanel"
           aria-labelledby={`p10-layer-tab-${layer.id}`}
         >
-          <span>Layer {activeLayer + 1} · question you own</span>
           <h3>{layer.label}</h3>
           <p>{detail.prompt}</p>
           <dl>
@@ -2519,7 +2440,6 @@ function OpeningMethodArtifact({
             >
               <span>0{item.number}</span>
               <b>{item.id}</b>
-              <small>{openingMethodDetails[index].summary}</small>
             </button>
           ))}
         </div>
@@ -2531,7 +2451,6 @@ function OpeningMethodArtifact({
           role="tabpanel"
           aria-labelledby={`p10-method-tab-${chapter.id}`}
         >
-          <span>Your decision · step 0{chapter.number}</span>
           <h3>{chapter.title}</h3>
           <p>{welcomeOutcomes[activeMethod].detail}</p>
           <div>
@@ -2558,7 +2477,6 @@ function OpeningRouteArtifact() {
         <p>
           <span><b>04</b> chapters</span>
           <span><b>08</b> stops</span>
-          <span>about <b>15</b> minutes</span>
         </p>
       </header>
       <ol>
@@ -2567,9 +2485,7 @@ function OpeningRouteArtifact() {
             <span>0{chapter.number}</span>
             <div>
               <b>{chapter.title}</b>
-              <p>{chapter.summary}</p>
             </div>
-            <small>{chapter.stages.length} {chapter.stages.length === 1 ? "stop" : "stops"}</small>
           </li>
         ))}
       </ol>
@@ -2910,6 +2826,7 @@ function PaginatedPrologue({
     if (!folio) return;
 
     programmaticFolioRef.current = index;
+    setActiveFolio(index);
     const behavior = preferredScrollBehavior();
     folio.scrollIntoView({
       block: "start",
@@ -2972,13 +2889,13 @@ function PaginatedPrologue({
 
       let nextFolio: number | null = null;
       if (event.key === "PageDown") {
-        nextFolio = Math.min(introFolios.length - 1, activeFolio + 1);
+        nextFolio = Math.min(introFolioLabels.length - 1, activeFolio + 1);
       } else if (event.key === "PageUp") {
         nextFolio = Math.max(0, activeFolio - 1);
       } else if (event.key === "Home") {
         nextFolio = 0;
       } else if (event.key === "End") {
-        nextFolio = introFolios.length - 1;
+        nextFolio = introFolioLabels.length - 1;
       }
 
       if (nextFolio === null || nextFolio === activeFolio) return;
@@ -3020,7 +2937,7 @@ function PaginatedPrologue({
       const nextFolio = Math.max(
         0,
         Math.min(
-          introFolios.length - 1,
+          introFolioLabels.length - 1,
           activeFolio + (event.deltaY > 0 ? 1 : -1),
         ),
       );
@@ -3051,28 +2968,10 @@ function PaginatedPrologue({
           Pentimento — learn to build trustworthy projects with AI
         </h1>
       )}
-      <nav className="p9-folio-nav" aria-label="Introduction pages">
-        <ol>
-          {introFolios.map((folio, index) => (
-            <li key={folio.id}>
-              <button
-                aria-current={activeFolio === index ? "step" : undefined}
-                aria-label={`Go to page ${index + 1} of ${introFolios.length}: ${folio.label}`}
-                type="button"
-                onClick={() => scrollToFolio(index)}
-              >
-                <span>{folio.number}</span>
-                <i aria-hidden="true" />
-                <b>{folio.shortLabel}</b>
-              </button>
-            </li>
-          ))}
-        </ol>
-      </nav>
-
       <div
         className="p9-folios"
         ref={scrollerRef}
+        role="region"
         aria-label="Pentimento introduction. Scroll one page at a time."
       >
         <section
@@ -3102,20 +3001,14 @@ function PaginatedPrologue({
               <p className="p9-orientation__answer">
                 {finalOpening.destination}
               </p>
-              <p className="p9-orientation__explanation">
-                {finalOpening.explanation}
-              </p>
             </div>
 
             <aside className="p9-orientation__definition">
-              <span>Pentimento · /ˌpɛntɪˈmɛntoʊ/</span>
+              <span>Why the name</span>
               <p>
-                An earlier version still visible beneath a finished painting.
+                An earlier version still visible beneath a finished painting—a
+                reminder to inspect the decisions beneath the surface.
               </p>
-              <b>
-                The name is a reminder: every finished surface carries the
-                decisions beneath it.
-              </b>
             </aside>
 
             <dl className="p9-orientation__facts">
@@ -3140,7 +3033,6 @@ function PaginatedPrologue({
             >
               <span>
                 Meet the finished-looking project
-                <small>One idea per page</small>
               </span>
               <i aria-hidden="true">02</i>
             </button>
@@ -3168,7 +3060,6 @@ function PaginatedPrologue({
             </div>
 
             <div className="p9-folio__copy p10-scene__copy">
-              <p className="p4-kicker">AI build report · “Ready to publish”</p>
               <h2 id="p9-claim-title" tabIndex={-1}>
                 What does a polished preview prove?
               </h2>
@@ -3190,7 +3081,6 @@ function PaginatedPrologue({
               >
                 <span>
                   Test the important path
-                  <small>Turn appearance into evidence</small>
                 </span>
                 <i aria-hidden="true">03</i>
               </button>
@@ -3219,13 +3109,12 @@ function PaginatedPrologue({
             </div>
 
             <div className="p9-folio__copy p10-scene__copy">
-              <p className="p4-kicker">Your first evidence check</p>
               <h2 id="p9-evidence-title" tabIndex={-1}>
                 Test the visitor’s one important action.
               </h2>
               <p>
-                This page promises that a visitor can email the organizer. Try
-                that exact path yourself.
+                Select “Email the organizer.” This is simulated; no email opens
+                or sends.
               </p>
             </div>
 
@@ -3238,14 +3127,6 @@ function PaginatedPrologue({
             </div>
 
             <div className="p10-scene__footer">
-              {auditStep === "surface" ? (
-                <aside className="p9-test-instruction">
-                  <span>Your task</span>
-                  <b>Select “Email the organizer”</b>
-                  <p>Evidence is what a person tries and observes on the exact version.</p>
-                </aside>
-              ) : null}
-
               {auditStep === "failed" && (
                 <button
                   className="p9-next p9-next--dark"
@@ -3254,7 +3135,6 @@ function PaginatedPrologue({
                 >
                   <span>
                     Reveal what the page cannot show
-                    <small>Inspect the project beneath it</small>
                   </span>
                   <i aria-hidden="true">04</i>
                 </button>
@@ -3284,13 +3164,11 @@ function PaginatedPrologue({
             </div>
 
             <div className="p9-folio__copy p10-scene__copy">
-              <p className="p4-kicker">What the finished page cannot show</p>
               <h2 id="p9-layers-title" tabIndex={-1}>
                 A trustworthy project has four working layers.
               </h2>
               <p>
-                Open the promise, project files, test evidence, and exact
-                release. AI can help with each; you own the decision.
+                Choose a layer to see the decision you own.
               </p>
             </div>
 
@@ -3307,10 +3185,9 @@ function PaginatedPrologue({
                 type="button"
                 onClick={() => scrollToFolio(4)}
               >
-                <span>
-                  Turn the layers into a method
-                  <small>Shape → Ground → Direct → Prove</small>
-                </span>
+                  <span>
+                    Turn the layers into a method
+                  </span>
                 <i aria-hidden="true">05</i>
               </button>
             </div>
@@ -3337,14 +3214,10 @@ function PaginatedPrologue({
             </div>
 
             <div className="p9-folio__copy p10-scene__copy">
-              <p className="p4-kicker">A method that survives the tool</p>
               <h2 id="p9-method-title" tabIndex={-1}>
                 Prompting is one move. Direction is the skill.
               </h2>
-              <p>
-                Shape the promise. Ground the work. Direct the AI. Prove the
-                release. The method survives when the tool changes.
-              </p>
+              <p>Choose a step to see its decision, artifact, and proof.</p>
             </div>
 
             <div className="p10-scene__artifact">
@@ -3360,10 +3233,9 @@ function PaginatedPrologue({
                 type="button"
                 onClick={() => scrollToFolio(5)}
               >
-                <span>
-                  Start the guided build
-                  <small>Apply the method to Willow Fix Day</small>
-                </span>
+                  <span>
+                    Start the guided build
+                  </span>
                 <i aria-hidden="true">06</i>
               </button>
             </div>
@@ -3390,16 +3262,15 @@ function PaginatedPrologue({
             </div>
 
             <div className="p9-lesson__heading">
-              <p className="p4-kicker">Learn by deciding, not watching</p>
               <h2 id="p9-lesson-title" tabIndex={-1}>
                 Now direct Willow Fix Day.
               </h2>
               <p>
-                Across eight short stops, own the project decisions, repair{" "}
+                Eight stops: repair{" "}
                 {auditStep === "failed"
                   ? "the failure you found"
                   : "an observed failure"}
-                , and finish with a checked release.
+                , then release a checked version.
               </p>
             </div>
 
@@ -3420,7 +3291,6 @@ function PaginatedPrologue({
             </div>
 
             <div className="p9-lesson__overview">
-              <span>Prefer to inspect the route first?</span>
               <button
                 className="p4-text-button"
                 type="button"
@@ -3468,7 +3338,7 @@ function PaginatedWelcome({
           <span aria-hidden="true">
             {String(activeFolio + 1).padStart(2, "0")} / 06
           </span>
-          <b>{introFolios[activeFolio].shortLabel}</b>
+          <b>{introFolioLabels[activeFolio]}</b>
         </div>
         {activeFolio === 5 ? (
           <button
@@ -3514,7 +3384,7 @@ function PreparingStudio() {
           <span>01 / 06</span>
           <b>What this is</b>
         </div>
-        <span className="p9-welcome-header__skip">Interactive field lesson</span>
+        <span className="p9-welcome-header__skip">Skip to lesson</span>
       </header>
       <main className="p9-main" id="main-content">
         <section
@@ -3533,17 +3403,13 @@ function PreparingStudio() {
               <p className="p9-orientation__answer">
                 {finalOpening.destination}
               </p>
-              <p className="p9-orientation__explanation">
-                {finalOpening.explanation}
-              </p>
             </div>
             <aside className="p9-orientation__definition">
-              <span>Pentimento · /ˌpɛntɪˈmɛntəʊ/</span>
-              <p>An earlier version still visible beneath a finished painting.</p>
-              <b>
-                The name is a reminder: every finished surface carries the
-                decisions beneath it.
-              </b>
+              <span>Why the name</span>
+              <p>
+                An earlier version still visible beneath a finished painting—a
+                reminder to inspect the decisions beneath the surface.
+              </p>
             </aside>
             <dl className="p9-orientation__facts">
               <div>
@@ -3559,13 +3425,15 @@ function PreparingStudio() {
                 <dd>Five reusable build tools</dd>
               </div>
             </dl>
-            <div className="p9-next p9-preparing__status" role="status">
+            <div className="p9-next p9-preparing__status" aria-hidden="true">
               <span>
-                Preparing the field lesson
-                <small>One useful decision per page</small>
+                Meet the finished-looking project
               </span>
-              <i aria-hidden="true">···</i>
+              <i>02</i>
             </div>
+            <p className="p4-visually-hidden" role="status">
+              Loading Pentimento
+            </p>
             <noscript className="p9-preparing__noscript">
               This interactive lesson needs JavaScript. Enable it and reload;
               no account is required.
@@ -3899,8 +3767,7 @@ function JourneyHeader({
                 ? "Lesson complete"
                 : `${String(currentNumber).padStart(2, "0")} / 08`}
             </span>
-            <b>{stageLabel(progress.stage)}</b>
-            <small>{chapter.title}</small>
+            <b>{progress.stage === "completion" ? "Complete" : chapter.title}</b>
           </span>
         </div>
         <div className="p4-header__actions">
@@ -5002,7 +4869,14 @@ export function PentimentoFinal() {
         }
       }
       scrollTimer = window.setTimeout(() => {
-        checkpoint?.focus({ preventScroll: true });
+        const active = document.activeElement;
+        const focusHasMoved =
+          active instanceof HTMLElement &&
+          active !== document.body &&
+          active.isConnected;
+        if (!focusHasMoved) {
+          checkpoint?.focus({ preventScroll: true });
+        }
       }, preferredScrollBehavior() === "auto" ? 0 : 260);
     });
     return () => {
@@ -5181,10 +5055,6 @@ export function PentimentoFinal() {
                     {stageById[progress.stage].heading}
                   </h1>
                   <p>{stageById[progress.stage].introduction}</p>
-                  <p className="p7-stage-output">
-                    <span>Make at this stop</span>
-                    <b>{stageById[progress.stage].canvasLayer}</b>
-                  </p>
                   <LastSavedRule progress={progress} />
                 </header>
                 <div className="p4-workspace">

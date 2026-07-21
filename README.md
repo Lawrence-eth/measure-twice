@@ -19,11 +19,18 @@ site.
 
 Built for the **Education** track of OpenAI Build Week 2026.
 
-- ChatGPT Site:
+- Public demo:
   [pentimento.aethe.me](https://pentimento.aethe.me)
+- Native ChatGPT Sites address:
+  [pentimento.law-ender.chatgpt.site](https://pentimento.law-ender.chatgpt.site)
 - Source:
   [github.com/Lawrence-eth/measure-twice](https://github.com/Lawrence-eth/measure-twice)
 - License: [MIT](LICENSE)
+
+For submission copy, the landing-only video plan, judge instructions, and the
+remaining entrant-controlled fields, start with
+[`docs/HACKATHON.md`](docs/HACKATHON.md). The release-by-release collaboration
+and verification record is in [`docs/BUILD_LOG.md`](docs/BUILD_LOG.md).
 
 ## Why this lesson exists
 
@@ -45,7 +52,7 @@ different. A chat is not automatically a project home. A repository is not a
 public site. A successful deployment is not proof that a visitor can complete
 the important path.
 
-## The v10 page-by-page opening
+## The six-page opening
 
 The opening is six deliberately composed folios, numbered 01–06. It uses the
 page itself as the scroller—there is no nested story panel. Each folio answers
@@ -60,15 +67,22 @@ one question and advances one visual idea:
 | **05 · The method** | What is the learner’s role around AI? | Explore Shape, Ground, Direct, and Prove |
 | **06 · Your lesson** | What happens next? | Begin the eight-stop field lesson or inspect its map |
 
+The editorial rule is one question, one meaningful artifact, and one next move
+per page. Explanations appear where a choice changes their meaning—in the
+failure receipt and selected layer or method panel—rather than as repeated
+introductory copy. This keeps the landing readable while preserving the deeper
+curriculum behind interaction.
+
 On desktop, each deliberate wheel or keyboard gesture settles one full folio,
 including compact short-height layouts. Tall tablet and phone layouts also
 settle by page; short narrow screens, high zoom, and reduced motion return to
-forgiving natural scrolling. Layouts wider than 1120px include a six-step,
-keyboard-operable rail; smaller screens use the persistent page counter and
-in-flow next actions. Claim, evidence, layers, and method each have a dedicated
-responsive artifact—no text-bearing mockup is scaled or cropped to fit. Tablet
-layouts keep the explanation and artifact side by side; phones recompose the
-same material into one reading flow.
+forgiving natural scrolling. The persistent page counter communicates position;
+in-flow next actions, normal root scrolling, and Page Up/Page Down/Home/End
+provide navigation without an edge rail covering the compositions. Claim,
+evidence, layers, and method each have a dedicated responsive artifact—no
+text-bearing mockup is scaled or cropped to fit. Tablet layouts keep the
+explanation and artifact side by side; phones recompose the same material into
+one reading flow.
 
 The opening does not reveal the failure before the learner tests it. The test
 on folio 03 is the actual evidence check—not a teaser for a duplicate
@@ -101,10 +115,10 @@ Save this lesson → Lesson receipt → next stop
 ```
 
 Correct feedback stays in place; there is no delayed auto-scroll or automatic
-advance. The receipt names the reusable rule, when to use it, and the failure it
-prevents. Receipts are marked **Lesson receipt · practice saved · n / 8**. They
-do not pretend to create eight separate tools: the complete Build kit contains
-five durable guides.
+advance. The receipt names the reusable rule and one practical place to use it.
+Receipts are marked **Lesson receipt · practice saved · n / 8**. They do not
+pretend to create eight separate tools: the complete Build kit contains five
+durable guides.
 
 Wrong choices are educational rather than punitive. Each explains the added
 system, missing proof, or unnecessary risk and remains recoverable. There are
@@ -213,36 +227,56 @@ configured `OPENAI_MODEL` (Build Week default `gpt-5.6`), structured output,
 safety identifier. Provider failure falls back to the clearly labelled authored
 example without blocking the local brief.
 
-## Current demo flow
+## Recommended demo flow
 
-1. Open the ChatGPT Site and read folio 01.
-2. Move to folio 02 and inspect the untested **Ready to publish** claim.
-3. On folio 03, select **Email the organizer** and read the observed-failure
-   receipt.
-4. Continue through the four hidden layers and interactive
-   Shape/Ground/Direct/Prove method.
-5. On folio 06, select **Start: shape the promise**.
-6. Follow either tool lane through the eight stops. Open the mobile project
-   layer only when useful; **Lesson map** shows the whole route.
-7. At Check, record the failure remembered from the opening, make the bounded
-   repair, and retry it.
-8. Release checked V4, test the simulated public path, preserve recovery, then
-   make the source-backed V5 update.
-9. At completion, open the Build kit or select **Create my V1 brief**.
-10. If showing reflection, identify it using the mode label displayed in the
-    interface.
+The under-three-minute submission video is designed around the six-page
+opening. It demonstrates the complete thesis without rushing through the
+longer practice route:
+
+1. On **01 · What this is**, establish the audience, problem, and five things
+   the learner keeps.
+2. On **02 · The claim**, show that a finished-looking preview proves
+   appearance, not behavior.
+3. On **03 · The test**, select **Email the organizer** and hold long enough for
+   the observed-failure receipt to be legible.
+4. On **04 · The layers**, select at least **Evidence** and **Release** to show
+   that trust depends on decisions beneath the surface.
+5. On **05 · The method**, move through Shape, Ground, Direct, and Prove; pause
+   on **Prove** so the exact-version idea lands.
+6. On **06 · Your lesson**, show the four-chapter, eight-stop route and the five
+   reusable tools. End before starting the long-form lesson.
+
+The landing is not a decorative trailer. Folio 03 produces evidence that is
+carried into the lesson when the learner starts, and folios 04–05 use
+keyboard-operable tabs with meaningful artifacts and proof. The complete
+eight-stop lesson remains available for judging and repository testing; the
+video simply uses the opening as its deliberate, self-contained story. A timed
+narration script is in
+[`docs/HACKATHON.md`](docs/HACKATHON.md).
 
 All Willow Fix Day people, addresses, versions, URLs, releases, and external
 actions are fictional or simulated. Progress is stored in the current browser.
 **Start over** asks for confirmation before removing the saved lesson, project
 layers, and workshop draft from that device.
 
+## Sample data and supported environment
+
+No external dataset or seed import is required. The fictional Willow Fix Day
+case, project versions, evidence records, choices, feedback, and Build kit are
+authored in the repository, so a judge receives the complete experience on the
+first load.
+
+Pentimento is a responsive web application intended for current desktop and
+mobile browsers. Automated browser acceptance uses Chromium desktop and mobile
+profiles, with explicit contracts at 320, 390, 768, and 1440 pixels. Keyboard,
+focus, reduced-motion, and route-wide Axe checks are part of the browser suite.
+
 ## Run locally
 
 Requirements: **Node.js 22 or newer**.
 
 ```bash
-npm install
+npm ci
 npm run dev
 ```
 
@@ -374,8 +408,30 @@ Devpost submission form before the deadline.
   responsive, keyboard, accessibility, persistence, and full-journey coverage
 - [`docs/FINAL_EXPERIENCE.md`](docs/FINAL_EXPERIENCE.md) — experience
   contract
+- [`docs/CURRICULUM.md`](docs/CURRICULUM.md) — learning rationale, teaching
+  sequence, misconceptions, and source notes
+- [`docs/QUALITY_STANDARD.md`](docs/QUALITY_STANDARD.md) — content, product,
+  accessibility, evidence, and release-quality bar
+- [`docs/HACKATHON.md`](docs/HACKATHON.md) — submission copy, judge path,
+  landing-only video script, criteria mapping, and checklist
 - [`docs/BUILD_LOG.md`](docs/BUILD_LOG.md) — dated design, collaboration, and
   release evidence
+
+## Hackathon provenance
+
+This repository began from an empty project on **July 18, 2026**, inside the
+OpenAI Build Week submission period. It is therefore new hackathon work rather
+than a pre-existing product with an added feature. The dated design history,
+commit references, human decisions, Codex contribution, and immutable release
+evidence are recorded in [`docs/BUILD_LOG.md`](docs/BUILD_LOG.md).
+
+The core curriculum and judging path are authored and deterministic. Codex was
+the primary implementation collaborator. GPT-5.6 is integrated only through
+the optional, bounded Teaching Mirror after the local brief exists; the public
+judge deployment can remain in deterministic demo mode and must not be
+described as making a live model call. The Devpost submission must separately
+include the primary Codex thread's `/feedback` Session ID and describe the
+model shown in the video exactly as its visible mode label states.
 
 ## License
 

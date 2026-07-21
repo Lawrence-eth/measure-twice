@@ -1,9 +1,9 @@
-# Pentimento v10 experience contract
+# Pentimento experience contract
 
-This document is the implementation contract for the six-folio, page-by-page
-release candidate. Earlier release results remain historical evidence in
-[BUILD_LOG.md](BUILD_LOG.md); the exact v9 evidence is recorded there
-separately and does not prove v10.
+This document is the implementation contract for the current six-page,
+page-by-page experience. Release results remain historical evidence in
+[BUILD_LOG.md](BUILD_LOG.md); evidence recorded for one commit does not certify
+a later change.
 
 ## Product truth
 
@@ -35,24 +35,23 @@ not a nested scroller, dashboard, feature menu, or preliminary carousel.
 
 | Folio | Name | Job |
 | --- | --- | --- |
-| **01** | What this is | Explain Pentimento, its audience, duration, boundary, and five takeaways |
+| **01** | What this is | Explain Pentimento, its audience, duration, and five takeaways |
 | **02** | The claim | Present a polished Willow Fix Day preview and the untested AI claim |
 | **03** | The test | Let the learner test the only important visitor action |
 | **04** | The layers | Reveal Promise, Project home, Evidence, and Release |
 | **05** | The method | Make Shape, Ground, Direct, and Prove interactive |
 | **06** | Your lesson | Hand the learner into the eight-stop field lesson |
 
-Folio 01 must answer before asking:
+Folio 01 answers before asking:
 
 - **What is this?** An interactive field lesson for first-time AI builders.
-- **What will I do?** Direct a fictional site from rough idea to checked public
-  version without writing code.
-- **Why does it matter?** A polished surface cannot prove behavior, custody,
-  release identity, or recovery.
+- **What will I learn?** What to decide between an AI preview and a tested,
+  recoverable release.
+- **Why does it matter?** AI can make a project look finished before its
+  important path has been tested.
 - **What will I keep?** A V1 brief, tool map, AI work agreement, evidence
   ladder, and release-and-recovery card.
-- **What is safe?** The project is fictional; no email is sent and nothing is
-  published.
+- **What does it require?** About 15 minutes and no prior experience.
 
 Folio 02 makes no spoiler. **Ready to publish** remains visibly labelled as an
 AI report with untested evidence.
@@ -63,7 +62,7 @@ has no address, and distinguishes how the preview looked from how it behaved.
 The failure is not announced before the click.
 
 Folio 04 exposes four working layers after evidence has been produced. Folio
-05 lets the learner inspect each part of the method and its consequence, not
+05 lets the learner inspect each part of the method, its artifact, and proof—not
 merely read four slogans. Folio 06 says exactly what the eight-stop lesson will
 ask and offers **Start: shape the promise** as the primary action. **View all 8
 stops** is secondary.
@@ -77,11 +76,11 @@ stops** is secondary.
   mandatory one-page settlement.
 - Short narrow viewports, high zoom, and reduced-motion layouts use normal
   scrolling so content is never trapped inside an undersized page.
-- Above 1120px, a six-step rail exposes current position and direct navigation
-  with meaningful accessible names. Smaller layouts use the sticky counter and
-  in-flow actions.
+- A persistent header counter exposes current position without adding an edge
+  rail over the composition. In-flow next actions, normal root scrolling, and
+  Page Up/Page Down/Home/End provide navigation.
 - The active folio changes only after the next page’s prose crosses the reading
-  line; the rail must not announce content before it is visible.
+  line; the counter must not announce content before it is visible.
 - Claim, evidence, layers, and method use separate responsive artifacts. No
   text-bearing artifact may be transformed smaller or cropped to fit.
 - Tablet recomposes explanation and artifact into two columns; phone layouts
@@ -174,9 +173,9 @@ lesson**. The task becomes:
 Lesson receipt · practice saved · n / 8
 ```
 
-The receipt states the transferable rule, when to use it, and the failure it
-prevents. A predictable action continues to the next stop. The wording never
-claims each receipt creates a new Build-kit guide.
+The receipt states the transferable rule and one practical place to use it. A
+predictable action continues to the next stop. The wording never claims each
+receipt creates a new Build-kit guide or repeats the full decision feedback.
 
 Wrong answers show a literal `×`, explain the cost or missing evidence, and
 remain revisable. Recommended choices show a literal `✓`; color and animation
@@ -302,7 +301,7 @@ text, and motion never disagree.
 
 ## Acceptance contract
 
-The v10 release is acceptable only when:
+A release is acceptable only when:
 
 - unit, API, state, and type checks pass;
 - the complete desktop and mobile journeys pass;

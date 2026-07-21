@@ -6269,7 +6269,7 @@ html[data-pentimento-transition="prologue"]::view-transition-new(pentimento-arti
 /* Pentimento v9 — six composed, page-by-page introduction folios */
 
 html.p9-intro-active {
-  scroll-behavior: smooth;
+  scroll-behavior: auto;
   scroll-padding-top: 72px;
   scroll-snap-type: y proximity;
 }
@@ -6315,10 +6315,7 @@ html.p9-intro-active {
   border-color: var(--p6-rule);
   background: #e8e9e6;
   color: var(--p6-carbon);
-  transition:
-    color 360ms var(--p7-state-ease),
-    background-color 360ms var(--p7-state-ease),
-    border-color 360ms var(--p7-state-ease);
+  transition: none;
 }
 
 .p9-welcome-header > .p4-brand {
@@ -6338,7 +6335,7 @@ html.p9-intro-active {
   font-variation-settings: "wdth" 84, "wght" 620;
   letter-spacing: 0.085em;
   text-transform: uppercase;
-  transition: color 360ms var(--p7-state-ease);
+  transition: none;
 }
 
 .p9-welcome-header__progress > span {
@@ -6346,7 +6343,7 @@ html.p9-intro-active {
   border-right: 1px solid currentColor;
   color: var(--p6-cobalt);
   font-variation-settings: "wdth" 82, "wght" 690;
-  transition: color 360ms var(--p7-state-ease);
+  transition: none;
 }
 
 .p9-welcome-header__progress > b {
@@ -6364,9 +6361,7 @@ html.p9-intro-active {
   font-size: 12px;
   font-variation-settings: "wght" 620;
   text-decoration: none;
-  transition:
-    color var(--p7-hover) var(--p7-state-ease),
-    border-color var(--p7-hover) var(--p7-state-ease);
+  transition: border-color var(--p7-hover) var(--p7-state-ease);
 }
 
 .p9-welcome-header__skip::after {
@@ -9544,15 +9539,15 @@ button.p10-project-page__action:active:not(:disabled):not([aria-disabled="true"]
 .p9-folio.is-active .p10-scene__copy,
 .p9-folio.is-active .p10-scene__artifact,
 .p9-folio.is-active .p10-scene__footer {
-  animation: p10-scene-in 520ms var(--p7-enter) both;
+  animation: p10-scene-in 420ms var(--p7-enter) both;
 }
 
 .p9-folio.is-active .p10-scene__artifact {
-  animation-delay: 70ms;
+  animation-delay: 35ms;
 }
 
 .p9-folio.is-active .p10-scene__footer {
-  animation-delay: 120ms;
+  animation-delay: 70ms;
 }
 
 .p10-scene .p4-kicker,
@@ -9568,7 +9563,7 @@ button.p10-project-page__action:active:not(:disabled):not([aria-disabled="true"]
 @keyframes p10-scene-in {
   from {
     opacity: 0;
-    transform: translateY(18px);
+    transform: translateY(12px);
   }
   to {
     opacity: 1;
@@ -11015,6 +11010,10 @@ button.p10-project-page__action:active:not(:disabled):not([aria-disabled="true"]
     -webkit-box-orient: initial;
     -webkit-line-clamp: unset;
   }
+
+  #p9-evidence .p10-project-proof[data-state="failed"] .p10-evidence-receipt > p {
+    font-size: 10px;
+  }
 }
 
 /* Short phones keep the six-folio rhythm without clipping the teaching layer. */
@@ -11242,6 +11241,30 @@ button.p10-project-page__action:active:not(:disabled):not([aria-disabled="true"]
   #p9-method .p10-scene__artifact {
     margin-top: 0;
   }
+
+  #p9-evidence .p10-project-proof[data-state="failed"] .p10-evidence-receipt > b {
+    font-size: 11px;
+  }
+
+  #p9-evidence .p10-project-proof[data-state="failed"] .p10-evidence-receipt > p {
+    font-size: 10px;
+  }
+}
+
+/* v10.4 · one idea per reading layer */
+.p9-orientation__definition p:last-child {
+  margin-bottom: 0;
+}
+
+.p10-layer-sheet > span,
+.p10-method-steps button > span {
+  grid-row: auto;
+  align-self: center;
+}
+
+.p10-layer-sheet > b,
+.p10-method-steps button > b {
+  align-self: center;
 }
 
 @media (prefers-reduced-motion: no-preference) and (max-width: 560px) and (min-height: 640px) and (max-height: 779px) {
