@@ -60,17 +60,17 @@ export type FinalChoice<Id extends string> = {
 };
 
 export const finalOpening = {
-  kicker: "An interactive field lesson for first-time AI builders",
+  kicker: "A 15-minute interactive lesson for first-time AI builders",
   promise: "AI can make it look finished.",
   destination:
-    "Pentimento teaches you how to turn an AI-made preview into a project you can test, trust, and release.",
+    "Learn the decisions that turn an AI-made preview into a project you can test, publish, and recover.",
   explanation:
-    "Direct one fictional site from idea to a checked public version—without writing code.",
+    "Direct one fictional site from idea to release. No coding required.",
   payoff:
     "Finish with five reusable tools: a V1 brief, tool map, AI work agreement, evidence ladder, and release-and-recovery card.",
   reassurance: "Fictional project · no email sent · nothing published",
-  primaryAction: "Begin with the first promise",
-  overviewAction: "Preview the 8-stop route",
+  primaryAction: "Start: shape the promise",
+  overviewAction: "View all 8 stops",
 } as const;
 
 export const welcomePrologueBeats = [

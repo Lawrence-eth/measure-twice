@@ -10,6 +10,14 @@ test.describe.configure({ timeout: 180_000 });
 
 const STORAGE_KEY = "pentimento-studio-v4";
 const MOBILE_VIEWPORT = { width: 390, height: 844 };
+const introHeadingNames = [
+  /AI can make it look finished/i,
+  /What does a polished preview prove\?/i,
+  /Test the visitor’s one important action/i,
+  /A trustworthy project has four working layers/i,
+  /Prompting is one move\. Direction is the skill/i,
+  /Now direct Willow Fix Day/i,
+] as const;
 const wcagTags = [
   "wcag2a",
   "wcag2aa",
@@ -121,6 +129,126 @@ async function expectNoHorizontalOverflow(page: Page) {
       dimensions.clientWidth
     }px; offenders: ${JSON.stringify(dimensions.offenders)}`,
   ).toBeLessThanOrEqual(dimensions.clientWidth + 1);
+}
+
+async function expectFullyVisibleAndHittable(
+  control: Locator,
+  clipRoot: Locator,
+  minimumHeight = 44,
+) {
+  await expect(control).toBeVisible();
+
+  const [controlBox, rootBox, viewport, centerHit] = await Promise.all([
+    control.boundingBox(),
+    clipRoot.boundingBox(),
+    control.evaluate((element) => ({
+      width: window.innerWidth,
+      height: window.innerHeight,
+      headerBottom:
+        document
+          .querySelector<HTMLElement>(".p9-welcome-header")
+          ?.getBoundingClientRect().bottom ?? 0,
+    })),
+    control.evaluate((element) => {
+      const rect = element.getBoundingClientRect();
+      const target = document.elementFromPoint(
+        rect.left + rect.width / 2,
+        rect.top + rect.height / 2,
+      );
+      return Boolean(target && (target === element || element.contains(target)));
+    }),
+  ]);
+
+  expect(controlBox, "the control should have a rendered box").not.toBeNull();
+  expect(rootBox, "the clipping root should have a rendered box").not.toBeNull();
+  expect(
+    controlBox!.height,
+    "the control should retain a practical touch target",
+  ).toBeGreaterThanOrEqual(minimumHeight);
+  expect(controlBox!.x).toBeGreaterThanOrEqual(rootBox!.x - 1);
+  expect(controlBox!.x + controlBox!.width).toBeLessThanOrEqual(
+    rootBox!.x + rootBox!.width + 1,
+  );
+  expect(controlBox!.y).toBeGreaterThanOrEqual(rootBox!.y - 1);
+  expect(controlBox!.y + controlBox!.height).toBeLessThanOrEqual(
+    rootBox!.y + rootBox!.height + 1,
+  );
+  expect(controlBox!.x).toBeGreaterThanOrEqual(-1);
+  expect(controlBox!.x + controlBox!.width).toBeLessThanOrEqual(
+    viewport.width + 1,
+  );
+  expect(controlBox!.y).toBeGreaterThanOrEqual(viewport.headerBottom - 1);
+  expect(controlBox!.y + controlBox!.height).toBeLessThanOrEqual(
+    viewport.height + 1,
+  );
+  expect(
+    centerHit,
+    "the control center should be the topmost hit target before Playwright scrolls it",
+  ).toBe(true);
+}
+
+async function expectPhraseUnclippedAndUnscaled(artifact: Locator) {
+  const phraseLines = artifact.locator(".p10-project-page h3 > span");
+  await expect(phraseLines).toHaveCount(2);
+  await expect(phraseLines.nth(0)).toHaveText("Bring it broken.");
+  await expect(phraseLines.nth(1)).toHaveText("Leave with a plan.");
+
+  for (let index = 0; index < 2; index += 1) {
+    const audit = await phraseLines.nth(index).evaluate((element) => {
+      const boundary = element.closest<HTMLElement>(".p10-artifact");
+      const elementRect = element.getBoundingClientRect();
+      const clippedBy: string[] = [];
+      const scaledBy: Array<{ selector: string; scaleX: number; scaleY: number }> = [];
+      let current: HTMLElement | null = element.parentElement;
+
+      while (current) {
+        const styles = getComputedStyle(current);
+        const selector = `${current.tagName.toLowerCase()}${
+          current.id ? `#${current.id}` : ""
+        }${
+          current.className
+            ? `.${String(current.className).trim().split(/\s+/).join(".")}`
+            : ""
+        }`;
+
+        if (styles.transform !== "none") {
+          const matrix = new DOMMatrixReadOnly(styles.transform);
+          if (Math.abs(Math.abs(matrix.a) - 1) > 0.01 || Math.abs(Math.abs(matrix.d) - 1) > 0.01) {
+            scaledBy.push({ selector, scaleX: matrix.a, scaleY: matrix.d });
+          }
+        }
+
+        const clipsX = /hidden|clip|scroll|auto/.test(styles.overflowX);
+        const clipsY = /hidden|clip|scroll|auto/.test(styles.overflowY);
+        if (clipsX || clipsY) {
+          const ancestorRect = current.getBoundingClientRect();
+          const clippedHorizontally =
+            clipsX &&
+            (elementRect.left < ancestorRect.left - 1 ||
+              elementRect.right > ancestorRect.right + 1);
+          const clippedVertically =
+            clipsY &&
+            (elementRect.top < ancestorRect.top - 1 ||
+              elementRect.bottom > ancestorRect.bottom + 1);
+          if (clippedHorizontally || clippedVertically) clippedBy.push(selector);
+        }
+
+        if (current === boundary) break;
+        current = current.parentElement;
+      }
+
+      return { clippedBy, scaledBy };
+    });
+
+    expect(
+      audit.clippedBy,
+      `phrase line ${index + 1} should not escape a clipping ancestor`,
+    ).toEqual([]);
+    expect(
+      audit.scaledBy,
+      `phrase line ${index + 1} should not inherit a scaled mockup`,
+    ).toEqual([]);
+  }
 }
 
 async function expectCurrentHeadingFocused(
@@ -318,16 +446,37 @@ async function openFresh(page: Page) {
   ).toBeVisible();
   await expect(
     page.getByText(
-      /teaches you how to turn an AI-made preview into a project you can test, trust, and release/i,
+      /Learn the decisions that turn an AI-made preview into a project you can test, publish, and recover/i,
     ),
   ).toBeVisible();
   await expect(
     page.getByText(/An earlier version still visible beneath a finished painting/i),
   ).toBeVisible();
-  await expect(page.getByText(/About 15 minutes/i)).toBeVisible();
-  await expect(page.getByText(/None required/i)).toBeVisible();
+  const orientationFacts = page.locator("#p9-orientation .p9-orientation__facts");
+  await expect(orientationFacts.getByText(/About 15 minutes/i)).toBeVisible();
+  await expect(orientationFacts.getByText(/None required/i)).toBeVisible();
   await expect(page.locator(".p9-folio-nav")).toHaveCount(1);
   await expect(page.locator(".p9-folio")).toHaveCount(6);
+}
+
+async function expectIntroPageActive(page: Page, pageIndex: number) {
+  await expect(page.locator(".p9-welcome")).toHaveAttribute(
+    "data-intro-folio",
+    String(pageIndex),
+  );
+  await expect(
+    page.locator(".p9-folio-nav button").nth(pageIndex),
+  ).toHaveAttribute("aria-current", "step");
+  await expect(page.locator(".p9-welcome-header__progress > span")).toHaveText(
+    `${String(pageIndex + 1).padStart(2, "0")} / 06`,
+  );
+  await expect(page.locator(".p9-folio[inert]")).toHaveCount(0);
+  await expect(page.locator(".p9-folio.is-active")).toHaveCount(1);
+  await expect(
+    page
+      .locator(".p9-folio.is-active")
+      .getByRole("heading", { name: introHeadingNames[pageIndex] }),
+  ).toBeFocused();
 }
 
 async function goToIntroPage(
@@ -336,13 +485,7 @@ async function goToIntroPage(
   pageIndex: number,
 ) {
   await page.getByRole("button", { name: actionName }).click();
-  await expect(page.locator(".p9-welcome")).toHaveAttribute(
-    "data-intro-folio",
-    String(pageIndex),
-  );
-  await expect(
-    page.locator(".p9-folio-nav button").nth(pageIndex),
-  ).toHaveAttribute("aria-current", "step");
+  await expectIntroPageActive(page, pageIndex);
 }
 
 async function startWithIdea(
@@ -351,7 +494,7 @@ async function startWithIdea(
 ) {
   await openFresh(page);
   await goToIntroPage(page, /Meet the finished-looking project/i, 1);
-  await goToIntroPage(page, /What did the preview prove\?/i, 2);
+  await goToIntroPage(page, /Test the important path/i, 2);
 
   const evidencePage = page.locator("#p9-evidence");
   await activate(
@@ -361,17 +504,17 @@ async function startWithIdea(
     }),
     counter,
   );
-  await expect(evidencePage).toContainText(
-    /Observed evidence.*Nothing happened.*important path failed/is,
+  await expect(evidencePage.getByRole("status")).toContainText(
+    /Observed failure.*No email opened.*important path is broken/is,
   );
 
-  await goToIntroPage(page, /Look beneath the surface/i, 3);
-  await goToIntroPage(page, /Learn the directing method/i, 4);
-  await goToIntroPage(page, /Now direct the project/i, 5);
+  await goToIntroPage(page, /Reveal what the page cannot show/i, 3);
+  await goToIntroPage(page, /Turn the layers into a method/i, 4);
+  await goToIntroPage(page, /Start the guided build/i, 5);
   await page
     .locator("#p9-lesson")
     .getByRole("button", {
-      name: "Begin with the first promise",
+      name: "Start: shape the promise",
       exact: true,
     })
     .click();
@@ -824,64 +967,109 @@ test("presents six deliberate pages, turns a claim into evidence, and carries th
         () => getComputedStyle(document.documentElement).scrollSnapType,
       ),
     )
-    .toMatch(/^y(?: proximity)?$/i);
+    .toMatch(/^y (?:proximity|mandatory)$/i);
   await expect(folios).toHaveCount(6);
   await expect(nav.getByRole("button", { includeHidden: true })).toHaveCount(6);
   await expect(nav).toContainText(
     /What this is.*The claim.*The test.*The layers.*The method.*Your lesson/is,
   );
+  for (const [index, label] of [
+    "What Pentimento teaches",
+    "Inspect the AI-ready claim",
+    "Test the important action",
+    "Reveal the hidden project layers",
+    "Learn the four-part method",
+    "Begin the interactive field lesson",
+  ].entries()) {
+    await expect(nav.locator("button").nth(index)).toHaveAttribute(
+      "aria-label",
+      `Go to page ${index + 1} of 6: ${label}`,
+    );
+  }
+  await expect(page.locator(".p9-welcome-header__progress > span")).toHaveText(
+    "01 / 06",
+  );
+  await expect(page.locator(".p9-folio[inert]")).toHaveCount(0);
   await expect(
-    page.getByRole("link", { name: /Skip introduction/i }),
-  ).toHaveAttribute("href", "#p9-lesson");
+    page.getByRole("button", { name: /Skip to lesson/i }),
+  ).toBeVisible();
 
   await goToIntroPage(page, /Meet the finished-looking project/i, 1);
   const claim = page.locator("#p9-claim");
   await expect(claim).toContainText(
-    /AI says this page is ready.*Evidence.*untested.*checking begins/is,
+    /Ready to publish.*What does a polished preview prove.*looks.*important action works/is,
   );
-  await expect(claim).not.toContainText(/Nothing happened|Observed failure/i);
+  await expect(claim.locator('.p10-project-proof[data-state="claim"]')).toHaveCount(1);
+  await expect(claim.locator(".p10-evidence-receipt")).not.toBeVisible();
+  await expectPhraseUnclippedAndUnscaled(claim);
 
-  await goToIntroPage(page, /What did the preview prove\?/i, 2);
+  await goToIntroPage(page, /Test the important path/i, 2);
   const evidence = page.locator("#p9-evidence");
   const email = evidence.getByRole("button", {
     name: "Email the organizer",
     exact: true,
   });
-  await expect(email).toBeVisible();
-  const emailBox = await email.boundingBox();
-  expect(emailBox, "the introduction test must render a usable action").not.toBeNull();
-  expect(
-    emailBox!.height,
-    "the introduction test action needs a practical touch target",
-  ).toBeGreaterThanOrEqual(44);
+  await expectPhraseUnclippedAndUnscaled(evidence);
+  await expectFullyVisibleAndHittable(
+    email,
+    evidence.locator(".p10-project-page"),
+  );
   await email.click();
-  await expect(evidence).toContainText(
-    /Observed evidence.*Nothing happened.*project behaves.*important path failed/is,
+  await expect(email).toBeFocused();
+  await expect(email).toHaveAttribute("aria-disabled", "true");
+  await expect(evidence.getByRole("status")).toContainText(
+    /Observed failure.*No email opened because the button has no address.*click is evidence.*important path is broken/is,
   );
 
-  await goToIntroPage(page, /Look beneath the surface/i, 3);
+  await goToIntroPage(page, /Reveal what the page cannot show/i, 3);
   const layers = page.locator("#p9-layers");
-  await expect(layers.locator(".p9-layer-ledger > li")).toHaveCount(4);
+  const layerChoices = layers.getByRole("tablist", {
+    name: /Choose a project layer/i,
+  });
+  await expect(layerChoices.getByRole("tab")).toHaveCount(4);
+  await layerChoices.getByRole("tab", { name: /Evidence/i }).click();
+  await expect(layerChoices.getByRole("tab", { name: /Evidence/i })).toHaveAttribute(
+    "aria-selected",
+    "true",
+  );
+  await expect(layers.locator("#p10-layer-detail")).toContainText(
+    /What did a person actually try and observe.*short evidence record.*important path/is,
+  );
   await expect(layers).toContainText(
     /Promise.*Project home.*Evidence.*Release/is,
   );
 
-  await goToIntroPage(page, /Learn the directing method/i, 4);
+  await goToIntroPage(page, /Turn the layers into a method/i, 4);
   const method = page.locator("#p9-method");
-  const methodChoices = method.getByRole("group", {
+  const methodChoices = method.getByRole("tablist", {
     name: /Explore the four-part method/i,
   });
-  await expect(methodChoices.getByRole("button")).toHaveCount(4);
-  await methodChoices.getByRole("button", { name: /Prove/i }).click();
-  await expect(method).toContainText(/You decide.*release/is);
+  await expect(methodChoices.getByRole("tab")).toHaveCount(4);
+  await methodChoices.getByRole("tab", { name: /Prove/i }).click();
+  await expect(method.locator("#p10-method-detail")).toContainText(
+    /Prove the release.*Evidence \+ release card.*important path works.*exact version.*live/is,
+  );
+  const proveFit = await method.evaluate((root) => {
+    const detail = root.querySelector<HTMLElement>("#p10-method-detail")!;
+    const body = root.querySelector<HTMLElement>(".p10-artifact__body")!;
+    const paragraph = detail.querySelector<HTMLElement>(":scope > p")!;
+    return {
+      detailBottom: detail.getBoundingClientRect().bottom,
+      bodyBottom: body.getBoundingClientRect().bottom,
+      paragraphClientHeight: paragraph.clientHeight,
+      paragraphScrollHeight: paragraph.scrollHeight,
+    };
+  });
+  expect(proveFit.detailBottom).toBeLessThanOrEqual(proveFit.bodyBottom + 1);
+  expect(proveFit.paragraphClientHeight).toBe(proveFit.paragraphScrollHeight);
 
-  await goToIntroPage(page, /Now direct the project/i, 5);
+  await goToIntroPage(page, /Start the guided build/i, 5);
   const lesson = page.locator("#p9-lesson");
   await expect(lesson).toContainText(
-    /14.*decisions.*08.*project stops.*05.*reusable tools/is,
+    /04.*chapters.*08.*stops.*15.*minutes.*five reusable tools/is,
   );
   await lesson
-    .getByRole("button", { name: /Preview the 8-stop route/i })
+    .getByRole("button", { name: /View all 8 stops/i })
     .click();
 
   const overview = page.getByRole("dialog", {
@@ -923,6 +1111,29 @@ test("presents six deliberate pages, turns a claim into evidence, and carries th
   );
   await saveFieldCard(page, checkpointActions.idea);
   await expectCurrentHeadingFocused(page, /Give each tool one job/i);
+});
+
+test("moves one folio per desktop gesture and lands skip navigation on its heading", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1440, height: 650 });
+  await openFresh(page);
+  await expect(page.locator(".p4-skip")).toHaveCount(0);
+
+  await page.mouse.wheel(0, 700);
+  await expect
+    .poll(() => page.locator(".p9-welcome").getAttribute("data-intro-folio"))
+    .toBe("1");
+  await expect
+    .poll(() =>
+      page.locator("#p9-claim").evaluate((folio) =>
+        Math.round(folio.getBoundingClientRect().top),
+      ),
+    )
+    .toBe(72);
+
+  await page.getByRole("button", { name: /Skip to lesson/i }).click();
+  await expectIntroPageActive(page, 5);
 });
 
 for (const lane of [
@@ -1520,19 +1731,21 @@ test("has no automated accessibility violations throughout the core route", asyn
 
   await goToIntroPage(page, /Meet the finished-looking project/i, 1);
   await expectAxeClean(page);
-  await goToIntroPage(page, /What did the preview prove\?/i, 2);
+  await goToIntroPage(page, /Test the important path/i, 2);
   await expectAxeClean(page);
   await page
     .locator("#p9-evidence")
     .getByRole("button", { name: "Email the organizer", exact: true })
     .click();
-  await expect(page.locator("#p9-evidence")).toContainText(/Nothing happened/i);
+  await expect(page.locator("#p9-evidence").getByRole("status")).toContainText(
+    /No email opened.*important path is broken/is,
+  );
   await expectAxeClean(page);
-  await goToIntroPage(page, /Look beneath the surface/i, 3);
+  await goToIntroPage(page, /Reveal what the page cannot show/i, 3);
   await expectAxeClean(page);
-  await goToIntroPage(page, /Learn the directing method/i, 4);
+  await goToIntroPage(page, /Turn the layers into a method/i, 4);
   await expectAxeClean(page);
-  await goToIntroPage(page, /Now direct the project/i, 5);
+  await goToIntroPage(page, /Start the guided build/i, 5);
   await expectAxeClean(page);
 
   const count = await completeCoreJourney(page, { checkAxe: true });
@@ -1552,28 +1765,25 @@ test("uses adjacent text—not motion—to explain every layer under reduced mot
     ),
   ).toBe("none");
   await goToIntroPage(page, /Meet the finished-looking project/i, 1);
-  await goToIntroPage(page, /What did the preview prove\?/i, 2);
+  await goToIntroPage(page, /Test the important path/i, 2);
   await page
     .locator("#p9-evidence")
     .getByRole("button", { name: "Email the organizer", exact: true })
     .click();
-  await goToIntroPage(page, /Look beneath the surface/i, 3);
+  await goToIntroPage(page, /Reveal what the page cannot show/i, 3);
   await expect(page.locator(".p9-welcome")).toHaveAttribute(
     "data-intro-folio",
     "3",
   );
-  await expect(page.locator(".p9-layer-ledger > li")).toHaveCount(4);
+  await expect(
+    page
+      .locator("#p9-layers")
+      .getByRole("tablist", { name: /Choose a project layer/i })
+      .getByRole("tab"),
+  ).toHaveCount(4);
   await expect(page.locator("#p9-layers")).toContainText(
     /Promise.*Project home.*Evidence.*Release/is,
   );
-  await expect(page.locator(".p8-specimen__scan").first()).toHaveCSS(
-    "display",
-    "none",
-  );
-
-  await startWithIdea(page);
-  await chooseSmallestIdea(page);
-
   const motion = await page.evaluate(() => {
     const seconds = (value: string) =>
       value.split(",").map((entry) => {
@@ -1583,7 +1793,9 @@ test("uses adjacent text—not motion—to explain every layer under reduced mot
           : Number.parseFloat(part);
       });
 
-    const offenders = Array.from(document.querySelectorAll<HTMLElement>("body *"))
+    const offenders = Array.from(
+      document.querySelectorAll<HTMLElement>(".p9-folio.is-active *"),
+    )
       .filter((element) => {
         const styles = getComputedStyle(element);
         const animations = seconds(styles.animationDuration);
@@ -1610,6 +1822,45 @@ test("uses adjacent text—not motion—to explain every layer under reduced mot
 
   expect(motion.offenders).toEqual([]);
   expect(motion.scrollBehavior).not.toBe("smooth");
+
+  await goToIntroPage(page, /Turn the layers into a method/i, 4);
+  const prove = page
+    .locator("#p9-method")
+    .getByRole("tablist", { name: /Explore the four-part method/i })
+    .getByRole("tab", { name: /Prove/i });
+  await prove.click();
+  await expect(prove).toHaveAttribute("aria-selected", "true");
+
+  const methodMotionOffenders = await page.evaluate(() => {
+    const seconds = (value: string) =>
+      value.split(",").map((entry) => {
+        const part = entry.trim();
+        return part.endsWith("ms")
+          ? Number.parseFloat(part) / 1000
+          : Number.parseFloat(part);
+      });
+
+    return Array.from(
+      document.querySelectorAll<HTMLElement>(".p9-folio.is-active *"),
+    )
+      .filter((element) => {
+        const styles = getComputedStyle(element);
+        return (
+          (styles.animationName !== "none" &&
+            seconds(styles.animationDuration).some((duration) => duration > 0.01)) ||
+          seconds(styles.transitionDuration).some((duration) => duration > 0.01)
+        );
+      })
+      .map((element) => element.className);
+  });
+  expect(methodMotionOffenders).toEqual([]);
+
+  await goToIntroPage(page, /Start the guided build/i, 5);
+  await page
+    .locator("#p9-lesson")
+    .getByRole("button", { name: "Start: shape the promise", exact: true })
+    .click();
+  await chooseSmallestIdea(page);
   await expect(projectCanvas(page)).toContainText(
     /Nearby visitor.*approved facts.*email a question/is,
   );
@@ -1635,30 +1886,57 @@ test("never overflows at 320, 390, 768, or 1440 pixels across the paginated intr
       await page.evaluate(
         () => getComputedStyle(document.documentElement).scrollSnapType,
       ),
-    ).toMatch(
-      width === 1440 ? /y mandatory/i : /^y(?: proximity)?$/i,
-    );
+    ).toMatch(/^y (?:proximity|mandatory)$/i);
 
     for (const [action, index] of [
       [/Meet the finished-looking project/i, 1],
-      [/What did the preview prove\?/i, 2],
+      [/Test the important path/i, 2],
     ] as const) {
       await goToIntroPage(page, action, index);
       await expectNoHorizontalOverflow(page);
     }
+
+    await expectPhraseUnclippedAndUnscaled(page.locator("#p9-evidence"));
+    await expectFullyVisibleAndHittable(
+      page
+        .locator("#p9-evidence")
+        .getByRole("button", { name: "Email the organizer", exact: true }),
+      page.locator("#p9-evidence .p10-project-page"),
+    );
 
     await page
       .locator("#p9-evidence")
       .getByRole("button", { name: "Email the organizer", exact: true })
       .click();
     for (const [action, index] of [
-      [/Look beneath the surface/i, 3],
-      [/Learn the directing method/i, 4],
-      [/Now direct the project/i, 5],
+      [/Reveal what the page cannot show/i, 3],
+      [/Turn the layers into a method/i, 4],
     ] as const) {
       await goToIntroPage(page, action, index);
       await expectNoHorizontalOverflow(page);
     }
+
+    const method = page.locator("#p9-method");
+    await method.getByRole("tab", { name: /Prove/i }).click();
+    const expandedMethodFit = await method.evaluate((root) => {
+      const detail = root.querySelector<HTMLElement>("#p10-method-detail")!;
+      const artifact = root.querySelector<HTMLElement>(".p10-artifact")!;
+      const paragraph = detail.querySelector<HTMLElement>(":scope > p")!;
+      return {
+        detailBottom: detail.getBoundingClientRect().bottom,
+        artifactBottom: artifact.getBoundingClientRect().bottom,
+        paragraphClientHeight: paragraph.clientHeight,
+        paragraphScrollHeight: paragraph.scrollHeight,
+      };
+    });
+    expect(expandedMethodFit.detailBottom).toBeLessThanOrEqual(
+      expandedMethodFit.artifactBottom + 1,
+    );
+    expect(expandedMethodFit.paragraphClientHeight).toBe(
+      expandedMethodFit.paragraphScrollHeight,
+    );
+
+    await goToIntroPage(page, /Start the guided build/i, 5);
     await expectNoHorizontalOverflow(page);
 
     if (width <= 768) {
@@ -1670,7 +1948,7 @@ test("never overflows at 320, 390, 768, or 1440 pixels across the paginated intr
       expect(count).toBe(14);
     } else {
       const begin = page.locator("#p9-lesson").getByRole("button", {
-        name: "Begin with the first promise",
+        name: "Start: shape the promise",
         exact: true,
       });
       await expect(begin).toBeVisible();
@@ -1706,13 +1984,15 @@ test("supports the complete core route with keyboard input alone", async ({
       name: /Meet the finished-looking project/i,
     }),
   );
+  await expectIntroPageActive(page, 1);
   await keyboardActivate(
     page,
-    page.getByRole("button", { name: /What did the preview prove\?/i }),
+    page.getByRole("button", { name: /Test the important path/i }),
   );
+  await expectIntroPageActive(page, 2);
   const evidenceHeading = page.locator("#p9-evidence").getByRole("heading", {
     level: 2,
-    name: /Try the page’s only important action/i,
+    name: /Test the visitor’s one important action/i,
   });
   const evidenceAction = page.locator("#p9-evidence").getByRole("button", {
     name: "Email the organizer",
@@ -1722,31 +2002,65 @@ test("supports the complete core route with keyboard input alone", async ({
   await page.keyboard.press("Tab");
   await expect(evidenceAction).toBeFocused();
   await page.keyboard.press("Enter");
-  await expect(page.locator("#p9-evidence")).toContainText(
-    /Observed evidence.*Nothing happened/is,
+  await expect(page.locator("#p9-evidence").getByRole("status")).toContainText(
+    /Observed failure.*No email opened/is,
   );
   await keyboardActivate(
     page,
     page.getByRole("button", {
-      name: /Look beneath the surface/i,
+      name: /Reveal what the page cannot show/i,
     }),
   );
+  await expectIntroPageActive(page, 3);
+
+  const layerGroup = page
+    .locator("#p9-layers")
+    .getByRole("tablist", { name: /Choose a project layer/i });
+  const promiseLayer = layerGroup.getByRole("tab", { name: /Promise/i });
+  const evidenceLayer = layerGroup.getByRole("tab", { name: /Evidence/i });
+  await tabTo(page, promiseLayer);
+  await page.keyboard.press("ArrowRight");
+  await page.keyboard.press("ArrowRight");
+  await expect(evidenceLayer).toBeFocused();
+  await expect(evidenceLayer).toHaveAttribute("aria-selected", "true");
+  await expect(layerGroup.locator('[aria-selected="true"]')).toHaveCount(1);
+  await expect(page.locator("#p10-layer-detail")).toContainText(
+    /What did a person actually try and observe.*short evidence record.*important path/is,
+  );
+
   await keyboardActivate(
     page,
     page.getByRole("button", {
-      name: /Learn the directing method/i,
+      name: /Turn the layers into a method/i,
     }),
   );
+  await expectIntroPageActive(page, 4);
+
+  const methodGroup = page
+    .locator("#p9-method")
+    .getByRole("tablist", { name: /Explore the four-part method/i });
+  const shapeMethod = methodGroup.getByRole("tab", { name: /Shape/i });
+  const proveMethod = methodGroup.getByRole("tab", { name: /Prove/i });
+  await tabTo(page, shapeMethod);
+  await page.keyboard.press("End");
+  await expect(proveMethod).toBeFocused();
+  await expect(proveMethod).toHaveAttribute("aria-selected", "true");
+  await expect(methodGroup.locator('[aria-selected="true"]')).toHaveCount(1);
+  await expect(page.locator("#p10-method-detail")).toContainText(
+    /Prove the release.*Evidence \+ release card.*important path works.*exact version.*live/is,
+  );
+
   await keyboardActivate(
     page,
     page.getByRole("button", {
-      name: /Now direct the project/i,
+      name: /Start the guided build/i,
     }),
   );
+  await expectIntroPageActive(page, 5);
   await keyboardActivate(
     page,
     page.locator("#p9-lesson").getByRole("button", {
-      name: "Begin with the first promise",
+      name: "Start: shape the promise",
       exact: true,
     }),
   );

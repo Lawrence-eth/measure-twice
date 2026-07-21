@@ -45,31 +45,33 @@ different. A chat is not automatically a project home. A repository is not a
 public site. A successful deployment is not proof that a visitor can complete
 the important path.
 
-## The v9 page-by-page opening
+## The v10 page-by-page opening
 
-The opening is six deliberately composed folios, numbered 00–05. It uses the
+The opening is six deliberately composed folios, numbered 01–06. It uses the
 page itself as the scroller—there is no nested story panel. Each folio answers
 one question and advances one visual idea:
 
 | Folio | Question answered | Learner action |
 | --- | --- | --- |
-| **00 · What this is** | What is Pentimento, who is it for, and what will I keep? | Understand the 15-minute, no-experience-required lesson |
-| **01 · The claim** | What does the polished AI report actually prove? | Treat “Ready to publish” as a claim, not evidence |
-| **02 · The test** | Does the project’s important visitor action work? | Select **Email the organizer** and observe **Nothing happened** |
-| **03 · The layers** | What does the finished surface hide? | Reveal Promise, Project home, Evidence, and Release |
-| **04 · The method** | What is the learner’s role around AI? | Explore Shape, Ground, Direct, and Prove |
-| **05 · Your lesson** | What happens next? | Begin the eight-stop field lesson or preview its map |
+| **01 · What this is** | What is Pentimento, who is it for, and what will I keep? | Understand the 15-minute, no-experience-required lesson |
+| **02 · The claim** | What does the polished AI report actually prove? | Separate appearance from tested behavior |
+| **03 · The test** | Does the project’s important visitor action work? | Select **Email the organizer** and create an evidence record |
+| **04 · The layers** | What does the finished surface hide? | Explore Promise, Project home, Evidence, and Release |
+| **05 · The method** | What is the learner’s role around AI? | Explore Shape, Ground, Direct, and Prove |
+| **06 · Your lesson** | What happens next? | Begin the eight-stop field lesson or inspect its map |
 
-On a tall desktop with a fine pointer, each folio settles to a full page. Touch,
-short, zoomed, and reduced-motion layouts use forgiving proximity or normal
-scrolling so the composition never traps the learner. Layouts with enough room
-include a six-step, keyboard-operable rail; phones use the persistent page
-counter and in-flow next actions instead. Desktop keeps one project specimen
-beside the story; smaller screens place a purpose-built specimen in the reading
-flow.
+On desktop, each deliberate wheel or keyboard gesture settles one full folio,
+including compact short-height layouts. Tall tablet and phone layouts also
+settle by page; short narrow screens, high zoom, and reduced motion return to
+forgiving natural scrolling. Layouts wider than 1120px include a six-step,
+keyboard-operable rail; smaller screens use the persistent page counter and
+in-flow next actions. Claim, evidence, layers, and method each have a dedicated
+responsive artifact—no text-bearing mockup is scaled or cropped to fit. Tablet
+layouts keep the explanation and artifact side by side; phones recompose the
+same material into one reading flow.
 
 The opening does not reveal the failure before the learner tests it. The test
-on folio 02 is the actual evidence check—not a teaser for a duplicate
+on folio 03 is the actual evidence check—not a teaser for a duplicate
 inspection. When the learner sees the failure and begins the lesson,
 `introFailureObserved` is persisted. The later **Check** stop therefore begins
 with **You found this failure earlier; now record it**. A learner who skips the
@@ -213,13 +215,13 @@ example without blocking the local brief.
 
 ## Current demo flow
 
-1. Open the ChatGPT Site and read folio 00.
-2. Move to folio 01 and inspect the untested **Ready to publish** claim.
-3. On folio 02, select **Email the organizer** and observe **Nothing
-   happened**.
+1. Open the ChatGPT Site and read folio 01.
+2. Move to folio 02 and inspect the untested **Ready to publish** claim.
+3. On folio 03, select **Email the organizer** and read the observed-failure
+   receipt.
 4. Continue through the four hidden layers and interactive
    Shape/Ground/Direct/Prove method.
-5. On folio 05, select **Begin with the first promise**.
+5. On folio 06, select **Start: shape the promise**.
 6. Follow either tool lane through the eight stops. Open the mobile project
    layer only when useful; **Lesson map** shows the whole route.
 7. At Check, record the failure remembered from the opening, make the bounded
@@ -370,7 +372,7 @@ Devpost submission form before the deadline.
   example
 - [`tests/e2e/final-journey.spec.ts`](tests/e2e/final-journey.spec.ts) —
   responsive, keyboard, accessibility, persistence, and full-journey coverage
-- [`docs/FINAL_EXPERIENCE.md`](docs/FINAL_EXPERIENCE.md) — v9 implementation
+- [`docs/FINAL_EXPERIENCE.md`](docs/FINAL_EXPERIENCE.md) — experience
   contract
 - [`docs/BUILD_LOG.md`](docs/BUILD_LOG.md) — dated design, collaboration, and
   release evidence

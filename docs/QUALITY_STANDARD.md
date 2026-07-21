@@ -1,8 +1,8 @@
-# Pentimento v9 quality standard
+# Pentimento v10 quality standard
 
 This is the acceptance contract for the current OpenAI Build Week release.
 Pentimento is ready only when the product follows the careful build discipline
-it teaches. A passing result from v1–v8 is not evidence for v9.
+it teaches. A passing result from v1–v9 is not evidence for v10.
 
 ## Product truth
 
@@ -27,22 +27,26 @@ it teaches. A passing result from v1–v8 is not evidence for v9.
   The test, The layers, The method, and Your lesson.
 - The document root owns scrolling; no nested panel traps the wheel, touch,
   keyboard, reverse scroll, or focus.
-- Mandatory page settlement applies only to tall fine-pointer layouts. Touch
-  uses proximity. Short, zoomed, and reduced-motion layouts use normal scroll.
-- The six-step rail has meaningful names and changes current state only after
-  the next page’s prose crosses the reading line.
-- Desktop uses a persistent side specimen for the middle pages. Tablet and
-  mobile use a purpose-built inline specimen that never covers headings.
+- Desktop keeps one-folio wheel and keyboard settlement in both full and
+  compact short-height compositions. Tall tablet and phone layouts also snap;
+  short narrow, zoomed, and reduced-motion layouts use normal scroll.
+- Above 1120px, the six-step rail has meaningful names and changes current
+  state only after the destination is visible. Smaller screens use the sticky
+  counter and in-flow actions.
+- Claim, evidence, layers, and method each use a dedicated responsive artifact.
+  No text-bearing mockup is scaled, clipped, or hidden behind another layer.
 - The claim page does not disclose the failure.
-- The learner selects **Email the organizer** on The test and visibly observes
-  **Nothing happened** before the lesson explains why.
+- The learner selects **Email the organizer** on The test and receives a live
+  evidence receipt that names the missing address and broken important path.
+- The tested Email control retains visible focus while the live receipt is
+  announced. Scroll-driven page changes never make the focused region inert.
 - The layers page exposes four text-labelled layers: Promise, Project home,
   Evidence, and Release.
 - The method page makes Shape, Ground, Direct, and Prove operable by pointer and
   keyboard and exposes a corresponding consequence.
 - The final page explains the complete lesson, shows the five reusable outputs,
-  and makes **Begin with the first promise** dominant.
-- **Preview the 8-stop route** is visually secondary and opens the Lesson map.
+  and makes **Start: shape the promise** dominant.
+- **View all 8 stops** is visually secondary and opens the Lesson map.
 - Observing the opening failure persists `introFailureObserved`.
 - Check consumes remembered evidence with **You found this failure earlier; now
   record it**. It does not require the same failure to be staged again.

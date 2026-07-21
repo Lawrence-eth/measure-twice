@@ -1,6 +1,6 @@
 # Pentimento curriculum and content standard
 
-This document is the long-form content bank behind the current v9 experience.
+This document is the long-form content bank behind the current v10 experience.
 The exact screen order, interaction count, and progressive-disclosure contract
 live in [FINAL_EXPERIENCE.md](FINAL_EXPERIENCE.md). Templates and examples below
 may appear as contextual field notes or in the five-guide Build kit; they are not
@@ -674,13 +674,13 @@ Save this lesson → inspect the Lesson receipt → continue
 
 Scaffolding changes across the route:
 
-- folio 00 identifies the learner, time, activity, and take-home artifacts;
-- folio 01 presents an untested claim without spoiling the defect;
-- folio 02 lets the learner test the polished action and observe the failure;
-- folio 03 reveals Promise, Project home, Evidence, and Release beneath the
+- folio 01 identifies the learner, time, activity, and take-home artifacts;
+- folio 02 presents an untested claim without spoiling the defect;
+- folio 03 lets the learner test the polished action and observe the failure;
+- folio 04 reveals Promise, Project home, Evidence, and Release beneath the
   visitor surface;
-- folio 04 lets the learner explore Shape, Ground, Direct, and Prove;
-- folio 05 states the lesson and begins with the first promise;
+- folio 05 lets the learner explore Shape, Ground, Direct, and Prove;
+- folio 06 states the lesson and begins with the first promise;
 - Idea narrows one tempting wishlist to a complete first-version path;
 - Tools compares two tradeoffs rather than presenting a winner;
 - Project home establishes recoverable custody and the runtime-AI boundary;

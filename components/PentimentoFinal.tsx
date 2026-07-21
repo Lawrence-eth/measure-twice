@@ -4,6 +4,7 @@ import {
   useEffect,
   useRef,
   useState,
+  type KeyboardEvent as ReactKeyboardEvent,
   type RefObject,
 } from "react";
 import { flushSync } from "react-dom";
@@ -89,39 +90,85 @@ type ReflectionMode = "demo" | "live";
 const introFolios = [
   {
     id: "orientation",
-    number: "00",
+    number: "01",
     shortLabel: "What this is",
     label: "What Pentimento teaches",
   },
   {
     id: "claim",
-    number: "01",
+    number: "02",
     shortLabel: "The claim",
     label: "Inspect the AI-ready claim",
   },
   {
     id: "evidence",
-    number: "02",
+    number: "03",
     shortLabel: "The test",
     label: "Test the important action",
   },
   {
     id: "layers",
-    number: "03",
+    number: "04",
     shortLabel: "The layers",
     label: "Reveal the hidden project layers",
   },
   {
     id: "method",
-    number: "04",
+    number: "05",
     shortLabel: "The method",
     label: "Learn the four-part method",
   },
   {
     id: "lesson",
-    number: "05",
+    number: "06",
     shortLabel: "Your lesson",
     label: "Begin the interactive field lesson",
+  },
+] as const;
+
+const openingLayerDetails = [
+  {
+    prompt: "What single result must this version complete?",
+    summary: "What must the first version finish?",
+    artifact: "A first-version brief with a clear Not now boundary",
+  },
+  {
+    prompt: "Where do the files and their history survive?",
+    summary: "Where will files and history live?",
+    artifact: "A recoverable project home with version history",
+  },
+  {
+    prompt: "What did a person actually try and observe?",
+    summary: "What did a person verify?",
+    artifact: "A short evidence record tied to the important path",
+  },
+  {
+    prompt: "Which checked version is live—and which can you restore?",
+    summary: "Which checked version is live?",
+    artifact: "A release-and-recovery record for one exact version",
+  },
+] as const;
+
+const openingMethodDetails = [
+  {
+    summary: "Define the first version",
+    artifact: "V1 brief",
+    proof: "One person can finish one complete path.",
+  },
+  {
+    summary: "Keep the work recoverable",
+    artifact: "Tool map + project home",
+    proof: "You can find the files, history, and host again.",
+  },
+  {
+    summary: "Bound the change",
+    artifact: "AI work agreement",
+    proof: "The requested change, boundary, and stopping point are visible.",
+  },
+  {
+    summary: "Check the exact version",
+    artifact: "Evidence + release card",
+    proof: "The important path works on the exact version that is live.",
   },
 ] as const;
 
@@ -2239,6 +2286,301 @@ function PrologueSpecimen({
   );
 }
 
+function OpeningArtifactFrame({
+  label,
+  marker,
+  children,
+}: {
+  label: string;
+  marker: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <section className="p10-artifact" aria-label={label}>
+      <header className="p10-artifact__registration" aria-hidden="true">
+        <span>Willow Fix Day</span>
+        <i />
+        <span>{marker}</span>
+      </header>
+      <div className="p10-artifact__body">{children}</div>
+    </section>
+  );
+}
+
+function OpeningProjectArtifact({
+  failed = false,
+  interactive = false,
+  onTest,
+}: {
+  failed?: boolean;
+  interactive?: boolean;
+  onTest?: () => void;
+}) {
+  return (
+    <OpeningArtifactFrame
+      label={
+        interactive
+          ? "Willow Fix Day visitor-path test"
+          : "Willow Fix Day generated preview"
+      }
+      marker={failed ? "Evidence · observed" : "Preview · untested"}
+    >
+      <div className="p10-project-proof" data-state={failed ? "failed" : "claim"}>
+        <article className="p10-project-page">
+          <header>
+            <span>Neighborhood repair day</span>
+            <b>{failed ? "Observed · failed" : "AI says · ready"}</b>
+          </header>
+          <div className="p10-project-page__content">
+            <p>Saturday · West Hall</p>
+            <h3>
+              <span>Bring it broken.</span>
+              <span>Leave with a plan.</span>
+            </h3>
+            <small>Repairs depend on volunteer availability.</small>
+            {interactive ? (
+              <button
+                aria-disabled={failed || undefined}
+                className={cx(
+                  "p10-project-page__action",
+                  failed && "is-tested",
+                )}
+                type="button"
+                onClick={() => {
+                  if (!failed) onTest?.();
+                }}
+              >
+                Email the organizer
+              </button>
+            ) : (
+              <div className="p10-project-page__action">Email the organizer</div>
+            )}
+          </div>
+          <footer>
+            <span>Important path 01</span>
+            <b>Details → Email</b>
+          </footer>
+        </article>
+
+        <div
+          className="p10-evidence-receipt"
+          aria-hidden={!failed ? "true" : undefined}
+          aria-live={failed ? "polite" : undefined}
+          aria-atomic={failed ? "true" : undefined}
+          role={failed ? "status" : undefined}
+        >
+          <span>Observed failure · exact version · 12:04</span>
+          <b>No email opened because the button has no address.</b>
+          <p>That click is evidence: the page looks complete, but its important path is broken.</p>
+        </div>
+      </div>
+    </OpeningArtifactFrame>
+  );
+}
+
+function handleOpeningTabKey(
+  event: ReactKeyboardEvent<HTMLButtonElement>,
+  index: number,
+  count: number,
+  onChange: (nextIndex: number) => void,
+) {
+  let nextIndex: number | null = null;
+
+  if (event.key === "ArrowRight" || event.key === "ArrowDown") {
+    nextIndex = (index + 1) % count;
+  } else if (event.key === "ArrowLeft" || event.key === "ArrowUp") {
+    nextIndex = (index - 1 + count) % count;
+  } else if (event.key === "Home") {
+    nextIndex = 0;
+  } else if (event.key === "End") {
+    nextIndex = count - 1;
+  }
+
+  if (nextIndex === null) return;
+  event.preventDefault();
+  onChange(nextIndex);
+  event.currentTarget.parentElement
+    ?.querySelectorAll<HTMLButtonElement>("[role='tab']")
+    [nextIndex]?.focus();
+}
+
+function OpeningLayerArtifact({
+  activeLayer,
+  onLayerChange,
+}: {
+  activeLayer: number;
+  onLayerChange: (index: number) => void;
+}) {
+  const layer = welcomeAuditLayers[activeLayer];
+  const detail = openingLayerDetails[activeLayer];
+
+  return (
+    <OpeningArtifactFrame
+      label="Explore the four working layers beneath an AI-built page"
+      marker="Underpainting · four layers"
+    >
+      <div className="p10-layer-workbench">
+        <div
+          className="p10-layer-stack"
+          role="tablist"
+          aria-label="Choose a project layer"
+        >
+          {welcomeAuditLayers.map((item, index) => (
+            <button
+              aria-selected={activeLayer === index}
+              aria-controls="p10-layer-detail"
+              className={cx(
+                "p10-layer-sheet",
+                activeLayer === index && "is-selected",
+              )}
+              data-layer={item.id}
+              id={`p10-layer-tab-${item.id}`}
+              key={item.id}
+              role="tab"
+              tabIndex={activeLayer === index ? 0 : -1}
+              type="button"
+              onClick={() => onLayerChange(index)}
+              onKeyDown={(event) =>
+                handleOpeningTabKey(
+                  event,
+                  index,
+                  welcomeAuditLayers.length,
+                  onLayerChange,
+                )
+              }
+            >
+              <span>0{index + 1}</span>
+              <b>{item.label}</b>
+              <small>{openingLayerDetails[index].summary}</small>
+            </button>
+          ))}
+        </div>
+
+        <div
+          className="p10-layer-detail"
+          id="p10-layer-detail"
+          key={layer.id}
+          role="tabpanel"
+          aria-labelledby={`p10-layer-tab-${layer.id}`}
+        >
+          <span>Layer {activeLayer + 1} · question you own</span>
+          <h3>{layer.label}</h3>
+          <p>{detail.prompt}</p>
+          <dl>
+            <dt>You create</dt>
+            <dd>{detail.artifact}</dd>
+          </dl>
+        </div>
+      </div>
+    </OpeningArtifactFrame>
+  );
+}
+
+function OpeningMethodArtifact({
+  activeMethod,
+  onMethodChange,
+}: {
+  activeMethod: number;
+  onMethodChange: (index: number) => void;
+}) {
+  const chapter = finalChapters[activeMethod];
+  const detail = openingMethodDetails[activeMethod];
+
+  return (
+    <OpeningArtifactFrame
+      label="Explore the Shape, Ground, Direct, and Prove method"
+      marker="Method · human direction"
+    >
+      <div className="p10-method-workbench">
+        <div
+          className="p10-method-steps"
+          role="tablist"
+          aria-label="Explore the four-part method"
+        >
+          {finalChapters.map((item, index) => (
+            <button
+              aria-selected={activeMethod === index}
+              aria-controls="p10-method-detail"
+              className={activeMethod === index ? "is-selected" : undefined}
+              id={`p10-method-tab-${item.id}`}
+              key={item.id}
+              role="tab"
+              tabIndex={activeMethod === index ? 0 : -1}
+              type="button"
+              onClick={() => onMethodChange(index)}
+              onKeyDown={(event) =>
+                handleOpeningTabKey(
+                  event,
+                  index,
+                  finalChapters.length,
+                  onMethodChange,
+                )
+              }
+            >
+              <span>0{item.number}</span>
+              <b>{item.id}</b>
+              <small>{openingMethodDetails[index].summary}</small>
+            </button>
+          ))}
+        </div>
+
+        <div
+          className="p10-method-detail"
+          id="p10-method-detail"
+          key={chapter.id}
+          role="tabpanel"
+          aria-labelledby={`p10-method-tab-${chapter.id}`}
+        >
+          <span>Your decision · step 0{chapter.number}</span>
+          <h3>{chapter.title}</h3>
+          <p>{welcomeOutcomes[activeMethod].detail}</p>
+          <div>
+            <dl>
+              <dt>You make</dt>
+              <dd>{detail.artifact}</dd>
+            </dl>
+            <dl>
+              <dt>You can prove</dt>
+              <dd>{detail.proof}</dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+    </OpeningArtifactFrame>
+  );
+}
+
+function OpeningRouteArtifact() {
+  return (
+    <section className="p10-route-artifact" aria-label="Four-chapter lesson route">
+      <header>
+        <span>Your field route</span>
+        <p>
+          <span><b>04</b> chapters</span>
+          <span><b>08</b> stops</span>
+          <span>about <b>15</b> minutes</span>
+        </p>
+      </header>
+      <ol>
+        {finalChapters.map((chapter) => (
+          <li key={chapter.id}>
+            <span>0{chapter.number}</span>
+            <div>
+              <b>{chapter.title}</b>
+              <p>{chapter.summary}</p>
+            </div>
+            <small>{chapter.stages.length} {chapter.stages.length === 1 ? "stop" : "stops"}</small>
+          </li>
+        ))}
+      </ol>
+      <footer>
+        <span>Finish</span>
+        <b>A checked release you can explain and recover</b>
+      </footer>
+    </section>
+  );
+}
+
 function ScrollPrologue({
   headingRef,
   onEnter,
@@ -2490,30 +2832,25 @@ function PaginatedPrologue({
   onOverview,
   onFolioChange,
   onEvidence,
+  skipToLessonRequest,
 }: {
   headingRef: RefObject<HTMLHeadingElement | null>;
   onEnter: () => void;
   onOverview: () => void;
   onFolioChange: (folio: number) => void;
   onEvidence: () => void;
+  skipToLessonRequest: number;
 }) {
   const [activeFolio, setActiveFolio] = useState(0);
   const [auditStep, setAuditStep] = useState<"surface" | "failed">("surface");
+  const [activeLayer, setActiveLayer] = useState(0);
   const [activeMethod, setActiveMethod] = useState(0);
   const scrollerRef = useRef<HTMLDivElement>(null);
   const folioRefs = useRef<Array<HTMLElement | null>>([]);
   const focusFrameRef = useRef<number | null>(null);
   const programmaticFolioRef = useRef<number | null>(null);
-  const scrollSettleTimerRef = useRef<number | null>(null);
-
-  const specimenBeat =
-    activeFolio === 3
-      ? 2
-      : activeFolio === 4
-        ? 3
-        : activeFolio === 2 && auditStep === "failed"
-          ? 1
-          : 0;
+  const wheelLockedRef = useRef(false);
+  const wheelReleaseRef = useRef<number | null>(null);
 
   useEffect(() => {
     onFolioChange(activeFolio);
@@ -2526,7 +2863,6 @@ function PaginatedPrologue({
     const syncActiveFolio = () => {
       frame = 0;
       if (programmaticFolioRef.current !== null) {
-        setActiveFolio(programmaticFolioRef.current);
         return;
       }
       const headerHeight = window.innerWidth <= 560 ? 64 : 72;
@@ -2544,16 +2880,6 @@ function PaginatedPrologue({
     const scheduleSync = () => {
       if (frame) return;
       frame = window.requestAnimationFrame(syncActiveFolio);
-      if (programmaticFolioRef.current !== null) {
-        if (scrollSettleTimerRef.current !== null) {
-          window.clearTimeout(scrollSettleTimerRef.current);
-        }
-        scrollSettleTimerRef.current = window.setTimeout(() => {
-          programmaticFolioRef.current = null;
-          scrollSettleTimerRef.current = null;
-          syncActiveFolio();
-        }, 140);
-      }
     };
 
     window.addEventListener("scroll", scheduleSync, { passive: true });
@@ -2564,9 +2890,6 @@ function PaginatedPrologue({
       window.removeEventListener("scroll", scheduleSync);
       window.removeEventListener("resize", scheduleSync);
       if (frame) window.cancelAnimationFrame(frame);
-      if (scrollSettleTimerRef.current !== null) {
-        window.clearTimeout(scrollSettleTimerRef.current);
-      }
     };
   }, []);
 
@@ -2574,6 +2897,9 @@ function PaginatedPrologue({
     () => () => {
       if (focusFrameRef.current !== null) {
         window.cancelAnimationFrame(focusFrameRef.current);
+      }
+      if (wheelReleaseRef.current !== null) {
+        window.clearTimeout(wheelReleaseRef.current);
       }
     },
     [],
@@ -2584,30 +2910,134 @@ function PaginatedPrologue({
     if (!folio) return;
 
     programmaticFolioRef.current = index;
-    setActiveFolio(index);
+    const behavior = preferredScrollBehavior();
     folio.scrollIntoView({
       block: "start",
-      behavior: preferredScrollBehavior(),
+      behavior,
     });
 
-    if (!focusHeading) return;
     if (focusFrameRef.current !== null) {
       window.cancelAnimationFrame(focusFrameRef.current);
     }
-    focusFrameRef.current = window.requestAnimationFrame(() => {
-      folio
-        .querySelector<HTMLElement>("h1, h2")
-        ?.focus({ preventScroll: true });
-      focusFrameRef.current = null;
-    });
+    const startedAt = window.performance.now();
+    const finishWhenAligned = () => {
+      const headerHeight = window.innerWidth <= 560 ? 64 : 72;
+      const distance = Math.abs(folio.getBoundingClientRect().top - headerHeight);
+      const timedOut = window.performance.now() - startedAt > 1200;
+
+      if (behavior !== "auto" && distance > 3 && !timedOut) {
+        focusFrameRef.current = window.requestAnimationFrame(finishWhenAligned);
+        return;
+      }
+
+      programmaticFolioRef.current = null;
+      setActiveFolio(index);
+      focusFrameRef.current = window.requestAnimationFrame(() => {
+        if (focusHeading) {
+          folio
+            .querySelector<HTMLElement>("h1, h2")
+            ?.focus({ preventScroll: true });
+        }
+        focusFrameRef.current = null;
+      });
+    };
+
+    focusFrameRef.current = window.requestAnimationFrame(finishWhenAligned);
   }
+
+  useEffect(() => {
+    if (skipToLessonRequest > 0) scrollToFolio(5);
+  }, [skipToLessonRequest]);
+
+  useEffect(() => {
+    const handlePageKey = (event: KeyboardEvent) => {
+      if (
+        event.defaultPrevented ||
+        event.altKey ||
+        event.ctrlKey ||
+        event.metaKey ||
+        event.shiftKey
+      ) {
+        return;
+      }
+
+      const target = event.target;
+      if (
+        target instanceof HTMLElement &&
+        (target.matches("input, textarea, select, [contenteditable='true']") ||
+          target.closest("[role='dialog']"))
+      ) {
+        return;
+      }
+
+      let nextFolio: number | null = null;
+      if (event.key === "PageDown") {
+        nextFolio = Math.min(introFolios.length - 1, activeFolio + 1);
+      } else if (event.key === "PageUp") {
+        nextFolio = Math.max(0, activeFolio - 1);
+      } else if (event.key === "Home") {
+        nextFolio = 0;
+      } else if (event.key === "End") {
+        nextFolio = introFolios.length - 1;
+      }
+
+      if (nextFolio === null || nextFolio === activeFolio) return;
+      event.preventDefault();
+      scrollToFolio(nextFolio);
+    };
+
+    window.addEventListener("keydown", handlePageKey);
+    return () => window.removeEventListener("keydown", handlePageKey);
+  }, [activeFolio]);
+
+  useEffect(() => {
+    const handlePageWheel = (event: WheelEvent) => {
+      if (
+        !(event.target instanceof Node) ||
+        !scrollerRef.current
+          ?.closest<HTMLElement>(".p9-welcome")
+          ?.contains(event.target) ||
+        window.innerWidth < 901 ||
+        preferredScrollBehavior() === "auto" ||
+        event.ctrlKey ||
+        Math.abs(event.deltaY) <= Math.abs(event.deltaX) ||
+        Math.abs(event.deltaY) < 10
+      ) {
+        return;
+      }
+
+      event.preventDefault();
+
+      if (wheelReleaseRef.current !== null) {
+        window.clearTimeout(wheelReleaseRef.current);
+      }
+      wheelReleaseRef.current = window.setTimeout(() => {
+        wheelLockedRef.current = false;
+        wheelReleaseRef.current = null;
+      }, 420);
+
+      if (wheelLockedRef.current) return;
+      const nextFolio = Math.max(
+        0,
+        Math.min(
+          introFolios.length - 1,
+          activeFolio + (event.deltaY > 0 ? 1 : -1),
+        ),
+      );
+      if (nextFolio === activeFolio) return;
+
+      wheelLockedRef.current = true;
+      scrollToFolio(nextFolio, false);
+    };
+
+    window.addEventListener("wheel", handlePageWheel, { passive: false });
+    return () => window.removeEventListener("wheel", handlePageWheel);
+  }, [activeFolio]);
 
   function testClaim() {
     if (auditStep === "failed") return;
-    runViewTransition(() => {
-      setAuditStep("failed");
-      onEvidence();
-    }, "canvas");
+    setAuditStep("failed");
+    onEvidence();
   }
 
   return (
@@ -2640,21 +3070,6 @@ function PaginatedPrologue({
         </ol>
       </nav>
 
-      <aside
-        className="p9-persistent-specimen"
-        data-visible={
-          activeFolio >= 1 && activeFolio <= 4 && activeFolio !== 2
-            ? "true"
-            : "false"
-        }
-        aria-hidden="true"
-      >
-        <PrologueSpecimen
-          activeBeat={specimenBeat}
-          activeMethod={activeMethod}
-        />
-      </aside>
-
       <div
         className="p9-folios"
         ref={scrollerRef}
@@ -2668,14 +3083,13 @@ function PaginatedPrologue({
           )}
           id="p9-orientation"
           aria-labelledby="welcome-title"
-          inert={activeFolio === 0 ? undefined : true}
           ref={(node) => {
             folioRefs.current[0] = node;
           }}
         >
           <div className="p9-folio__inner p9-orientation">
             <div className="p9-folio__index" aria-hidden="true">
-              <span>00</span>
+              <span>01</span>
               <i />
               <span>Orientation</span>
             </div>
@@ -2728,7 +3142,7 @@ function PaginatedPrologue({
                 Meet the finished-looking project
                 <small>One idea per page</small>
               </span>
-              <i aria-hidden="true">01</i>
+              <i aria-hidden="true">02</i>
             </button>
           </div>
         </section>
@@ -2742,47 +3156,43 @@ function PaginatedPrologue({
           )}
           id="p9-claim"
           aria-labelledby="p9-claim-title"
-          inert={activeFolio === 1 ? undefined : true}
           ref={(node) => {
             folioRefs.current[1] = node;
           }}
         >
-          <div className="p9-folio__inner p9-split-folio">
-            <div className="p9-folio__copy">
-              <div className="p9-folio__index" aria-hidden="true">
-                <span>01</span>
-                <i />
-                <span>The claim</span>
-              </div>
+          <div className="p9-folio__inner p10-scene">
+            <div className="p9-folio__index" aria-hidden="true">
+              <span>02</span>
+              <i />
+              <span>The claim</span>
+            </div>
+
+            <div className="p9-folio__copy p10-scene__copy">
               <p className="p4-kicker">AI build report · “Ready to publish”</p>
               <h2 id="p9-claim-title" tabIndex={-1}>
-                AI says this page is ready.
+                What does a polished preview prove?
               </h2>
               <p>
-                The event facts are in place. The email button looks complete.
-                The preview is polished.
+                It proves how the page looks—not whether its one important
+                action works.
               </p>
-              <div className="p9-inline-specimen" aria-hidden="true">
-                <PrologueSpecimen activeBeat={0} />
-              </div>
-              <aside className="p9-claim-note">
-                <span>AI report</span>
-                <b>Ready to publish</b>
-                <p>Evidence · untested</p>
-              </aside>
-              <p className="p9-margin-note">
-                A claim is where checking begins—not where it ends.
-              </p>
+            </div>
+
+            <div className="p10-scene__artifact" aria-hidden="true">
+              <OpeningProjectArtifact />
+            </div>
+
+            <div className="p10-scene__footer">
               <button
                 className="p9-next p9-next--dark"
                 type="button"
                 onClick={() => scrollToFolio(2)}
               >
                 <span>
-                  What did the preview prove?
-                  <small>Test the important path</small>
+                  Test the important path
+                  <small>Turn appearance into evidence</small>
                 </span>
-                <i aria-hidden="true">02</i>
+                <i aria-hidden="true">03</i>
               </button>
             </div>
           </div>
@@ -2797,56 +3207,44 @@ function PaginatedPrologue({
           )}
           id="p9-evidence"
           aria-labelledby="p9-evidence-title"
-          inert={activeFolio === 2 ? undefined : true}
           ref={(node) => {
             folioRefs.current[2] = node;
           }}
         >
-          <div className="p9-folio__inner p9-split-folio">
-            <div className="p9-folio__copy">
-              <div className="p9-folio__index" aria-hidden="true">
-                <span>02</span>
-                <i />
-                <span>The test</span>
-              </div>
+          <div className="p9-folio__inner p10-scene">
+            <div className="p9-folio__index" aria-hidden="true">
+              <span>03</span>
+              <i />
+              <span>The test</span>
+            </div>
+
+            <div className="p9-folio__copy p10-scene__copy">
               <p className="p4-kicker">Your first evidence check</p>
               <h2 id="p9-evidence-title" tabIndex={-1}>
-                Try the page’s only important action.
+                Test the visitor’s one important action.
               </h2>
               <p>
-                A visitor should be able to read the details and email the
-                organizer. Select the button in the project specimen.
+                This page promises that a visitor can email the organizer. Try
+                that exact path yourself.
               </p>
+            </div>
 
-              <div className="p9-inline-specimen p9-inline-specimen--interactive">
-                <PrologueSpecimen
-                  activeBeat={auditStep === "failed" ? 1 : 0}
-                  interactive
-                  onTest={testClaim}
-                />
-              </div>
+            <div className="p10-scene__artifact">
+              <OpeningProjectArtifact
+                failed={auditStep === "failed"}
+                interactive
+                onTest={testClaim}
+              />
+            </div>
 
+            <div className="p10-scene__footer">
               {auditStep === "surface" ? (
                 <aside className="p9-test-instruction">
                   <span>Your task</span>
-                  <b>Email the organizer</b>
-                  <p>The visible control is part of the test—not the answer.</p>
+                  <b>Select “Email the organizer”</b>
+                  <p>Evidence is what a person tries and observes on the exact version.</p>
                 </aside>
-              ) : (
-                <div
-                  className="p9-observation"
-                  role="status"
-                  aria-live="polite"
-                >
-                  <span>Observed evidence</span>
-                  <b>Nothing happened.</b>
-                  <p>
-                    Now you know something the preview could not show: how the
-                    project behaves.
-                  </p>
-                  <small>Observed · important path failed</small>
-                </div>
-              )}
+              ) : null}
 
               {auditStep === "failed" && (
                 <button
@@ -2855,10 +3253,10 @@ function PaginatedPrologue({
                   onClick={() => scrollToFolio(3)}
                 >
                   <span>
-                    Look beneath the surface
-                    <small>Reveal the project layers</small>
+                    Reveal what the page cannot show
+                    <small>Inspect the project beneath it</small>
                   </span>
-                  <i aria-hidden="true">03</i>
+                  <i aria-hidden="true">04</i>
                 </button>
               )}
             </div>
@@ -2874,56 +3272,46 @@ function PaginatedPrologue({
           )}
           id="p9-layers"
           aria-labelledby="p9-layers-title"
-          inert={activeFolio === 3 ? undefined : true}
           ref={(node) => {
             folioRefs.current[3] = node;
           }}
         >
-          <div className="p9-folio__inner p9-split-folio">
-            <div className="p9-folio__copy">
-              <div className="p9-folio__index" aria-hidden="true">
-                <span>03</span>
-                <i />
-                <span>The underpainting</span>
-              </div>
-              <p className="p4-kicker">The project beneath the page</p>
+          <div className="p9-folio__inner p10-scene">
+            <div className="p9-folio__index" aria-hidden="true">
+              <span>04</span>
+              <i />
+              <span>The underpainting</span>
+            </div>
+
+            <div className="p9-folio__copy p10-scene__copy">
+              <p className="p4-kicker">What the finished page cannot show</p>
               <h2 id="p9-layers-title" tabIndex={-1}>
-                The screen was only the top layer.
+                A trustworthy project has four working layers.
               </h2>
               <p>
-                A trustworthy project connects four layers.
+                Open the promise, project files, test evidence, and exact
+                release. AI can help with each; you own the decision.
               </p>
+            </div>
 
-              <div className="p9-inline-specimen" aria-hidden="true">
-                <PrologueSpecimen activeBeat={2} />
-              </div>
+            <div className="p10-scene__artifact">
+              <OpeningLayerArtifact
+                activeLayer={activeLayer}
+                onLayerChange={setActiveLayer}
+              />
+            </div>
 
-              <ol className="p9-layer-ledger">
-                {welcomeAuditLayers.map((layer, index) => (
-                  <li key={layer.id}>
-                    <span>0{index + 1}</span>
-                    <div>
-                      <b>{layer.label}</b>
-                      <p>{layer.issue}</p>
-                    </div>
-                  </li>
-                ))}
-              </ol>
-
-              <p className="p9-margin-note">
-                Polish can hide these layers. It cannot replace them.
-              </p>
-
+            <div className="p10-scene__footer">
               <button
                 className="p9-next p9-next--dark"
                 type="button"
                 onClick={() => scrollToFolio(4)}
               >
-                  <span>
-                    Learn the directing method
-                    <small>Practice the judgment beneath the surface</small>
+                <span>
+                  Turn the layers into a method
+                  <small>Shape → Ground → Direct → Prove</small>
                 </span>
-                <i aria-hidden="true">04</i>
+                <i aria-hidden="true">05</i>
               </button>
             </div>
           </div>
@@ -2937,84 +3325,46 @@ function PaginatedPrologue({
           )}
           id="p9-method"
           aria-labelledby="p9-method-title"
-          inert={activeFolio === 4 ? undefined : true}
           ref={(node) => {
             folioRefs.current[4] = node;
           }}
         >
-          <div className="p9-folio__inner p9-split-folio">
-            <div className="p9-folio__copy">
-              <div className="p9-folio__index" aria-hidden="true">
-                <span>04</span>
-                <i />
-                <span>The method</span>
-              </div>
-              <p className="p4-kicker">Your role around the AI</p>
+          <div className="p9-folio__inner p10-scene">
+            <div className="p9-folio__index" aria-hidden="true">
+              <span>05</span>
+              <i />
+              <span>The method</span>
+            </div>
+
+            <div className="p9-folio__copy p10-scene__copy">
+              <p className="p4-kicker">A method that survives the tool</p>
               <h2 id="p9-method-title" tabIndex={-1}>
-                The skill is not prompting. It is judgment.
+                Prompting is one move. Direction is the skill.
               </h2>
               <p>
-                AI can accelerate the making. You still direct the promise,
-                project home, evidence, and release.
+                Shape the promise. Ground the work. Direct the AI. Prove the
+                release. The method survives when the tool changes.
               </p>
+            </div>
 
-              <div className="p9-inline-specimen" aria-hidden="true">
-                <PrologueSpecimen
-                  activeBeat={3}
-                  activeMethod={activeMethod}
-                />
-              </div>
+            <div className="p10-scene__artifact">
+              <OpeningMethodArtifact
+                activeMethod={activeMethod}
+                onMethodChange={setActiveMethod}
+              />
+            </div>
 
-              <div className="p9-method-explorer">
-                <div
-                  className="p9-method-explorer__tabs"
-                  role="group"
-                  aria-label="Explore the four-part method"
-                >
-                  {finalChapters.map((chapter, index) => (
-                    <button
-                      aria-pressed={activeMethod === index}
-                      aria-controls="p9-method-detail"
-                      key={chapter.id}
-                      type="button"
-                      onClick={() => setActiveMethod(index)}
-                      onFocus={() => setActiveMethod(index)}
-                      onMouseEnter={() => setActiveMethod(index)}
-                    >
-                      <span>0{chapter.number}</span>
-                      <b>{chapter.id}</b>
-                    </button>
-                  ))}
-                </div>
-                <article
-                  className="p9-method-explorer__detail"
-                  id="p9-method-detail"
-                  role="region"
-                  aria-live="polite"
-                  aria-atomic="true"
-                  aria-labelledby="p9-method-detail-title"
-                >
-                  <span>You decide</span>
-                  <h3 id="p9-method-detail-title">
-                    {finalChapters[activeMethod].title}
-                  </h3>
-                  <p>{welcomeOutcomes[activeMethod].detail}</p>
-                </article>
-              </div>
-              <p className="p9-margin-note">
-                The judgment between prompt and publish.
-              </p>
-
+            <div className="p10-scene__footer">
               <button
                 className="p9-next"
                 type="button"
                 onClick={() => scrollToFolio(5)}
               >
                 <span>
-                  Now direct the project
-                  <small>Move from explanation to practice</small>
+                  Start the guided build
+                  <small>Apply the method to Willow Fix Day</small>
                 </span>
-                <i aria-hidden="true">05</i>
+                <i aria-hidden="true">06</i>
               </button>
             </div>
           </div>
@@ -3028,48 +3378,34 @@ function PaginatedPrologue({
           )}
           id="p9-lesson"
           aria-labelledby="p9-lesson-title"
-          inert={activeFolio === 5 ? undefined : true}
           ref={(node) => {
             folioRefs.current[5] = node;
           }}
         >
           <div className="p9-folio__inner p9-lesson">
             <div className="p9-folio__index" aria-hidden="true">
-              <span>05</span>
+              <span>06</span>
               <i />
               <span>The field lesson</span>
             </div>
 
             <div className="p9-lesson__heading">
-              <p className="p4-kicker">Learn by directing, not watching</p>
+              <p className="p4-kicker">Learn by deciding, not watching</p>
               <h2 id="p9-lesson-title" tabIndex={-1}>
-                Now direct the project.
+                Now direct Willow Fix Day.
               </h2>
               <p>
-                Take Willow Fix Day from a rough idea to a checked release. One
-                decision at a time, you will scope it, choose its project home,
-                guide AI, repair{" "}
+                Across eight short stops, own the project decisions, repair{" "}
                 {auditStep === "failed"
                   ? "the failure you found"
                   : "an observed failure"}
-                , and verify what goes live.
+                , and finish with a checked release.
               </p>
             </div>
 
-            <dl className="p9-lesson__facts">
-              <div>
-                <dt>14</dt>
-                <dd>decisions you make</dd>
-              </div>
-              <div>
-                <dt>08</dt>
-                <dd>project stops</dd>
-              </div>
-              <div>
-                <dt>05</dt>
-                <dd>reusable tools you keep</dd>
-              </div>
-            </dl>
+            <div className="p10-lesson-route">
+              <OpeningRouteArtifact />
+            </div>
 
             <aside className="p9-lesson__kit">
               <span>Your build kit</span>
@@ -3078,13 +3414,13 @@ function PaginatedPrologue({
 
             <div className="p9-lesson__actions">
               <button className="p4-primary" type="button" onClick={onEnter}>
-                {finalOpening.primaryAction}
+                Start: shape the promise
               </button>
               <p>{finalOpening.reassurance}</p>
             </div>
 
             <div className="p9-lesson__overview">
-              <span>Prefer to inspect the complete route first?</span>
+              <span>Prefer to inspect the route first?</span>
               <button
                 className="p4-text-button"
                 type="button"
@@ -3113,6 +3449,7 @@ function PaginatedWelcome({
 }) {
   const [activeFolio, setActiveFolio] = useState(0);
   const [failureObserved, setFailureObserved] = useState(false);
+  const [skipToLessonRequest, setSkipToLessonRequest] = useState(0);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -3133,9 +3470,23 @@ function PaginatedWelcome({
           </span>
           <b>{introFolios[activeFolio].shortLabel}</b>
         </div>
-        <a className="p9-welcome-header__skip" href="#p9-lesson">
-          Skip introduction
-        </a>
+        {activeFolio === 5 ? (
+          <button
+            className="p9-welcome-header__skip"
+            type="button"
+            onClick={() => onStart(failureObserved)}
+          >
+            Start lesson
+          </button>
+        ) : (
+          <button
+            className="p9-welcome-header__skip"
+            type="button"
+            onClick={() => setSkipToLessonRequest((current) => current + 1)}
+          >
+            Skip to lesson
+          </button>
+        )}
       </header>
       <main id="main-content" className="p9-main">
         <PaginatedPrologue
@@ -3143,6 +3494,7 @@ function PaginatedWelcome({
           onEnter={() => onStart(failureObserved)}
           onOverview={onOverview}
           onFolioChange={setActiveFolio}
+          skipToLessonRequest={skipToLessonRequest}
           onEvidence={() => {
             setFailureObserved(true);
             onEvidenceObserved();
@@ -3171,7 +3523,7 @@ function PreparingStudio() {
         >
           <div className="p9-folio__inner p9-orientation">
             <div className="p9-folio__index" aria-hidden="true">
-              <span>00</span>
+              <span>01</span>
               <i />
               <span>Orientation</span>
             </div>
@@ -4882,7 +5234,11 @@ export function PentimentoFinal() {
 
   return (
     <>
-      <a className="p4-skip" href="#main-content">Skip to the current task</a>
+      {hydrated && progress.started && progress.stage !== "welcome" ? (
+        <a className="p4-skip" href="#main-content">
+          Skip to the current task
+        </a>
+      ) : null}
       <div className="p4-app" ref={appRootRef}>
         {content}
         <p className="p4-visually-hidden" role="status" aria-live="polite">
