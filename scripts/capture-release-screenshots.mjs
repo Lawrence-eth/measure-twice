@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 
 const baseUrl =
   process.env.SCREENSHOT_BASE_URL ??
-  "https://pentimento.law-ender.chatgpt.site";
+  "https://pentimento.aethe.me";
 const repositoryRoot = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
   "..",

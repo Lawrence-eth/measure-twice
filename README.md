@@ -20,7 +20,7 @@ site.
 Built for the **Education** track of OpenAI Build Week 2026.
 
 - ChatGPT Site:
-  [pentimento.law-ender.chatgpt.site](https://pentimento.law-ender.chatgpt.site)
+  [pentimento.aethe.me](https://pentimento.aethe.me)
 - Source:
   [github.com/Lawrence-eth/measure-twice](https://github.com/Lawrence-eth/measure-twice)
 - License: [MIT](LICENSE)
@@ -302,7 +302,7 @@ npm run start
 Run the browser suite against a hosted candidate:
 
 ```bash
-PLAYWRIGHT_BASE_URL=https://pentimento.law-ender.chatgpt.site npm run test:e2e
+PLAYWRIGHT_BASE_URL=https://pentimento.aethe.me npm run test:e2e
 ```
 
 ## Deploy with ChatGPT Sites

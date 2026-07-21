@@ -10,7 +10,7 @@ import path from "node:path";
 // Set AUDIT_FAIL_ON_THRESHOLDS=1 when the four interaction-density gates should
 // make this command exit non-zero.
 const baseUrl =
-  process.env.AUDIT_BASE_URL ?? "https://pentimento.law-ender.chatgpt.site";
+  process.env.AUDIT_BASE_URL ?? "https://pentimento.aethe.me";
 const screenshotDirectory = process.env.AUDIT_SCREENSHOT_DIR;
 const screenshotFullPage = process.env.AUDIT_SCREENSHOT_FULL_PAGE === "1";
 const summaryOnly = process.env.AUDIT_SUMMARY_ONLY === "1";

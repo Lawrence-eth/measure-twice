@@ -5,7 +5,7 @@ import "./final.css";
 import "./atelier.css";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://pentimento.law-ender.chatgpt.site"),
+  metadataBase: new URL("https://pentimento.aethe.me"),
   title: "Pentimento — Learn to build with AI",
   description:
     "A 15-minute interactive field guide for first-time AI builders: learn to scope, direct, verify, release, and recover a trustworthy project.",
