@@ -7105,7 +7105,6 @@ html.p9-intro-active {
   right: 10px;
   color: var(--p6-graphite);
   transform: translateY(-50%);
-  transition: color 360ms var(--p7-state-ease);
 }
 
 .p9-prologue[data-folio="1"] .p9-folio-nav,
@@ -9113,14 +9112,14 @@ button.p10-project-page__action {
   cursor: pointer;
 }
 
-button.p10-project-page__action:hover:not(:disabled) {
+button.p10-project-page__action:hover:not(:disabled):not([aria-disabled="true"]) {
   border-color: var(--p6-cobalt);
   background: var(--p6-cobalt);
   box-shadow: 0 10px 24px rgb(36 72 200 / 20%);
   transform: translateY(-2px);
 }
 
-button.p10-project-page__action:active:not(:disabled) {
+button.p10-project-page__action:active:not(:disabled):not([aria-disabled="true"]) {
   transform: translateY(0);
 }
 
@@ -11018,6 +11017,243 @@ button.p10-project-page__action:active:not(:disabled) {
   }
 }
 
+/* Short phones keep the six-folio rhythm without clipping the teaching layer. */
+@keyframes p10-short-reveal {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 560px) and (min-height: 640px) and (max-height: 779px) {
+  .p9-folio,
+  .p9-folio__inner {
+    height: calc(100svh - 64px);
+    height: calc(100dvh - 64px);
+    min-height: calc(100svh - 64px);
+    min-height: calc(100dvh - 64px);
+  }
+
+  .p9-orientation {
+    gap: 0;
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
+
+  .p9-orientation__copy {
+    padding-top: 20px;
+  }
+
+  .p10-scene,
+  .p9-lesson {
+    height: calc(100svh - 64px);
+    height: calc(100dvh - 64px);
+    min-height: calc(100svh - 64px);
+    min-height: calc(100dvh - 64px);
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
+
+  .p10-scene > .p9-folio__index,
+  .p9-lesson > .p9-folio__index {
+    margin-bottom: 6px;
+  }
+
+  .p10-scene__copy > .p4-kicker {
+    margin-bottom: 5px;
+  }
+
+  .p10-scene__copy > h2 {
+    margin-bottom: 6px;
+    font-size: 35px;
+  }
+
+  .p10-scene__copy > p:not(.p4-kicker) {
+    font-size: 11px;
+    line-height: 1.35;
+  }
+
+  .p10-scene__artifact,
+  .p10-scene__footer {
+    margin-top: 4px;
+  }
+
+  .p10-scene__footer .p9-test-instruction {
+    padding-top: 4px;
+    padding-bottom: 4px;
+  }
+
+  #p9-evidence .p10-project-proof[data-state="failed"] {
+    min-height: 0;
+    padding: 5px;
+    gap: 6px;
+  }
+
+  #p9-evidence .p10-project-proof[data-state="failed"] .p10-project-page {
+    min-height: 0;
+  }
+
+  #p9-evidence .p10-project-proof[data-state="failed"] .p10-project-page > header,
+  #p9-evidence .p10-project-proof[data-state="failed"] .p10-project-page > footer {
+    min-height: 26px;
+  }
+
+  #p9-evidence .p10-project-proof[data-state="failed"] .p10-project-page__content {
+    padding: 8px;
+  }
+
+  #p9-evidence .p10-project-proof[data-state="failed"] .p10-project-page__content > p {
+    margin-bottom: 3px;
+  }
+
+  #p9-evidence .p10-project-proof[data-state="failed"] .p10-project-page h3 {
+    margin-bottom: 4px;
+    font-size: clamp(22px, 6.7vw, 26px);
+    line-height: 1;
+  }
+
+  #p9-evidence .p10-project-proof[data-state="failed"] .p10-project-page__action {
+    margin-top: 4px;
+  }
+
+  #p9-evidence .p10-project-proof[data-state="failed"] .p10-evidence-receipt {
+    padding: 6px;
+    gap: 2px;
+  }
+
+  #p9-evidence .p10-project-proof[data-state="failed"] .p10-evidence-receipt > b {
+    font-size: 10px;
+    line-height: 1.2;
+  }
+
+  #p9-evidence .p10-project-proof[data-state="failed"] .p10-evidence-receipt > p {
+    font-size: 7.5px;
+    line-height: 1.2;
+  }
+
+  .p10-layer-workbench,
+  .p10-method-workbench {
+    padding: 6px;
+  }
+
+  .p10-layer-sheet,
+  .p10-method-steps button {
+    min-height: 44px;
+    padding: 5px 7px 5px 10px;
+  }
+
+  .p10-layer-detail,
+  .p10-method-detail {
+    min-height: 0;
+    margin-top: 6px;
+    padding: 9px;
+    animation: p10-short-reveal 220ms var(--p7-state-ease) both;
+  }
+
+  .p10-evidence-receipt {
+    animation: p10-short-reveal 220ms var(--p7-state-ease) both;
+  }
+
+  .p10-layer-detail h3,
+  .p10-method-detail h3 {
+    margin: 3px 0 4px;
+    font-size: 19px;
+  }
+
+  .p10-layer-detail > p,
+  .p10-method-detail > p {
+    font-size: 10px;
+    line-height: 1.3;
+  }
+
+  .p10-layer-detail dl,
+  .p10-method-detail > div {
+    margin-top: 5px;
+    padding-top: 5px;
+    gap: 8px;
+  }
+
+  .p10-layer-detail dt,
+  .p10-method-detail dt {
+    font-size: 7px;
+  }
+
+  .p10-layer-detail dd,
+  .p10-method-detail dd {
+    margin-top: 3px;
+    font-size: 9px;
+    line-height: 1.25;
+  }
+
+  .p9-lesson__heading h2 {
+    margin-top: 5px;
+    margin-bottom: 7px;
+  }
+
+  .p10-lesson-route {
+    margin-top: 6px;
+  }
+
+  .p9-lesson__kit {
+    margin-top: 5px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+  }
+
+  .p9-lesson__actions {
+    padding-top: 5px;
+  }
+
+  .p9-lesson__overview {
+    padding-top: 4px;
+  }
+}
+
+@media (max-width: 360px) and (min-height: 640px) and (max-height: 779px) {
+  #p9-evidence .p10-scene__copy > h2 {
+    font-size: 31px;
+  }
+
+  #p9-evidence .p10-scene__artifact,
+  #p9-evidence .p10-scene__footer {
+    margin-top: 0;
+  }
+
+  #p9-evidence .p10-artifact {
+    padding: 5px;
+  }
+
+  #p9-evidence .p10-artifact__registration {
+    min-height: 17px;
+  }
+
+  #p9-evidence .p10-artifact__body {
+    margin-top: 3px;
+  }
+
+  #p9-method .p10-method-detail {
+    padding-top: 5px;
+    padding-bottom: 5px;
+  }
+
+  #p9-method .p10-scene__artifact {
+    margin-top: 0;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) and (max-width: 560px) and (min-height: 640px) and (max-height: 779px) {
+  html.p9-intro-active {
+    scroll-snap-type: y mandatory;
+  }
+
+  .p9-folio {
+    scroll-snap-stop: always;
+  }
+}
+
 @media (prefers-reduced-motion: no-preference) and (min-width: 901px) {
   html.p9-intro-active {
     scroll-snap-type: y mandatory;
@@ -11039,6 +11275,11 @@ button.p10-project-page__action:active:not(:disabled) {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .p9-folio-nav,
+  .p9-folio-nav * {
+    transition: none !important;
+  }
+
   .p9-folio.is-active .p10-scene__copy,
   .p9-folio.is-active .p10-scene__artifact,
   .p9-folio.is-active .p10-scene__footer,

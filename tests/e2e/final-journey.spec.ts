@@ -1017,6 +1017,22 @@ test("presents six deliberate pages, turns a claim into evidence, and carries th
   await email.click();
   await expect(email).toBeFocused();
   await expect(email).toHaveAttribute("aria-disabled", "true");
+  await email.hover();
+  expect(
+    await email.evaluate((element) => {
+      const style = getComputedStyle(element);
+      return {
+        background: style.backgroundColor,
+        border: style.borderColor,
+        color: style.color,
+      };
+    }),
+  ).toEqual({
+    background: "rgb(246, 227, 220)",
+    border: "rgb(212, 106, 89)",
+    color: "rgb(142, 52, 40)",
+  });
+  await page.mouse.move(0, 0);
   await expect(evidence.getByRole("status")).toContainText(
     /Observed failure.*No email opened because the button has no address.*click is evidence.*important path is broken/is,
   );
@@ -1119,6 +1135,11 @@ test("moves one folio per desktop gesture and lands skip navigation on its headi
   await page.setViewportSize({ width: 1440, height: 650 });
   await openFresh(page);
   await expect(page.locator(".p4-skip")).toHaveCount(0);
+  expect(
+    await page
+      .locator(".p9-folio-nav")
+      .evaluate((element) => getComputedStyle(element).transitionDuration),
+  ).toBe("0s");
 
   await page.mouse.wheel(0, 700);
   await expect
@@ -1134,6 +1155,59 @@ test("moves one folio per desktop gesture and lands skip navigation on its headi
 
   await page.getByRole("button", { name: /Skip to lesson/i }).click();
   await expectIntroPageActive(page, 5);
+});
+
+test("keeps every folio page-sized on a short phone", async ({ page }) => {
+  for (const viewport of [
+    { width: 390, height: 667 },
+    { width: 320, height: 640 },
+  ]) {
+    await page.setViewportSize(viewport);
+    await openFresh(page);
+
+    expect(
+      await page.evaluate(
+        () => getComputedStyle(document.documentElement).scrollSnapType,
+      ),
+    ).toBe("y mandatory");
+
+    await page
+      .locator("#p9-evidence")
+      .getByRole("button", { name: "Email the organizer", exact: true })
+      .click();
+    await page.locator("#p9-layers").getByRole("tab", { name: /Release/i }).click();
+    await page.locator("#p9-method").getByRole("tab", { name: /Prove/i }).click();
+
+    const geometry = await page.locator(".p9-folio").evaluateAll((folios) =>
+      folios.map((folio) => {
+        const inner = folio.querySelector<HTMLElement>(".p9-folio__inner")!;
+        return {
+          folioHeight: Math.round(folio.getBoundingClientRect().height),
+          innerClientHeight: inner.clientHeight,
+          innerScrollHeight: inner.scrollHeight,
+        };
+      }),
+    );
+
+    expect(geometry).toHaveLength(6);
+    for (const [index, folio] of geometry.entries()) {
+      expect(folio.folioHeight).toBe(viewport.height - 64);
+      expect(
+        folio.innerScrollHeight,
+        `folio ${index + 1} at ${viewport.width}×${viewport.height}`,
+      ).toBeLessThanOrEqual(
+        folio.innerClientHeight + 1,
+      );
+    }
+
+    const methodParagraph = page.locator("#p10-method-detail > p");
+    await expect(methodParagraph).toContainText(/keep recovery/i);
+    expect(
+      await methodParagraph.evaluate(
+        (paragraph) => paragraph.scrollHeight - paragraph.clientHeight,
+      ),
+    ).toBeLessThanOrEqual(1);
+  }
 });
 
 for (const lane of [
